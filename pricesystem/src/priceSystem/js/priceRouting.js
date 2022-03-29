@@ -41,9 +41,8 @@ class priceRouting extends BaseService {
     }
 
     await this.request("get", url, query).then((d) => {
-      if (d.data.length == 0) throw new Error("不存在航班信息");
+      if (d.data.length == 0&&flightArr.length==0) throw new Error("不存在航班信息");
       var data = d.data;
-      console.log(data);
       this.hbhArr = data;
       this.hbhArr.forEach((item,index,arr) => {
         var key = item.airnum + item.enddate+item.begindate;
