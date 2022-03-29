@@ -1019,7 +1019,7 @@
     <el-dialog
       :title="relationEditTitle"
       :visible.sync="priceObj.isShowRelationEdit"
-      :width="'40%'"
+      :width="'800px'"
     >
       <div
         class="row relation-edit-wrap"
