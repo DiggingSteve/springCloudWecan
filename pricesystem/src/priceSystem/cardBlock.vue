@@ -38,7 +38,7 @@
             type="input"
             v-bind:class="{ ban: (isNeedBan && indexSelf<0)||index==indexSelf ? true : false }"
             @input="editContent(item)"
-            @focus="handleFocus($event)"
+            @focus="handleFocus(index,$event)"
           />
         </div>
       </div>
@@ -157,9 +157,9 @@ export default {
       if(input>0&&item.diff.indexOf("+")<0)item.diff="+"+item.diff;
       this.$set(item, "isSetValue", true);
     },
-    handleFocus(e) {
+    handleFocus(index,e) {
       debugger
-      if (this.isBan) {
+      if (this.indexSelected==index) {
         e.srcElement.blur();
       }
     },
