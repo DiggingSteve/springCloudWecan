@@ -739,6 +739,7 @@ export default {
               }
             });
           }
+          if(this.tableDataRes.length==0)this.$message.success("无查询数据");
         });
     },
     /**设置航司名字 */
