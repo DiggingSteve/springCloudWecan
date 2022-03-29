@@ -45,3 +45,6 @@ buildNumber.properties
 .classpath
 
 SpringCloudWecan/trunk/springCloudWecan/.idea/
+*.jar
+*.iml
+
