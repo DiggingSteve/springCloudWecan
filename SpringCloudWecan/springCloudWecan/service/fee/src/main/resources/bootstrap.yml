@@ -1,0 +1,24 @@
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${server-host}:${server-port}/eureka/
+    registry-fetch-interval-seconds: 5 # 拉取服务注册信息间隔时间 (默认为30秒)
+  instance:
+    preferIpAddress: true
+    instanceId: ${application-host}:${application-port}
+    ip-address: ${application-host}
+
+
+spring:
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config
+      profile: dev
+      name: fee
+  application:
+    name: fee
+
+

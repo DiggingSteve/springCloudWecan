@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FeeAircompnay</OriginalElement>
+  <nodes>
+    <node x="164.0" y="324.5">0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FeePackageType</node>
+    <node x="680.0" y="313.0">0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FeeVol</node>
+    <node x="500.0" y="324.5">0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FeeAircompnay</node>
+    <node x="352.0" y="313.0">0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FeeWeight</node>
+    <node x="0.0" y="313.0">0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FeeCuslevel</node>
+    <node x="315.0" y="0.0">0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FreightFee</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FeeAircompnay" target="0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FreightFee">
+      <point x="0.0" y="-62.5" />
+      <point x="580.0" y="293.0" />
+      <point x="456.40000000000003" y="293.0" />
+      <point x="40.400000000000034" y="131.5" />
+    </edge>
+    <edge source="0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FeePackageType" target="0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FreightFee">
+      <point x="0.0" y="-62.5" />
+      <point x="248.0" y="293.0" />
+      <point x="375.6" y="293.0" />
+      <point x="-40.39999999999998" y="131.5" />
+    </edge>
+    <edge source="0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FeeVol" target="0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FreightFee">
+      <point x="0.0" y="-74.0" />
+      <point x="744.0" y="283.0" />
+      <point x="496.80000000000007" y="283.0" />
+      <point x="80.80000000000007" y="131.5" />
+    </edge>
+    <edge source="0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FeeCuslevel" target="0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FreightFee">
+      <point x="0.0" y="-74.0" />
+      <point x="72.0" y="283.0" />
+      <point x="335.2" y="283.0" />
+      <point x="-80.80000000000001" y="131.5" />
+    </edge>
+    <edge source="0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FeeWeight" target="0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FreightFee">
+      <point x="0.0" y="-74.0" />
+      <point x="0.0" y="131.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.8393719806763285" x="404.0" y="230.5" />
+  <SelectedNodes>
+    <node>0fc6244d-edf7-4b62-98d3-4a06bc1ecdc5.TABLE:feeManagement.Ex_FeeAircompnay</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Key columns</Category>
+    <Category>Columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+

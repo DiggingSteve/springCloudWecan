@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+  <table-set>
+    <table path="feeManagement.Ex_FeePackageType">
+      <table path="feeManagement.Ex_FreightFee" from="feeid" to="guid"/>
+    </table>
+    <table path="feeManagement.Ex_FeeAircompany">
+      <table path="feeManagement.Ex_FreightFee" from="feeid" to="guid"/>
+    </table>
+    <table path="feeManagement.Ex_FeeCuslevel">
+      <table path="feeManagement.Ex_FreightFee" from="feeid" to="guid"/>
+    </table>
+    <table path="feeManagement.Ex_FeeVol">
+      <table path="feeManagement.Ex_FreightFee" from="feeid" to="guid"/>
+    </table>
+    <table path="feeManagement.Ex_FeeWeight">
+      <table path="feeManagement.Ex_FreightFee" from="feeid" to="guid"/>
+    </table>
+
+  </table-set>
+</data>

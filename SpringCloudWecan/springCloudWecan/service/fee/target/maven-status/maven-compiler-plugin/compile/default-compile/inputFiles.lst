@@ -1,0 +1,14 @@
+D:\svncode\SpringCloudWecan\trunk\springCloudWecan\service\fee\src\main\java\com\wecan\fee\service\ITruckFee.java
+D:\svncode\SpringCloudWecan\trunk\springCloudWecan\service\fee\src\main\java\com\wecan\fee\controller\AirFreightFeeController.java
+D:\svncode\SpringCloudWecan\trunk\springCloudWecan\service\fee\src\main\java\com\wecan\fee\service\impl\AirFreightFeeService.java
+D:\svncode\SpringCloudWecan\trunk\springCloudWecan\service\fee\src\main\java\com\wecan\fee\service\impl\TruckFeeService.java
+D:\svncode\SpringCloudWecan\trunk\springCloudWecan\service\fee\src\main\java\com\wecan\fee\enums\PageTypeEnum.java
+D:\svncode\SpringCloudWecan\trunk\springCloudWecan\service\fee\src\main\java\com\wecan\fee\base\BaseApiController.java
+D:\svncode\SpringCloudWecan\trunk\springCloudWecan\service\fee\src\main\java\com\wecan\fee\FeeApplication.java
+D:\svncode\SpringCloudWecan\trunk\springCloudWecan\service\fee\src\main\java\com\wecan\fee\global\WebConfig.java
+D:\svncode\SpringCloudWecan\trunk\springCloudWecan\service\fee\src\main\java\com\wecan\fee\controller\FeeController.java
+D:\svncode\SpringCloudWecan\trunk\springCloudWecan\service\fee\src\main\java\com\wecan\fee\service\IBaseService.java
+D:\svncode\SpringCloudWecan\trunk\springCloudWecan\service\fee\src\main\java\com\wecan\fee\global\GlobalCorsConfig.java
+D:\svncode\SpringCloudWecan\trunk\springCloudWecan\service\fee\src\main\java\com\wecan\fee\service\IAirFreightFee.java
+D:\svncode\SpringCloudWecan\trunk\springCloudWecan\service\fee\src\main\java\com\wecan\fee\global\MyBatisPlusConfiguration.java
+D:\svncode\SpringCloudWecan\trunk\springCloudWecan\service\fee\src\main\java\com\wecan\fee\controller\TruckFeeController.java

@@ -1,0 +1,255 @@
+@titleColor: #222933; //标题颜色   主字体颜色
+@contentColor: #7A8189; //内容颜色 辅字体颜色
+@mainBgcolor: #006AFF; //选中的单选按钮背景色 主色调
+@inputBorder: #BFC5CE; //输入框边框颜色  次级字体与边框颜色
+@requireInputBg: #FFFAF4; //必填输入框的背景颜色
+@borderColor: #DADEE3; //面板边框颜色
+
+* {
+  font-family: Helvetica, Helvetica;
+}
+
+.elitem {
+  display: inline-flex;
+  flex-direction: column;
+  margin: 8px 0px;
+
+  .input-title {
+    margin-bottom: 8px;
+    min-height: 20px;
+    color: @titleColor;
+  }
+
+  .input-content {
+    color: @contentColor;
+  }
+
+  /deep/ .el-radio-button__inner {
+    border: 0
+  }
+
+  /deep/ .el-radio-button__orig-radio:checked+.el-radio-button__inner {
+    border-radius: 16px;
+    background-color: @mainBgcolor ;
+  }
+
+  /deep/ input::-webkit-input-placeholder {
+    color: @contentColor;
+    font-size: 14px;
+  }
+
+  /deep/ .el-checkbox {
+    height: 30px;
+    display: inline-grid;
+    place-items: center;
+    padding: 0 6px;
+
+    .el-checkbox__input {
+      display: none
+    }
+
+    .el-checkbox__label {
+      padding-left: 0px
+    }
+  }
+
+
+  /deep/ .el-checkbox.is-checked {
+    border-radius: 16px;
+    background-color: #006AFF;
+    color: #fff;
+
+    .el-checkbox__label {
+      color: #fff;
+    }
+  }
+
+  /deep/ .el-input__suffix {
+    display: flex;
+    align-items: center;
+  }
+
+}
+
+
+
+.panel {
+  .panelTitle {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #222933;
+    font-weight: bold;
+
+    .panelExplain {
+      margin-left: 16px;
+      color: @contentColor;
+      font-weight: normal;
+      font-size: 14px;
+    }
+
+    .displayBtn {
+      float: right;
+      cursor: pointer;
+      color: @contentColor;
+      font-weight: normal;
+      font-size: 14px;
+    }
+
+    i {
+      font-size: 18px;
+      color: @mainBgcolor;
+    }
+
+    .titleOpend {
+      color: @mainBgcolor;
+    }
+
+    .displayBtnOpend {
+      color: @titleColor;
+    }
+  }
+
+  .panelContent {
+    border: 1px solid @borderColor;
+    margin-top: 8px;
+    padding: 24px;
+    display: grid;
+    row-gap: 12px;
+
+    .spanTitle {
+      display: inline-block;
+      color: @contentColor;
+      min-width: 110px;
+      text-align: right;
+      margin-right: 6px;
+    }
+  }
+
+  .dividing {
+    height: 1px;
+    background-color: @borderColor;
+    margin-top: 10px;
+  }
+
+}
+
+.infoPane {
+  // max-width: 1400px;
+  //height: 222px;
+  border-radius: 8px;
+  padding: 40px;
+  margin-bottom: 35px;
+  background: transparent linear-gradient(92deg, #3732C4 0%, #2D6FCB 100%) 0% 0% no-repeat padding-box;
+
+  .infoPaneSystem {
+    display: inline-block;
+    width: 56px;
+    height: 24px;
+    line-height: 24px;
+    background: rgba(255, 255, 255, .2);
+    //background-color: #5C6DD1;
+    border-radius: 12px;
+    color: #fff;
+    opacity: .7;
+    font-size: 12px;
+    text-align: center;
+    //color: #C2C9EE;
+    margin-right: 6px;
+
+  }
+
+  .infoitem {
+    display: grid;
+    align-items: center;
+
+    .number {
+      color: #fff;
+      font-size: 18px;
+      margin-right: 2px;
+    }
+
+    .ompany {
+      color: #fff;
+      font-size: 12px;
+      margin-right: 3px;
+      opacity: .6;
+    }
+
+    .infoitem-explain {
+      color: #fff;
+      font-size: 14px;
+      opacity: .6;
+    }
+  }
+
+}
+
+
+.division {
+  width: 100%;
+  height: 0px;
+  border-bottom: 1px dotted #DADEE3;
+  margin: 12px 0;
+}
+
+  .contentOut {
+    font-size: 0px;
+    .elitem {
+      width: 100%;
+      font-size: 14px;
+      .el-select {
+        width: 100%
+      }
+    }
+  }
+
+
+
+  .input-group {
+
+    //输入框组合
+    .el-input__inner {
+      border-radius: 0;
+    }
+
+    >div:first-child {
+      .el-input__inner {
+        border-radius: 4px 0 0 4px;
+        border-right: none;
+      }
+    }
+
+    >div:last-child {
+      .el-input__inner {
+        border-radius: 0 4px 4px 0;
+        border-left: none;
+      }
+    }
+
+  }
+
+  .input-group-a {
+
+    //输入框组合 第一个
+    /deep/ .el-input__inner {
+      border-radius: 4px 0 0 4px;
+      border-right: none;
+    }
+  }
+
+  .input-group-m {
+
+    //输入框组合 中间
+    /deep/ .el-input__inner {
+      border-radius: 0;
+    }
+  }
+
+  .input-group-f {
+
+    //输入框组合 最后
+    /deep/ .el-input__inner {
+      border-radius: 0 4px 4px 0;
+      border-left: none;
+    }
+  }

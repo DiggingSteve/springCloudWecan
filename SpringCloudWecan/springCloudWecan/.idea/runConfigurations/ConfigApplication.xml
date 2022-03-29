@@ -1,0 +1,72 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ConfigApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="config" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.wecan.config.ConfigApplication" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <additionalParameters>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="server-port" />
+        <option name="value" value="8100" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="application-port" />
+        <option name="value" value="9100" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="server-host" />
+        <option name="value" value="localhost" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="application-host" />
+        <option name="value" value="localhost" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="config-git-uri" />
+        <option name="value" value="http://192.168.98.205:8090/root/springcloud-wecan-config.git" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="config-git-username" />
+        <option name="value" value="root" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="config-git-password" />
+        <option name="value" value="54752152" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="config-git-label" />
+        <option name="value" value="master" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="rabbitmq-host" />
+        <option name="value" value="192.168.0.113" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="rabbitmq-port" />
+        <option name="value" value="5672" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="rabbitmq-username" />
+        <option name="value" value="wecan" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="rabbitmq-password" />
+        <option name="value" value="wecan" />
+      </param> 
+    </additionalParameters>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

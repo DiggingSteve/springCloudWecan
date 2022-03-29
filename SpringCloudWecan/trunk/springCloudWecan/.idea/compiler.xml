@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="commonmongo" />
+        <module name="server" />
+        <module name="pushmsg" />
+        <module name="log" />
+        <module name="fee" />
+        <module name="commonLog" />
+        <module name="daoprice" />
+        <module name="commonmsgqueue" />
+        <module name="commonBase" />
+        <module name="modeldbo" />
+        <module name="file" />
+        <module name="mqreceiver" />
+        <module name="websocket" />
+        <module name="shardingTest" />
+        <module name="commonFeign" />
+        <module name="commonutils" />
+        <module name="daoFee" />
+        <module name="daolog" />
+        <module name="daoRoutes" />
+        <module name="config" />
+        <module name="gateway" />
+        <module name="commonPool" />
+      </profile>
+      <profile name="Annotation profile for springCloudWecan" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.2.0.Final/mapstruct-processor-1.2.0.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/jolira/hickory/1.0.0/hickory-1.0.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.2.0.Final/mapstruct-1.2.0.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/assertj/assertj-core/3.7.0/assertj-core-3.7.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/google/guava/guava/19.0/guava-19.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/puppycrawl/tools/checkstyle/7.2/checkstyle-7.2.jar" />
+          <entry name="$MAVEN_REPOSITORY$/javax/inject/javax.inject/1/javax.inject-1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-container-default/1.6/plexus-container-default-1.6.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-test/4.0.3.RELEASE/spring-test-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-beans/4.0.3.RELEASE/spring-beans-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-context/4.0.3.RELEASE/spring-context-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
+        </processorPath>
+        <module name="modelview" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="common" target="1.8" />
+      <module name="commonBase" target="1.8" />
+      <module name="commonFeign" target="1.8" />
+      <module name="commonLog" target="1.8" />
+      <module name="commonmongo" target="1.8" />
+      <module name="commonmsgqueue" target="1.8" />
+      <module name="commonPool" target="1.8" />
+      <module name="commonutils" target="1.8" />
+      <module name="commonUtils" target="1.8" />
+      <module name="config" target="1.8" />
+      <module name="dao" target="1.8" />
+      <module name="daoBase" target="1.8" />
+      <module name="daoFee" target="1.8" />
+      <module name="daolog" target="1.8" />
+      <module name="daoLog" target="1.8" />
+      <module name="daoprice" target="1.8" />
+      <module name="daoRoutes" target="1.8" />
+      <module name="fee" target="8" />
+      <module name="file" target="8" />
+      <module name="gateway" target="1.8" />
+      <module name="log" target="1.8" />
+      <module name="model" target="1.8" />
+      <module name="modeldbo" target="1.8" />
+      <module name="ModelView" target="8" />
+      <module name="modelview" target="8" />
+      <module name="mqreceiver" target="8" />
+      <module name="pushmsg" target="8" />
+      <module name="server" target="1.8" />
+      <module name="service" target="8" />
+      <module name="shardingTest" target="8" />
+      <module name="springCloudWecan" target="1.8" />
+      <module name="websocket" target="8" />
+      <module name="zipkin" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ModelView" options="-parameters" />
+      <module name="commonBase" options="-parameters" />
+      <module name="commonFeign" options="-parameters" />
+      <module name="commonLog" options="-parameters" />
+      <module name="commonPool" options="-parameters" />
+      <module name="commonUtils" options="-parameters" />
+      <module name="commonmongo" options="-parameters" />
+      <module name="commonmsgqueue" options="-parameters" />
+      <module name="commonutils" options="-parameters" />
+      <module name="config" options="-parameters" />
+      <module name="daoBase" options="-parameters" />
+      <module name="daoFee" options="-parameters" />
+      <module name="daoLog" options="-parameters" />
+      <module name="daoRoutes" options="-parameters" />
+      <module name="daolog" options="-parameters" />
+      <module name="daoprice" options="-parameters" />
+      <module name="fee" options="-parameters" />
+      <module name="file" options="-parameters" />
+      <module name="gateway" options="-parameters" />
+      <module name="log" options="-parameters" />
+      <module name="modeldbo" options="-parameters" />
+      <module name="modelview" options="-parameters" />
+      <module name="modelview (1)" options="-parameters" />
+      <module name="modelview (2)" options="-parameters" />
+      <module name="mqreceiver" options="-parameters" />
+      <module name="pushmsg" options="-parameters" />
+      <module name="server" options="-parameters" />
+      <module name="service" options="-parameters" />
+      <module name="shardingTest" options="-parameters" />
+      <module name="springCloudWecan" options="" />
+      <module name="websocket" options="-parameters" />
+      <module name="zipkin" options="-parameters" />
+    </option>
+  </component>
+</project>

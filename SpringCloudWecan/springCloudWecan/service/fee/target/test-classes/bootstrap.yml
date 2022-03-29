@@ -1,0 +1,55 @@
+server:
+  port: 8320
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.98.205:8100/eureka/
+    registry-fetch-interval-seconds: 5 # 拉取服务注册信息间隔时间 (默认为30秒)
+  instance:
+    preferIpAddress: true
+    instanceId: 192.168.98.203:8320
+    ip-address: 192.168.98.203
+
+
+spring:
+
+  application:
+    name: fee
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.98.205:3306/feeManagement?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    maxPoolSize: 200
+    minPoolSize: 10
+    initialPoolSize: 10
+    acquireIncrement: 5
+    idleConnectionTestPeriod: 28800
+    maxIdleTime: 28800
+    hikari:
+      connection-timeout: 15000
+
+  jpa:
+    database: MySQL
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+  type-enums-package: com.wecan.modeldbo.airfreight.fee.enums
+  global-config:
+    db-config:
+      logic-delete-field: isdel
+      logic-delete-value: 2
+      logic-not-delete-value: 1
+
+
+

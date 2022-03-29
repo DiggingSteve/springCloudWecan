@@ -1,0 +1,38 @@
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${server-host}:${server-port}/eureka/
+    registry-fetch-interval-seconds: 5 # 拉取服务注册信息间隔时间 (默认为30秒)
+  instance:
+    prefer-ip-address: true
+    ip-address: ${application-host}
+    instance-id: ${application-host}:${application-port}
+
+
+server:
+  port: ${application-port}
+
+
+spring:
+  cloud:
+    application:
+      name: ${application-name}
+  jpa:
+    database: MySQL
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
+  global-config:
+    db-config:
+      logic-delete-field: isdel
+      logic-delete-value: 2
+      logic-not-delete-value: 1

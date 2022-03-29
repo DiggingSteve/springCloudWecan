@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.wecan</groupId>
+    <artifactId>pushmsg</artifactId>
+    <version>0.0.1</version>
+    <name>pushMsg</name>
+    <description>pushMsg</description>
+    <parent>
+        <artifactId>service</artifactId>
+        <groupId>com.wecan</groupId>
+        <version>0.0.1</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring5</artifactId>
+            <version>3.0.11.RELEASE</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--                <configuration>-->
+                <!--                    <mainClass>com.wecan.PushMsgApplication</mainClass>-->
+                <!--                    <layout>ZIP</layout>-->
+                <!--                    <includes>-->
+                <!--                        <include>-->
+                <!--                            <groupId>nothing</groupId>-->
+                <!--                            <artifactId>nothing</artifactId>-->
+                <!--                        </include>-->
+                <!--                    </includes>-->
+                <!--                </configuration>-->
+                <!--                <executions>-->
+                <!--                    <execution>-->
+                <!--                        <goals>-->
+                <!--                            <goal>repackage</goal>-->
+                <!--                        </goals>-->
+                <!--                    </execution>-->
+                <!--                </executions>-->
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

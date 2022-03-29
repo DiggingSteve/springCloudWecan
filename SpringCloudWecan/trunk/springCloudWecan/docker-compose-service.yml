@@ -1,0 +1,17 @@
+version: "2"
+services:
+  server:
+    image: server
+    container_name: server
+    ports:
+      - "8090:8090"
+  config:
+    image:  config
+    container_name: config
+    ports:
+      - "8091:8091"
+  gateway:
+    image: gateway
+    container_name: gateway
+    ports:
+      - "8092:8092"

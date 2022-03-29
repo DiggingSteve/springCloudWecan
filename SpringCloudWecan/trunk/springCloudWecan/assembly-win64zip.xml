@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf8"?>
+<assembly
+        xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+    <!-- 产生zip文件的名字 -->
+    <id>ApiWeCan</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+
+    <!-- 将全部依赖放到/lib目录下 -->
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/lib</outputDirectory>
+        </dependencySet>
+    </dependencySets>
+    <!--打包文件将依赖模块打成的jar放到lib依赖目录中-->
+    <files>
+        <file>
+            <source>gateway/target/gateway-0.0.1.jar</source>
+            <outputDirectory>/</outputDirectory>
+            <destName>gateway-0.0.1.jar</destName>
+        </file>
+        <file>
+            <source>config/target/config-0.0.1.jar</source>
+            <outputDirectory>/</outputDirectory>
+            <destName>config-0.0.1.jar</destName>
+        </file>
+        <file>
+            <source>server/target/server-0.0.1.jar</source>
+            <outputDirectory>/</outputDirectory>
+            <destName>server-0.0.1.jar</destName>
+        </file>
+    </files>
+</assembly>

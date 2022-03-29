@@ -1,0 +1,52 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="GatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" activateToolWindowBeforeRun="false">
+    <module name="gateway" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.wecan.gateway.GatewayApplication" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <additionalParameters>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="server-host" />
+        <option name="value" value="192.168.98.205" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="server-port" />
+        <option name="value" value="8100" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="config-service" />
+        <option name="value" value="config" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="config-name" />
+        <option name="value" value="gateway" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="config-profile" />
+        <option name="value" value="dev" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="application-name" />
+        <option name="value" value="gateway" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="application-port" />
+        <option name="value" value="9000" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="application-host" />
+        <option name="value" value="localhost" />
+      </param>
+    </additionalParameters>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

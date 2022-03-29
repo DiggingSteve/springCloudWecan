@@ -1,0 +1,760 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: "微软雅黑", "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1", Arial, sans-serif;
+  width: 100%;
+  height: 100%;
+}
+
+#message {
+  position: fixed;
+  z-index: 1000;
+  top: 50px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 200px;
+  height: 46px;
+  line-height: 46px;
+  font-size: 14px;
+  text-align: center;
+  background: #fef0f0;
+  border: 1px solid #fde2e2;
+  border-radius: 3px;
+  color: #f56c6c;
+  min-width: 380px;
+  transition: all .4s;
+}
+
+.dialog {
+  display: none;
+  position: fixed;
+  z-index: 1100;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 0 60px #000;
+  background: #999999;
+}
+
+.dialog .mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, .4);
+}
+
+.dialog .dialog-content {
+  background: white;
+}
+
+.dialog .dialog-content {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* left: 226px; */
+  left: 0px;
+  right: 0;
+  margin: auto;
+  border-radius: 3px;
+  background: white;
+}
+
+.dialog .dialog-content .header {
+  padding: 15px 20px;
+  height: 60px;
+  position: relative;
+}
+
+.dialog .dialog-content .header .close {
+  float: right;
+  display: block;
+  background: url(./images/close.png) no-repeat;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  margin-top: 7px;
+}
+
+.dialog .dialog-content .content {
+  padding: 0 42px;
+}
+
+.wffsettlement .dialog-content {
+  width: 950px;
+  height: 400px;
+}
+
+.wffsettlement .dialog-content .content {
+  padding: 0 10px;
+}
+
+.wffsettlement .dialog-content .header {
+  padding: 20px 8px;
+}
+
+.wffsettlement .dialog-content {
+  padding: 20px 30px;
+}
+
+.wffsettlement .dialog-content .header h3 {
+  float: left;
+  font-size: 18px;
+  color: #004d84;
+  margin-bottom: 15px;
+}
+
+.wffsettlement .dialog-content .content .area-location {
+  float: left;
+  text-align: center;
+  width: 100px;
+  margin-right: 45px;
+}
+
+.wffsettlement .dialog-content .content .area-location:last-child {
+  margin-right: 0;
+}
+
+.wffsettlement .dialog-content .content .area-location .location-title {
+  font-size: 14px;
+  color: #ccc;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.wffsettlement .dialog-content .content .area-location .btn {
+  text-align: center;
+}
+
+.wffsettlement .dialog-content .content .area-location .btn span {
+  display: inline-block;
+  font-size: 12px;
+  width: 100px;
+  height: 32px;
+  line-height: 30px;
+  border: 1px solid #e8e8e8;
+  color: #606266;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.wffsettlement .dialog-content .content .area-location .btn span:hover {
+  border-color: #004d84;
+  color: #004d84;
+}
+
+.forgetpassword .dialog-content {
+  width: 400px;
+  height: 300px;
+}
+
+.forgetpassword .dialog-content .content .row .icon .icon-loginman {
+  background: url(./images/icon-loginman.png) no-repeat;
+}
+
+.forgetpassword .dialog-content .content .row .icon .icon-yzm {
+  background: url(./images/icon-yzm.png) no-repeat;
+}
+
+.forgetpassword .dialog-content .content .row .icon .icon-lock {
+  background: url(./images/icon-lock.png) no-repeat;
+}
+
+.forgetpassword .dialog-content .content .row {
+  margin-bottom: 20px;
+}
+
+.forgetpassword .dialog-content .content .row .icon {
+  float: left;
+  width: 41px;
+  height: 41px;
+  padding: 0 11px;
+  border: 1px solid #dcdfe6;
+  vertical-align: middle;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.forgetpassword .dialog-content .content .row .icon i {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-top: 10px;
+}
+
+.forgetpassword .dialog-content .content .row input {
+  vertical-align: middle;
+  width: 270px;
+  height: 41px;
+  border: 1px solid #dcdfe6;
+  border-left: none;
+  outline: none;
+  padding: 12px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.forgetpassword .dialog-content .content .row .confirm {
+  margin-left: 120px;
+  background: #0f5a8c;
+  border: none;
+  color: #fff;
+  padding: 8px 20px;
+  cursor: pointer;
+  outline: none;
+  border-radius: 3px;
+}
+
+.forgetpassword .dialog-content .content .verifycode input {
+  width: 165px;
+}
+
+.forgetpassword .dialog-content .content .verifycode .verifybtn {
+  vertical-align: middle;
+  width: 100px;
+  height: 40px;
+  background: white;
+  outline: none;
+  border: 1px solid #dcdfe6;
+  color: #0f5a8c;
+  border-radius: 3px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.forgetpassword .dialog-content .content .verifycode .verifybtn:hover {
+  border: 1px solid #e8e8e8;
+  background: #f8f8f8;
+  color: #0f5a8c;
+}
+
+.forgetpassword .dialog-content .content .verifycode .verifybtn:disabled {
+  border: 1px solid #ebeef5;
+  background: #fff;
+  color: #c0c4cc;
+  cursor: not-allowed;
+}
+
+#login {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+#login .left-c {
+  float: left;
+  height: 100%;
+  width: 226px;
+}
+
+#login .left-c .wecan_logo {
+  margin: 60px auto 0;
+  width: 93px;
+  height: 48px;
+}
+
+#login .user-operation {
+  display: none;
+  position: absolute;
+  left: 80px;
+  bottom: 11%;
+  width: 150px;
+}
+
+#login .user-operation .operate-list {
+  margin-bottom: 40px;
+}
+
+#login .user-operation .operate-list span {
+  display: inline-block;
+  font-size: 22px;
+  font-weight: 900;
+  color: #cccccc;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+#login .user-operation .operate-list span:last-child {
+  margin-bottom: 0;
+}
+
+#login .right-c {
+  margin-left: 226px;
+  height: 100%;
+}
+
+#login .right-c .login-c {
+  width: 100%;
+  height: 100%;
+  background-image: url('./images/login_bg.png');
+  background-repeat: round;
+  position: relative;
+}
+
+#login .right-c .login-c .login-box {
+  display: inline-block;
+  width: 400px;
+  height: 278px;
+  background: #ffffff;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  padding: 28px;
+}
+
+#login .right-c .login-c .login-box .login-title {
+  font-size: 20px;
+  color: #0f5a8c;
+  margin-bottom: 25px;
+}
+
+#login .right-c .login-c .login-box .btn-c input {
+  width: 344px;
+  height: 42px;
+  padding: 15px 8px;
+  outline: none;
+  border: 1px solid #dcdfe6;
+  border-radius: 3px;
+}
+
+#login .right-c .login-c .login-box .btn-c>input:first-child {
+  margin-bottom: 20px;
+}
+
+#login .right-c .login-c .login-box .btn-c .input-required {
+  background: #fff8ef;
+  border-color: #F7CBCB;
+}
+
+#login .right-c .login-c .login-box .btn-c .forgetPasswd {
+  float: right;
+  font-size: 12px;
+  margin-top: 8px;
+  color: #0f5a8c;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+#login .right-c .login-c .login-box #loginbtn {
+  width: 344px;
+  height: 42px;
+  line-height: 42px;
+  background: #0f5a8c;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  outline: none;
+
+  margin-bottom: 10px;
+}
+
+#login .right-c .system-c {
+  display: none;
+  position: relative;
+  height: 100%;
+  min-width: 1525px;
+}
+
+#login .right-c .system-c .login-info {
+  position: absolute;
+  top: 46px;
+  right: 60px;
+  text-align: right;
+}
+
+#login .right-c .system-c .login-info .user p {
+  height: 24px;
+  line-height: 24px;
+  text-align: right;
+  color: #333;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+#login .right-c .system-c .login-info .login-time {
+  font-size: 14px;
+  color: #999;
+}
+
+#login .right-c .system-c .login-info .operationBook {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border-radius: 32px;
+  border: 1px solid #e8e8e8;
+  cursor: pointer;
+  background-size: 16px 16px;
+  margin-top:10px;
+}
+
+#login .right-c .system-c .login-info .shouce {
+  background: url('./images/book.png') no-repeat center;
+  margin-left:5px;
+}
+#login .right-c .system-c .login-info .rizi {
+  background: url('./images/message.png') no-repeat center;
+  position: relative;
+}
+#login .right-c .system-c .login-info .rizi .redPoint {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  top: 6px;
+  right: 6px;
+  background: #f56c6c;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+#login .right-c .system-c .system-box {
+  position: absolute;
+  bottom: 13%;
+  right: 0;
+  height: 520px;
+}
+
+#login .right-c .system-c .system-box .sys-item {
+  position: relative;
+  top: 0;
+  display: inline-block;
+  width: 240px;
+  height: 100%;
+  margin-left: 12px;
+  background: #ccc;
+  color: white;
+  vertical-align: top;
+  padding: 40px 30px 0 30px;
+  box-shadow: 0 0 0px 0px #000;
+  transition: all .3s;
+}
+
+#login .right-c .system-c .system-box .sys-item .mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+#login .right-c .system-c .system-box .sys-item .icon {
+  width: 110px;
+  height: 120px;
+  position: absolute;
+  bottom: 15px;
+}
+
+#login .right-c .system-c .system-box .sys-item:hover {
+  top: -40px;
+  box-shadow: 0 0 33px -4px #000;
+}
+
+#login .right-c .system-c .system-box .sys-item:hover .mask {
+  opacity: 0.5;
+  /* background: #124c82; */
+}
+
+#login .right-c .system-c .system-box .sys-item .content-c {
+  position: absolute;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+#login .right-c .system-c .system-box .sys-item .content-c .sys-title {
+  font-size: 24px;
+  color: white;
+  width: 166px;
+  height: 40px;
+  margin-bottom: 19px;
+}
+
+#login .right-c .system-c .system-box .sys-item .content-c .line {
+  width: 24px;
+  height: 4px;
+  background: white;
+  margin-left: 1px;
+  margin-bottom: 28px;
+}
+
+#login .right-c .system-c .system-box .sys-item .content-c .sub-sys {
+  overflow: hidden;
+}
+
+#login .right-c .system-c .system-box .sys-item .content-c .sub-sys .sub-sys-item {
+  float: left;
+  font-size: 14px;
+  text-align: center;
+  line-height: 30px;
+  width: 90px;
+  height: 30px;
+  margin-right: 11px;
+  margin-bottom: 10px;
+  background: #454545;
+  cursor: pointer;
+}
+
+#login .right-c .system-c .system-box .sys-item .content-c .sub-sys .empty {
+  background: transparent;
+  cursor: default;
+  pointer-events: none;
+}
+
+#login .right-c .system-c .system-box .sys-item .content-c .sub-sys .sub-sys-title {
+  clear: both;
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+}
+
+#login .right-c .system-c .system-box .sys-item .content-c .sub-sys .sub-sys-item a {
+  color: #606266;
+  text-decoration: none;
+}
+
+#login .right-c .system-c .system-box .sys-item .content-c .sub-sys .sub-sys-item .hashref {
+  color: #ccc;
+}
+
+.opeBookDialog .dialog-content {
+  width:1350px; height: 80%;
+}
+.opeBookDialog .dialog-content > .content {
+  padding: 0px;
+  height: 100%;
+}
+.opeBookDialog .dialog-content .content .operLeft {
+  width:200px;
+  float: left;
+  height: 100%;
+  border-right:1px solid #E2DFDF;
+  padding:12px;
+}
+.opeBookDialog .dialog-content .content .operLeft ul li {
+  list-style:none;
+  height:60px; 
+  line-height:60px; 
+  border-bottom:1px solid #e2dfdf;
+  text-align:center; 
+  font-size:16px; 
+  color:#989899;
+  padding-left:20px; 
+  cursor:pointer; 
+  letter-spacing:0.1em;
+  color:#0E5A8C;
+  background: url('./images/version.png') no-repeat left center;
+}
+.opeBookDialog .dialog-content .content .operLeft .spanTitle {
+  float: left;
+  margin-left: 12px;
+}
+.opeBookDialog .dialog-content .content .operLeft .spanNum {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background: #f56c6c;
+  color: #fff;
+  text-align: center;
+  line-height: 18px;
+  border-radius: 18px;
+  font-size: 13px;
+}
+.opeBookDialog .dialog-content .content .operLeft .iarrow {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background: url('./images/tabright.png') no-repeat left center;
+  vertical-align: -4px;
+}
+.opeBookDialog .dialog-content .content .operRight {
+  width:1150px;
+  float: left;
+  height: 100%;
+  position: relative;
+}
+.opeBookDialog .dialog-content .content .operRight .header .multipleSelect {
+  position: absolute;
+  right: 55px;
+  top: 15px;
+}
+.opeBookDialog .dialog-content .content .operRight .header .goback {
+  display: inline-block;
+  background: url(./images/tableft.png) no-repeat;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  margin-top: 7px;
+}
+.opeBookDialog .dialog-content .content .operRight .operRight-c {
+  position: absolute;
+  width: 100%;
+  top: 60px;
+  bottom: 0;
+  overflow: auto;
+}
+.opeBookDialog .dialog-content .content .operRight .updateLogDetail {
+  margin-top: 30px;
+  padding: 10px;
+}
+.opeBookDialog .dialog-content .content .operRight .updateLogDetail .updateLogTitle {
+  font-size: 18px;
+  font-weight: bold;
+  color: #0E5A8C;
+}
+.opeBookDialog .dialog-content .content .operRight .updateLogDetail .detailInfo {
+  color: #989898;
+  font-weight: normal;
+  letter-spacing: 0.1em;
+  margin-top: 8px;
+  font-size: 14px;
+}
+.opeBookDialog .dialog-content .content .operRight .updateLogDetail .detailInfo .version {
+  margin-left: 60px;
+}
+.opeBookDialog .dialog-content .content .operRight .operList {
+  height: 86px;
+  line-height: 86px;
+  padding:0 10px;
+  border-bottom: 1px solid #E2DFDF;
+}
+.opeBookDialog .dialog-content .content .operRight .operList span,
+.opeBookDialog .dialog-content .content .operRight .operList a,
+.opeBookDialog .dialog-content .content .operRight .operList p {
+  display:inline-block;
+  font-size: 14px;
+} 
+.opeBookDialog .dialog-content .content .operRight .operList .operTitle {
+  width:417px;
+  color:#0E5A8C;
+  font-size: 16px !important;
+  font-weight: 600;
+} 
+.opeBookDialog .dialog-content .content .operRight .operList .operTitle .redPoint {
+  width: 6px;
+  height: 6px;
+  background: #f56c6c;
+  border-radius: 6px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.opeBookDialog .dialog-content .content .operRight .operList .opertime {
+  width:324px;
+  color:#989898;
+}
+.opeBookDialog .dialog-content .content .operRight .operList .operversion{
+  width:185px;
+  color:#989898;
+}
+.opeBookDialog .dialog-content .content .operRight .operList .oper{
+  width:180px;
+  cursor: pointer;
+  color:#0E5A8C;
+  text-align: right;
+  text-decoration: none;
+}
+
+
+
+@media screen and (max-width:1700px) {
+  .operationBook {
+    margin-top: 0px!important;
+  }
+  .login .right-c .system-c .login-info {
+    top: 26px!important;
+  }
+  .login-time {
+    float: left!important;
+    margin-top: 5px!important;
+    margin-right: 8px!important;
+  }
+  .bookVersion {
+    float: left!important;
+    margin-top: 2px!important;
+    margin-left: 8px!important;
+  }
+  #login .right-c {
+    margin-left: 0px;
+  }
+  #login .right-c .system-c {
+    min-width: auto;
+  }
+  #login .right-c .system-c .system-box {
+    bottom: 0px;
+    /* right: 20px; */
+  }
+  #login .right-c .system-c .system-box {
+    height: 500px;
+  }
+  #login .right-c .system-c .system-box .sys-item {
+    height: 500px;
+    padding-top: 30px;
+    padding-left: 20px;
+    width: 210px;
+  }
+  #login .right-c .system-c .system-box .sys-item .icon {
+    bottom: 20px;
+  }
+  #login .user-operation {
+    z-index: 10;
+    left: auto;
+    bottom: auto;
+    top: 15px;
+    right: 350px;
+    width: auto;
+  }
+  #login .user-operation .operate-list span {
+    display: inline;
+    margin: 0 10px;
+  }
+  #login .right-c .system-c .system-box {
+    bottom: 2%;
+  }
+  #login .left-c .wecan_logo {
+    margin-top: 15px;
+  }
+  #login .right-c .system-c .login-info {
+    top: 10px;
+  }
+  #login .right-c .system-c .system-box .sys-item .content-c .sub-sys .sub-sys-item {
+    width: 84px;
+  }
+}
+
+
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f6f6f6;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #aaa;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #747474;
+}
+
+::-webkit-scrollbar-corner {
+  background: #f6f6f6;
+}

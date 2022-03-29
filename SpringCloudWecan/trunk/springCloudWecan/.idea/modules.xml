@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/commonBase/commonBase.iml" filepath="$PROJECT_DIR$/common/commonBase/commonBase.iml" group="common and modules" />
+      <module fileurl="file://$PROJECT_DIR$/common/commonFeign/commonFeign.iml" filepath="$PROJECT_DIR$/common/commonFeign/commonFeign.iml" group="common and modules" />
+      <module fileurl="file://$PROJECT_DIR$/common/commonLog/commonLog.iml" filepath="$PROJECT_DIR$/common/commonLog/commonLog.iml" group="common and modules" />
+      <module fileurl="file://$PROJECT_DIR$/common/commonPool/commonPool.iml" filepath="$PROJECT_DIR$/common/commonPool/commonPool.iml" group="common and modules" />
+      <module fileurl="file://$PROJECT_DIR$/common/commonMongo/commonmongo.iml" filepath="$PROJECT_DIR$/common/commonMongo/commonmongo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/commonMsgQueue/commonmsgqueue.iml" filepath="$PROJECT_DIR$/common/commonMsgQueue/commonmsgqueue.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/commonUtils/commonutils.iml" filepath="$PROJECT_DIR$/common/commonUtils/commonutils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/config/config.iml" filepath="$PROJECT_DIR$/config/config.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dao/dao.iml" filepath="$PROJECT_DIR$/dao/dao.iml" group="dao and modules" />
+      <module fileurl="file://$PROJECT_DIR$/dao/daoFee/daoFee.iml" filepath="$PROJECT_DIR$/dao/daoFee/daoFee.iml" group="dao and modules" />
+      <module fileurl="file://$PROJECT_DIR$/dao/daoRoutes/daoRoutes.iml" filepath="$PROJECT_DIR$/dao/daoRoutes/daoRoutes.iml" group="dao and modules" />
+      <module fileurl="file://$PROJECT_DIR$/dao/daoLog/daolog.iml" filepath="$PROJECT_DIR$/dao/daoLog/daolog.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dao/daoPrice/daoprice.iml" filepath="$PROJECT_DIR$/dao/daoPrice/daoprice.iml" group="dao and modules" />
+      <module fileurl="file://$PROJECT_DIR$/service/fee/fee.iml" filepath="$PROJECT_DIR$/service/fee/fee.iml" group="service and modules" />
+      <module fileurl="file://$PROJECT_DIR$/service/file/file.iml" filepath="$PROJECT_DIR$/service/file/file.iml" group="service and modules" />
+      <module fileurl="file://$PROJECT_DIR$/gateway/gateway.iml" filepath="$PROJECT_DIR$/gateway/gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service/log/log.iml" filepath="$PROJECT_DIR$/service/log/log.iml" group="service and modules" />
+      <module fileurl="file://$PROJECT_DIR$/model/model.iml" filepath="$PROJECT_DIR$/model/model.iml" group="model and modules" />
+      <module fileurl="file://$PROJECT_DIR$/model/modelDbo/modeldbo.iml" filepath="$PROJECT_DIR$/model/modelDbo/modeldbo.iml" group="model and modules" />
+      <module fileurl="file://$PROJECT_DIR$/model/modelView/modelview.iml" filepath="$PROJECT_DIR$/model/modelView/modelview.iml" group="model and modules" />
+      <module fileurl="file://$PROJECT_DIR$/service/mqReceiver/mqreceiver.iml" filepath="$PROJECT_DIR$/service/mqReceiver/mqreceiver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service/pushmsg/pushmsg.iml" filepath="$PROJECT_DIR$/service/pushmsg/pushmsg.iml" />
+      <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service/service.iml" filepath="$PROJECT_DIR$/service/service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service/shardingTest/shardingTest.iml" filepath="$PROJECT_DIR$/service/shardingTest/shardingTest.iml" group="service and modules" />
+      <module fileurl="file://$PROJECT_DIR$/springCloudWecan.iml" filepath="$PROJECT_DIR$/springCloudWecan.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service/websocket/websocket.iml" filepath="$PROJECT_DIR$/service/websocket/websocket.iml" />
+    </modules>
+  </component>
+</project>

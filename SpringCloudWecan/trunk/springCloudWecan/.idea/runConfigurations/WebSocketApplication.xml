@@ -1,0 +1,52 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="WebSocketApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="websocket" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.wecan.websocket.WebSocketApplication" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <additionalParameters>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="server-port" />
+        <option name="value" value="8100" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="server-host" />
+        <option name="value" value="localhost" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="config-service" />
+        <option name="value" value="config" />
+      </param> 
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="config-name" />
+        <option name="value" value="websocket" />
+      </param> 
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="config-profile" />
+        <option name="value" value="dev" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="application-name" />
+        <option name="value" value="websocket" />
+      </param> 
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="application-port" />
+        <option name="value" value="8170" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="application-host" />
+        <option name="value" value="localhost" />
+      </param>
+    </additionalParameters>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

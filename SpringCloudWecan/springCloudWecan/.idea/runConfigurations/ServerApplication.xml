@@ -1,0 +1,22 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="server" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.wecan.server.ServerApplication" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <additionalParameters>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="application-port" />
+        <option name="value" value="8100" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="application-host" />
+        <option name="value" value="localhost" />
+      </param>
+    </additionalParameters>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

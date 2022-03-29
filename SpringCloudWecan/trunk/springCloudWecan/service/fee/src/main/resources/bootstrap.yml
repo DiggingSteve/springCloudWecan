@@ -1,0 +1,39 @@
+spring:
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: ${config-service}
+      profile: ${config-profile}
+      name: ${config-name}
+  application:
+    name: ${application-name}
+
+  jpa:
+    database: MySQL
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${server-host}:${server-port}/eureka/
+    registry-fetch-interval-seconds: 5 # 拉取服务注册信息间隔时间 (默认为30秒)
+  instance:
+    prefer-ip-address: true
+    ip-address: ${application-host}
+    instance-id: ${application-host}:${application-port}
+
+
+server:
+  port: ${application-port}
+
+#logging:
+#  config: classpath:config/log4j2-spring.xml
+

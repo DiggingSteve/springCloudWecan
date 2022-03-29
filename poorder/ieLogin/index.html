@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>唯凯信息管理系统</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="SHORTCUT ICON" href="static/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="static/css.css">
+    <link rel="stylesheet" type="text/css" href="static/select.css">
+    <script src="static/js/jquery-1.12.2.js"></script>
+    <script src="static/js/common.js"></script>
+    <script src="static/js/ie9.js"></script>
+    <script src="static/js/json2.js"></script>
+    <script src="static/js/respond.min.js"></script>
+    <script src="static/js/multipleSelect.js"></script>
+    <script src="static/js/shell.js"></script>
+  </head>
+  <body>
+    <div id="login">
+      <div class="left-c">
+        <div class="wecan_logo" style="background: url(./static/images/wecan_logo.png) no-repeat;"></div>
+        <div style="width:140px;height:160px;border:1px solid #e8e8e8;background:#fff;text-align:center;padding:14px;margin:30px auto 0">
+          <img src="./static/images/appewm.png" height="112" width="112">
+          <span style="color:#222;font-size: 12px;">唯凯ERP-APP下载</span>
+        </div>
+      </div>
+
+      <div class="user-operation">
+        <div class="operate-list">
+          <span onclick="window.open('http://www.wecanintl.com')">唯凯官网</span>
+          <!-- <span onclick="window.open('http://erp.wecanintl.com/wffcustomoutsidenew')">外网查货</span> -->
+          <span onclick="window.open('http://oa.wecanintl.com:8089')">行政管理(OA)</span>
+          <span onclick="window.open('http://air.intl-paperless.com/wff')">Paperless平台</span>
+          <span id="SelfCheck">考勤系统</span>
+          <span id="logout">退出登录</span>
+        </div>
+      </div>
+
+      <div class="right-c">
+        <div class="login-c">
+          <div class="login-box">
+            <h1 class="login-title">唯凯信息管理系统</h1>
+            <div class="btn-c">
+              <input id="user"
+                class="input-required"
+                onblur="if (this.value == '') {this.value = '请输入用户名/公司邮箱号/手机号';}"
+                onfocus="if (this.value == '请输入用户名/公司邮箱号/手机号') {this.value = '';}"
+                value="请输入用户名/公司邮箱号/手机号"
+                type="text">
+              <div class="passwordinput">
+                <input id="passwd" type="password" class="input-required" style="display: none;">
+                <input type="text" class="input-required" value="请输入密码">
+              </div>
+              <span class="forgetPasswd">忘记密码?</span>
+            </div>
+            <button id="loginbtn" type="button">登录</button>
+          </div>
+        </div>
+
+        <div class="system-c">
+          <div class="login-info">
+            <div class="user"></div>
+            <p class="login-time">登录时间：</p>
+            <span title="更新日志" class='operationBook rizi' onclick="openDialogFunc(1)"></span>
+            <span title="操作手册" class='operationBook shouce' onclick="openDialogFunc(2)"></span>
+          </div>
+
+          <div class="system-box"></div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog forgetpassword">
+      <div class="mask"></div>
+
+      <div class="dialog-content">
+        <div class="header">
+          <i class="close"></i>
+        </div>
+        <div class="content">
+          <div class="row userinput">
+            <div class="icon">
+              <i class="icon-loginman"></i>
+            </div>
+            <input
+              type="text"
+              onkeyup="if (this.value !== '请输入用户名/公司邮箱号/手机号') {data.forgetCodeInfo.logname = this.value}"
+              onblur="if (this.value == '') {this.value = '请输入用户名/公司邮箱号/手机号';}"
+              onfocus="if (this.value == '请输入用户名/公司邮箱号/手机号') {this.value = '';}"
+              value="请输入用户名/公司邮箱号/手机号">
+          </div>
+          <div class="row verifycode">
+            <div class="icon">
+              <i class="icon-yzm"></i>
+            </div>
+            <input
+              type="text"
+              onkeyup="if (this.value !== '请输入手机验证码') {data.forgetCodeInfo.smscode = this.value}"
+              onblur="if (this.value == '') {this.value = '请输入手机验证码';}"
+              onfocus="if (this.value == '请输入手机验证码') {this.value = '';}"
+              value="请输入手机验证码">
+            <button type="button" class="verifybtn">获取验证码</button>
+          </div>
+          <div class="row newpasswd">
+            <div class="icon">
+              <i class="icon-lock"></i>
+            </div>
+            <div class="passwordinput">
+              <input
+                type="password"
+                onkeyup="data.forgetCodeInfo.pwd = this.value"
+                style="display: none;">
+              <input type="text" value="请重新输入密码">
+            </div>
+          </div>
+          <div class="row">
+            <button type="button" class="confirm">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog wffsettlement">
+      <div class="mask"></div>
+
+      <div class="dialog-content">
+        <div class="header">
+          <h3>请选择区域</h3>
+          <i class="close"></i>
+        </div>
+        <div class="content">
+
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog opeBookDialog">
+      <div class="mask"></div>
+
+      <div class="dialog-content">
+
+        <div class="content">
+            <div class="operLeft">
+              <ul>
+                <li class="active">
+                  <span class="spanTitle">操作手册</span>
+                  <span style="float:right">
+                    <span class="spanNum" style="display:none;">2</span>
+                    <i class="iarrow"></i>
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <div class="operRight">
+              <div class="header" style="border-bottom:1px solid #E2DFDF;">
+                <i class="goback" onclick="updateLogDetailBack()"></i>
+                <i class="close"></i>
+              </div>
+              <div class="operRight-c"></div>
+              <div class="updateLogDetail" style="display: none;">
+                <p class="updateLogTitle"></p>
+                <p class="detailInfo">
+                  <span class="updateTime"></span>
+                  <span class="version"></span>
+                </p>
+                <iframe frameborder="0" allowtransparency="true" style="width: 100%; height:600px; border: 0px none;" class="iframeScroll"></iframe>
+              </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+
+      // 时间戳转换
+      function timestamp (time) {
+        var date = new Date(time * 1000);
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        var D = (date.getDate()< 10?'0'+date.getDate(): date.getDate())+ ' ';
+        var h = (date.getHours()<10?'0'+date.getHours():date.getHours()) + ':';
+        var m= (date.getMinutes()<10?'0'+date.getMinutes():date.getMinutes()) + ':';
+        var s = (date.getSeconds()<10?'0'+date.getSeconds():date.getSeconds());
+        return Y+M+D+h+m+s;
+      }
+
+      String.prototype.Format = function (args) {
+        var result = this;
+        if (arguments.length > 0) {
+          if (arguments.length == 1 && typeof (args) == "object") {
+            for (var key in args) {
+              if (args[key] != undefined) {
+                var reg = new RegExp("({" + key + "})", "g");
+                result = result.replace(reg, args[key]);
+              }
+            }
+          } else {
+            for (var i = 0; i < arguments.length; i++) {
+              if (arguments[i] != undefined) {　　　　　　　　　　　　
+                var reg = new RegExp("({)" + i + "(})", "g");
+                result = result.replace(reg, arguments[i]);
+              }
+            }
+          }
+        }
+        return result;
+      }
+
+      jQuery.support.cors = true
+      // ie8 & 9 跨域请求
+      function crossDomainAjax (options) {
+        // IE8 & 9 only Cross domain JSON GET request
+
+        if ('XDomainRequest' in window && window.XDomainRequest !== null) {
+          if (options.type == 'GET') {
+            options.url += '?' + $.param(options.data)
+          }
+
+          var xdr = new XDomainRequest() // Use Microsoft XDR
+          xdr.open(options.type, options.url)
+          xdr.onload = function () {
+            var dom  = new ActiveXObject('Microsoft.XMLDOM'),
+                JSON = $.parseJSON(xdr.responseText)
+
+            dom.async = false
+
+            if (JSON == null || typeof (JSON) == 'undefined') {
+              JSON = $.parseJSON(data.firstChild.textContent)
+            }
+            options.success(JSON) // internal function
+          }
+          xdr.onerror = function() {
+            _result = false
+          }
+          if (options.type !== 'GET') {
+            xdr.send(JSON.stringify(options.data))
+          } else {
+            xdr.send()
+          }
+        }
+        // Do normal jQuery AJAX for everything else
+        else {
+          $.ajax(options)
+        }
+      }
+
+      // function $message
+      ;(function(global){
+        var curmsg = null,
+            timeoutid = null
+        global.$message = function (msg) {
+          if (!curmsg) {
+            curmsg = $(document.createElement('div'))
+              .attr('id', 'message')
+              .html(msg)
+              .appendTo(document.body)
+          } else {
+            curmsg
+            .html(msg)
+            .css({
+              top: '50px',
+              opacity: '1'
+            })
+          }
+          if (timeoutid !== null) {
+            clearTimeout(timeoutid)
+          }
+          timeoutid = setTimeout(function () {
+            timeoutid = null
+            curmsg.css({
+              top: '-50px',
+              opacity: '0'
+            })
+          }, 3000)
+        }
+      })(window)
+    </script>
+
+    <script>
+      window.name='login';
+       var ipstr = '{0}'
+    //  var ipstr = '192.168.0.115'
+      var publicWebApi = 'http://' + ipstr + '/PublicWebApi/'
+      publicWebApi = publicWebApi.Format(window.location.hostname)
+
+      var data = {
+        realarea:'',
+        depart:'',
+        user: '',
+        passwd: '',
+        login_time: '',
+        key: '',
+        area: '',
+        system_list: [
+          {
+            // title: '订单系统', bg: './static/images/system_bg1.png', more: true, dialog: 'orderSystem'
+            title: '订单系统', bg: './static/images/system_bg1.png', icon: './static/images/system_icon1.png', sub: [
+              // {sub_title: '国际业务'},
+              {system_name: '唯凯订单', href: '${location.hostname}/BoManagement/#/index', localhost: '192.168.0.96'}
+              //{system_name: '海运部', href: 'https://auth.walltechsystem.cn/LoginServlet?ps=eyJyZXR1cm5VcmwiOiJodHRwOlwvXC93d3cuY2FyZ293YXJlLmNvbVwvSW5kZXhTZXJ2bGV0Iiwic2VydmljZUNvZGUiOiJDYXJnbyIsImNoZWNrTG9naW5SdWxlIjoidHJ1ZSJ9'},
+              // {},
+              // {system_name: '空出(市场部)', href: '${location.hostname}/pomanagement?username=${username}&key=${key}&system=PO', localhost: '192.168.0.96'},
+              // {system_name: '空出(海外部)', href: '${location.hostname}/pomanagement?username=${username}&key=${key}&system=PO海外部', localhost: '192.168.0.96'},
+              // {sub_title: '国内业务(分公司)'},
+              // {system_name: '联运服务', href: '${location.hostname}/BoManagement/#/index?temp=OrderAccept', localhost: '192.168.0.96'},
+              // {system_name: '报关服务', href: '${location.hostname}/BoManagement/#/index?temp=BgOrderAccept', localhost: '192.168.0.96'}
+              // {system_name: '仓储服务'},
+              // {system_name: '其他延伸', href: '${location.hostname}${port}/wffairexpfreight?username=${username}&key=${key}'}
+            ]
+          }, {
+            // title: '操作系统', bg: './static/images/system_bg2.png', icon: './static/images/system_icon2.png', more: true, dialog: 'operationSystem'
+            title: '操作系统(上海)', bg: './static/images/system_bg2.png', icon: './static/images/system_icon2.png', sub: [
+              {sub_title: '国际业务'},
+            //  {system_name: '空运出口', href: '${location.hostname}/wffairexpfreight?username=${username}&key=${key}', localhost: '192.168.0.96'},
+              {system_name: '空运进口', href: '${location.hostname}/wffairimpfreight?username=${username}&key=${key}', localhost: '192.168.0.96'},
+              // {system_name: '海运出口', href: 'https://auth.walltechsystem.cn/LoginServlet?ps=eyJyZXR1cm5VcmwiOiJodHRwOlwvXC93d3cuY2FyZ293YXJlLmNvbVwvSW5kZXhTZXJ2bGV0Iiwic2VydmljZUNvZGUiOiJDYXJnbyIsImNoZWNrTG9naW5SdWxlIjoidHJ1ZSJ9'},
+              // {system_name: '海运进口', href: 'https://auth.walltechsystem.cn/LoginServlet?ps=eyJyZXR1cm5VcmwiOiJodHRwOlwvXC93d3cuY2FyZ293YXJlLmNvbVwvSW5kZXhTZXJ2bGV0Iiwic2VydmljZUNvZGUiOiJDYXJnbyIsImNoZWNrTG9naW5SdWxlIjoidHJ1ZSJ9'},
+              // {system_name: '空出(香港)', href: '${location.hostname}${port}/wffAirexpFreight?username=${username}&key=${key}', localhost: '192.168.0.101'},
+              // {},
+              {sub_title: '国内业务'},
+              {system_name: '空出仓库', href: '${location.hostname}/wffairexpstore?username=${username}&key=${key}', localhost: '192.168.0.96'},
+              {system_name: '空进仓库', href: '${location.hostname}/wffairimpstore?username=${username}&key=${key}', localhost: '192.168.0.96'},
+              {system_name: '联运操作', href: '${location.hostname}/wfftransport?username=${username}&key=${key}', localhost: '192.168.0.96'},
+              {system_name: '材料操作', href: '${location.hostname}/wffproductionmanagement?username=${username}&key=${key}', localhost: '192.168.0.96'}
+            // {system_name: '部门延伸', href: 'http://erp.wecanintl.com/loginnew/admin/frmYsServicesQuickSearch.aspx?addman=${username}'}
+            ]
+          }, {
+            title: '结算系统', bg: './static/images/system_bg3.png', icon: './static/images/system_icon3.png', sub: [
+              // {sub_title: '集团'},
+              // {system_name: '汇总结算', href: '#'},
+              // {sub_title: '分站'},
+              // {system_name: '空出结算', href: '${location.hostname}${port}/wffsettlement?username=${username}&key=${key}'},
+              // {system_name: '空进结算', href: '${location.hostname}${port}/wffsettlement?username=${username}&key=${key}'},
+              // {system_name: '联运结算', href: '${location.hostname}${port}/wffsettlement?username=${username}&key=${key}'},
+              // {system_name: '报关结算', href: '${location.hostname}${port}/wffsettlement?username=${username}&key=${key}'},
+              // {system_name: '仓库结算'}
+              {system_name: '业务结算', href: '${location.hostname}/wffsettlement?username=${username}&key=${key}'}
+            ]
+          }, {
+            title: '基础信息', bg: './static/images/system_bg4.png', icon: './static/images/system_icon4.png', sub: [
+              {sub_title: '集团'},
+              {system_name: '客户供应商', href: '${location.hostname}/wffcustommanagement?username=${username}&key=${key}'},
+              {system_name: '权限系统', href: '${location.hostname}/usermanagement?username=${username}&key=${key}'},
+            {system_name: '价格管理', href: '${location.hostname}/priceManagement/#/index'},
+              {sub_title: '分站'},
+              {system_name: '基础数据', href: '${location.hostname}/wffbasic?username=${username}&key=${key}'}
+            ]
+          }, {
+            title: '审批管理', bg: './static/images/system_bg5.png', icon: './static/images/system_icon5.png', sub: [
+              {sub_title: '集团'},
+              {system_name: '公司审批', href: '${location.hostname}/wffmanagement?username=${username}&key=${key}&defaulturl=公司项目审批'},
+              {system_name: '信控审批', href: '${location.hostname}/BoManagement/wffmanagement.html#/index?redirect=frmCustomJob'},
+              {system_name: '法务审批', href: '${location.hostname}/wffmanagement?username=${username}&key=${key}&defaulturl=法务审批'},
+              {system_name: '结算审批', href: '${location.hostname}/wffmanagement?username=${username}&key=${key}&defaulturl=结算审批'},
+              // {system_name: '权限系统', href: '${location.hostname}/usermanagement?username=${username}&key=${key}'},
+              // {system_name: '订单调度'},
+              {sub_title: '分站'},
+              // {system_name: '经理审核', href: '${location.hostname}/wffmanagement?username=${username}&key=${key}&defaulturl=经理审核'},
+              {system_name: '经理审核', href: '${location.hostname}/BoManagement/wffmanagement.html#/index?redirect=managerExamine'}
+            ]
+          }, {
+            title: '数据统计', bg: './static/images/system_bg6.png', icon: './static/images/system_icon6.png', sub: [
+              // {system_name: '统计报表'}
+              // {sub_title: '分站'},
+              {system_name: '统计报表', href: '${location.hostname}/statisticalReport/'}
+              // {system_name: '销售员', href: '${location.hostname}/statisticalReport/#/ZDSalesStatistic'},
+              // {system_name: '航线区域', href: '${location.hostname}/statisticalReport/#/ZDAirlineStatistic'},
+              // {system_name: '站点', href: '${location.hostname}/statisticalReport/#/ZDStationStatistic'},
+              // {system_name: '排行', href: '${location.hostname}/statisticalReport/#/TopStatistic'},
+              // {system_name: '航司', href: '${location.hostname}/statisticalReport/#/ZDAirCompanyStatistic'}
+            ]
+          }
+        ],
+
+        groupTypeArea: {},
+
+        area_port: {    // 区域端口
+          '上海': '',
+          '杭州': ':200',
+          '香港': ':201',
+          '北京': ':202',
+          '西安': ':203',
+          '广州': ':204',
+          '昆明': ':205',
+          '成都': ':206',
+          '重庆': ':207',
+          '厦门': ':208',
+          '宁波': ':209',
+          '深圳': ':210',
+          '郑州': ':211',
+          '武汉': ':212',
+          '青岛': ':213',
+          '南京': ':214'
+        },
+
+        forgetCodeInfo: {
+          logname: '',
+          pwd: '',
+          smscode: ''
+        },
+
+        opeBookDialogType: -1,
+        systemArr: [],
+        selectedSystem: [],
+        newUpdateLogLength: 0,
+        resultUpdate: [],
+        resultUpdateOperation: []
+      }
+    </script>
+
+    <script>
+      function getListData(){
+        crossDomainAjax({
+          type: 'GET',
+          url: publicWebApi + 'api/PubUpdateNoticeLog',
+          data: { logname: data.user },
+          success: function (result) {
+            data.resultUpdate = []
+            data.resultUpdateOperation = []
+
+            for (var i=0;i<result.length;i++) {
+              var item= result[i]
+              // item.timestamp = timestamp(item.timestamp)
+
+              if (!item.isread && item.noticetype == 1) {
+                data.newUpdateLogLength++
+              }
+
+              if (item.noticetype == 1) {
+                data.resultUpdate.push(item)
+              }
+
+              if (item.noticetype == 10) {
+                data.resultUpdateOperation.push(item)
+              }
+            }
+
+            data.resultUpdate.sort(function (a, b) {
+              return b['version'].localeCompare(a['version'], 'zh')
+            })
+
+            data.resultUpdateOperation.sort(function (a, b) {
+              return b['version'].localeCompare(a['version'], 'zh')
+            })
+
+            if (data.newUpdateLogLength > 0) {
+              $('.opeBookDialog .dialog-content .content .operLeft .spanNum').html(data.newUpdateLogLength).show()
+              $('#login .right-c .system-c .login-info .rizi').append($('<i class="redPoint"></i>'))
+            }
+          }
+        })
+      }
+
+      function createdHook () {
+        crossDomainAjax({
+          type: 'GET',
+          url: publicWebApi+'api/PubTypeCode',
+          data: {groupid: -1},
+          success: function (result) {
+            var addSystem = []
+
+            for (var i=0; i<result.length; i++) {
+              if (result[i].groupid == '101') {
+                if (!data.groupTypeArea[result[i].ready04]) data.groupTypeArea[result[i].ready04] = []
+                data.groupTypeArea[result[i].ready04].push(result[i])
+              }
+
+              if (result[i].groupid == '136') {
+                if ($.inArray(result[i].ready04, addSystem) == -1) {
+                  addSystem.push(result[i].ready04)
+                  data.systemArr.push({label: result[i].ready04, options: [{value: result[i].typename.split('丨')[0], label: result[i].typename}]})
+                } else {
+                  var len = $.inArray(result[i].ready04, addSystem)
+                  data.systemArr[len].options.push({value: result[i].typename.split('丨')[0], label: result[i].typename})
+                }
+              }
+            }
+
+            var mulSelect = $.multipleSelect(data.systemArr).on('change', function (event, eventData) {
+              data.selectedSystem = eventData
+              renderOperList(data.opeBookDialogType)
+            })
+
+            $('.opeBookDialog .operRight .header').append(mulSelect)
+            renderWffsettlement()
+          }
+        })
+
+        // ie8 模拟placeholder
+        $('.passwordinput input[type=password]').on('blur', function (event) {
+          if (this.value == '') {
+            $(this).hide().next('input').show()
+          }
+        })
+        $('.passwordinput input[type=text]').on('focus', function (event) {
+          $(this).hide().prev('input').show().focus()
+        })
+
+        $('.dialog .close').on('click', function (event) {
+          $('.dialog').hide()
+        })
+
+        $('#user,#passwd').on('keyup', function (event) {
+          data[this.id] = this.value
+          if (this.value) {
+            $(this).removeClass('input-required')
+          } else {
+            $(this).addClass('input-required')
+          }
+        })
+
+        $('.forgetPasswd').on('click', function (event) {
+          data.forgetCodeInfo.logname = ''
+          data.forgetCodeInfo.smscode = ''
+          data.forgetCodeInfo.pwd = ''
+          $('.forgetpassword .userinput input').val('请输入用户名/公司邮箱号/手机号')
+          $('.forgetpassword .verifycode input').val('请输入手机验证码')
+          $('.forgetpassword .newpasswd input[type=password]').val('').hide()
+          $('.forgetpassword .newpasswd input[type=text]').val('请重新输入密码').show()
+          $('.forgetpassword').show()
+        })
+        $('.forgetpassword .verifybtn').on('click', function (event) {
+          getVerifyCode.call(this, event)
+        })
+        $('.forgetpassword .confirm').on('click', function (event) {
+          changePwd()
+        })
+
+        $('#loginbtn').on('click', function (event) {
+          login()
+        })
+
+        document.onkeydown = function(e){
+          if(!e) e = window.event
+          if((e.keyCode || e.which) == 13){
+            login()
+          }
+        }
+
+        $('#SelfCheck').on('click', function (event) {
+          var url = "${location.hostname}/wffselfcheck?username=${username}&key=${key}"
+          window.open(transUrl({href:url}))
+        })
+
+        $('#logout').on('click', function (event) {
+          data.user = ''
+          data.passwd = ''
+          $('#user,#passwd').val('').addClass('input-required')
+          toggleLoginPage(false)
+        })
+
+        if (localStorage.getItem('usrname')) {
+          data.user = localStorage.getItem('usrname')
+        }
+
+        if (data.user !== '') {
+          $('#user').val(data.user).removeClass('input-required')
+        }
+      }
+
+      function getVerifyCode (event) {
+        var btn = $(this)
+        crossDomainAjax({
+          type: 'GET',
+          url: publicWebApi+'api/PubMessageSms',
+          data: {logname: data.forgetCodeInfo.logname},
+          success: function (result) {
+            if (result.resultstatus == 0) {
+              $message('发送成功')
+
+              var count = 30
+              btn.attr('disabled', 'disabled').html('重新获取'+count)
+              var intervalID = setInterval(function () {
+                if (count == 0) {
+                  btn.removeAttr('disabled').html('获取验证码')
+                  return clearInterval(intervalID)
+                }
+                btn.html('重新获取'+--count)
+              }, 1000)
+
+            } else {
+              $message('发送失败')
+            }
+          }
+        })
+
+      }
+
+      function changePwd () {
+        crossDomainAjax({
+          type: 'PUT',
+          url: publicWebApi+'api/UserPwd',
+          data: data.forgetCodeInfo,
+          success: function (result) {
+            if (result.resultstatus == 0) {
+              $message(result.resultmessage)
+
+              data.user = data.forgetCodeInfo.logname
+              data.passwd = data.forgetCodeInfo.pwd
+              setTimeout(function () {
+                login()
+              },500)
+
+              setTimeout(function () {
+                data.forgetCodeInfo={logname:'',pwd:'',smscode:''}
+              },800)
+            } else {
+              $message(result.resultmessage)
+            }
+          }
+        })
+      }
+
+      function login () {
+
+        if (!data.user || !data.passwd) {
+          return $message('请输入用户名和密码')
+        }
+
+        localStorage.clear()
+        sessionStorage.clear()
+
+        var login_data = {
+          usrname: data.user,
+          pwd: data.passwd
+        }
+
+        crossDomainAjax({
+          type: 'GET',
+          url: publicWebApi+'api/UserLogin',
+          data: login_data,
+          success: function (result) {
+            if (result.resultstatus == 0) {
+              data.key = result.upwd
+              // data.login_time = new Date().toLocaleString('chinese', {hour12: false}).slice(0, -3).replace(/\//g, '.')
+              data.login_time = formatDate(new Date(),'yyyy-MM-dd hh:mm')
+
+              sessionStorage.setItem('ticket', result.ticket)
+              localStorage.setItem('loginarea', result.area)
+              localStorage.setItem('realarea', result.realarea||'')
+              localStorage.setItem('depart', result.depart||'')
+              localStorage.setItem('usrname', result.logname)
+              localStorage.setItem('dom', result.dom || '出口部')
+              localStorage.setItem('englishname', result.englishname || '')
+              localStorage.setItem('userEmail', result.email || '')
+              sessionStorage.setItem('loginDate', new Date().getTime())
+
+              data.user = result.logname || ''
+              data.realarea = result.realarea || ''
+              data.depart = result.depart || ''
+              toggleLoginPage(true)
+              getListData()
+              $message('登录成功')
+            } else {
+              $message(result.resultmessage)
+            }
+          }
+        })
+      }
+
+      function transUrl (item) {
+        if (!item.href) return undefined
+
+        var href = item.href
+        if (location.hostname.indexOf('192.168') !== -1) {
+          if (item.localhost) {
+            href = href.replace('${location.hostname}', location.protocol +'//'+ item.localhost)
+          } else {
+            href = href.replace('${location.hostname}', location.protocol +'//'+ location.hostname)
+          }
+          href = href.replace('${port}', data.area_port[localStorage.loginarea] || '')
+        } else {
+          href = href.replace('${location.hostname}', location.protocol +'//'+ location.hostname)
+          href = href.replace('${port}', data.area_port[localStorage.loginarea] || '')
+        }
+
+        href = href.replace('${username}', encodeURI(data.user || ''))
+        href = href.replace('${key}', data.key || '')
+        return href
+      }
+
+      function linkhandler (event) {
+        var target = $(event.currentTarget)
+        if (!target.attr('href') || target.attr('href') == '#') {
+          event.preventDefault()
+          if (target.html().indexOf('汇总结算') !== -1) {
+            $('.wffsettlement').show()
+          }
+        }
+      }
+
+      function renderSystemContent (system) {
+        var systemBox = $('.system-box')
+        systemBox.html('')
+        for (var i=0; i < system.length; i++) {
+          var sysitem = $('<div class="sys-item">' +
+              '<div class="mask"></div>' +
+              '<div class="content-c">' +
+                '<h2 class="sys-title">' + system[i].title + '</h2>' +
+                '<p class="line"></p>' +
+              '</div>' +
+              '<i class="icon" style="background: url(' + system[i].icon + ') no-repeat center"></i>' +
+            '</div>')
+          .css('background', 'url(' + system[i].bg + ')')
+          .appendTo(systemBox)
+
+          var subSys = $('<div class="sub-sys"></div>')
+
+          for (var y=0; y < system[i].sub.length; y++) {
+            var html = null
+            var isempty = $.isEmptyObject(system[i].sub[y])
+            if (typeof system[i].sub[y].sub_title != "undefined") {
+              html = $('<div class="sub-sys-title"><p>' + system[i].sub[y].sub_title + '</p></div>')
+            } else {
+              html = $('<div class="sub-sys-item"></div>')
+              if (isempty) html.addClass('empty')
+
+              var href = system[i].sub[y].href ? 'href="'+transUrl(system[i].sub[y])+'"' : ''
+              var linkcls = href ? 'class="hashref"' : ''
+
+              var link = null
+              if (isempty) {
+                link = $('<a></a>')
+              } else {
+                link = $('<a ' + href + ' target="_blank" ' + linkcls+ '>' +
+                          '<p>' + system[i].sub[y].system_name + '</p>' +
+                        '</a>')
+                link.on('click', linkhandler)
+              }
+
+              link.appendTo(html)
+            }
+
+            $(html).appendTo(subSys)
+          }
+
+          subSys.appendTo(sysitem.find('.content-c'))
+        }
+      }
+
+      function renderWffsettlement () {
+        var wffsettlementContent = $('.wffsettlement .dialog-content .content')
+        var html = ''
+        for (var key in data.groupTypeArea) {
+          html += '<div class="area-location"><p class="location-title">' + key + '</p>'
+          var areaArr = data.groupTypeArea[key]
+          for (var index in areaArr) {
+            html += '<div class="btn"><span>' + areaArr[index].typename + '</span></div>'
+          }
+          html += '</div>'
+        }
+        wffsettlementContent.html(html)
+        wffsettlementContent.find('.btn span').on('click', function (event) {
+          var area = $(this).html().split('丨')[0]
+          var url = 'http://erp.wecanintl.com${port}/wffsettlement?username=${username}&key=${key}'
+          url = url.replace('${port}', data.area_port[area] || '')
+          url = url.replace('${username}', data.user || '')
+          url = url.replace('${key}', data.key || '')
+          window.open(encodeURI(url))
+        })
+      }
+
+      function toggleLoginPage (status) {
+        if (status) {
+          $('.login-c').hide()
+          $('.system-c').show()
+          $('.user-operation').show()
+          $('.system-c .user').html("<p>欢迎,"+data.realarea+data.depart+"</p><p>"+data.user+"</p>")
+          $('.system-c .login-time').html('登录时间：' + data.login_time)
+          $('#login').css('background', 'url(./static/images/login_bg_repeat.png) repeat')
+          renderSystemContent(data.system_list)
+          document.onkeydown = null
+        } else {
+          $('.login-c').show()
+          $('.system-c').hide()
+          $('.user-operation').hide()
+          $('#login').css('background', 'none')
+          document.onkeydown = function(e){
+            if(!e) e = window.event
+            if((e.keyCode || e.which) == 13){
+              login()
+            }
+          }
+        }
+      }
+
+      function updateLogDetailBack () {
+        var opeBookDialog = $('.opeBookDialog')
+        opeBookDialog.find('.operLeft').show()
+        opeBookDialog.find('.operRight .multipleSelect').show()
+        opeBookDialog.find('.operRight .operRight-c').show()
+        opeBookDialog.find('.operRight').css('width', '1150')
+        opeBookDialog.find('.operRight .header .goback').hide()
+        opeBookDialog.find('.operRight .updateLogDetail').hide()
+      }
+
+      function openUpdateLogDetail (index) {
+        var opeBookDialog = $('.opeBookDialog')
+        opeBookDialog.find('.operLeft').hide()
+        opeBookDialog.find('.operRight .multipleSelect').hide()
+        opeBookDialog.find('.operRight .operRight-c').hide()
+        opeBookDialog.find('.operRight').css('width', '100%')
+        opeBookDialog.find('.operRight .header .goback').show()
+        var logDetail = opeBookDialog.find('.operRight .updateLogDetail')
+        logDetail.show()
+        logDetail.find('.updateLogTitle').html(data.resultUpdate[index].title)
+        logDetail.find('.updateTime').html('更新时间：' + timestamp(data.resultUpdate[index].timestamp))
+        logDetail.find('.version').html('版本号：' + data.resultUpdate[index].version)
+        var iframeUrl = publicWebApi + 'api/PubUpdateNoticeLog?contenturl=' + data.resultUpdate[index].contenturl
+        logDetail.find('iframe').attr('src', iframeUrl)
+
+        if (!data.resultUpdate[index].isread) {
+          crossDomainAjax({
+            type: 'POST',
+            url: publicWebApi+'api/PubUpdateNoticeSendLog',
+            crossDomain: true,
+            contentType: 'application/json',
+            data: JSON.stringify({
+              logname: data.user,
+              system: 'bo',
+              id: data.resultUpdate[index].id,
+              czman: data.user,
+              dom: '出口部',
+              logExtraData: 'PC,上海'
+            }),
+            success: function (result) {
+              data.resultUpdate[index].isread = true
+              $('.operRight .operRight-c .operList .operTitle').eq(index).find('i').remove()
+              data.newUpdateLogLength--
+              $('.opeBookDialog .dialog-content .content .operLeft .spanNum').html(data.newUpdateLogLength)
+              if (data.newUpdateLogLength == 0) {
+                $('#login .right-c .system-c .login-info .rizi i').remove()
+                $('.opeBookDialog .dialog-content .content .operLeft .spanNum').hide()
+              }
+            }
+          })
+        }
+      }
+
+      function renderOperList (type) {
+        $('.operRight .operRight-c').empty()
+        if (type == 1) {
+          for (var i = 0;i < data.resultUpdate.length; i++) {
+            var item = data.resultUpdate[i]
+            if (data.selectedSystem.length !== 0 && $.inArray(item.system, data.selectedSystem) == -1) continue
+
+            $('.operRight .operRight-c').append("<div class='operList'><span class='operTitle'>" + item.title +"</span><span class='opertime'>更新日期："+ timestamp(item.timestamp) + "</span><span class='operversion'>版本号："+item.version+ "</span><p class='oper' onclick='openUpdateLogDetail(\"" + i + "\")'>查看详情</p></div>")
+            if (!item.isread) {
+              $('.operRight .operRight-c .operList .operTitle').eq(i).prepend('<i class="redPoint"></i>')
+            }
+          }
+        } else if (type == 2) {
+          for (var i = 0; i < data.resultUpdateOperation.length; i++) {
+            var item = data.resultUpdateOperation[i]
+            if (data.selectedSystem.length !== 0 && $.inArray(item.system, data.selectedSystem) == -1) continue
+
+            $('.operRight .operRight-c').append("<div class='operList'><span  class='operTitle'>" + item.title +"</span><span class='opertime'>更新日期："+ timestamp(item.timestamp) + "</span><span class='operversion'>版本号："+item.version+ "</span><a class='oper' href='"+item.contenturl+"'>下载</a></div>")
+          }
+        }
+      }
+
+      function openDialogFunc (type) {
+        data.opeBookDialogType = type
+        if (type == 1) {
+          $('.operLeft .spanTitle').text('更新日志')
+        } else if (type == 2) {
+          $('.operLeft .spanTitle').text('操作手册')
+        }
+
+        $('.opeBookDialog').show()
+        $('.opeBookDialog .operRight .header .goback').hide()
+        updateLogDetailBack()
+        renderOperList(type)
+      }
+
+      $(document).ready(function () {
+         var shell = getUserAgentInfoFoo();
+        if (!shell.isIE()) {//非ie浏览器跳转到bomanagement
+          window.location.href = 'http://' + window.location.host + '/bomanagement/#login'
+        }
+              
+        createdHook()
+        // toggleLoginPage(true)
+        // getListData()
+      })
+    </script>
+  </body>
+</html>

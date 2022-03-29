@@ -1,0 +1,34 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="feeApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="fee" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.wecan.fee.FeeApplication" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
+    <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+    <additionalParameters>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="server-host" />
+        <option name="value" value="192.168.98.205" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="server-port" />
+        <option name="value" value="8100" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="application-host" />
+        <option name="value" value="localhost" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="application-port" />
+        <option name="value" value="8180" />
+      </param>
+    </additionalParameters>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
