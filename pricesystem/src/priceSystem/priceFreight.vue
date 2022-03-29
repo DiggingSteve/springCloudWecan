@@ -595,11 +595,11 @@
               </div>
             </div> -->
             <div class="" style="width: 42%; line-height: 39px">
-              <el-button
+              <!-- <el-button
                 type="success"
                 @click="priceObj.isShowImportData = true"
                 >导入数据</el-button
-              >
+              > -->
               <el-button type="success" @click="priceObj.loadIataPrice()"
                 >TACT运价表查询</el-button
               >

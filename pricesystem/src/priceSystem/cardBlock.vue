@@ -153,11 +153,12 @@ export default {
       if(!Number.isFinite(input)){
         throw new Error("请输入有效数字");
       }
-debugger
+
       if(input>0&&item.diff.indexOf("+")<0)item.diff="+"+item.diff;
       this.$set(item, "isSetValue", true);
     },
     handleFocus(e) {
+      debugger
       if (this.isBan) {
         e.srcElement.blur();
       }
