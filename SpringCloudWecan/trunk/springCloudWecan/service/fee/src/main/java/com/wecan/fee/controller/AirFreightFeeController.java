@@ -101,11 +101,7 @@ public class AirFreightFeeController extends BaseApiController {
         return feeService.getRouting(data.getJson());
     }
 
-    @RequestMapping("/udpateMycMsc")
-    @GET
-    public Boolean updateMycMsc(  String sfg,String mdg,String area,String threeCode,String twoCode){
-           return feeService.sendMsgToUpdateMyc(sfg,mdg,area,threeCode,twoCode);
-    }
+
 
     @ApiOperation(value = "经理审批", notes = "经理审批")
     @RequestMapping(value = "/approve",method = RequestMethod.POST)

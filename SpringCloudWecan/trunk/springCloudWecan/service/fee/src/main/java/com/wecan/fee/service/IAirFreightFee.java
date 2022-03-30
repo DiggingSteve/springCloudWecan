@@ -117,9 +117,9 @@ public interface IAirFreightFee extends IBaseService{
 
     */
    List<OutputFreightRouting>getRouting(String json);
-
-   // 发送消息更新 myc价格
-  Boolean sendMsgToUpdateMyc(String sfg,String mdg,String area,String threeCode,String twoCode);
+//
+//   // 发送消息更新 myc价格
+//  Boolean sendMsgToUpdateMyc(String sfg,String mdg,String area,String threeCode,String twoCode);
 
     /**
      * 审批

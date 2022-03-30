@@ -96,8 +96,7 @@ public class AirFreightFeeService implements IAirFreightFee {
     @Autowired
     TruckFeeWeightServiceImpl truckWeightDao;
 
-    @Autowired
-    Sender mqSender;
+
 
     @Autowired
     FeeApprovalRecordServiceImpl approvalDao;
@@ -757,27 +756,27 @@ public class AirFreightFeeService implements IAirFreightFee {
         return msg;
     }
 
-    @Override
-    public Boolean sendMsgToUpdateMyc(String sfg, String mdg, String area, String threeCode, String twoCode) {
-        var query=new  QueryWrapper<ViewFreightFee>();
-        if(!StringUtils.isEmpty(mdg)){
-            query.lambda() .eq(ViewFreightFee::getMdg,mdg);
-        }
-        if(!StringUtils.isEmpty(area)){
-            query.lambda() .eq(ViewFreightFee::getArea,area);
-        }
-        query.lambda()
-                .eq(ViewFreightFee::getSfg,sfg)
-                .eq(ViewFreightFee::getTwocode,twoCode);
-        query.select("*");
-        var list=viewFreightFeeDao.getDefaultFreightFee(query);
-        if(list.stream().count()==0)return true;
-        LambdaUtil.forEach(0,list,(item,index)->{
-            var feeid=item.getFeeid();
-            mqSender.sendMsg( makeUpdateMscMsg(feeid,area,threeCode,sfg,mdg));
-        });
-        return true;
-    }
+//    @Override
+//    public Boolean sendMsgToUpdateMyc(String sfg, String mdg, String area, String threeCode, String twoCode) {
+//        var query=new  QueryWrapper<ViewFreightFee>();
+//        if(!StringUtils.isEmpty(mdg)){
+//            query.lambda() .eq(ViewFreightFee::getMdg,mdg);
+//        }
+//        if(!StringUtils.isEmpty(area)){
+//            query.lambda() .eq(ViewFreightFee::getArea,area);
+//        }
+//        query.lambda()
+//                .eq(ViewFreightFee::getSfg,sfg)
+//                .eq(ViewFreightFee::getTwocode,twoCode);
+//        query.select("*");
+//        var list=viewFreightFeeDao.getDefaultFreightFee(query);
+//        if(list.stream().count()==0)return true;
+//        LambdaUtil.forEach(0,list,(item,index)->{
+//            var feeid=item.getFeeid();
+//            mqSender.sendMsg( makeUpdateMscMsg(feeid,area,threeCode,sfg,mdg));
+//        });
+//        return true;
+//    }
 
     /**
      * 经理审核
