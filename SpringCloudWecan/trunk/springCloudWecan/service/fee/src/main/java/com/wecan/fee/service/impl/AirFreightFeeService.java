@@ -929,7 +929,7 @@ public class AirFreightFeeService implements IAirFreightFee {
             else {
                 //仅在已发送之后更新该条数据的最后一次时间戳
                 if(notify.isSend==1){
-                    notify.setLastTimestamp(SnowflakeIdWorker.generateId());
+                    notify.setLastTimestamp(System.currentTimeMillis());
                     emailNotifyDao.updateById(notify);
                 }
             }
@@ -962,7 +962,7 @@ public class AirFreightFeeService implements IAirFreightFee {
         });
         existList.stream().filter(f->{return f.isSend==1;}).forEach(item->{
             item.isSend=2;
-            item.lastTimestamp=SnowflakeIdWorker.generateId();
+            item.lastTimestamp=System.currentTimeMillis();
             updateList.add(item);
         });
         emailNotifyDao.updateBatchById(updateList);
@@ -975,7 +975,7 @@ public class AirFreightFeeService implements IAirFreightFee {
         notify.setArea(fee.getArea());
         notify.setFid(cusFid);
         notify.setIsSend(2);
-        notify.setLastTimestamp(SnowflakeIdWorker.generateId());
+        notify.setLastTimestamp(System.currentTimeMillis());
         return notify;
     }
 

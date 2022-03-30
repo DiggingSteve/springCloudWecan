@@ -19,15 +19,15 @@ const pageType = { normal: "普通应收运费维护", customer: "客户应收�
 //一口价类型 没有选择任何card时 为全覆盖
 const coverType = { all: "all", single: "single" }
 
-const allFlight="所有航班";
+const allFlight = "所有航班";
 
-const specifiedFlight="特定航班";
+const specifiedFlight = "特定航班";
 
-const zzgTitle={direct:"直达",trans:"中转"};
+const zzgTitle = { direct: "直达", trans: "中转" };
 
-const relationEditTitle={cus:"客户参数编辑",packageType:"包装参数编辑",vol:"货型参数编辑"}
+const relationEditTitle = { cus: "客户参数编辑", packageType: "包装参数编辑", vol: "货型参数编辑" }
 
-const diffCode={vol:"vol",weight:"weight",cus:"cus",package:"package"}
+const diffCode = { vol: "vol", weight: "weight", cus: "cus", package: "package" }
 
 
 
@@ -43,14 +43,14 @@ class priceFreightView extends BaseService {
     weightArr = []
     volArr = []
     cusArr = []
-    approvalArr=[];
+    approvalArr = [];
 
 
     // 一口价dom引用的key
-    createFixedPriceRef(head,i,j){
-        return head+ i.toString()+j.toString();
+    createFixedPriceRef(head, i, j) {
+        return head + i.toString() + j.toString();
     }
- 
+
 
     /**二维数组 用于记录一口价 */
     priceDisplayArr = [];
@@ -58,17 +58,17 @@ class priceFreightView extends BaseService {
     /**记录 packagetype_cus 组成的key 对应的一口价 */
     priceDisplayMap = {};
     /**记录用于导入价格的map 被选中的价格最终会复制到 priceDisplayMap */
-    priceCopyMap={};
+    priceCopyMap = {};
 
     //记录钩稽参数相关信息
-    relationMap={
-        cus:{title:diffCode.cus,hasRelation:false,baseIndex:-1},
-        packageType:{title:diffCode.package,hasRelation:false,baseIndex:-1},
-        vol:{title:diffCode.vol,hasRelation:false,baseIndex:-1}
+    relationMap = {
+        cus: { title: diffCode.cus, hasRelation: false, baseIndex: -1 },
+        packageType: { title: diffCode.package, hasRelation: false, baseIndex: -1 },
+        vol: { title: diffCode.vol, hasRelation: false, baseIndex: -1 }
     };
 
 
-    limitDay=1;//清关后多少天承诺完成
+    limitDay = 1;//清关后多少天承诺完成
 
     currentCoverType = coverType.all;
 
@@ -77,106 +77,106 @@ class priceFreightView extends BaseService {
 
     packageDisplayIndex = -1;
 
-    cusImportIndex=-1;
+    cusImportIndex = -1;
 
-    packageImportIndex=-1;
+    packageImportIndex = -1;
 
     // 清除数据的方式 weight 或者 vol
-    clearDataType=diffCode.weight;
+    clearDataType = diffCode.weight;
 
-    clearDataIndex=-1;
+    clearDataIndex = -1;
 
     // 是否没添加cus参数
-    get isCusEmpty(){
-        var arr=this.cusArr.filter(item=>{return item.isAdd})
-        return arr.length==0;
+    get isCusEmpty() {
+        var arr = this.cusArr.filter(item => { return item.isAdd })
+        return arr.length == 0;
     }
 
-       // 是否没添加package参数
-       get isPackageTypeEmpty(){
-        var arr=this.packageTypeArr.filter(item=>{return item.isAdd})
-        return arr.length==0;
+    // 是否没添加package参数
+    get isPackageTypeEmpty() {
+        var arr = this.packageTypeArr.filter(item => { return item.isAdd })
+        return arr.length == 0;
     }
 
     /**当前选中的包装类型 */
-    get currentPackageType(){
+    get currentPackageType() {
         return this.packageTypeArr[this.packageDisplayIndex];
     }
 
-    get currentCus(){
+    get currentCus() {
         return this.cusArr[this.cusDisplayIndex];
     }
 
     /**当前导入页面选中的包装类型 */
-    get currentImportPackageType(){
-        if(this.packageImportIndex<0)return null;
+    get currentImportPackageType() {
+        if (this.packageImportIndex < 0) return null;
         return this.packageTypeArr[this.packageImportIndex];
     }
-/**当前导入页面选中的客户类型 */
-    get currentImportCus(){
-        if(this.cusImportIndex<0)return null;
+    /**当前导入页面选中的客户类型 */
+    get currentImportCus() {
+        if (this.cusImportIndex < 0) return null;
         return this.cusArr[this.cusImportIndex];
     }
 
     /**当前钩稽关系维护数组 将在打开编辑窗口 */
-  currentRelationEditArr=[];
+    currentRelationEditArr = [];
 
 
-  currentRelationMap={};
+    currentRelationMap = {};
 
     /**复制增减种子 */
-    copySeed=0;
+    copySeed = 0;
     // 复制种子增或
-    isCopySeedPlus=true;
+    isCopySeedPlus = true;
 
-    get hbhStr(){
-        return this.hbhArr.map(m=>{return m.hbh}).join(",");
+    get hbhStr() {
+        return this.hbhArr.map(m => { return m.hbh }).join(",");
     }
 
-    hbhArr=[];
+    hbhArr = [];
 
 
     //燃油费附加费
-    isContainGas=true;
+    isContainGas = true;
 
     // 战争附加费
-    isContainWar=true;
+    isContainWar = true;
 
     //货站地面费
-    isContainStation=true;
+    isContainStation = true;
 
     //是否显示删除数据快捷操作
-    isShowClearDialog=false;
+    isShowClearDialog = false;
 
     //删除数据标题
-    clearDataTitle="";
+    clearDataTitle = "";
 
     //是否同步删除参数
-    isDelRelationSync=false;
+    isDelRelationSync = false;
 
     //是否特定航班
-   get isSpecifiedFlight(){
-       return this.flightType==specifiedFlight;
-   }
+    get isSpecifiedFlight() {
+        return this.flightType == specifiedFlight;
+    }
 
-    flightType=allFlight; 
-    
+    flightType = allFlight;
+
 
     get hbhOptionCondition() {
         return {
             twocode: this.twoCode,
             sfg: this.sfg,
-            mdg:this.mdg
+            mdg: this.mdg
         }
     }
 
     // 始发港 二字码 同时设置了才会展示航班号
-    get isSfgTwocodeSetted(){
-        return (!!this.sfg)&&(!!this.twoCode)&&(!!this.mdg);
+    get isSfgTwocodeSetted() {
+        return (!!this.sfg) && (!!this.twoCode) && (!!this.mdg);
     }
 
 
-  
+
 
     _currentPageMode = pageMode.search;
 
@@ -190,7 +190,7 @@ class priceFreightView extends BaseService {
     }
 
 
-   dialogTitle="新增公布运费";
+    dialogTitle = "新增公布运费";
     // 当前页面展示的分组航司二字码 ["MU,KL","CK"]
     _twoCodeArr = [];
 
@@ -198,28 +198,34 @@ class priceFreightView extends BaseService {
 
     _sfg = "";
 
-    get sfg(){
-        if(!this.isEditMode){
+    get sfg() {
+        if (!this.isEditMode) {
             //新增 直接带入选择站点
             return this.vueInstance.$store.state.areaStateCode;
         }
         return this._sfg;
     }
-    set sfg(val){
-        this._sfg=val;
+    set sfg(val) {
+        this._sfg = val;
     }
 
     mdg = "";
 
     twoCode = "";
 
-    tactTwocode="";
+    tactTwocode = "";
 
-    iataMap={};
+    iataMap = {};
 
-    zzgTitle=zzgTitle.direct;
+    _zzgTitle = zzgTitle.direct;
 
-    
+    get zzgTitle() {
+        if (this._zzg != zzgTitle.direct) return zzgTitle.trans;
+        else return zzgTitle.direct;
+    }
+    set zzgTitle(v) {
+        this._zzgTitle = v;
+    }
 
     _zzg = "";
 
@@ -276,8 +282,8 @@ class priceFreightView extends BaseService {
     /**
      * 能否修改客户关系参数 在gid>0时不能选择 cus关系
      */
-    get canEditCus(){
-        return this.gid<0;
+    get canEditCus() {
+        return this.gid < 0;
     }
 
 
@@ -302,7 +308,7 @@ class priceFreightView extends BaseService {
             let isLegal = true;
             arr.forEach((item) => {
                 if (!!this._twcodeGroupMap[item]) {
-             
+
                     isLegal = false;
                 }
             });
@@ -317,8 +323,8 @@ class priceFreightView extends BaseService {
         this._twoCodeArr.push(v);
     }
 
-    get singleTwoCodeArr(){
-       return this.twoCode.split(",");
+    get singleTwoCodeArr() {
+        return this.twoCode.split(",");
     }
     // key twocode:{对应的分组} 为了加入分组的时候判断该航司是否加入过当前分组
     _twcodeGroupMap = {}
@@ -372,10 +378,10 @@ class priceFreightView extends BaseService {
         return this._currentPageMode == pageMode.pageConfirm
     }
 
-    get isShowUnSelectedWrap(){
-        var hasCus=this.cusArr.filter(item=>{return item.isAdd}).length>1;
-        var hasPackage=this.packageTypeArr.filter(item=>{return item.isAdd}).length>1;
-        return hasCus||hasPackage;
+    get isShowUnSelectedWrap() {
+        var hasCus = this.cusArr.filter(item => { return item.isAdd }).length > 1;
+        var hasPackage = this.packageTypeArr.filter(item => { return item.isAdd }).length > 1;
+        return hasCus || hasPackage;
     }
 
 
@@ -383,11 +389,11 @@ class priceFreightView extends BaseService {
     isShowImportData = false;
 
     /**是否展示iata运价 */
-    isShowIataDialog=false;
+    isShowIataDialog = false;
 
 
     //是否显示勾稽关系编辑框
-    isShowRelationEdit=false;
+    isShowRelationEdit = false;
 
 
 
@@ -420,8 +426,8 @@ class priceFreightView extends BaseService {
         if (this._zzg.trim() == "") {
             this.zzg = "直达";
         }
- 
-        if(this.vueInstance.wecanStandard==this.vueInstance.wecanStandardOpts[1].value&&this.gid<=0){
+
+        if (this.vueInstance.wecanStandard == this.vueInstance.wecanStandardOpts[1].value && this.gid <= 0) {
             throw new Error("请选择客户");
         }
 
@@ -465,5 +471,5 @@ class priceFreightView extends BaseService {
 
 }
 
-export { priceFreightView, pageMode, editMode, priceMode, pageType, coverType,specifiedFlight,allFlight,zzgTitle,relationEditTitle,diffCode}
+export { priceFreightView, pageMode, editMode, priceMode, pageType, coverType, specifiedFlight, allFlight, zzgTitle, relationEditTitle, diffCode }
 

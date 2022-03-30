@@ -667,9 +667,7 @@ export default {
       this.addSearchCondition("addman", where, "addman");
       this.addSearchCondition("ddg", where, "ddg");
       this.addSearchCondition("addtime", where, "adddate");
-      if (!!this.priceObj.area) {
-        where["area"] = this.priceObj.area;
-      }
+  
       where["wageinout"] = this.wageinout;
       var jsonArr = {
         where: {
