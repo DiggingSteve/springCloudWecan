@@ -154,7 +154,6 @@ public class AirFreightFeeService implements IAirFreightFee {
     @Override
     @Transactional
     public void editFee(InputAirFreightFee data) {
-        canEdit(data.getFeeid());
         checkDuplicateTimespan(data, data.getFeeid(), data.getGid() > 0 ? data.getGid() : 0);
         // 费用主表
         FreightFeePending fee = InputAirFreightFeeMapper.INSTANCES.toFreightFeePending(data);
@@ -218,15 +217,6 @@ public class AirFreightFeeService implements IAirFreightFee {
                 .eq(FeeAirFlight::getFeeid, feeid);
         flightDao.remove(delFlightQuery);
     }
-
-    private void canEdit(Long feeid){
-        var pendingFee=feePendingDao.getById(feeid);
-        if(pendingFee.getApprovalStatus().equals(ApprovalStatusEnum.PendingApproval.getCode())){
-            throw new BusinessException("经理审批中请勿再次修改");
-        }
-
-    }
-
 
 
     @Override

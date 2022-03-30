@@ -375,7 +375,7 @@
                   <tr>
                     <td class="big">{{ priceObj.sfg }}</td>
                     <td class=""><div class="arrow"></div></td>
-                    <td class="zzgFont">{{ priceObj.zzgTitle }}</td>
+                    <td class="zzgFont">{{ priceObj.zzg?priceObj.zzg:"直达" }}</td>
                     <td class=""><div class="arrow"></div></td>
                     <td class="big">{{ priceObj.mdg }}</td>
                     <td class="big">{{ priceObj.twoCode }}</td>

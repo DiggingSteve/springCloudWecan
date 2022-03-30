@@ -432,7 +432,7 @@
     <el-dialog
       :title="`卡车信息 基港:${truckInfo.mdg} -> 到达港: ${truckInfo.ddg}`"
       :visible.sync="isShowTruckDetail"
-      :width="'50%'"
+      style="overflow:auto;width:800px;"
       :center="true"
     >
       <div class="row" style="min-height: 200px" v-if="!!truckInfo.ddg">
@@ -567,7 +567,7 @@ import { diffCodeKey } from "../api/getBasicStorageData";
 import { queueKey, SystemMessage } from "../store/systemMessage";
 import { delay } from "lodash";
 let airInfoArr = JSON.parse(localStorage.getItem("airinfo"));
-let transportTypeData = ["直达", "中转"];
+let transportTypeData = [all,"直达", "中转"];
 const all = "全部";
 const normalCus = "公布运价";
 
@@ -589,7 +589,7 @@ export default {
       currencyArr: [], // 汇率数组 从localStroage中取出
       selectedCurrency: "人民币", //选中的汇率
       transportTypeArr: transportTypeData, //运输方式数据
-      selectedTransportType: "", //选中的运输方式
+      selectedTransportType: all, //选中的运输方式
       selectedPackageType: "托盘", //选中的包装类型
       selectedCusType: "A类", //选中的客户类型
       isContainsTruck: true,
@@ -667,7 +667,7 @@ export default {
       }
       // this.addSearchCondition("mdg", where, "mdg");
       this.addSearchCondition("wffAreaid", where, "areaname");
-      if (!!this.selectedTransportType) {
+      if (this.selectedTransportType!=all) {
         if (this.selectedTransportType == "直达") {
           where["zzg"] = "直达";
         } else {
