@@ -74,6 +74,7 @@ class priceRouting extends BaseService {
         if(item.isSelfInput==1){
         this.hbhMap[hbh]=this.hbhMap[hbh]||{};
         this.hbhMap[hbh]=item;
+        this.selectedHbhKey=hbh;
       }
 
       })
