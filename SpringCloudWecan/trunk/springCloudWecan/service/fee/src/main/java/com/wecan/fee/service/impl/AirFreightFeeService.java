@@ -18,16 +18,19 @@ import com.wecan.daofee.service.impl.*;
 import com.wecan.fee.cache.CustomerCache;
 import com.wecan.fee.model.dto.MycMscDto;
 import com.wecan.fee.rabbitmq.Sender;
+import com.wecan.fee.service.IAirFreightFee;
 import com.wecan.modeldbo.SnowflakeIdWorker;
 import com.wecan.modeldbo.airfreight.fee.*;
 import com.wecan.modeldbo.airfreight.fee.enums.ApprovalStatusEnum;
 import com.wecan.modelview.model.mapper.fee.*;
-
 import com.wecan.modelview.model.vo.customer.output.OutputFidCache;
 import com.wecan.modelview.model.vo.fee.input.InputAirFreightFee;
-import com.wecan.fee.service.IAirFreightFee;
-import com.wecan.modelview.model.vo.fee.input.*;
-import com.wecan.modelview.model.vo.fee.output.*;
+import com.wecan.modelview.model.vo.fee.input.InputApprovalRecord;
+import com.wecan.modelview.model.vo.fee.input.InputCodeDiff;
+import com.wecan.modelview.model.vo.fee.input.InputDelFee;
+import com.wecan.modelview.model.vo.fee.output.OutputCodeDiff;
+import com.wecan.modelview.model.vo.fee.output.OutputFreightFeeList;
+import com.wecan.modelview.model.vo.fee.output.OutputFreightRouting;
 import com.wecan.modelview.model.vo.fee.view.ViewFixedFreightFee;
 import com.wecan.modelview.model.vo.fee.view.ViewFreightFee;
 import com.wecan.modelview.model.vo.fee.view.ViewFreightRouting;
@@ -40,7 +43,6 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
