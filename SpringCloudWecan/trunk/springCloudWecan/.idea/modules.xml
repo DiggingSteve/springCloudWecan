@@ -16,18 +16,16 @@
       <module fileurl="file://$PROJECT_DIR$/dao/daoRoutes/daoRoutes.iml" filepath="$PROJECT_DIR$/dao/daoRoutes/daoRoutes.iml" group="dao and modules" />
       <module fileurl="file://$PROJECT_DIR$/dao/daoLog/daolog.iml" filepath="$PROJECT_DIR$/dao/daoLog/daolog.iml" />
       <module fileurl="file://$PROJECT_DIR$/dao/daoPrice/daoprice.iml" filepath="$PROJECT_DIR$/dao/daoPrice/daoprice.iml" />
-      <module fileurl="file://$PROJECT_DIR$/service/fee/fee.iml" filepath="$PROJECT_DIR$/service/fee/fee.iml" group="service and modules" />
-      <module fileurl="file://$PROJECT_DIR$/service/file/file.iml" filepath="$PROJECT_DIR$/service/file/file.iml" group="service and modules" />
+      <module fileurl="file://$PROJECT_DIR$/service/fee/fee.iml" filepath="$PROJECT_DIR$/service/fee/fee.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service/file/file.iml" filepath="$PROJECT_DIR$/service/file/file.iml" />
       <module fileurl="file://$PROJECT_DIR$/gateway/gateway.iml" filepath="$PROJECT_DIR$/gateway/gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/service/log/log.iml" filepath="$PROJECT_DIR$/service/log/log.iml" />
       <module fileurl="file://$PROJECT_DIR$/model/model.iml" filepath="$PROJECT_DIR$/model/model.iml" />
       <module fileurl="file://$PROJECT_DIR$/model/modelDbo/modeldbo.iml" filepath="$PROJECT_DIR$/model/modelDbo/modeldbo.iml" />
       <module fileurl="file://$PROJECT_DIR$/model/modelView/modelview.iml" filepath="$PROJECT_DIR$/model/modelView/modelview.iml" />
-      <module fileurl="file://$PROJECT_DIR$/service/mqReceiver/mqreceiver.iml" filepath="$PROJECT_DIR$/service/mqReceiver/mqreceiver.iml" />
       <module fileurl="file://$PROJECT_DIR$/service/pushmsg/pushmsg.iml" filepath="$PROJECT_DIR$/service/pushmsg/pushmsg.iml" />
       <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" />
       <module fileurl="file://$PROJECT_DIR$/service/service.iml" filepath="$PROJECT_DIR$/service/service.iml" />
-      <module fileurl="file://$PROJECT_DIR$/service/shardingTest/shardingTest.iml" filepath="$PROJECT_DIR$/service/shardingTest/shardingTest.iml" group="service and modules" />
       <module fileurl="file://$PROJECT_DIR$/springCloudWecan.iml" filepath="$PROJECT_DIR$/springCloudWecan.iml" />
       <module fileurl="file://$PROJECT_DIR$/service/websocket/websocket.iml" filepath="$PROJECT_DIR$/service/websocket/websocket.iml" />
     </modules>
