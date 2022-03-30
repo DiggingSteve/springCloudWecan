@@ -5,17 +5,14 @@
  */
 package com.wecan.shardingTest.controller;
 
-import com.wecan.commonutils.commonClass.aop.response.ResponseResultBody;
 import com.wecan.daofee.service.impl.OrderServiceImpl;
 import com.wecan.modeldbo.sharding.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import java.util.ArrayList;
 import java.util.List;
 
