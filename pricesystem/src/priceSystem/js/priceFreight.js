@@ -199,7 +199,7 @@ class priceFreightView extends BaseService {
     _sfg = "";
 
     get sfg() {
-        if (!this.isEditMode&&_sfg=="") {
+        if (!this.isEditMode&&this._sfg=="") {
             //新增 直接带入选择站点
             return this.vueInstance.$store.state.areaStateCode;
         }
