@@ -567,12 +567,10 @@ import { diffCodeKey } from "../api/getBasicStorageData";
 import { queueKey, SystemMessage } from "../store/systemMessage";
 import { delay } from "lodash";
 let airInfoArr = JSON.parse(localStorage.getItem("airinfo"));
-let transportTypeData = [all,"直达", "中转"];
 const all = "全部";
+let transportTypeData = [all,"直达", "中转"];
 const normalCus = "公布运价";
-
 const singleCus = "客户报价";
-
 var filterTimeoutId = null;
 var tableDataCopy = null;
 export default {
