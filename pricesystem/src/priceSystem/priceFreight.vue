@@ -375,7 +375,9 @@
                   <tr>
                     <td class="big">{{ priceObj.sfg }}</td>
                     <td class=""><div class="arrow"></div></td>
-                    <td class="zzgFont">{{ priceObj.zzg?priceObj.zzg:"直达" }}</td>
+                    <td class="zzgFont">
+                      {{ priceObj.zzg ? priceObj.zzg : "直达" }}
+                    </td>
                     <td class=""><div class="arrow"></div></td>
                     <td class="big">{{ priceObj.mdg }}</td>
                     <td class="big">{{ priceObj.twoCode }}</td>
@@ -718,7 +720,7 @@
             </el-input>
           </div>
         </div>
-        <div v-if="priceObj.approvalArr.length > 0" style="margin-top:20px">
+        <div v-if="priceObj.approvalArr.length > 0" style="margin-top: 20px">
           <div
             @click="isShowApproval = !isShowApproval"
             style="cursor: pointer; text-align: center"
@@ -732,7 +734,7 @@
           </div>
           <div class="row">
             <el-collapse-transition>
-              <div class="wagediv" style="width:100%;" v-show="isShowApproval">
+              <div class="wagediv" style="width: 100%" v-show="isShowApproval">
                 <div
                   v-for="(item, index) in priceObj.approvalArr"
                   class="rightWageitem"
@@ -1286,9 +1288,8 @@ export default {
           where["startdate"]["end"] = d.end;
         }
       }
-      if (!!this.priceObj.area) {
-        where["area"] = this.priceObj.area;
-      }
+      where["area"] = {};
+      where["area"]["in"] = this.$store.state.areaState;
       var jsonArr = {
         where: {
           ...where,

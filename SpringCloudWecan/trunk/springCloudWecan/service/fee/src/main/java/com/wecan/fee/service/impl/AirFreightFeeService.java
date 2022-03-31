@@ -17,7 +17,6 @@ import com.wecan.daofee.mapper.ViewFreightRoutingMapper;
 import com.wecan.daofee.service.impl.*;
 import com.wecan.fee.cache.CustomerCache;
 import com.wecan.fee.model.dto.MycMscDto;
-import com.wecan.fee.rabbitmq.Sender;
 import com.wecan.fee.service.IAirFreightFee;
 import com.wecan.modeldbo.SnowflakeIdWorker;
 import com.wecan.modeldbo.airfreight.fee.*;
@@ -39,7 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
