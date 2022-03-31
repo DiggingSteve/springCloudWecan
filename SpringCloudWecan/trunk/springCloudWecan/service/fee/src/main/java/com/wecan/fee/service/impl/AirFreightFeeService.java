@@ -286,6 +286,8 @@ public class AirFreightFeeService implements IAirFreightFee {
                     p.setHbh(fee.getHbh());
                     p.setEnddate(fee.getEnddate());
                     p.setApprovalStatus(fee.getApprovalStatus());
+                    p.setApprovalMan(fee.getApprovalMan());
+                    p.setApprovalTime(fee.getApprovalTime());
                     result.add(p);
                 }
         );

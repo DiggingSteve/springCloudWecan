@@ -94,4 +94,8 @@ public class ViewFreightFee {
     //审批状态
     private Integer approvalStatus;
 
+    private String approvalMan;
+
+    private LocalDateTime approvalTime;
+
 }

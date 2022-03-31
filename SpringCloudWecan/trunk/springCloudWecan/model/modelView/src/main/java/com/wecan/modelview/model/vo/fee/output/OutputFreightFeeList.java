@@ -141,5 +141,9 @@ public class OutputFreightFeeList {
 
     public Integer approvalStatus;
 
+    private String approvalMan;
+
+    private LocalDateTime approvalTime;
+
 }
 
