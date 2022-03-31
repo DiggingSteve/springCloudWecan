@@ -476,7 +476,8 @@ class priceFreightEditView extends priceFreightView {
 
     }
     await this.request("post", url, data).then((d) => {
-      this.ok("保存成功")
+      this.ok("保存成功");
+      this.currentPageMode=pageMode.search;
     });
   }
 
@@ -514,7 +515,8 @@ class priceFreightEditView extends priceFreightView {
       limitDay: this.limitDay
     }
     await this.request("post", url, data).then((d) => {
-      this.ok("修改成功")
+      this.ok("修改成功");
+      this.currentPageMode=pageMode.search;
     });
   }
   convertDiffArr(arr) {
