@@ -227,7 +227,7 @@ class priceFreightView extends BaseService {
         this._zzgTitle = v;
     }
 
-    _zzg = "";
+    _zzg = zzgTitle.direct;
 
     set zzg(val) {
         this._zzg = val;
