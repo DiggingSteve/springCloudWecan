@@ -220,7 +220,7 @@ class priceFreightEditView extends priceFreightView {
     this.sfg = basicInfo.sfg;
     this.mdg = basicInfo.mdg;
     this.zzg = basicInfo.zzg;
-    this.vueInstance.$set(this.zzgTitle,basicInfo.zzg==zzgTitle.direct?zzgTitle.direct:zzgTitle.trans);
+    this.vueInstance.$set(this,"zzgTitle",basicInfo.zzg==zzgTitle.direct?zzgTitle.direct:zzgTitle.trans);
     this.jfType = basicInfo.jfType;
     this.twoCode = basicInfo.twocode
     this.tactPriceDiff = basicInfo.tactPriceDiff;
