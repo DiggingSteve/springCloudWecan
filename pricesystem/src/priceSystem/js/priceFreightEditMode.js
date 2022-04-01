@@ -1,5 +1,5 @@
 import { diffCodeKey } from "../../api/getBasicStorageData";
-import { priceFreightView, pageMode, priceMode, pageType, specifiedFlight, allFlight, relationEditTitle, clearDataType, diffCode } from "./priceFreight";
+import { priceFreightView, pageMode, priceMode, pageType, specifiedFlight, allFlight, relationEditTitle, clearDataType, diffCode, zzgTitle } from "./priceFreight";
 
 
 
@@ -220,6 +220,7 @@ class priceFreightEditView extends priceFreightView {
     this.sfg = basicInfo.sfg;
     this.mdg = basicInfo.mdg;
     this.zzg = basicInfo.zzg;
+    this.vueInstance.$set(this.zzgTitle,basicInfo.zzg==zzgTitle.direct?zzgTitle.direct:zzgTitle.trans);
     this.jfType = basicInfo.jfType;
     this.twoCode = basicInfo.twocode
     this.tactPriceDiff = basicInfo.tactPriceDiff;
