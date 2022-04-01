@@ -410,10 +410,7 @@ class priceFreightView extends BaseService {
         if (!!!this.twoCode) {
             throw new Error("未选择航司二字码");
         }
-        if (this._zzg.trim() == "") {
-            this.zzg = "直达";
-        }
-
+      
         if (this.vueInstance.wecanStandard == this.vueInstance.wecanStandardOpts[1].value && this.gid <= 0) {
             throw new Error("请选择客户");
         }
