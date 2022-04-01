@@ -217,26 +217,13 @@ class priceFreightView extends BaseService {
 
     iataMap = {};
 
-    _zzgTitle = zzgTitle.direct;
+    zzgTitle = zzgTitle.direct;
 
-    get zzgTitle() {
-        if (this._zzg != zzgTitle.direct) return zzgTitle.trans;
-        else return zzgTitle.direct;
-    }
-    set zzgTitle(v) {
-        this._zzgTitle = v;
-    }
+   
 
-    _zzg = zzgTitle.direct;
+    zzg = zzgTitle.direct;
 
-    set zzg(val) {
-        this._zzg = val;
-    }
-
-    get zzg() {
-        return this._zzg;
-    }
-
+  
     _standardPrice = -1;
     get standardPrice() {
         if (this._standardPrice < 0) return '--';

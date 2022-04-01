@@ -1510,9 +1510,6 @@ export default {
       return result;
     },
     isDisableZzg: function () {
-      if (this.priceObj.zzgTitle == zzgTitle.direct) {
-        this.priceObj.zzg = zzgTitle.direct;
-      }
       return this.priceObj.zzgTitle == zzgTitle.direct;
     },
     hbhWidth: function () {
