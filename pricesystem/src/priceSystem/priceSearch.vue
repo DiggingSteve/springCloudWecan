@@ -435,7 +435,7 @@
       :style="'overflow:auto;width:800px;'"
       :center="true"
     >
-      <div class="row" style="min-height: 200px" v-if="!!truckInfo.ddg">
+      <div class="row" style="min-height: 200px;width:1200px;over-flow:auto" v-if="!!truckInfo.ddg">
         <table class="truckTable" style="height: 100%">
           <tr>
             <th>目的地</th>
