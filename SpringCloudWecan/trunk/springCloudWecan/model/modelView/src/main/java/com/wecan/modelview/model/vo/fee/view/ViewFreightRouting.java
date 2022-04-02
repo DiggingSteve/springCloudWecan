@@ -23,7 +23,7 @@ public class ViewFreightRouting {
     private String zzg;
 
     //基港就是运价上的mdg 以及 卡车算运费的基港 终点可能是mdg 可能是ddg
-    private  String mdg;
+    public  String mdg;
 
     private String ddg;
 

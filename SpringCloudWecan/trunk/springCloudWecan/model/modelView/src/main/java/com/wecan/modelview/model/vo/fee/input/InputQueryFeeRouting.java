@@ -10,4 +10,6 @@ import lombok.Data;
 @Data
 public class InputQueryFeeRouting {
     public String json;
+
+    public String mdg;
 }

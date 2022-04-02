@@ -91,14 +91,16 @@ public class AirFreightFeeController extends BaseApiController {
         return feeService.getDirectFee(json);
     }
 
-    // 因为传了orlist是个数组带[] 而 [] 是url保留字符串 所以只能用post
+    //第一版 因为传了orlist是个数组带[] 而 [] 是url保留字符串 所以只能用post
+    //第二版 测试发现卡车段如果基于基港关联数据过多的话 查询传的时候会造成重复数据过多 视图中会重复查 所以将mdg额外传入
+    //      先匹配mdg 再匹配ddg 否则对数据库不友好
     @RequestMapping("/getRouting")
     @POST
     public List<OutputFreightRouting> getRouting(
             @RequestBody InputQueryFeeRouting data
 
                                                 ){
-        return feeService.getRouting(data.getJson());
+        return feeService.getRouting(data.getJson(),data.getMdg());
     }
 
 
