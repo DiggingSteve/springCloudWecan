@@ -254,9 +254,7 @@
         <div
           style="display: flex; min-width: 500px; justify-content: space-around"
         >
-          <span>{{
-
-          }}</span>
+          <span>{{}}</span>
           <div
             class="input-item"
             style="
@@ -435,7 +433,11 @@
       :width="'90%'"
       :center="true"
     >
-      <div class="row" style="min-height: 200px;width:1200px;over-flow:auto" v-if="!!truckInfo.ddg">
+      <div
+        class="row"
+        style="min-height: 200px; width: 1200px; over-flow: auto"
+        v-if="!!truckInfo.ddg"
+      >
         <table class="truckTable" style="height: 100%">
           <tr>
             <th>目的地</th>
@@ -530,7 +532,13 @@
                       <td>{{ getDayOfWeek(p.airweekdetail) }}</td>
                       <td>{{ p.flaytime.slice(11, 16) }}</td>
                       <td>{{ p.jjg }}</td>
-                      <td>{{ p.jdate.slice(11, 16)=="00:00"?"": p.jdate.slice(11, 16) }}</td>
+                      <td>
+                        {{
+                          p.jdate.slice(11, 16) == "00:00"
+                            ? ""
+                            : p.jdate.slice(11, 16)
+                        }}
+                      </td>
                       <td>{{ p.mdg }}</td>
                       <td>{{ p.reachtime.slice(11, 16) }}</td>
                       <td>{{ p.timedifference }}</td>
@@ -545,11 +553,13 @@
               </div>
               <div class="row">
                 <div class="item15">航班时刻周期</div>
-                <div class="item80" style="font-size:15px;">
+                <div class="item80" style="font-size: 15px">
                   {{ void (weekList = item.schedule.split(",")) }}
 
                   <template v-for="day in weekList">
-                    <span style="margin:0 1px">{{ convertIntToWeek(day*1) }}</span>
+                    <span style="margin: 0 1px">{{
+                      convertIntToWeek(day * 1)
+                    }}</span>
                   </template>
                 </div>
               </div>
@@ -568,7 +578,7 @@ import { queueKey, SystemMessage } from "../store/systemMessage";
 import { delay } from "lodash";
 let airInfoArr = JSON.parse(localStorage.getItem("airinfo"));
 const all = "全部";
-let transportTypeData = [all,"直达", "中转"];
+let transportTypeData = [all, "直达", "中转"];
 const normalCus = "公布运价";
 const singleCus = "客户报价";
 var filterTimeoutId = null;
@@ -665,7 +675,7 @@ export default {
       }
       // this.addSearchCondition("mdg", where, "mdg");
       this.addSearchCondition("wffAreaid", where, "areaname");
-      if (this.selectedTransportType!=all) {
+      if (this.selectedTransportType != all) {
         if (this.selectedTransportType == "直达") {
           where["zzg"] = "直达";
         } else {
@@ -674,11 +684,6 @@ export default {
         }
       }
       this.addSearchCondition("gid", where, "wtkh");
-      if (!!this.searchData.mdg) {
-        where["mdg"] = this.searchData.mdg 
-        
-      }
-      else  where["mdg"] = "";
 
       if (!!this.searchData.validityDate) {
         var d = this.searchData.validityDate;
@@ -698,6 +703,9 @@ export default {
           ...where,
         },
       };
+      if (!!this.searchData.mdg) {
+        jsonArr["mdg"] = this.searchData.mdg;
+      } else jsonArr["mdg"] = "";
 
       this.priceObj
         .request("post", url, { json: JSON.stringify(jsonArr) })
@@ -736,7 +744,7 @@ export default {
               }
             });
           }
-          if(this.tableDataRes.length==0)this.$message("无查询数据");
+          if (this.tableDataRes.length == 0) this.$message("无查询数据");
         });
     },
     /**设置航司名字 */
@@ -807,7 +815,6 @@ export default {
         });
     },
 
-
     /**
      * @vol 当前对应的比例
      * @weight 当前对应重量
@@ -836,13 +843,13 @@ export default {
       });
       //激活了一口价 但是没设置有效的数字 则显示--
       if (!!matchFixedPrice) {
-      
-      if(matchFixedPrice.diff>0){
-        let v= (matchFixedPrice.diff / this.currentCurrency)+this.getTruckFee(weight,currentRow)
-        
-        return v.toLocaleString();
-      }
-      else return '--';
+        if (matchFixedPrice.diff > 0) {
+          let v =
+            matchFixedPrice.diff / this.currentCurrency +
+            this.getTruckFee(weight, currentRow);
+
+          return v.toLocaleString();
+        } else return "--";
       }
       //weight package vol cus 基础参数中 每个对象 isSetValue为true的将被保存进数据库
       // 对应位置需要用一口价替换
@@ -863,23 +870,27 @@ export default {
       var packageCusMap = currentRow["packageCusDiffMap"]; //为了前端渲染效率 直接将钩稽关系转换成了一个map
       var packageDiff = packageCusMap[this.selectedPackageType] * 1;
       var cusDiff = packageCusMap[this.selectedCusType] * 1;
-      if(currentRow.packageTypeArr.length>0 && !Number.isFinite(packageDiff))return "--";
-      if(currentRow.cusArr.length>0 && !Number.isFinite(cusDiff))return "--";
+      if (currentRow.packageTypeArr.length > 0 && !Number.isFinite(packageDiff))
+        return "--";
+      if (currentRow.cusArr.length > 0 && !Number.isFinite(cusDiff))
+        return "--";
       packageDiff = Number.isFinite(packageDiff) ? packageDiff : 0;
       cusDiff = Number.isFinite(cusDiff) ? cusDiff : 0;
       var volDiff = !!matchVol ? matchVol.diff * 1 : 0;
-      var val=0;
+      var val = 0;
       var isSetStandardPrice = !!matchWeight;
       if (!isSetStandardPrice) return "--";
       if (weight.title == "MIN") {
-        val= matchWeight.standardPrice == 0
-          ? undefined
-          : (matchWeight.standardPrice / this.currentCurrency);
-          if(!Number.isFinite(val))return '--'
-          if(!this.isExactSearch)val=val+this.getTruckFee(weight,currentRow);
-          return val.toLocaleString();
+        val =
+          matchWeight.standardPrice == 0
+            ? undefined
+            : matchWeight.standardPrice / this.currentCurrency;
+        if (!Number.isFinite(val)) return "--";
+        if (!this.isExactSearch)
+          val = val + this.getTruckFee(weight, currentRow);
+        return val.toLocaleString();
       }
-     val = (
+      val = (
         (matchWeight.standardPrice + volDiff + packageDiff + cusDiff) /
         this.currentCurrency
       ).toLocaleString();
@@ -905,26 +916,33 @@ export default {
           currentRow.exactObj.weight = "+0kg";
         }
       }
-      if(!this.isExactSearch)return (val*1+this.getTruckFee(weight,currentRow)*1).toLocaleString();
+      if (!this.isExactSearch)
+        return (
+          val * 1 +
+          this.getTruckFee(weight, currentRow) * 1
+        ).toLocaleString();
       return val;
     },
 
-   // 计算卡车费
-    getTruckFee(weight,currentRow){
-      if((!this.isContainsTruck)|| (!currentRow.hasTruckRouting))return 0;
-      var truckMinDiff=currentRow.truckMinDiff;
-      var truckMin=currentRow.truckMin
-      var truckFixedMin=currentRow.truckFixedMin;
+    // 计算卡车费
+    getTruckFee(weight, currentRow) {
+      if (!this.isContainsTruck || !currentRow.hasTruckRouting) return 0;
+      var truckMinDiff = currentRow.truckMinDiff;
+      var truckMin = currentRow.truckMin;
+      var truckFixedMin = currentRow.truckFixedMin;
 
-      var matchWeight=currentRow.truckFeeWeightList.find(f=>{
-        return f.code==weight.code;
+      var matchWeight = currentRow.truckFeeWeightList.find((f) => {
+        return f.code == weight.code;
       });
-      console.log(weight)
-      if(weight.code!="+0kg"){
-        return matchWeight? (matchWeight.fixedDiff>0?matchWeight.fixedDiff:(matchWeight.diff+matchWeight.wageinDiff)):0
-      }
-      else if(weight.code=="+0kg") {
-        return truckFixedMin>0? truckFixedMin:(truckMinDiff+truckMin);
+      console.log(weight);
+      if (weight.code != "+0kg") {
+        return matchWeight
+          ? matchWeight.fixedDiff > 0
+            ? matchWeight.fixedDiff
+            : matchWeight.diff + matchWeight.wageinDiff
+          : 0;
+      } else if (weight.code == "+0kg") {
+        return truckFixedMin > 0 ? truckFixedMin : truckMinDiff + truckMin;
       }
     },
 
@@ -1122,7 +1140,7 @@ export default {
 @smallFont: 10px;
 @greyBorder: #80808047;
 @grey: #f8f8f8;
-.blueText{
+.blueText {
   color: @blue;
 }
 .currencyDisplay {
@@ -1332,7 +1350,7 @@ export default {
 /deep/.detailFixed {
   max-width: unset !important;
 }
-/deep/.trRow td{
+/deep/.trRow td {
   max-width: unset !important;
 }
 // /deep/.trRow > td:nth-of-type(10) {
