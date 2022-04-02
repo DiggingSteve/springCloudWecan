@@ -197,7 +197,7 @@
                       :triggerKey="index"
                     ></page-select>
                   </td>
-                  <td>
+                  <td style="width:300px">
                     <pageSelectMultiple
                       pagetype="11"
                       placeholder="航空公司"

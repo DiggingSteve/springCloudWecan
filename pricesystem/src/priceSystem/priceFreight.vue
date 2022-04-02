@@ -326,7 +326,7 @@
 
         <div class="row block">
           <div style="width: 100%" class="blue title">
-            <span>请填写各重量的运价</span>
+            <span>请填写各重量的运价( CNY )</span>
           </div>
         </div>
         <div class="row">

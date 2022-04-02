@@ -432,7 +432,7 @@
     <el-dialog
       :title="`卡车信息 基港:${truckInfo.mdg} -> 到达港: ${truckInfo.ddg}`"
       :visible.sync="isShowTruckDetail"
-      style="overflow:auto;width:800px;"
+      :style="'overflow:auto;width:800px;'"
       :center="true"
     >
       <div class="row" style="min-height: 200px" v-if="!!truckInfo.ddg">
@@ -530,7 +530,7 @@
                       <td>{{ getDayOfWeek(p.airweekdetail) }}</td>
                       <td>{{ p.flaytime.slice(11, 16) }}</td>
                       <td>{{ p.jjg }}</td>
-                      <td>{{ p.jdate.slice(11, 16) }}</td>
+                      <td>{{ p.jdate.slice(11, 16)=="00:00"?"": p.jdate.slice(11, 16) }}</td>
                       <td>{{ p.mdg }}</td>
                       <td>{{ p.reachtime.slice(11, 16) }}</td>
                       <td>{{ p.timedifference }}</td>
