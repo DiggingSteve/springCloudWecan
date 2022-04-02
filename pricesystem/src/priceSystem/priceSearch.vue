@@ -703,12 +703,13 @@ export default {
           ...where,
         },
       };
+      var postJson={json: JSON.stringify(jsonArr)};
       if (!!this.searchData.mdg) {
-        jsonArr["mdg"] = this.searchData.mdg;
-      } else jsonArr["mdg"] = "";
+        postJson["mdg"] = this.searchData.mdg;
+      } else postJson["mdg"] = "";
 
       this.priceObj
-        .request("post", url, { json: JSON.stringify(jsonArr) })
+        .request("post", url, postJson)
         .then(({ data }) => {
           data.resultdata.forEach((i) => {
             this.$set(i, "showWeightVolume", false);
