@@ -705,7 +705,7 @@ export default {
       };
       var postJson={json: JSON.stringify(jsonArr)};
       if (!!this.searchData.mdg) {
-        postJson["mdg"] = this.searchData.mdg;
+        postJson["mdg"] = this.searchData.mdg.like;
       } else postJson["mdg"] = "";
 
       this.priceObj
