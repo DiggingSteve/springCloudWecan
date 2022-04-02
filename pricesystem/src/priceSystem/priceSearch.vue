@@ -675,11 +675,10 @@ export default {
       }
       this.addSearchCondition("gid", where, "wtkh");
       if (!!this.searchData.mdg) {
-        where["orList"] = [
-          { mdg: this.searchData.mdg },
-          { ddg: this.searchData.mdg },
-        ];
+        where["mdg"] = this.searchData.mdg 
+        
       }
+      else  where["mdg"] = "";
 
       if (!!this.searchData.validityDate) {
         var d = this.searchData.validityDate;
