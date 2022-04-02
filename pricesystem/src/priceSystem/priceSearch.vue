@@ -432,7 +432,7 @@
     <el-dialog
       :title="`卡车信息 基港:${truckInfo.mdg} -> 到达港: ${truckInfo.ddg}`"
       :visible.sync="isShowTruckDetail"
-      :style="'overflow:auto;width:800px;'"
+      :width="'90%'"
       :center="true"
     >
       <div class="row" style="min-height: 200px;width:1200px;over-flow:auto" v-if="!!truckInfo.ddg">
