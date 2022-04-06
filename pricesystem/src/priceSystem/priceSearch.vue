@@ -347,8 +347,10 @@
       <template v-slot:detail="pdata">
         <template>
           {{ void (currentIndex = pdata.data.index) }}
-        </template>
-        <table style="min-width: 500px; font-size: 10px; text-align: center">
+          {{ void (currentRow = tableDataRes[currentIndex]) }}
+        </template >
+        <span>{{currentRow.isShow?currentRow.exactPrice:"无匹配费用"}}</span>
+        <table style="min-width: 500px; font-size: 10px; text-align: center" v-if="!isExactSearch">
           <tbody>
             <tr>
               <td
@@ -358,9 +360,6 @@
                     !pdata.data.row.showWeightVolume
                 "
               >
-                <span style="display: none">{{
-                  (currentRow = tableDataRes[currentIndex])
-                }}</span>
                 <i
                   :class="
                     pdata.data.row.showWeightVolume
@@ -549,8 +548,7 @@
               </table>
             </div>
             <div class="hbhDetail" v-if="item.isSelfInput == 1">
-                 <div class="row" style="padding-bottom: 10px">
-             
+              <div class="row" style="padding-bottom: 10px">
                 <div class="item30">
                   航班号:<span class="label">{{ item.hbh }}</span>
                 </div>
@@ -561,20 +559,14 @@
                   目的港:<span class="label">{{ item.mdg }}</span>
                 </div>
               </div>
-               <div class="row" style="padding-bottom: 10px">
-             
-                <div class="item30">
-                  开始日期:<span class="label">--</span>
-                </div>
-                <div class="item30">
-                  结束日期:<span class="label">--</span>
-                </div>
-                <div class="item20">
-                  目的港:<span class="label">{{ item.mdg }}</span>
-                </div>
+              <div class="row" style="padding-bottom: 10px">
+                <div class="item30">开始日期:<span class="label">--</span></div>
+                <div class="item30">结束日期:<span class="label">--</span></div>
               </div>
-                <table class="detailTable">
-                  {{ void (weekList = item.schedule.split(",")) }}
+              <table class="detailTable">
+                {{
+                  void (weekList = item.schedule.split(","))
+                }}
                 <thead>
                   <tr>
                     <td>航班日期</td>
@@ -589,7 +581,7 @@
                 <tbody>
                   <template v-for="day in weekList">
                     <tr>
-                      <td>{{   convertIntToWeek(day * 1) }}</td>
+                      <td>{{ convertIntToWeek(day * 1) }}</td>
                       <td>--</td>
                       <td>--</td>
                       <td>--</td>
@@ -600,7 +592,6 @@
                   </template>
                 </tbody>
               </table>
-
             </div>
           </el-tab-pane>
         </template>
@@ -741,50 +732,48 @@ export default {
           ...where,
         },
       };
-      var postJson={json: JSON.stringify(jsonArr)};
+      var postJson = { json: JSON.stringify(jsonArr) };
       if (!!this.searchData.mdg) {
         postJson["mdg"] = this.searchData.mdg.like;
       } else postJson["mdg"] = "";
 
-      this.priceObj
-        .request("post", url, postJson)
-        .then(({ data }) => {
-          data.resultdata.forEach((i) => {
-            this.$set(i, "showWeightVolume", false);
-          });
-          tableDataCopy = JSON.parse(JSON.stringify(data.resultdata));
-          if (this.isExactSearch) {
-            var vol = this.inputModelData.vol;
-            var weight = this.inputModelData.weight;
-            var volType = this.getVolType(vol, weight);
-            var calWeight = this.calWeight(); //计重
-            var grossWeight = weight * 1;
-            // 精准查询的时候通过计重或者毛重筛选数据 根据计费方式上的毛重 计重
-            this.tableDataRes = this.filterDataByWeight(
-              tableDataCopy,
-              calWeight,
-              grossWeight,
-              volType
-            );
-          } else {
-            this.tableDataRes = data.resultdata;
-          }
-          if (this.searchData.mdg) {
-            this.tableDataRes.forEach((item) => {
-              if (item.hasTruckRouting) {
-                if (!!!item.ddg) return;
-                if (!!!_this.searchData.mdg.like) return;
-                if (
-                  item.ddg.toLowerCase() !=
-                  _this.searchData.mdg.like.toLowerCase()
-                ) {
-                  item.hasTruckRouting = false;
-                }
-              }
-            });
-          }
-          if (this.tableDataRes.length == 0) this.$message("无查询数据");
+      this.priceObj.request("post", url, postJson).then(({ data }) => {
+        data.resultdata.forEach((i) => {
+          this.$set(i, "showWeightVolume", false);
         });
+        tableDataCopy = JSON.parse(JSON.stringify(data.resultdata));
+        if (this.isExactSearch) {
+          var vol = this.inputModelData.vol;
+          var weight = this.inputModelData.weight;
+          var volType = this.getVolType(vol, weight);
+          var calWeight = this.calWeight(); //计重
+          var grossWeight = weight * 1;
+          // 精准查询的时候通过计重或者毛重筛选数据 根据计费方式上的毛重 计重
+          this.tableDataRes = this.filterDataByWeight(
+            tableDataCopy,
+            calWeight,
+            grossWeight,
+            volType
+          );
+        } else {
+          this.tableDataRes = data.resultdata;
+        }
+        if (this.searchData.mdg) {
+          this.tableDataRes.forEach((item) => {
+            if (item.hasTruckRouting) {
+              if (!!!item.ddg) return;
+              if (!!!_this.searchData.mdg.like) return;
+              if (
+                item.ddg.toLowerCase() !=
+                _this.searchData.mdg.like.toLowerCase()
+              ) {
+                item.hasTruckRouting = false;
+              }
+            }
+          });
+        }
+        if (this.tableDataRes.length == 0) this.$message("无查询数据");
+      });
     },
     /**设置航司名字 */
     setAircomName(twocode) {
@@ -830,10 +819,63 @@ export default {
         }
         item.calWeight = weight;
         var exactWeight = this.getWeight(weight);
-        var exactObj = { weight: exactWeight, vol: volType }; //得出匹配的 比例以及重量格子 在setCellValue时用到
-        item.exactObj = exactObj;
+        this.reversePrice(item,exactWeight,volType,weight);
       });
       return dataArrCopy;
+    },
+
+    //计算每行的单价是否吃到min 吃到Min就要倒算
+    reversePrice(row, weightCode, volType, calWeight) {
+      var minFixedPrice = row.fixedFeeList.find((item) => {
+        return (
+          (!!item.cus ? item.cus == this.selectedCusType : true) &&
+          (!!item.packageType
+            ? item.packageType == this.selectedPackageType
+            : true) &&
+          item.vol == volType &&
+          item.weight == "+0kg"
+        );
+      });
+      var minFlight = row.weightArr.find((item) => {
+        return item.code == "+0kg";
+      });
+      var flightMinPrice;
+      if (!!minFixedPrice) flightMinPrice = minFixedPrice.diff * 1;
+      else flightMinPrice = !!minFlight ? minFlight.standardPrice : 0;
+
+      //查卡车min价格
+      var truckMinPrice =
+        row.truckFixedMin > 0
+          ? row.truckFixedMin
+          : row.truckMin + row.truckMinDiff;
+      var matchFlight = row.weightArr.find((item) => {
+        return item.code == weightCode;
+      });
+      var matchTruck = row.truckFeeWeightList.find((item) => {
+        return item.code == weightCode;
+      });
+      var matchFlightPrice = !!matchFlight ? matchFlight.standardPrice * 1 : 0;
+      var matchTruckPrice = !!matchTruck
+        ? matchTruck.fixedDiff > 0
+          ? matchTruck.fixedDiff
+          : matchTruck.diff + matchTruck.wageinDiff
+        : 0;
+      if (matchFlightPrice == 0) {
+        // 没有匹配的价格 没维护 这一行可以隐藏
+        row.isShow = false;
+        return;
+      }
+      var flightTotal=matchFlightPrice*calWeight*1;
+      var truckTotal=matchTruckPrice*calWeight*1;
+      if(flightTotal>=flightMinPrice&&truckTotal>=truckMinPrice)
+      {
+        row.exactPrice=matchFlightPrice+matchTruckPrice;
+        return;
+      }
+      //需要倒算
+      var total=(flightTotal<flightMinPrice?flightMinPrice:flightTotal )+(truckTotal<truckMinPrice?truckMinPrice:truckTotal);
+      row.exactPrice=(totoal/calWeight).toLocaleString();
+      row.isShow=true;
     },
 
     loadTruckInfo(truckFeeid) {
@@ -860,15 +902,6 @@ export default {
      * @currentRow 指查询接口返回数组对应的当前行数据
      */
     setCellValue(vol, weight, currentRow) {
-      //精准查询 不匹配格子直接--
-      if (this.isExactSearch) {
-        var exactWeight = currentRow.exactObj.weight;
-        var exactVol = currentRow.exactObj.vol;
-        if (vol.code != exactVol || weight.code != exactWeight) {
-          return "--";
-        }
-      }
-
       // 查找当前格子一口价
       var matchFixedPrice = currentRow.fixedFeeList.find((item) => {
         return (
@@ -934,27 +967,6 @@ export default {
         this.currentCurrency
       ).toLocaleString();
 
-      // exactObj中的weight vol 代表精确筛选之后对应的td 改成0kg对应到MIN
-      //此处计算一下 min价格和通过计重*单价算出的价格谁更大 取较大值
-      if (this.isExactSearch && currentRow.exactObj.weight != "+0kg") {
-        var total = currentRow.calWeight * 1 * val * 1;
-        var minFixedPrice = currentRow.fixedFeeList.find((item) => {
-          return (
-            (!!item.cus ? item.cus == this.selectedCusType : true) &&
-            (!!item.packageType
-              ? item.packageType == this.selectedPackageType
-              : true) &&
-            item.vol == vol.code &&
-            item.weight == "+0kg"
-          );
-        });
-        var minPrice;
-        if (!!minFixedPrice) minPrice = minFixedPrice.diff * 1;
-        else minPrice = !!minWeight ? minWeight.standardPrice : 0;
-        if (Number.isFinite(total) && total < minPrice) {
-          currentRow.exactObj.weight = "+0kg";
-        }
-      }
       if (!this.isExactSearch)
         return (
           val * 1 +
