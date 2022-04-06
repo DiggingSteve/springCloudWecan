@@ -353,7 +353,7 @@
           <tbody>
             <tr><td>{{currentRow.isShow?currentRow.exactPrice:"无匹配费用"}}</td></tr>
           </tbody>
-          </table> >
+          </table> 
         <table style="min-width: 500px; font-size: 10px; text-align: center" v-if="!isExactSearch">
           <tbody>
             <tr>
@@ -878,7 +878,7 @@ export default {
       }
       //需要倒算
       var total=(flightTotal<flightMinPrice?flightMinPrice:flightTotal )+(truckTotal<truckMinPrice?truckMinPrice:truckTotal);
-      row.exactPrice=(totoal/calWeight).toLocaleString();
+      row.exactPrice=(total/calWeight).toLocaleString();
       row.isShow=true;
     },
 
