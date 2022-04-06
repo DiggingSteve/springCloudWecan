@@ -254,7 +254,7 @@
         <div
           style="display: flex; min-width: 500px; justify-content: space-around"
         >
-          <span>{{}}</span>
+          <span></span>
           <div
             class="input-item"
             style="
@@ -463,6 +463,7 @@
       :visible.sync="priceObj.isShowHbhDetail"
       :close-on-click-modal="false"
       :before-close="closeHbhDetail"
+      :width="'80%'"
     >
       <el-tabs v-model="priceObj.selectedHbhKey" type="card" @tab-click="">
         <template v-for="(item, key) in priceObj.hbhMap">
@@ -479,7 +480,7 @@
                   始发港:<span class="label">{{ item.sfg }}</span>
                 </div>
                 <div class="item20">
-                  交接地:<span class="label">{{ item.hbh }}</span>
+                  交接地:<span class="label">{{ item.jjdname }}</span>
                 </div>
               </div>
               <div class="row" style="padding-bottom: 10px">
@@ -548,21 +549,58 @@
               </table>
             </div>
             <div class="hbhDetail" v-if="item.isSelfInput == 1">
-              <div class="row">
-                <span class="blueText">此航班为自定义输入</span>
-              </div>
-              <div class="row">
-                <div class="item15">航班时刻周期</div>
-                <div class="item80" style="font-size: 15px">
-                  {{ void (weekList = item.schedule.split(",")) }}
-
-                  <template v-for="day in weekList">
-                    <span style="margin: 0 1px">{{
-                      convertIntToWeek(day * 1)
-                    }}</span>
-                  </template>
+                 <div class="row" style="padding-bottom: 10px">
+             
+                <div class="item30">
+                  航班号:<span class="label">{{ item.hbh }}</span>
+                </div>
+                <div class="item30">
+                  始发港:<span class="label">{{ item.sfg }}</span>
+                </div>
+                <div class="item30">
+                  目的港:<span class="label">{{ item.mdg }}</span>
                 </div>
               </div>
+               <div class="row" style="padding-bottom: 10px">
+             
+                <div class="item30">
+                  开始日期:<span class="label">--</span>
+                </div>
+                <div class="item30">
+                  结束日期:<span class="label">--</span>
+                </div>
+                <div class="item20">
+                  目的港:<span class="label">{{ item.mdg }}</span>
+                </div>
+              </div>
+                <table class="detailTable">
+                  {{ void (weekList = item.schedule.split(",")) }}
+                <thead>
+                  <tr>
+                    <td>航班日期</td>
+                    <td>起飞时间</td>
+                    <td>经停港</td>
+                    <td>经停时间</td>
+                    <td>目的港</td>
+                    <td>到达时间</td>
+                    <td>时差</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template v-for="day in weekList">
+                    <tr>
+                      <td>{{   convertIntToWeek(day * 1) }}</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+
             </div>
           </el-tab-pane>
         </template>

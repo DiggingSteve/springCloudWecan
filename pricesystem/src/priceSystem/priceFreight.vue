@@ -1816,6 +1816,9 @@ export default {
   border-radius: 4px;
   background: #fffcf0;
   padding-left: 5px;
+ & .el-input__inner{
+    border: 0 !important;
+  }
 }
 /deep/.el-tab-pane {
   padding: 0 !important;
@@ -1836,9 +1839,7 @@ export default {
 /deep/ .contentCmpt {
   max-width: 100% !important;
 }
-/deep/.el-input__inner {
-  border: 0;
-}
+
 /deep/.el-range-editor .el-range-input {
   background: transparent !important;
 }
