@@ -664,11 +664,14 @@ public class AirFreightFeeService implements IAirFreightFee {
         }
         query.orderByAsc("startDate");
         var list = routingDao.getRoutingList(query);
-        if(list.stream().count()==0&& (!mdg.equals(""))){
+        if( !mdg.equals("")){
             query = GetQueryWrapper.getQueryWrapperByJsonStr(json, ViewFreightRouting.class);
             query.eq("ddg",mdg);
             query.orderByAsc("startDate");
-            list = routingDao.getRoutingList(query);
+           var ddgList = routingDao.getRoutingList(query);
+           if(ddgList.stream().count()>0){
+               list.addAll(ddgList);
+           }
         }
         if(list.stream().count()==0)return new ArrayList<>();
         List<OutputFreightRouting> result = ViewFreightRoutingObjectMapper.INSTANCES.toList(list);
