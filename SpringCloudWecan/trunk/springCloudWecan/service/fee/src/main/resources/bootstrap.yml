@@ -34,6 +34,10 @@ eureka:
 server:
   port: ${application-port}
 
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
+
 #logging:
 #  config: classpath:config/log4j2-spring.xml
 
