@@ -349,7 +349,11 @@
           {{ void (currentIndex = pdata.data.index) }}
           {{ void (currentRow = tableDataRes[currentIndex]) }}
         </template >
-        <span>{{currentRow.isShow?currentRow.exactPrice:"无匹配费用"}}</span>
+        <table style="min-width: 500px; font-size: 10px; text-align: center" v-if="isExactSearch">
+          <tbody>
+            <tr><td>{{currentRow.isShow?currentRow.exactPrice:"无匹配费用"}}</td></tr>
+          </tbody>
+          </table> >
         <table style="min-width: 500px; font-size: 10px; text-align: center" v-if="!isExactSearch">
           <tbody>
             <tr>
@@ -1243,9 +1247,7 @@ export default {
   line-height: 27px;
   width: 270px;
   padding: 0 10px;
-  & .tab {
-    // padding: 0 10px;
-  }
+ 
   & input {
     font-size: 14px !important;
     // width: 80px;
