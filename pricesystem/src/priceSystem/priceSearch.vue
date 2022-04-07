@@ -758,18 +758,7 @@ export default {
         });
         tableDataCopy = JSON.parse(JSON.stringify(data.resultdata));
         if (this.isExactSearch) {
-          var vol = this.inputModelData.vol;
-          var weight = this.inputModelData.weight;
-          var volType = this.getVolType(vol, weight);
-          var calWeight = this.calWeight(); //计重
-          var grossWeight = weight * 1;
-          // 精准查询的时候通过计重或者毛重筛选数据 根据计费方式上的毛重 计重
-          this.tableDataRes = this.filterDataByWeight(
-            tableDataCopy,
-            calWeight,
-            grossWeight,
-            volType
-          );
+          this.updateList();
         } else {
           this.tableDataRes = data.resultdata;
         }
@@ -789,6 +778,21 @@ export default {
         }
         if (this.tableDataRes.length == 0) this.$message("无查询数据");
       });
+    },
+    updateList() {
+      if (!this.isExactSearch) return;
+      var vol = this.inputModelData.vol;
+      var weight = this.inputModelData.weight;
+      var volType = this.getVolType(vol, weight);
+      var calWeight = this.calWeight(); //计重
+      var grossWeight = weight * 1;
+      // 精准查询的时候通过计重或者毛重筛选数据 根据计费方式上的毛重 计重
+      this.tableDataRes = this.filterDataByWeight(
+        tableDataCopy,
+        calWeight,
+        grossWeight,
+        volType
+      );
     },
     /**设置航司名字 */
     setAircomName(twocode) {
@@ -842,8 +846,8 @@ export default {
     //计算每行的单价是否吃到min 吃到Min就要倒算
     reversePrice(row, weightCode, volType, calWeight) {
       var isContainsTruck = this.isContainsTruck;
-      var packageDiff=row.packageCusDiffMap[this.selectedPackageType];
-      var cusDiff=row.packageCusDiffMap[this.selectedCusType];
+      var packageDiff = row.packageCusDiffMap[this.selectedPackageType];
+      var cusDiff = row.packageCusDiffMap[this.selectedCusType];
       var minFixedPrice = row.fixedFeeList.find((item) => {
         return (
           (!!item.cus ? item.cus == this.selectedCusType : true) &&
@@ -883,7 +887,10 @@ export default {
         row.isShow = false;
         return;
       }
-     matchFlightPrice= matchFlightPrice+(packageDiff>0?packageDiff:0)+(cusDiff>0?cusDiff:0);
+      matchFlightPrice =
+        matchFlightPrice +
+        (packageDiff > 0 ? packageDiff : 0) +
+        (cusDiff > 0 ? cusDiff : 0);
       var flightTotal = matchFlightPrice * calWeight * 1;
       var truckTotal = matchTruckPrice * calWeight * 1;
       if (flightTotal >= flightMinPrice && truckTotal >= truckMinPrice) {
@@ -895,9 +902,9 @@ export default {
       var total =
         (flightTotal < flightMinPrice ? flightMinPrice : flightTotal) +
         (isContainsTruck
-          ?( truckTotal < truckMinPrice
+          ? truckTotal < truckMinPrice
             ? truckMinPrice
-            : truckTotal)
+            : truckTotal
           : 0);
       row.exactPrice = (total / calWeight).toLocaleString();
       row.isShow = true;
@@ -1205,6 +1212,24 @@ export default {
   watch: {
     typeStatus(val) {
       this.filterExactTable();
+    },
+    selectedPackageType: {
+      handler(newval, oldval) {
+        this.updateList();
+        this.$forceUpdate();
+      },
+    },
+    selectedCusType: {
+      handler(newval, oldval) {
+        this.updateList();
+        this.$forceUpdate();
+      },
+      isContainsTruck: {
+        handler(newval, oldval) {
+          this.updateList();
+          this.$forceUpdate();
+        },
+      },
     },
   },
 };
