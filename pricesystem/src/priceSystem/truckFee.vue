@@ -565,7 +565,7 @@
     <el-dialog
       :title="'导入卡应付车中转费'"
       :visible.sync="priceObj.isShowImportDialog"
-      width="30%"
+      width="50%"
       :close-on-click-modal="false"
     >
       <div class="importWrap">
@@ -588,6 +588,11 @@
         <div class="row">
           <file-read :fileData.sync="fileData"> </file-read>
         </div>
+      
+      </div>
+      <div class="row">
+
+      </div>
         <div class="row">
           <div class="item80"></div>
           <div class="item20">
@@ -599,7 +604,6 @@
             </el-button>
           </div>
         </div>
-      </div>
     </el-dialog>
   </div>
 </template>

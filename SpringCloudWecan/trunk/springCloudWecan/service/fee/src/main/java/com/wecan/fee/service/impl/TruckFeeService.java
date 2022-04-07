@@ -60,11 +60,12 @@ public class TruckFeeService implements ITruckFee {
         }
         List<TruckFeeWeight> codeList = new ArrayList<>();
         List<TruckFeeAircompany> comList = new ArrayList<>();
-        String twocdeoStr = data.get(0).getTwocodeStr(); // 二字码拼接的字符串
-        var twocodeArr = Arrays.stream(twocdeoStr.split(",")).collect(Collectors.toList());
+
 
         List<TruckFee> feeList = InputTruckFeeMapper.INSTANCES.toList(data);
         LambdaUtil.forEach(0, feeList, (item, index) -> {
+            String twocdeoStr = item.getTwocodeStr(); // 二字码拼接的字符串
+            var twocodeArr = Arrays.stream(twocdeoStr.split(",")).collect(Collectors.toList());
             var list = InputTruckWeightDiffMapper.INSTANCES.toCodeArr(data.get(index).getCodeArr(), item.getGuid());
             codeList.addAll(list);
             LambdaUtil.forEach(0, twocodeArr, (twocode, j) -> {
@@ -156,10 +157,11 @@ public class TruckFeeService implements ITruckFee {
         }
         List<TruckFeeWeight> codeList = new ArrayList<>();
         List<TruckFeeAircompany> comList = new ArrayList<>();
-        String twocdeoStr = data.get(0).getTwocodeStr(); // 二字码拼接的字符串
-        var twocodeArr = Arrays.stream(twocdeoStr.split(",")).collect(Collectors.toList());
+
         List<TruckFee> feeList = InputTruckFeeMapper.INSTANCES.toList(data);
         LambdaUtil.forEach(0, feeList, (item, index) -> {
+            String twocdeoStr = item.getTwocodeStr(); // 二字码拼接的字符串
+            var twocodeArr = Arrays.stream(twocdeoStr.split(",")).collect(Collectors.toList());
             LambdaQueryWrapper<TruckFeeAircompany> delAircomQuery = new LambdaQueryWrapper<TruckFeeAircompany>()
                     .eq(TruckFeeAircompany::getFeeid, item.getGuid());
             airComDao.remove(delAircomQuery);
