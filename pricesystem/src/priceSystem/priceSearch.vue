@@ -449,10 +449,10 @@
     >
       <div
         class="row"
-        style="min-height: 200px; width: 1200px; over-flow: auto"
+        style="min-height: 200px; over-flow: auto"
         v-if="!!truckInfo.ddg"
       >
-        <table class="truckTable" style="height: 100%">
+        <table class="truckTable" style="height: 100% ;width:1200px" >
           <tr>
             <th>目的地</th>
             <th>M</th>
@@ -550,7 +550,7 @@
                       <td>
                         {{
                           p.jdate.slice(11, 16) == "00:00"
-                            ? ""
+                            ? "--"
                             : p.jdate.slice(11, 16)
                         }}
                       </td>
@@ -896,6 +896,7 @@ export default {
       if (flightTotal >= flightMinPrice && truckTotal >= truckMinPrice) {
         row.exactPrice =
           matchFlightPrice + (isContainsTruck ? matchTruckPrice : 0);
+          row.isShow = true;
         return;
       }
       //需要倒算
