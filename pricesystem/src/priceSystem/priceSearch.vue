@@ -452,7 +452,7 @@
         style="min-height: 200px; over-flow: auto"
         v-if="!!truckInfo.ddg"
       >
-        <table class="truckTable" style="height: 100% ;width:1200px" >
+        <table class="truckTable" style="height: 100%; width: 1200px">
           <tr>
             <th>目的地</th>
             <th>M</th>
@@ -896,7 +896,7 @@ export default {
       if (flightTotal >= flightMinPrice && truckTotal >= truckMinPrice) {
         row.exactPrice =
           matchFlightPrice + (isContainsTruck ? matchTruckPrice : 0);
-          row.isShow = true;
+        row.isShow = true;
         return;
       }
       //需要倒算
@@ -1214,23 +1214,17 @@ export default {
     typeStatus(val) {
       this.filterExactTable();
     },
-    selectedPackageType: {
-      handler(newval, oldval) {
-        this.updateList();
-        this.$forceUpdate();
-      },
+    selectedPackageType(val) {
+      this.updateList();
+      this.$forceUpdate();
     },
-    selectedCusType: {
-      handler(newval, oldval) {
-        this.updateList();
-        this.$forceUpdate();
-      },
-      isContainsTruck: {
-        handler(newval, oldval) {
-          this.updateList();
-          this.$forceUpdate();
-        },
-      },
+    selectedCusType(val) {
+      this.updateList();
+      this.$forceUpdate();
+    },
+    isContainsTruck(val) {
+      this.updateList();
+      this.$forceUpdate();
     },
   },
 };
