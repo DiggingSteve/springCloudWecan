@@ -906,7 +906,7 @@ export default {
             ? truckMinPrice
             : truckTotal
           : 0);
-      row.exactPrice = (total / calWeight).toLocaleString();
+      row.exactPrice = (total / calWeight).toFixed(2);
       row.isShow = true;
     },
 
