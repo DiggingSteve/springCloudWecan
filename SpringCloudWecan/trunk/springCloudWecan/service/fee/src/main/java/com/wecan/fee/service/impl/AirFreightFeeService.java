@@ -660,7 +660,7 @@ public class AirFreightFeeService implements IAirFreightFee {
         var query = GetQueryWrapper.getQueryWrapperByJsonStr(json, ViewFreightRouting.class);
         if(!mdg.equals("")) {
             query.eq("mdg", mdg);
-            query.eq("ddg","");
+
         }
         query.orderByAsc("startDate");
         var list = routingDao.getRoutingList(query);
@@ -668,7 +668,7 @@ public class AirFreightFeeService implements IAirFreightFee {
             query = GetQueryWrapper.getQueryWrapperByJsonStr(json, ViewFreightRouting.class);
             query.eq("ddg",mdg);
             query.orderByAsc("startDate");
-           var ddgList = routingDao.getRoutingList(query);
+           var ddgList = routingDao.getTruckRoutingList(query);
            if(ddgList.stream().count()>0){
                list.addAll(ddgList);
            }
