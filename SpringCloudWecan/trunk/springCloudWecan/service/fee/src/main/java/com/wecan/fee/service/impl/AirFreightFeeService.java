@@ -673,6 +673,15 @@ public class AirFreightFeeService implements IAirFreightFee {
                list.addAll(ddgList);
            }
         }
+        else{
+            query = GetQueryWrapper.getQueryWrapperByJsonStr(json, ViewFreightRouting.class);
+            
+            query.orderByAsc("startDate");
+            var ddgList = routingDao.getTruckRoutingList(query);
+            if(ddgList.stream().count()>0){
+                list.addAll(ddgList);
+            }
+        }
         if(list.stream().count()==0)return new ArrayList<>();
         List<OutputFreightRouting> result = ViewFreightRoutingObjectMapper.INSTANCES.toList(list);
         getRoutingData(result);
