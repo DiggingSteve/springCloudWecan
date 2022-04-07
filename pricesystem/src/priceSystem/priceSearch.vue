@@ -348,13 +348,24 @@
         <template>
           {{ void (currentIndex = pdata.data.index) }}
           {{ void (currentRow = tableDataRes[currentIndex]) }}
-        </template >
-        <table style="min-width: 500px; font-size: 10px; text-align: center" v-if="isExactSearch">
+        </template>
+        <table
+          style="min-width: 500px; font-size: 10px; text-align: center"
+          v-if="isExactSearch"
+        >
           <tbody>
-            <tr><td>{{currentRow.isShow?currentRow.exactPrice:"无匹配费用"}}</td></tr>
+            <tr>
+              <td style="border: 0">
+                折算单价:
+                {{ currentRow.isShow ? currentRow.exactPrice : "无匹配费用" }}
+              </td>
+            </tr>
           </tbody>
-          </table> 
-        <table style="min-width: 500px; font-size: 10px; text-align: center" v-if="!isExactSearch">
+        </table>
+        <table
+          style="min-width: 500px; font-size: 10px; text-align: center"
+          v-if="!isExactSearch"
+        >
           <tbody>
             <tr>
               <td
@@ -823,13 +834,16 @@ export default {
         }
         item.calWeight = weight;
         var exactWeight = this.getWeight(weight);
-        this.reversePrice(item,exactWeight,volType,weight);
+        this.reversePrice(item, exactWeight, volType, weight);
       });
       return dataArrCopy;
     },
 
     //计算每行的单价是否吃到min 吃到Min就要倒算
     reversePrice(row, weightCode, volType, calWeight) {
+      var isContainsTruck = this.isContainsTruck;
+      var packageDiff=row.packageCusDiffMap[this.selectedPackageType];
+      var cusDiff=row.packageCusDiffMap[this.selectedCusType];
       var minFixedPrice = row.fixedFeeList.find((item) => {
         return (
           (!!item.cus ? item.cus == this.selectedCusType : true) &&
@@ -869,17 +883,24 @@ export default {
         row.isShow = false;
         return;
       }
-      var flightTotal=matchFlightPrice*calWeight*1;
-      var truckTotal=matchTruckPrice*calWeight*1;
-      if(flightTotal>=flightMinPrice&&truckTotal>=truckMinPrice)
-      {
-        row.exactPrice=matchFlightPrice+matchTruckPrice;
+     matchFlightPrice= matchFlightPrice+(packageDiff>0?packageDiff:0)+(cusDiff>0?cusDiff:0);
+      var flightTotal = matchFlightPrice * calWeight * 1;
+      var truckTotal = matchTruckPrice * calWeight * 1;
+      if (flightTotal >= flightMinPrice && truckTotal >= truckMinPrice) {
+        row.exactPrice =
+          matchFlightPrice + (isContainsTruck ? matchTruckPrice : 0);
         return;
       }
       //需要倒算
-      var total=(flightTotal<flightMinPrice?flightMinPrice:flightTotal )+(truckTotal<truckMinPrice?truckMinPrice:truckTotal);
-      row.exactPrice=(total/calWeight).toLocaleString();
-      row.isShow=true;
+      var total =
+        (flightTotal < flightMinPrice ? flightMinPrice : flightTotal) +
+        (isContainsTruck
+          ?( truckTotal < truckMinPrice
+            ? truckMinPrice
+            : truckTotal)
+          : 0);
+      row.exactPrice = (total / calWeight).toLocaleString();
+      row.isShow = true;
     },
 
     loadTruckInfo(truckFeeid) {
@@ -1247,7 +1268,7 @@ export default {
   line-height: 27px;
   width: 270px;
   padding: 0 10px;
- 
+
   & input {
     font-size: 14px !important;
     // width: 80px;
