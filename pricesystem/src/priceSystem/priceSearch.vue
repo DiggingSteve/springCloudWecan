@@ -477,7 +477,7 @@
       :visible.sync="priceObj.isShowHbhDetail"
       :close-on-click-modal="false"
       :before-close="closeHbhDetail"
-      :width="'80%'"
+      :width="'90%'"
     >
       <el-tabs v-model="priceObj.selectedHbhKey" type="card" @tab-click="">
         <template v-for="(item, key) in priceObj.hbhMap">
@@ -550,7 +550,7 @@
                       <td>
                         {{
                           p.jdate.slice(11, 16) == "00:00"
-                            ? "--"
+                            ? ""
                             : p.jdate.slice(11, 16)
                         }}
                       </td>
