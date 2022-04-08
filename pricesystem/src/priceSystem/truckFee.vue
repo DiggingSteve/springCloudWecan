@@ -769,12 +769,12 @@ export default {
     },
 
     sliceFeeArr(){
-      if(this.feeArr.length==0)return [];
+      if(this.priceObj.feeArr.length==0)return [];
       var length=this.feeArr.length;
       var pageSize=10;//分页控件默认10
       var start=pageSize*(this.currentPage-1);
       var end=pageSize*this.currentPage;
-      return this.feeArr.slice(start,end);
+      return this.priceObj.feeArr.slice(start,end);
     },
 
     /**显示正负号 */
