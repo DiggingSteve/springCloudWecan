@@ -158,7 +158,10 @@
             >复制</span
           >
         </div>
-        <div class="middle" style="min-height: 100px; margin-bottom: 10px;overflow-x:scroll">
+        <div
+          class="middle"
+          style="min-height: 100px; margin-bottom: 10px; overflow-x: scroll"
+        >
           <table class="editTb">
             <thead>
               <tr>
@@ -197,7 +200,7 @@
                       :triggerKey="index"
                     ></page-select>
                   </td>
-                  <td style="width:300px">
+                  <td style="width: 300px">
                     <pageSelectMultiple
                       pagetype="11"
                       placeholder="航空公司"
@@ -224,8 +227,8 @@
                       type="text"
                       v-model="priceObj.feeArr[index].min"
                       @input="editContent(priceObj.feeArr[index].min)"
-                        @focus="selectText($event)"
-                        @blur="fixed($event,priceObj.feeArr[index].min)"
+                      @focus="selectText($event)"
+                      @blur="fixed($event, priceObj.feeArr[index].min)"
                     ></el-input>
                     <div class="row fixedWrap" v-if="row.isNeedSync">
                       <div class="item37">
@@ -275,7 +278,9 @@
                           editContent(priceObj.feeArr[index].codeArr[j].diff)
                         "
                         @focus="selectText($event)"
-                        @blur="fixed($event,priceObj.feeArr[index].codeArr[j].diff)"
+                        @blur="
+                          fixed($event, priceObj.feeArr[index].codeArr[j].diff)
+                        "
                       ></el-input>
                       <div class="row fixedWrap" v-if="row.isNeedSync">
                         <div class="item37">
@@ -322,7 +327,7 @@
                       v-model="priceObj.feeArr[index].flat"
                       @input="editContent(priceObj.feeArr[index].flat)"
                       @focus="selectText($event)"
-                      @blur="fixed($event,priceObj.feeArr[index].flat)"
+                      @blur="fixed($event, priceObj.feeArr[index].flat)"
                     ></el-input>
                     <div class="row fixedWrap" v-if="row.isNeedSync">
                       <div class="item37">
@@ -365,6 +370,12 @@
             </tbody>
           </table>
         </div>
+        <div class="row">
+          <div class="item100">
+            <el-pagination layout="prev, pager, next" :total="priceObj.feeArr.length">
+            </el-pagination>
+          </div>
+        </div>
       </div>
       <div class="row" style="">
         <div class="item15">
@@ -402,7 +413,7 @@
       width="70%"
       :close-on-click-modal="false"
     >
-      <div class="row" v-if="priceObj.feeArr.length>0" >
+      <div class="row" v-if="priceObj.feeArr.length > 0">
         <div
           class="item100"
           style="font-size: 16px; font-weight: 800; margin-bottom: 10px"
@@ -413,7 +424,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="item100" style="overflow:auto">
+        <div class="item100" style="overflow: auto">
           <table class="editTb">
             <thead>
               <tr>
@@ -588,22 +599,19 @@
         <div class="row">
           <file-read :fileData.sync="fileData"> </file-read>
         </div>
-      
       </div>
+      <div class="row"></div>
       <div class="row">
-
-      </div>
-        <div class="row">
-          <div class="item80"></div>
-          <div class="item20">
-            <el-button
-              type="primary"
-              @click="priceObj.setExcelToFeeArr(fileData)"
-            >
-              确认
-            </el-button>
-          </div>
+        <div class="item80"></div>
+        <div class="item20">
+          <el-button
+            type="primary"
+            @click="priceObj.setExcelToFeeArr(fileData)"
+          >
+            确认
+          </el-button>
         </div>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -657,7 +665,7 @@ export default {
   },
   methods: {
     /**
-     * 
+     *
      * 卡车费计算逻辑为 fixedDiff>0取fixedDiff值 没有fixed值 取diff+wageinDiff
      */
     search() {
@@ -671,7 +679,7 @@ export default {
       this.addSearchCondition("addman", where, "addman");
       this.addSearchCondition("ddg", where, "ddg");
       this.addSearchCondition("addtime", where, "adddate");
-  
+
       where["wageinout"] = this.wageinout;
       var jsonArr = {
         where: {
@@ -735,11 +743,10 @@ export default {
         throw new Error("请输入数字");
       }
     },
-     fixed(event,item,length) {
-       var e=event.currentTarget;
-       if(!!!length)length=2;
-        e.value= (item*1).toFixed(length);
-      
+    fixed(event, item, length) {
+      var e = event.currentTarget;
+      if (!!!length) length = 2;
+      e.value = (item * 1).toFixed(length);
     },
     selectTwocode(index) {
       this.selectedTwocodeIndex = index;
@@ -769,9 +776,9 @@ export default {
      */
     checkIsExistWageoutFee(i) {
       console.log(this.priceObj.feeArr[i].ddg);
-      this.$nextTick(function(){
+      this.$nextTick(function () {
         console.log(this.priceObj.feeArr[i].ddg);
-      })
+      });
       setTimeout(() => {
         if (this.wageinout == wageinoutEnum.in) {
           var item = this.priceObj.feeArr[i];
@@ -794,7 +801,7 @@ export default {
       this.priceObj.loadEditInfo(data);
       this.priceObj.loadWageinFromWageout(data.feeid);
     },
-       selectText(event) {
+    selectText(event) {
       event.currentTarget.select();
     },
 
@@ -883,7 +890,6 @@ export default {
   & .row {
     line-height: 14px;
     vertical-align: middle;
-    
   }
   & .adjust-wrap {
     display: inline-block;
@@ -928,7 +934,7 @@ i {
 }
 .fixedWrap {
   padding: 10px;
-  width:110px;
+  width: 110px;
 }
 .importWrap {
   & .row {
