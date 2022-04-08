@@ -178,7 +178,7 @@
               </tr>
             </thead>
             <tbody>
-              <template v-for="(item, index) in priceObj.feeArr">
+              <template v-for="(item, index) in sliceFeeArr()">
                 {{ void (row = priceObj.feeArr[index]) }}
                 <tr>
                   <td v-if="!priceObj.isEditMode">
@@ -372,7 +372,9 @@
         </div>
         <div class="row">
           <div class="item100">
-            <el-pagination layout="prev, pager, next" :total="priceObj.feeArr.length">
+            <el-pagination
+            :current-page="currentPage" 
+            layout="prev, pager, next" :total="priceObj.feeArr.length">
             </el-pagination>
           </div>
         </div>
@@ -645,6 +647,7 @@ export default {
       twocodeMap: {},
       /**二字码数组["kv","sz"] */
       twocodeArr: [],
+      currentPage:1,
       selectedTwocodeIndex: -1,
       fileData: {},
       currencyArr: [],
@@ -763,6 +766,15 @@ export default {
       if (!!this.searchData[searchDataKey]) {
         target[key] = this.searchData[searchDataKey];
       }
+    },
+
+    sliceFeeArr(){
+      if(this.feeArr.length==0)return [];
+      var length=this.feeArr.length;
+      var pageSize=10;//分页控件默认10
+      var start=pageSize*(this.currentPage-1);
+      var end=pageSize*this.currentPage;
+      return this.feeArr.slice(start,end);
     },
 
     /**显示正负号 */
