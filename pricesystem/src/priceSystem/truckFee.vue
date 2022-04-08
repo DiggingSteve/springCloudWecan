@@ -770,7 +770,7 @@ export default {
 
     sliceFeeArr(){
       if(this.priceObj.feeArr.length==0)return [];
-      var length=this.feeArr.length;
+      var length=this.priceObj.feeArr.length;
       var pageSize=10;//分页控件默认10
       var start=pageSize*(this.currentPage-1);
       var end=pageSize*this.currentPage;
