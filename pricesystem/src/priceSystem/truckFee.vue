@@ -373,7 +373,7 @@
         <div class="row">
           <div class="item100">
             <el-pagination
-            :current-page="currentPage" 
+            :current-page.sync="currentPage" 
             layout="prev, pager, next" :total="priceObj.feeArr.length">
             </el-pagination>
           </div>
