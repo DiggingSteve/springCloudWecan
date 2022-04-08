@@ -178,8 +178,11 @@
               </tr>
             </thead>
             <tbody>
-              <template v-for="(item, index) in sliceFeeArr()">
-                {{ void (row = priceObj.feeArr[index]) }}
+              <template>
+                {{void(pageArr=sliceFeeArr())}}
+              </template>
+              <template v-for="(item, index) in pageArr">
+                {{ void (row = pageArr[index]) }}
                 <tr>
                   <td v-if="!priceObj.isEditMode">
                     <span @click="priceObj.delRow(index)"
@@ -195,7 +198,7 @@
                     <page-select
                       :pagetype="6"
                       placeholder="基港"
-                      :modelval.sync="priceObj.feeArr[index].mdg"
+                      :modelval.sync="pageArr[index].mdg"
                       :changeFunction="checkIsExistWageoutFee"
                       :triggerKey="index"
                     ></page-select>
@@ -204,7 +207,7 @@
                     <pageSelectMultiple
                       pagetype="11"
                       placeholder="航空公司"
-                      :modelval.sync="priceObj.feeArr[index].twocodeStr"
+                      :modelval.sync="pageArr[index].twocodeStr"
                       :changeFunction="checkIsExistWageoutFee"
                       :triggerKey="index"
                     ></pageSelectMultiple>
@@ -213,7 +216,7 @@
                     <page-select
                       :pagetype="6"
                       placeholder="到达港"
-                      :modelval.sync="priceObj.feeArr[index].ddg"
+                      :modelval.sync="pageArr[index].ddg"
                       style="width: 100%; border: 0"
                       :changeFunction="checkIsExistWageoutFee"
                       :triggerKey="index"
@@ -225,10 +228,10 @@
                     <el-input
                       v-if="!row.isNeedSync"
                       type="text"
-                      v-model="priceObj.feeArr[index].min"
-                      @input="editContent(priceObj.feeArr[index].min)"
+                      v-model="pageArr[index].min"
+                      @input="editContent(pageArr[index].min)"
                       @focus="selectText($event)"
-                      @blur="fixed($event, priceObj.feeArr[index].min)"
+                      @blur="fixed($event, pageArr[index].min)"
                     ></el-input>
                     <div class="row fixedWrap" v-if="row.isNeedSync">
                       <div class="item37">
@@ -246,7 +249,7 @@
                         <span
                           ><i
                             class="icon-btn el-icon-minus"
-                            @click="priceObj.feeArr[index].minDiff--"
+                            @click="pageArr[index].minDiff--"
                           ></i
                         ></span>
                         <span
@@ -260,26 +263,26 @@
                         <span
                           ><i
                             class="icon-btn el-icon-plus"
-                            @click="priceObj.feeArr[index].minDiff++"
+                            @click="pageArr[index].minDiff++"
                           ></i
                         ></span>
                       </div>
                     </div>
                   </td>
-                  <template v-for="(code, j) in priceObj.feeArr[index].codeArr">
+                  <template v-for="(code, j) in pageArr[index].codeArr">
                     {{ void (code = row.codeArr[j]) }}
                     <td>
                       <span v-if="!row.isNeedSync">￥</span>
                       <el-input
                         v-if="!row.isNeedSync"
                         type="text"
-                        v-model="priceObj.feeArr[index].codeArr[j].diff"
+                        v-model="pageArr[index].codeArr[j].diff"
                         @input="
-                          editContent(priceObj.feeArr[index].codeArr[j].diff)
+                          editContent(pageArr[index].codeArr[j].diff)
                         "
                         @focus="selectText($event)"
                         @blur="
-                          fixed($event, priceObj.feeArr[index].codeArr[j].diff)
+                          fixed($event, pageArr[index].codeArr[j].diff)
                         "
                       ></el-input>
                       <div class="row fixedWrap" v-if="row.isNeedSync">
@@ -324,10 +327,10 @@
                     <el-input
                       v-if="!row.isNeedSync"
                       type="text"
-                      v-model="priceObj.feeArr[index].flat"
-                      @input="editContent(priceObj.feeArr[index].flat)"
+                      v-model="pageArr[index].flat"
+                      @input="editContent(pageArr[index].flat)"
                       @focus="selectText($event)"
-                      @blur="fixed($event, priceObj.feeArr[index].flat)"
+                      @blur="fixed($event, pageArr[index].flat)"
                     ></el-input>
                     <div class="row fixedWrap" v-if="row.isNeedSync">
                       <div class="item37">
@@ -345,7 +348,7 @@
                         <span
                           ><i
                             class="icon-btn el-icon-minus"
-                            @click="priceObj.feeArr[index].flatDiff--"
+                            @click="pageArr[index].flatDiff--"
                           ></i
                         ></span>
                         <span
@@ -359,7 +362,7 @@
                         <span
                           ><i
                             class="icon-btn el-icon-plus"
-                            @click="priceObj.feeArr[index].flatDiff++"
+                            @click="pageArr[index].flatDiff++"
                           ></i
                         ></span>
                       </div>

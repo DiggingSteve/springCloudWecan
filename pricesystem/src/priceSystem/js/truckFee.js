@@ -66,7 +66,7 @@ class TruckFee extends BaseService {
 
   /**是否显示行内新增小图标 只在最后一行显示 */
   isShowAddBtn(index) {
-    return this.feeArr.length - 1 == index;
+    return  index+ ((this.vueInstance.currentPage-1)*10)==this.feeArr.length-1;
   }
   tableHeadArr = (() => {
     var arr = JSON.parse(localStorage.getItem(localStorageKey.weightDiff));
