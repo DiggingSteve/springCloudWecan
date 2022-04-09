@@ -618,6 +618,18 @@
         </div>
       </div>
     </el-dialog>
+    <el-dialog
+     :title="'重复列表'"
+      :visible.sync="priceObj.isShowDuplicate"
+      width="50%"
+      :close-on-click-modal="false"
+    >
+      <template v-for="(item) in priceObj.duplicateArr">
+          <div class="row">
+            {{item.sfg}}
+          </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -656,6 +668,7 @@ export default {
       currencyArr: [],
       selectedCurrency: "人民币",
       seed: 0,
+    
     };
   },
   computed: {},
