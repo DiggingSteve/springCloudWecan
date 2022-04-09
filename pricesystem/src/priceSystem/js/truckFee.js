@@ -41,12 +41,16 @@ class TruckFee extends BaseService {
 
   isShowSyncDialog = false;
 
-  isShowImportDialog=false;
+  isShowImportDialog = false;
 
-  fileList=[];
+  isShowDuplicate = false;
+
+  fileList = [];
+  //重复数据数组
+  duplicateArr = [];
 
   //是否已载入编辑页
-  isLoaded=false;
+  isLoaded = false;
 
 
   get isShowDialog() {
@@ -66,18 +70,20 @@ class TruckFee extends BaseService {
 
   /**是否显示行内新增小图标 只在最后一行显示 */
   isShowAddBtn(index) {
-    return  index+ ((this.vueInstance.currentPage-1)*10)==this.feeArr.length-1;
+    return index + ((this.vueInstance.currentPage - 1) * 10) == this.feeArr.length - 1;
   }
   tableHeadArr = (() => {
     var arr = JSON.parse(localStorage.getItem(localStorageKey.weightDiff));
-    return arr.filter((p)=>{return p.code!="+0kg"}).map((item) => {
+    return arr.filter((p) => { return p.code != "+0kg" }).map((item) => {
       return item.code;
     });
   })();
 
   init() {
-    var obj = {  mdg:"",
-      twocodeStr:"", mdg: "", min: 0, minDiff: 0, fixedMin: 0, flat: 0, flatDiff: 0, fixedFlat: 0 };
+    var obj = {
+      mdg: "",
+      twocodeStr: "", mdg: "", min: 0, minDiff: 0, fixedMin: 0, flat: 0, flatDiff: 0, fixedFlat: 0
+    };
 
     var arr = new Array(this.tableHeadArr.length);
     for (var i = 0; i < arr.length; i++) {
@@ -91,7 +97,7 @@ class TruckFee extends BaseService {
     this.feeArr[0] = obj;
   }
   addRow(index) {
-    var obj = { mdg: this.feeArr[index].mdg,ddg: this.feeArr[index].ddg,twocodeStr: this.feeArr[index].twocodeStr, flatDiff: 0, fixedFlat: 0, minDiff: 0, fixedMin: 0 };
+    var obj = { mdg: this.feeArr[index].mdg, ddg: this.feeArr[index].ddg, twocodeStr: this.feeArr[index].twocodeStr, flatDiff: 0, fixedFlat: 0, minDiff: 0, fixedMin: 0 };
     obj.min = this.feeArr[index].min;
     obj.flat = this.feeArr[index].flat;
     obj.codeArr = JSON.parse(JSON.stringify(this.feeArr[index].codeArr));
@@ -99,6 +105,21 @@ class TruckFee extends BaseService {
   }
   delRow(index) {
     this.feeArr.splice(index, 1);
+  }
+  getDuplicateData(data) {
+    var map = {};
+    var duplicateArr = [];
+    data.forEach((item) => {
+      var mdg = item.mdg;
+      var ddg = item.ddg;
+      var twocode = item.twocodeStr;
+      var key = mdg + ddg + twocode;
+      if (map[key]) {
+        duplicateMap.push(item);
+      }
+      else map[key] = true;
+    });
+    return duplicateArr;
   }
   async save() {
     this.checkCanSave();
@@ -109,7 +130,11 @@ class TruckFee extends BaseService {
       var obj = this.createPostData(fee, this.vueInstance.wageinout)
       data.push(obj);
     });
-
+    this.duplicateArr = this.getDuplicateData(this.feeArr);
+    if (this.duplicateArr.length > 0) {
+      this.isShowDuplicate = true;
+      return;
+    }
     await super.request("post", url, data).then((d) => {
       this.ok("保存成功");
       // 应付需要弹框提示
@@ -123,7 +148,7 @@ class TruckFee extends BaseService {
         this.isShowSyncDialog = true;
         this.feeArr.forEach((item, index) => {
           item.wageoutId = d.data.resultdata[index].guid;//应付的guid为应收的wageoutId
-          item.guid=item.wageoutId;
+          item.guid = item.wageoutId;
         });
       })
       debugger;
@@ -160,8 +185,8 @@ class TruckFee extends BaseService {
 
   /**应收编辑时载入匹配的应付数据 */
   async loadWageout(mdg, ddg, twocodeStr, i) {
-//    if(!this.isLoaded)return;
-    if(this.isShowDialog==false)return;
+    //    if(!this.isLoaded)return;
+    if (this.isShowDialog == false) return;
     var url = this.feeUrl + "TruckFee/getFeeDetail";
     var jsonData = {
       where: {
@@ -169,8 +194,8 @@ class TruckFee extends BaseService {
       },
     };
     var matchData;
-   await super.request("get", url, { json: JSON.stringify(jsonData) }).then((d) => {
-      matchData=d;
+    await super.request("get", url, { json: JSON.stringify(jsonData) }).then((d) => {
+      matchData = d;
       if (!!!d.data.resultdata) return;
       this.vueInstance.$confirm("检测到有匹配应付费用是否需要导入", "提示", {
         confirmButtonText: "确认",
@@ -185,14 +210,14 @@ class TruckFee extends BaseService {
         dd.isNeedSync = true;
         dd.flat = data.flat;
         dd.min = data.min;
-        dd.isLoadWageout=true;
+        dd.isLoadWageout = true;
         dd.codeArr.forEach((item, index) => {
           item.diff = codeArr[index].diff//应收的参数差,
         });
-      }).catch(()=>{
+      }).catch(() => {
 
       });
-     
+
     });
   }
   /**同步到应收 */
@@ -202,7 +227,7 @@ class TruckFee extends BaseService {
     debugger;
     this.feeArr.forEach((fee) => {
       var obj = this.createPostData(fee, this.vueInstance.wageinout);
-      obj.wageinout=1;
+      obj.wageinout = 1;
       data.push(obj);
     });
     await super.request("post", url, data).then((d) => {
@@ -215,18 +240,18 @@ class TruckFee extends BaseService {
 
   async loadEditInfo(data) {
     this.currentFeeid = data.feeid;
-    this.currentArea=data.area;
-    var result=false
-    
-    if(this.vueInstance.wageinout==1){ result = await this.loadWageInEditInfo();}
+    this.currentArea = data.area;
+    var result = false
+
+    if (this.vueInstance.wageinout == 1) { result = await this.loadWageInEditInfo(); }
     /**编辑页数据[{mdg:"",ddg:"到达港","twocodeStr":"航司逗号拼接",min:1,flat:2,codeArr:[]}] */
     if (!result) {
       this.feeArr = [
         {
-          guid:data.feeid,
-         wageoutId:this.vueInstance.wageinout==2?data.feeid:data.wageoutId,
-          mdg:data.mdg,
-          twocodeStr:data.twocodeStr,
+          guid: data.feeid,
+          wageoutId: this.vueInstance.wageinout == 2 ? data.feeid : data.wageoutId,
+          mdg: data.mdg,
+          twocodeStr: data.twocodeStr,
           ddg: data.ddg,
           mdg: data.mdg,
           min: data.min,
@@ -235,15 +260,15 @@ class TruckFee extends BaseService {
           minDiff: 0,
           fixedFlat: 0,
           fixedMin: 0,
-          isNeedSync:false,
+          isNeedSync: false,
           codeArr: data.codeArr.map((item) => {
             return { guid: item.guid, diff: item.diff, wageinDiff: 0, fixedDiff: 0 };
           }),
         },
       ];
     }
- 
-    
+
+
   }
   /**载入应收的数据 需要从后台取出diff详细参数 */
   async loadWageInEditInfo() {
@@ -251,24 +276,24 @@ class TruckFee extends BaseService {
     var where = {
       where: {
         guid: this.currentFeeid,
-        wageoutId:{not:this.currentFeeid}
+        wageoutId: { not: this.currentFeeid }
       }
     }
-    return await    super.request("get", url, { json: JSON.stringify(where) }).then(d => {
+    return await super.request("get", url, { json: JSON.stringify(where) }).then(d => {
       if (!!!d.data.resultdata) return false
       var data = d.data.resultdata.fee;
       var codeArr = d.data.resultdata.codeArr;
       var d = this.feeArr[0];
-      d.mdg=data.mdg;
-      d.twocodeStr=data.twocodeStr;
+      d.mdg = data.mdg;
+      d.twocodeStr = data.twocodeStr;
       d.flatDiff = data.flatDiff;
-      d.ddg=data.ddg;
+      d.ddg = data.ddg;
       d.flat = data.flat;
       d.fixedFlat = data.fixedFlat;
       d.min = data.min;
       d.fixedMin = data.fixedMin;
       d.minDiff = data.minDiff;
-      d.wageoutId=data.wageoutId;
+      d.wageoutId = data.wageoutId;
       d.isNeedSync = true;
       d.codeArr.forEach((item, index) => {
         item.wageinDiff = codeArr[index].wageinDiff//应收的参数差,
@@ -277,7 +302,7 @@ class TruckFee extends BaseService {
 
       });
       return true
-    }).catch((e)=>{
+    }).catch((e) => {
       return false
     });
   }
@@ -287,8 +312,8 @@ class TruckFee extends BaseService {
     let data = [];
     this.feeArr.forEach((fee) => {
       var obj = this.createPostData(fee, this.vueInstance.wageinout)
-      if(this.vueInstance.wageinout==2)obj.wageoutId=null;
-      
+      if (this.vueInstance.wageinout == 2) obj.wageoutId = null;
+
       data.push(obj);
     });
 
@@ -359,8 +384,8 @@ class TruckFee extends BaseService {
 
   createPostData(fee, wageinout) {
     var obj = {
-      wageoutId:wageinout==2? fee.guid:fee.wageoutId,
-      area:this.area,
+      wageoutId: wageinout == 2 ? fee.guid : fee.wageoutId,
+      area: this.area,
       mdg: fee.mdg,
       ddg: fee.ddg,
       twocodeStr: fee.twocodeStr,
@@ -383,45 +408,45 @@ class TruckFee extends BaseService {
     if (this.currentPageMode == pagemode.edit) {
       obj.feeid = this.currentFeeid;
     }
-    if(!!!obj.wageoutId)obj.wageoutId=null;
+    if (!!!obj.wageoutId) obj.wageoutId = null;
     return obj;
   }
 
-  checkCanSave(){
-    this.feeArr.forEach((item)=>{
-      var mdg=item.mdg;
-      var ddg=item.ddg;
-      var twocodeStr=item.twocodeStr;
-      if(!!!mdg||!!!ddg||!!!twocodeStr){
+  checkCanSave() {
+    this.feeArr.forEach((item) => {
+      var mdg = item.mdg;
+      var ddg = item.ddg;
+      var twocodeStr = item.twocodeStr;
+      if (!!!mdg || !!!ddg || !!!twocodeStr) {
         throw new Error("请完善数据");
       }
     })
   }
 
   /**将excel导入到feeArr */
-  setExcelToFeeArr(fileData){
-    var currency=this.vueInstance.currentCurrency;
-    this.feeArr=[];
-    var groupLength=this.getExcelGroupLength(fileData)// 有多少行数据 
-    for(var i=0;i<groupLength;i++){
-      let key=i+2;
-      if(!!!fileData["A"+key]){throw new Error("基港三字码必填")}
-      var mdg=fileData["A"+key].v;
-      if(!!!fileData["B"+key]){throw new Error("航司二字码必填")}
-      var twocodeStr=fileData["B"+key].v;
-      if(!!!fileData["C"+key]){throw new Error("到达港必填")}
-      var ddg=fileData["C"+key].v;
-      var min=!!!fileData["D"+key]?"0.00": (fileData["D"+key].v/currency).toFixed(2);
-      var n45=!!!fileData["E"+key]?"0.00":(fileData["E"+key].v/currency).toFixed(2);
-      var p45=!!!fileData["F"+key]?"0.00":(fileData["F"+key].v/currency).toFixed(2);
-      var p100=!!!fileData["G"+key]?"0.00":(fileData["G"+key].v/currency).toFixed(2);
-      var p300=!!!fileData["H"+key]?"0.00":(fileData["H"+key].v/currency).toFixed(2);
-      var p500=!!!fileData["I"+key]?"0.00":(fileData["I"+key].v/currency).toFixed(2);
-      var p1000=!!!fileData["J"+key]?"0.00":(fileData["J"+key].v/currency).toFixed(2);
-      var p2000=!!!fileData["K"+key]?"0.00":(fileData["K"+key].v/currency).toFixed(2);
-      var p3000=!!!fileData["L"+key]?"0.00":(fileData["L"+key].v/currency).toFixed(2);
-      var p5000=!!!fileData["M"+key]?"0.00":(fileData["M"+key].v/currency).toFixed(2);
-      var codeArr=[];
+  setExcelToFeeArr(fileData) {
+    var currency = this.vueInstance.currentCurrency;
+    this.feeArr = [];
+    var groupLength = this.getExcelGroupLength(fileData)// 有多少行数据 
+    for (var i = 0; i < groupLength; i++) {
+      let key = i + 2;
+      if (!!!fileData["A" + key]) { throw new Error("基港三字码必填") }
+      var mdg = fileData["A" + key].v;
+      if (!!!fileData["B" + key]) { throw new Error("航司二字码必填") }
+      var twocodeStr = fileData["B" + key].v;
+      if (!!!fileData["C" + key]) { throw new Error("到达港必填") }
+      var ddg = fileData["C" + key].v;
+      var min = !!!fileData["D" + key] ? "0.00" : (fileData["D" + key].v / currency).toFixed(2);
+      var n45 = !!!fileData["E" + key] ? "0.00" : (fileData["E" + key].v / currency).toFixed(2);
+      var p45 = !!!fileData["F" + key] ? "0.00" : (fileData["F" + key].v / currency).toFixed(2);
+      var p100 = !!!fileData["G" + key] ? "0.00" : (fileData["G" + key].v / currency).toFixed(2);
+      var p300 = !!!fileData["H" + key] ? "0.00" : (fileData["H" + key].v / currency).toFixed(2);
+      var p500 = !!!fileData["I" + key] ? "0.00" : (fileData["I" + key].v / currency).toFixed(2);
+      var p1000 = !!!fileData["J" + key] ? "0.00" : (fileData["J" + key].v / currency).toFixed(2);
+      var p2000 = !!!fileData["K" + key] ? "0.00" : (fileData["K" + key].v / currency).toFixed(2);
+      var p3000 = !!!fileData["L" + key] ? "0.00" : (fileData["L" + key].v / currency).toFixed(2);
+      var p5000 = !!!fileData["M" + key] ? "0.00" : (fileData["M" + key].v / currency).toFixed(2);
+      var codeArr = [];
       codeArr.push(n45)
       codeArr.push(p45);
       codeArr.push(p100);
@@ -431,13 +456,13 @@ class TruckFee extends BaseService {
       codeArr.push(p2000);
       codeArr.push(p3000);
       codeArr.push(p5000);
-      
-      var flat=!!!fileData["N"+key]?"0.00":(fileData["N"+key].v/currency).toFixed(2);
-      this.mdg=mdg;
-      this.twocodeStr=twocodeStr;
+
+      var flat = !!!fileData["N" + key] ? "0.00" : (fileData["N" + key].v / currency).toFixed(2);
+      this.mdg = mdg;
+      this.twocodeStr = twocodeStr;
       var obj = {
-        mdg:mdg,
-        twocodeStr:twocodeStr,
+        mdg: mdg,
+        twocodeStr: twocodeStr,
         ddg: ddg,
         min: min,
         flat: flat,
@@ -457,18 +482,18 @@ class TruckFee extends BaseService {
       };
       this.feeArr.push(obj)
     }
-    this.isShowImportDialog=false;
+    this.isShowImportDialog = false;
   }
 
   // 通过A列最后一行编号获得有多少行数据
-  getExcelGroupLength(fileData){
-    var count=1;
-    var key="A"+count;
-    while(fileData[key]){
-    count++;
-     key="A"+count
+  getExcelGroupLength(fileData) {
+    var count = 1;
+    var key = "A" + count;
+    while (fileData[key]) {
+      count++;
+      key = "A" + count
     }
-    return count-2;
+    return count - 2;
   }
 }
 

@@ -834,7 +834,7 @@ export default {
         if (item.jfType == "毛重") {
           weight = grossWeight;
         } else {
-          weight = calWeight;
+          weight = calWeight.toFixed(0);
         }
         item.calWeight = weight;
         var exactWeight = this.getWeight(weight);
