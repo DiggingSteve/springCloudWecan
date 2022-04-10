@@ -70,7 +70,7 @@ public class TruckFee extends Parent {
 
     @Column(
             name = "min",
-            columnDefinition = "decimal(6,2) default(0) COMMENT 'min重'"
+            columnDefinition = "decimal(8,2) default(0) COMMENT 'min重'"
     )
     public BigDecimal min;
 
@@ -82,7 +82,7 @@ public class TruckFee extends Parent {
 
     @Column(
             name = "fixedMin",
-            columnDefinition = "decimal(6,2) default(0) COMMENT 'min重'"
+            columnDefinition = "decimal(8,2) default(0) COMMENT 'min重'"
     )
     public BigDecimal fixedMin;
 
