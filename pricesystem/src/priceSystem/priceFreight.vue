@@ -43,7 +43,7 @@
       :chinese-where="chineseWhere"
     >
       <template slot="operate" slot-scope="props">
-        <span @click="clickEdit(props.data.row)" searchData
+        <span @click="clickEdit(props.data.row)"
           ><i class="el-icon-edit"></i
         ></span>
         <span @click="deleteFeeByJson(props.data.row)"
@@ -64,7 +64,7 @@
           </div>
           <div class="item40">
             <i
-              @click="clickEdit(currentRow)"
+              @click="clickEdit(pdata.data.row)"
               :class="getApprovalStatusColor(currentRow.approvalStatus)"
               class="el-icon-shenhebohui"
             ></i>

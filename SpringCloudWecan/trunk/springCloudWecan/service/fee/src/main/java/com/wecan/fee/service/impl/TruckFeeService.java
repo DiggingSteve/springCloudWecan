@@ -116,7 +116,7 @@ public class TruckFeeService implements ITruckFee {
      * @author: yaodui
      */
     @Transactional
-    public List<Long> checkDuplicateGroup(List<InputTruckFee> list) {
+    public List<TruckFee> checkDuplicateGroup(List<InputTruckFee> list) {
         LambdaQueryWrapper<ViewTruckFee> query = new LambdaQueryWrapper<>();
         LambdaUtil.forEach(0, list, (item, index) -> {
 
@@ -135,7 +135,13 @@ public class TruckFeeService implements ITruckFee {
         query.and(a -> a.not(n -> n.in(ViewTruckFee::getFeeid, currentList.stream().map(InputTruckFee::getFeeid).collect(Collectors.toList()))));
         }
         var result = viewTruckMapper.getList(query);
-        return result.stream().map(ViewTruckFee::getFeeid).collect(Collectors.toList());
+        return result.stream().map(s->{
+            TruckFee fee=new TruckFee();
+            fee.setMdg(s.getMdg());
+            fee.setDdg(s.getDdg());
+            fee.setTwocodeStr(s.getTwocode());
+            return fee;
+        }).collect(Collectors.toList());
     }
 
     /**
@@ -151,9 +157,9 @@ public class TruckFeeService implements ITruckFee {
     @Transactional
     public List<TruckFee> editFee(List<InputTruckFee> data ,Boolean isSync) {
 
-        List<Long> feeidList = checkDuplicateGroup(data);
-        if (feeidList.stream().count() > 0) {
-            throw new BusinessException("存在重复基港 到达港 二字码组合的数据");
+        List<TruckFee> duplicateList = checkDuplicateGroup(data);
+        if (duplicateList.stream().count() > 0) {
+            return duplicateList;
         }
         List<TruckFeeWeight> codeList = new ArrayList<>();
         List<TruckFeeAircompany> comList = new ArrayList<>();

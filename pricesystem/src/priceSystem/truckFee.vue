@@ -626,7 +626,7 @@
     >
     <div class="row">以下数据存在重复的 航司 基港 到达港 数据,请检查数据后重新导入</div>
       
-          <div class="row" style="width:500px;height:650px;over-flow:auto;">
+          <div class="row" style="height:650px;over-flow:auto;">
             <table class="duplicateTable">
               <tbody>
                 <tr>
