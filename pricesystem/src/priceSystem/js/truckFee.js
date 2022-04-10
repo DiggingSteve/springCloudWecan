@@ -115,7 +115,7 @@ class TruckFee extends BaseService {
       var twocode = item.twocodeStr;
       var key = mdg + ddg + twocode;
       if (map[key]) {
-        duplicateMap.push(item);
+        duplicateArr.push(item);
       }
       else map[key] = true;
     });
