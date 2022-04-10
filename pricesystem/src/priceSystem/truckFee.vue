@@ -625,9 +625,9 @@
       :close-on-click-modal="false"
     >
     <div class="row">以下数据存在重复的 航司 基港 到达港 数据,请检查数据后重新导入</div>
-      <template v-for="(item) in priceObj.duplicateArr">
-          <div class="row">
-            <table>
+      
+          <div class="row" style="width:500px;height:650px;over-flow:auto;">
+            <table class="duplicateTable">
               <tbody>
                 <tr>
                   <td>
@@ -640,7 +640,7 @@
                     航司二字码
                   </td>
                 </tr>
-                <template>
+                <template  v-for="(item) in priceObj.duplicateArr">
                   <tr>
                     <td>{{item.mdg}}</td>
                     <td>{{item.ddg}}</td>
@@ -650,7 +650,7 @@
               </tbody>
             </table>
           </div>
-      </template>
+      
     </el-dialog>
   </div>
 </template>
@@ -991,6 +991,14 @@ i {
     margin: 10px 0;
   }
 }
+.duplicateTable{
+  width: 100%;
+  & td{
+    border: 1px solid #dedede;
+    font-size: 14px;
+    text-align: center;
+  }
+}
 </style>
 <style>
 .selectBorder {
@@ -1008,4 +1016,5 @@ i {
 .green {
   color: #19bd19;
 }
+
 </style>
