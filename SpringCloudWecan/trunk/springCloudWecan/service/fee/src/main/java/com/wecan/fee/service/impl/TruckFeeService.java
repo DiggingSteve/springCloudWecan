@@ -134,7 +134,7 @@ public class TruckFeeService implements ITruckFee {
                             .in(ViewTruckFee::getTwocode, arr)
             );
         });
-        query.select(ViewTruckFee::getFeeid);
+        query.select(ViewTruckFee::getFeeid,ViewTruckFee::getMdg,ViewTruckFee::getDdg,ViewTruckFee::getTwocode);
         var currentList= list.stream().filter(f-> f.getFeeid()!=null ).collect(Collectors.toList());
         if(currentList.stream().count()>0){
         query.and(a -> a.not(n -> n.in(ViewTruckFee::getFeeid, currentList.stream().map(InputTruckFee::getFeeid).collect(Collectors.toList()))));
