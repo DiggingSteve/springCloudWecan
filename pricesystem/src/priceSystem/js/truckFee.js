@@ -136,6 +136,11 @@ class TruckFee extends BaseService {
       return;
     }
     await super.request("post", url, data).then((d) => {
+      if(!d.data.resultsuccess){
+        this.duplicateArr=d.data.resultdata;
+        this.isShowDuplicate = true;
+        return;
+      }
       this.ok("保存成功");
       // 应付需要弹框提示
       this.vueInstance.wageinout == 2 && this.vueInstance.$confirm("是否将应付费用同步到应收", "提示", {
@@ -151,7 +156,7 @@ class TruckFee extends BaseService {
           item.guid = item.wageoutId;
         });
       })
-      debugger;
+      
       this.currentPageMode = pagemode.search;
       this.vueInstance.search();
     });
@@ -318,6 +323,11 @@ class TruckFee extends BaseService {
     });
 
     super.request("post", url, data).then((d) => {
+      if(!d.data.resultsuccess){
+        this.duplicateArr=d.data.resultdata;
+        this.isShowDuplicate = true;
+        return;
+      }
       this.ok("保存成功");
       this.vueInstance.wageinout == 2 && this.vueInstance.$confirm("是否将应付费用同步到应收", "提示", {
         confirmButtonText: "确认",

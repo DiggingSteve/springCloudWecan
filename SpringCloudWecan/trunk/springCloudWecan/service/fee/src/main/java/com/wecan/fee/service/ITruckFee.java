@@ -1,5 +1,6 @@
 package com.wecan.fee.service;
 
+import com.wecan.commonutils.commonClass.result.ReturnResult;
 import com.wecan.modeldbo.airfreight.fee.TruckFee;
 import com.wecan.modelview.model.vo.fee.input.InputTruckFee;
 import com.wecan.modelview.model.vo.fee.output.OutputTruckDetail;
@@ -9,11 +10,11 @@ import java.util.List;
 
 public interface ITruckFee extends IBaseService{
 
-    List<TruckFee> saveFee(List<InputTruckFee> data,Boolean isSync);
+    ReturnResult saveFee(List<InputTruckFee> data, Boolean isSync);
 
     void syncToWagein(List<InputTruckFee>data);
 
-    List<TruckFee> editFee(List<InputTruckFee> data,Boolean isSync);
+    ReturnResult editFee(List<InputTruckFee> data,Boolean isSync);
 
     void delFee(List<InputTruckFee> data);
 

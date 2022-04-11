@@ -8,6 +8,7 @@ package com.wecan.fee.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.wecan.commonutils.commonClass.exception.BusinessException;
 import com.wecan.commonutils.commonClass.mybatis.GetQueryWrapper;
+import com.wecan.commonutils.commonClass.result.ReturnResult;
 import com.wecan.commonutils.commonClass.util.LambdaUtil;
 import com.wecan.daofee.mapper.ViewTruckFeeMapper;
 import com.wecan.daofee.service.impl.TruckFeeAircompanyImpl;
@@ -52,11 +53,14 @@ public class TruckFeeService implements ITruckFee {
 
     @Override
     @Transactional
-    public List<TruckFee> saveFee(List<InputTruckFee> data,Boolean isSync) {
+    public ReturnResult saveFee(List<InputTruckFee> data,Boolean isSync) {
 
-        List<Long> feeidList = checkDuplicateGroup(data);
-        if (feeidList.stream().count() > 0) {
-            throw new BusinessException("存在重复基港 到达港 二字码组合的数据");
+        var result= ReturnResult.success();
+        List<TruckFee> duplicateList = checkDuplicateGroup(data);
+        if (duplicateList.stream().count() > 0) {
+            result.setResultsuccess(false);
+            result.setResultdata(duplicateList);
+            return result;
         }
         List<TruckFeeWeight> codeList = new ArrayList<>();
         List<TruckFeeAircompany> comList = new ArrayList<>();
@@ -81,7 +85,8 @@ public class TruckFeeService implements ITruckFee {
         truckDao.saveBatch(feeList);
         weightCodeDao.saveBatch(codeList);
         airComDao.saveBatch(comList);
-        return feeList;
+        result.setResultdata(feeList);
+        return result;
     }
 
     @Override
@@ -92,9 +97,9 @@ public class TruckFeeService implements ITruckFee {
         LambdaUtil.forEach(0, data, (item, index) -> {
             List<InputTruckFee> checkList = new ArrayList<>();
             checkList.add(item);
-            List<Long> needEditFeeid = checkDuplicateGroup(checkList);
+            List<TruckFee> needEditFeeid = checkDuplicateGroup(checkList);
             if (needEditFeeid.stream().count() > 0) {
-                item.setFeeid(needEditFeeid.get(0));
+                item.setFeeid(needEditFeeid.get(0).getGuid());
                 editList.add(item);
             } else {
                 insertList.add(item);
@@ -140,6 +145,7 @@ public class TruckFeeService implements ITruckFee {
             fee.setMdg(s.getMdg());
             fee.setDdg(s.getDdg());
             fee.setTwocodeStr(s.getTwocode());
+            fee.setGuid(s.getFeeid());
             return fee;
         }).collect(Collectors.toList());
     }
@@ -155,11 +161,13 @@ public class TruckFeeService implements ITruckFee {
      */
     @Override
     @Transactional
-    public List<TruckFee> editFee(List<InputTruckFee> data ,Boolean isSync) {
-
+    public ReturnResult editFee(List<InputTruckFee> data , Boolean isSync) {
+        var result= ReturnResult.success();
         List<TruckFee> duplicateList = checkDuplicateGroup(data);
         if (duplicateList.stream().count() > 0) {
-            return duplicateList;
+            result.setResultsuccess(false);
+            result.setResultdata(duplicateList);
+            return result;
         }
         List<TruckFeeWeight> codeList = new ArrayList<>();
         List<TruckFeeAircompany> comList = new ArrayList<>();
@@ -195,7 +203,8 @@ public class TruckFeeService implements ITruckFee {
         truckDao.updateBatchById(feeList);
         weightCodeDao.updateBatchById(codeList);
         airComDao.saveBatch(comList);
-        return feeList;
+        result.setResultdata(feeList);
+        return result;
     }
 
     @Override

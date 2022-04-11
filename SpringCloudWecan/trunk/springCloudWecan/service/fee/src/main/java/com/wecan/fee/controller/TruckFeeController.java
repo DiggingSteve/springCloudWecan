@@ -7,6 +7,7 @@ package com.wecan.fee.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.wecan.commonutils.commonClass.aop.response.ResponseResultBody;
+import com.wecan.commonutils.commonClass.result.ReturnResult;
 import com.wecan.fee.base.BaseApiController;
 import com.wecan.fee.service.ITruckFee;
 
@@ -37,12 +38,12 @@ public class TruckFeeController extends BaseApiController {
 
     @RequestMapping("/save")
     @POST
-    public List<TruckFee> save(@RequestBody @Validated(Insert.class) List<InputTruckFee> data) throws JsonProcessingException {
+    public ReturnResult save(@RequestBody @Validated(Insert.class) List<InputTruckFee> data) throws JsonProcessingException {
       return   feeService.saveFee(data,false);
     }
     @RequestMapping("/edit")
     @POST
-    public  List<TruckFee>  edit(@RequestBody @Validated(Insert.class) List<InputTruckFee> data) throws JsonProcessingException {
+    public  ReturnResult edit(@RequestBody @Validated(Insert.class) List<InputTruckFee> data) throws JsonProcessingException {
         return feeService.editFee(data,false);
 
     }
