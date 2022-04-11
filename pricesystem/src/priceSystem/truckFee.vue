@@ -624,13 +624,13 @@
       width="50%"
       :close-on-click-modal="false"
     >
-    <div class="row">以下数据存在重复的 航司 基港 到达港 数据,请检查数据后重新导入</div>
+    <div class="row" style="margin:20px 0">以下数据存在重复的 航司 基港 到达港 数据,请检查数据后重新导入</div>
       
           <div class="row" style="height:650px;over-flow:auto;">
             <table class="duplicateTable">
               <tbody>
                 <tr>
-                  <td>
+                  <td style="">
                     基港
                   </td>
                   <td>
@@ -995,8 +995,9 @@ i {
   width: 100%;
   & td{
     border: 1px solid #dedede;
-    font-size: 14px;
+    font-size: 15px;
     text-align: center;
+    height: 28px;
   }
 }
 </style>
