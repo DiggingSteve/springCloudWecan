@@ -54,6 +54,7 @@ class priceRouting extends BaseService {
           this.hbhMap[key]["aircompanyname"] = item.aircompanyname;//航司中文名
           this.hbhMap[key]["jjdname"] = item.jjdname;// 交接地名称
           this.hbhMap[key]["sfg"] = item.sfg;
+          this.hbhMap[key]["mdg"]=mdg;
           this.hbhMap[key]["planeid"] = item.planeid;// 机种 116货机 115 客机
           this.hbhMap[key]["jx"] = item.jx;// 机型
           this.hbhMap[key]["begindate"] = item.begindate;// 开始日期

@@ -626,7 +626,7 @@
     >
     <div class="row" style="margin:20px 0">以下数据存在重复的 航司 基港 到达港 数据,请检查数据后重新导入</div>
       
-          <div class="row" style="height:650px;over-flow:auto;">
+          <div class="row" style="">
             <table class="duplicateTable">
               <tbody>
                 <tr>
@@ -744,9 +744,7 @@ export default {
     },
     /**单击新增 */
     clickInsert() {
-      if (!!!this.priceObj.area) {
-        throw new Error("请选择地区");
-      }
+   
       this.priceObj = new TruckFee(this);
       this.priceObj.isLoaded = true;
       this.priceObj.currentPageMode = pagemode.add;
@@ -755,9 +753,7 @@ export default {
       this.priceObj.currentPageMode = pagemode.search;
     },
     clickEdit(data) {
-      if (!!!this.priceObj.area) {
-        throw new Error("请选择地区");
-      }
+     
       this.priceObj = new TruckFee(this);
       this.priceObj.currentPageMode = pagemode.edit;
       this.priceObj.loadEditInfo(data);

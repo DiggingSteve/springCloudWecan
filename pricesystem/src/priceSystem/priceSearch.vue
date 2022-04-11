@@ -483,84 +483,53 @@
         <template v-for="(item, key) in priceObj.hbhMap">
           <el-tab-pane :label="item.hbh" :name="key">
             <div class="hbhDetail" v-if="item.isSelfInput == 2">
-              <div class="row" style="padding-bottom: 10px">
+              <div class="row">
                 <div class="item30">
-                  航空公司:<span class="label">{{ item.aircompanyname }}</span>
+                  <span>航班号:</span><span>{{ item.sfg }}</span>
                 </div>
-                <div class="item20">
-                  航班号:<span class="label">{{ item.hbh }}</span>
+                <div class="item30">
+                  <span>始发港:</span><span>{{ item.sfg }}</span>
                 </div>
-                <div class="item20">
-                  始发港:<span class="label">{{ item.sfg }}</span>
-                </div>
-                <div class="item20">
-                  交接地:<span class="label">{{ item.jjdname }}</span>
+                <div class="item30">
+                  <span>目的港:</span><span>{{ item.mdg }}</span>
                 </div>
               </div>
-              <div class="row" style="padding-bottom: 10px">
-                <div class="item30">
-                  机种:<span class="label">{{
-                    getFlightTypeName(item.planeid)
-                  }}</span>
-                </div>
-                <div class="item20">
-                  机型:<span class="label">{{ item.jx }}</span>
-                </div>
-                <div class="item20">
-                  开始日期:<span class="label">{{
-                    item.begindate.slice(0, 10)
-                  }}</span>
-                </div>
-                <div class="item20">
-                  结束日期:<span class="label">{{
-                    item.enddate.slice(0, 10) == "1900-01-01"
-                      ? "长期"
-                      : item.enddate.slice(0, 10)
-                  }}</span>
-                </div>
-              </div>
-              <div class="row" style="padding-bottom: 10px">
-                <div class="item30">
-                  维护人:<span class="label">{{ item.modifyman }}</span>
-                </div>
-                <div class="item20">
-                  维护日期:<span class="label">{{
-                    item.modifydate.slice(0, 10)
-                  }}</span>
-                </div>
-              </div>
-              <table class="detailTable">
-                <thead>
-                  <tr>
-                    <td>航班日期</td>
-                    <td>起飞时间</td>
-                    <td>经停港</td>
-                    <td>经停时间</td>
-                    <td>目的港</td>
-                    <td>到达时间</td>
-                    <td>时差</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <template v-for="p in item.detailArr">
+              <div class="row">
+                <table>
+                  <tbody>
                     <tr>
-                      <td>{{ getDayOfWeek(p.airweekdetail) }}</td>
-                      <td>{{ p.flaytime.slice(11, 16) }}</td>
-                      <td>{{ p.jjg }}</td>
-                      <td>
-                        {{
-                          p.jdate.slice(11, 16) == "00:00"
-                            ? ""
-                            : p.jdate.slice(11, 16)
-                        }}
-                      </td>
-                      <td>{{ p.mdg }}</td>
-                      <td>{{ p.reachtime.slice(11, 16) }}</td>
-                      <td>{{ p.timedifference }}</td>
+                      <td>航班日期</td>
+                      <td>起飞时间</td>
+                      <td colspan="4">目的港信息</td>
                     </tr>
-                  </template>
-                </tbody>
-              </table>
+                    <template v-for="p in item.detailArr">
+                      <tr>
+                        <td rowspan="2">{{ getDayOfWeek(p.airweekdetail) }}</td>
+                        <td rowspan="2">{{ p.flaytime.slice(11, 16) }}</td>
+                        <td>经停港</td>
+                        <td>经停时间</td>
+                        <td>到达时间</td>
+                        <td>时差</td>
+                      </tr>
+                      <tr>
+                        <td>{{ p.jjg }}</td>
+                        <td>
+                          {{
+                            p.jdate.slice(11, 16) == "00:00"
+                              ? ""
+                              : p.jdate.slice(11, 16)
+                          }}
+                        </td>
+
+                        <td>{{ p.reachtime.slice(11, 16) }}</td>
+                        <td>{{ p.timedifference }}</td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+              </div>
+
+      
             </div>
             <div class="hbhDetail" v-if="item.isSelfInput == 1">
               <div class="row" style="padding-bottom: 10px">
@@ -1399,16 +1368,6 @@ export default {
   }
 }
 .hbhDetail {
-  & .label {
-    color: @blue;
-    padding-left: 5px;
-  }
-  & .detailTable {
-    width: 100%;
-    & tbody td {
-      padding: 5px;
-    }
-  }
 }
 /deep/.detail {
   padding: 0 !important;
