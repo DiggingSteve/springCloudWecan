@@ -827,22 +827,23 @@ export default {
       var dataArrCopy = JSON.parse(JSON.stringify(dataArr));
       var weightArr = this.priceObj.weightArr;
       var volArr = this.priceObj.volArr;
+      calWeight=calWeight.toFixed(0);
       dataArrCopy.forEach((item) => {
         let weight = null;
         if (item.jfType == "毛重") {
           weight = grossWeight;
         } else {
-          weight = calWeight.toFixed(0);
+          weight = calWeight;
         }
         item.calWeight = weight;
         var exactWeight = this.getWeight(weight);
-        this.reversePrice(item, exactWeight, volType, weight);
+        this.reversePrice(item, exactWeight, volType, weight,calWeight);
       });
       return dataArrCopy;
     },
 
     //计算每行的单价是否吃到min 吃到Min就要倒算
-    reversePrice(row, weightCode, volType, calWeight) {
+    reversePrice(row, weightCode, volType, weight,calWeight) {
       var isContainsTruck = this.isContainsTruck;
       var packageDiff = row.packageCusDiffMap[this.selectedPackageType];
       var cusDiff = row.packageCusDiffMap[this.selectedCusType];
@@ -889,7 +890,7 @@ export default {
         matchFlightPrice +
         (packageDiff > 0 ? packageDiff : 0) +
         (cusDiff > 0 ? cusDiff : 0);
-      var flightTotal = matchFlightPrice * calWeight * 1;
+      var flightTotal = matchFlightPrice * weight * 1;
       var truckTotal = matchTruckPrice * calWeight * 1;
       if (flightTotal >= flightMinPrice && truckTotal >= truckMinPrice) {
         row.exactPrice =
@@ -898,14 +899,15 @@ export default {
         return;
       }
       //需要倒算
-      var total =
-        (flightTotal < flightMinPrice ? flightMinPrice : flightTotal) +
-        (isContainsTruck
+       flightTotal =
+        (flightTotal < flightMinPrice ? flightMinPrice : flightTotal) ;
+        truckTotal=  (isContainsTruck
           ? truckTotal < truckMinPrice
             ? truckMinPrice
             : truckTotal
           : 0);
-      row.exactPrice = (total / calWeight).toFixed(2);
+         
+      row.exactPrice = ((flightTotal / weight) + (truckTotal/calWeight)).toFixed(2);
       row.isShow = true;
     },
 
