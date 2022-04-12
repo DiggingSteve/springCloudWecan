@@ -483,7 +483,7 @@
         <template v-for="(item, key) in priceObj.hbhMap">
           <el-tab-pane :label="item.hbh" :name="key">
             <div class="hbhDetail" v-if="item.isSelfInput == 2">
-              <div class="row">
+              <div class="row title">
                 <div class="item30">
                   <span>航班号:</span><span>{{ item.sfg }}</span>
                 </div>
@@ -1368,6 +1368,21 @@ export default {
   }
 }
 .hbhDetail {
+  & .title{
+    background: @blue;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    padding: 10px 20px;
+  }
+  & table {
+    width :100%;
+    & td{
+      font-size: 14px;
+      text-align: center;
+    }
+
+  }
 }
 /deep/.detail {
   padding: 0 !important;
