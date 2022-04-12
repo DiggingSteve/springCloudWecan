@@ -485,7 +485,7 @@
             <div class="hbhDetail" v-if="item.isSelfInput == 2">
               <div class="row title">
                 <div class="item30">
-                  <span>航班号:</span><span>{{ item.sfg }}</span>
+                  <span>航班号:</span><span>{{ item.hbh }}</span>
                 </div>
                 <div class="item30">
                   <span>始发港:</span><span>{{ item.sfg }}</span>
@@ -534,7 +534,7 @@
             <div class="hbhDetail" v-if="item.isSelfInput == 1">
                   <div class="row title">
                 <div class="item30">
-                  <span>航班号:</span><span>{{ item.sfg }}</span>
+                  <span>航班号:</span><span>{{ item.hbh }}</span>
                 </div>
                 <div class="item30">
                   <span>始发港:</span><span>{{ item.sfg }}</span>
@@ -1399,13 +1399,14 @@ export default {
 .hbhDetail {
   & .title {
     background: @blue;
-    margin: 20px;
+    
     border-radius: 4px;
     color: #fff;
     font-size: 16px;
     text-align: center;
     margin: 20px 0;
-    widows: 700px;
+    width: 700px;
+    padding: 10px 0;
   }
   & table {
     width: 700px;
