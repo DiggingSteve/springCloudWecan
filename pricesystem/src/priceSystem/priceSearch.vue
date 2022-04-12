@@ -576,7 +576,7 @@
                   </tbody>
                 </table>
               </div>
-              <table class="detailTable">
+              <!-- <table class="detailTable">
                 {{
                   void (weekList = item.schedule.split(","))
                 }}
@@ -604,7 +604,7 @@
                     </tr>
                   </template>
                 </tbody>
-              </table>
+              </table> -->
             </div>
           </el-tab-pane>
         </template>
