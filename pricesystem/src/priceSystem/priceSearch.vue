@@ -532,20 +532,49 @@
       
             </div>
             <div class="hbhDetail" v-if="item.isSelfInput == 1">
-              <div class="row" style="padding-bottom: 10px">
+                  <div class="row title">
                 <div class="item30">
-                  航班号:<span class="label">{{ item.hbh }}</span>
+                  <span>航班号:</span><span>{{ item.sfg }}</span>
                 </div>
                 <div class="item30">
-                  始发港:<span class="label">{{ item.sfg }}</span>
+                  <span>始发港:</span><span>{{ item.sfg }}</span>
                 </div>
                 <div class="item30">
-                  目的港:<span class="label">{{ item.mdg }}</span>
+                  <span>目的港:</span><span>{{ item.mdg }}</span>
                 </div>
               </div>
-              <div class="row" style="padding-bottom: 10px">
-                <div class="item30">开始日期:<span class="label">--</span></div>
-                <div class="item30">结束日期:<span class="label">--</span></div>
+           <div class="row">
+                <table>
+                      {{
+                  void (weekList = item.schedule.split(","))
+                }}
+                  <tbody>
+                    <tr>
+                      <td>航班日期</td>
+                      <td>起飞时间</td>
+                      <td colspan="4">目的港信息</td>
+                    </tr>
+                    <template v-for="v-for="day in weekList"">
+                      <tr>
+                        <td rowspan="2">{{ convertIntToWeek(day * 1) }}</td>
+                        <td rowspan="2">--</td>
+                        <td>经停港</td>
+                        <td>经停时间</td>
+                        <td>到达时间</td>
+                        <td>时差</td>
+                      </tr>
+                      <tr>
+                        <td>--</td>
+                        <td>
+                         --
+                        </td>
+
+                        <td>--</td>
+                        <td>--</td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
               </div>
               <table class="detailTable">
                 {{
@@ -1368,20 +1397,26 @@ export default {
   }
 }
 .hbhDetail {
-  & .title{
+  & .title {
     background: @blue;
+    margin: 20px;
+    border-radius: 4px;
     color: #fff;
     font-size: 16px;
     text-align: center;
-    padding: 10px 20px;
+    margin: 20px 0;
+    widows: 700px;
   }
   & table {
-    width :100%;
-    & td{
+    width: 700px;
+    & td {
       font-size: 14px;
       text-align: center;
+      vertical-align: middle;
+      height: 30px;
+      line-height: 30px;
+      border: 1px solid #dedede;
     }
-
   }
 }
 /deep/.detail {
