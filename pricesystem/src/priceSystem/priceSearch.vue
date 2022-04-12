@@ -554,7 +554,7 @@
                       <td>起飞时间</td>
                       <td colspan="4">目的港信息</td>
                     </tr>
-                    <template v-for="v-for="day in weekList"">
+                    <template v-for="day in weekList">
                       <tr>
                         <td rowspan="2">{{ convertIntToWeek(day * 1) }}</td>
                         <td rowspan="2">--</td>
