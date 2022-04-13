@@ -15,10 +15,14 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Service
 public class CustomerCache implements CommandLineRunner {
+
+    Lock l = new ReentrantLock();
    private PublicClientService _pubApi;
    @Autowired
    public CustomerCache(PublicClientService pubapi){
@@ -32,12 +36,20 @@ public class CustomerCache implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-       var data= _pubApi.getFidCache();
-       data=data.stream().filter(f->{return f.comxz==1;}).collect(Collectors.toList());
-       cache.put(key,data);
+       initCache();
+    }
+    private void initCache(){
+        var data= _pubApi.getFidCache();
+        data=data.stream().filter(f->{return f.comxz==1;}).collect(Collectors.toList());
+        cache.put(key,data);
     }
 
     public  List<OutputFidCache>getCache(){
+        if(cache.asMap().size()==0){
+            l.lock();
+            initCache();
+            l.unlock();
+        }
         return (List<OutputFidCache>) cache.asMap().get(key);
     }
 
