@@ -226,7 +226,13 @@ public class AirFreightFeeService implements IAirFreightFee {
     @Transactional
     public void deleteFee(String json) {
         var wrap = GetQueryWrapper.getQueryWrapperByJsonStr(json, InputDelFee.class);
-        feeDao.remove(wrap);
+        var fee=feeDao.getOne(wrap);
+        if(fee==null)throw new BusinessException("guid传入有误");
+        var pendingFeeid=fee.getFeeidPending();
+        feePendingDao.remove(wrap);
+        var removeWarp=new LambdaQueryWrapper<FreightFee>();
+        removeWarp.eq(FreightFee::getFeeidPending,pendingFeeid);
+        feeDao.remove(removeWarp);
     }
 
     @Override
