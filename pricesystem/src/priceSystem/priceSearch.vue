@@ -211,6 +211,11 @@
           <span>{{ tableDataRes[pdata.data.index].area }}</span>
         </div>
       </template>
+       <template v-slot:addtime="pdata">
+        <div class="row">
+          <span>{{ tableDataRes[pdata.data.index].addtime?tableDataRes[pdata.data.index].addtime.substring(0,10):"" }}</span>
+        </div>
+      </template>
       <template v-slot:routing="pdata">
         <div style="padding: 5px">
           <div
