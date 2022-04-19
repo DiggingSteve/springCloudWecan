@@ -205,9 +205,9 @@
     <tableCompt :name="name" :table-data-res="tableDataRes">
       <template v-slot:area="pdata">
         <div class="row">
-          <span @click="openWindow()">
+          <!-- <span @click="openWindow()">
             <i class="el-icon-s-order"></i>
-          </span>
+          </span> -->
           <span>{{ tableDataRes[pdata.data.index].area }}</span>
         </div>
       </template>
