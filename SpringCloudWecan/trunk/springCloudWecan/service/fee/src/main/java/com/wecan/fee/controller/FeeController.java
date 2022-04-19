@@ -21,5 +21,5 @@ public class FeeController {
     @RequestMapping("testCache")
     @GET
     public Object get(){
-        return cache.getCache();}
+        return cache.getCache().stream().filter(f->{return f.id>0;}).toArray();}
 }
