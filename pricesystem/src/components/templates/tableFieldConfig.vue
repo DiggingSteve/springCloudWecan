@@ -699,6 +699,7 @@ export default {
         allTableTmpField3: { // 订单层
         // fieldtype:3 订单类
         area: { title: '发布站点', fieldtype: 3 },
+        addtime: { title: '发布时间', fieldtype: 3 },
         addman: { title: '发布人', fieldtype: 3 },
         term: { title: '有效期', fieldtype: 3 },
         hs:{ title: '航司', fieldtype: 3 },
