@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Service
@@ -47,8 +48,9 @@ public class FreightRateController extends BaseApiController {
     @GetMapping("/GetPublishPrice")
     @ApiOperation(value = "新发布运价对比查询", notes = "")
     public Object GetUpateFee(@RequestParam(required = false,defaultValue ="-1" ) @ApiParam(value = "gid") Integer gid,
-                              @RequestParam @ApiParam(value ="客户等级:A类,B类,C类,散客" ) String level)
+                              @RequestParam @ApiParam(value ="客户等级:A类,B类,C类,散客" ) String level,
+                              @RequestParam @ApiParam(value ="时间戳" ) BigInteger timestamp)
     {
-        return  fr.getUpdatePrice(gid,level);
+        return  fr.getUpdatePrice(gid,level,timestamp);
     }
 }

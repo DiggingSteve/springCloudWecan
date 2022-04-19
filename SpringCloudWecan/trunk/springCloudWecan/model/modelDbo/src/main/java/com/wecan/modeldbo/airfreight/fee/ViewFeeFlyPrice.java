@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Data
@@ -22,6 +23,8 @@ public class ViewFeeFlyPrice {
 
     private String twocode;
 
+    private BigInteger timestamp;
+
     //private String weight;
     //private BigDecimal weightdiff;
 
@@ -29,6 +32,7 @@ public class ViewFeeFlyPrice {
     private BigDecimal standardPrice;
 
     private BigDecimal newStandardPrice;
+
 
     private LocalDateTime startdate;
 
@@ -64,18 +68,18 @@ public class ViewFeeFlyPrice {
 
     //private  BigDecimal minPrice;
 
-    private BigDecimal mycPrice;
+    //private BigDecimal mycPrice;
 
 
-    private BigDecimal mycMin;
+    //private BigDecimal mycMin;
 
     private  BigDecimal truckFixedMin;
 
-    private BigDecimal mscPrice;
+    //private BigDecimal mscPrice;
 
     private  String Ddg;
 
-    private BigDecimal mscMin;
+    //private BigDecimal mscMin;
 
     private BigDecimal truckminDiff;
 

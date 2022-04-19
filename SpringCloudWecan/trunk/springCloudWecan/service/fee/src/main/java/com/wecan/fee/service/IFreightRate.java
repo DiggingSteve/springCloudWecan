@@ -2,6 +2,7 @@ package com.wecan.fee.service;
 
 import com.wecan.fee.model.dto.FreightFlyPriceDto;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 public interface IFreightRate extends IBaseService {
@@ -21,8 +22,8 @@ public interface IFreightRate extends IBaseService {
 
     /**
     *
-    * @param gid: aaa
+    * @param gid:
     * */
-    Object getUpdatePrice(Integer gid, String level);
+    Object getUpdatePrice(Integer gid, String level, BigInteger timestamp);
 
 }

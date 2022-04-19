@@ -1,11 +1,14 @@
 package com.wecan.fee.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wecan.daofee.mapper.ViewFeeFlyPriceMapper;
+import com.wecan.daofee.service.impl.FeeAirFlightServiceImpl;
 import com.wecan.fee.model.dto.FpHeader;
 import com.wecan.fee.model.dto.FreightFlyPriceDto;
 import com.wecan.fee.model.dto.FreightPublishPriceDto;
 import com.wecan.fee.service.IFreightRate;
+import com.wecan.modeldbo.airfreight.fee.FeeAirFlight;
 import com.wecan.modeldbo.airfreight.fee.ViewFeeFlyPrice;
 import com.wecan.modelview.model.vo.fee.output.OutputFreightRouting;
 import lombok.var;
@@ -13,9 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +31,9 @@ public class FreightRateService implements IFreightRate {
 
     @Autowired
     private AirFreightFeeService airFee;
+
+    @Autowired
+    FeeAirFlightServiceImpl flightDao;
 
     final  String minprice="minprice";
     final  String noRegister="散客";
@@ -52,14 +60,17 @@ public class FreightRateService implements IFreightRate {
             dt=dt.plusMonths(2);
         QueryWrapper<ViewFeeFlyPrice> query=new QueryWrapper<>();
         query.eq("sfg",sfg);
-        query.eq("mdg",mdg);
+        query.eq("ddg",mdg);
+       /* query.and(c->c.eq("mdg",mdg).and(d->d.eq("ddg",""))
+                .or(g->g.eq("ddg",mdg))    );*/
+
         //散客 gid-1
         GetQuerWrapper(gid, level, query);
-        //gt >  lt<   ge >=   le <= //查询 2021-11-12  2021-12-13
+        //gt >  lt<   ge >=   le <= //查询 2021-11-12  2021-12-13ot
         var tempdt=LocalDateTime.from(dt);
         var templowDt=LocalDateTime.from(lowDt);
         query.and(c-> c.lt("startdate",tempdt).ge("enddate",templowDt))
-                .or().le("startdate",templowDt).gt("enddate",tempdt);
+                .or().le("startdate",templowDt).ge("enddate",tempdt);
         var result=new FreightFlyPriceDto();
         result.bodyList=new ArrayList<>();
         result.headerList=new ArrayList<>();
@@ -67,13 +78,12 @@ public class FreightRateService implements IFreightRate {
         var list= vfm.selectList(query).stream()
                 .sorted(Comparator.comparing(c -> c.getStartdate()))
                 .collect(Collectors.toList());
-        List<OutputFreightRouting> ls=new ArrayList<>();
 
         Function<ViewFeeFlyPrice, List<Object>> groupByKey = c ->
-                Arrays.asList(c.getFeeid(),c.getSfg(),c.getMdg(),c.getZzg(),c.getTwocode(),
+                Arrays.asList(c.getPackageType(),c.getFeeid(),c.getSfg(),c.getMdg(),c.getZzg(),c.getTwocode(),
                         c.getStartdate(),c.getEnddate(),c.getWffareaid(),
                         c.getAddman(),c.getAddtime(),c.getGid(),c.getHbh(),c.getDdg());
-        var fly=new ArrayList<>();
+
         while (dt.isAfter(lowDt)){
             var hp=new FpHeader();
             hp.date=lowDt;
@@ -86,23 +96,23 @@ public class FreightRateService implements IFreightRate {
                 hp.minprice= BigDecimal.ZERO;
             }
             else {
-               var minPrice= currList.stream().min(Comparator.comparing(c->c.getNewStandardPrice())).get().getNewStandardPrice();
-                if(minPrice.compareTo(BigDecimal.ZERO)<=0)
-                    minPrice= currList.stream().min(Comparator.comparing(c->c.getStandardPrice())).get().getStandardPrice();
-               hp.minprice=minPrice;
-               //查询详情
-               Map<Object,List<ViewFeeFlyPrice>> gp=currList.stream().collect(Collectors.groupingBy(groupByKey));
-               var outList= getOutputFreightRouting(gp,result.bodyList);
-               if (outList.size()>0) {
-                   airFee.getRoutingData(outList);
-                   result.bodyList.addAll(outList);
-               }
+                var minFee = currList.stream().min(Comparator.comparing(c -> c.getNewStandardPrice())).get();
+                hp.minprice = getMinprice(minFee);
+                //查询详情
+                Map<Object, List<ViewFeeFlyPrice>> gp = currList.stream().collect(Collectors.groupingBy(groupByKey));
+                var outList = getOutputFreightRouting(gp, result.bodyList);
+                if (outList.size() > 0) {
+                    airFee.getRoutingData(outList);
+                    result.bodyList.addAll(outList);
+                }
             }
             result.headerList.add(hp);
             lowDt=lowDt.plusDays(1);
         }
         return  result;
     }
+
+
 
     private void GetQuerWrapper(Integer gid, String level, QueryWrapper<ViewFeeFlyPrice> query) {
         //没登录的散客
@@ -119,6 +129,7 @@ public class FreightRateService implements IFreightRate {
         }
     }
 
+    //判断是否为未登录的散客
     private boolean isNoRegister(String level) {
         return !level.isEmpty() && level.trim().compareTo(noRegister)==0;
     }
@@ -134,7 +145,8 @@ public class FreightRateService implements IFreightRate {
             //var item=glist.get(0);
             //价格便宜的那个
             var item=glist.stream().min(Comparator.comparing(f->f.getNewStandardPrice())).get();
-            var dataCount= bodyList.stream().filter(f->f.getFeeid()==item.getFeeid()).count();
+            var dataCount= bodyList.stream().filter(f->f.getFeeid()==item.getFeeid()
+                && f.getPackageType()==item.getPackageType()).count();
             if ( dataCount>0)
                 continue;
             var outputFreightRouting=new OutputFreightRouting();
@@ -161,54 +173,50 @@ public class FreightRateService implements IFreightRate {
             outputFreightRouting.setPackageType(item.getPackageType());
             list.add(outputFreightRouting);
         }
-        origlist.entrySet().forEach(c->{
-           var kk= c.getKey();
-           var glist =c.getValue();
-           if(glist.size()>0) {
-
-           }
-        });
         return list;
+    }
+   //获取最小价格
+    private BigDecimal getMinprice(ViewFeeFlyPrice minFee) {
+        return minFee.getNewStandardPrice().compareTo(BigDecimal.ZERO) <= 0 ? minFee.getStandardPrice():
+        minFee.getNewStandardPrice();
+        //  minFee.getStandardPrice().compareTo( minFee.getNewStandardPrice())<=0?
+        //                        minFee.getStandardPrice(): minFee.getNewStandardPrice()
     }
 
     /*
     * 发布运价 价格对比
     * */
     @Override
-    public Object getUpdatePrice(Integer gid, String level) {
+    public Object getUpdatePrice(Integer gid, String level, BigInteger timestamp) {
         QueryWrapper<ViewFeeFlyPrice> query = new QueryWrapper<>();
         GetQuerWrapper(gid, level, query);
+        //query.eq("sfg","PVG");
+        //query.eq("mdg","NRT");
         var list = vfm.selectList(query).stream()
-                .sorted(Comparator.comparing(ViewFeeFlyPrice::getSfg).reversed())
                 .collect(Collectors.toList());
 
         List<FreightPublishPriceDto> priceResult =new ArrayList();
 
-        var gpFee = list.stream().collect(Collectors.groupingBy(GetPriceGroup()));
+        var gpFee = list.stream().collect(Collectors.groupingBy(GetUpdatePriceGroup()));
         for (Map.Entry<Object, List<ViewFeeFlyPrice>> item : gpFee.entrySet()) {
             var clist=item.getValue().stream()
                     .collect(Collectors.toList());
-            //取最近的2个时间
-            var twoDateList = clist.stream()
-                    .collect(Collectors.groupingBy(ViewFeeFlyPrice::getStartdate))
-                    .entrySet().stream()
-                    .sorted((a,b)->b.getKey().compareTo(a.getKey()))
-                    .limit(2).collect(Collectors.toList());;
+            //根据时间戳取数据
+            //新数据>时间戳 倒序第一条,对比的数据 <时间戳 倒序第一条
+            var newFeePrice=GetFee(clist,
+                    (a->a.getTimestamp().compareTo(timestamp)>=0));
+            var oldFeePrice= GetFee(clist,
+                    (a->a.getTimestamp().compareTo(timestamp)<0));
+
+            List<Map.Entry<LocalDateTime,List<ViewFeeFlyPrice>>> twoDateList=new ArrayList<>();
+            twoDateList.addAll(newFeePrice);
+            twoDateList.addAll(oldFeePrice);
             //价格最少的
             List<ViewFeeFlyPrice> currPriceList=new ArrayList<>();
             List<ViewFeeFlyPrice> prevPriceList=new ArrayList<>();
-
             if (twoDateList.size()==0) {
                 return  priceResult;
             }
-//            else if (twoDateList.size()==1){
-//                currPriceList = twoDateList.get(0).getValue();
-//                prevPriceList = twoDateList.get(0).getValue();
-//            }
-//           else {
-//                currPriceList = twoDateList.get(0).getValue();
-//                prevPriceList = twoDateList.get(1).getValue();
-//            }
             //新发布的之前没有数据 之前的就是它本身
             currPriceList = twoDateList.get(0).getValue();
             if (twoDateList.size()==1)
@@ -221,14 +229,20 @@ public class FreightRateService implements IFreightRate {
             FreightPublishPriceDto fpp = getFreightPublishPriceDto(currp, prevp);
             priceResult.add(fpp);
         }
+        if (priceResult.size()>0)
+            priceResult= priceResult.stream().sorted(Comparator.comparing(a->a.sfg))
+                            .collect(Collectors.toList());
         return priceResult;
     }
 
-    private  Function<ViewFeeFlyPrice,Object>  GetPriceGroup()
+    private  Function<ViewFeeFlyPrice,Object> GetUpdatePriceGroup()
     {
+        /*Function<ViewFeeFlyPrice,Object> gk = c ->
+                c.getSfg()+","+c.getMdg()+","+c.getZzg()+","+c.getTwocode()+","
+                        +c.getDdg()+","+c.getArea()+","+c.getHbh();*/
         Function<ViewFeeFlyPrice,Object> gk = c ->
                 c.getSfg()+","+c.getMdg()+","+c.getZzg()+","+c.getTwocode()+","
-                        +c.getDdg()+","+c.getArea()+","+c.getHbh();
+                        +c.getPackageType()+","+c.getArea();
         return gk;
     }
 
@@ -239,8 +253,8 @@ public class FreightRateService implements IFreightRate {
 
     private FreightPublishPriceDto getFreightPublishPriceDto(ViewFeeFlyPrice currp, ViewFeeFlyPrice prevp) {
         var fpp = new FreightPublishPriceDto();
-        fpp.price = currp.getNewStandardPrice();
-        fpp.change = currp.getNewStandardPrice().subtract(prevp.getNewStandardPrice());
+        fpp.price = getMinprice(currp);// currp.getNewStandardPrice();
+        fpp.change =getMinprice(currp).subtract(getMinprice(prevp));
         fpp.sfg = currp.getSfg();
         fpp.mdg = currp.getMdg();
         fpp.twocode = currp.getTwocode();
@@ -250,9 +264,26 @@ public class FreightRateService implements IFreightRate {
         fpp.publishDate = currp.getAddtime();
         fpp.remark = currp.getRemark();
         fpp.packageType = currp.getPackageType();
-//                fpp.area=currp.getArea();
-//                fpp.gid=currp.getGid();
+        fpp.addman=currp.getAddman();
+        fpp.area=currp.getArea();
+        fpp.hbh=currp.getHbh();
+        fpp.flightList= getFlightByFeeid(currp.getFeeid());
         return fpp;
     }
+    private  List<Map.Entry<LocalDateTime,List<ViewFeeFlyPrice>>>  GetFee(List<ViewFeeFlyPrice> clist,
+                          Predicate<ViewFeeFlyPrice> predicate) {
+        //同一个时间可能有多条 所以根据时间倒序分组取第一条
+        var feePrice=clist.stream().filter(predicate)
+                .collect(Collectors.groupingBy(ViewFeeFlyPrice::getStartdate))
+                .entrySet().stream()
+                .sorted((a,b)->b.getKey().compareTo(a.getKey()))
+                .limit(1).collect(Collectors.toList());
+        return feePrice;
+    }
 
+    protected List<FeeAirFlight>getFlightByFeeid(long feeid){
+        var query = new LambdaQueryWrapper<FeeAirFlight>().eq(FeeAirFlight::getFeeid, feeid);
+        var list = flightDao.list(query);
+        return list;
+    }
 }
