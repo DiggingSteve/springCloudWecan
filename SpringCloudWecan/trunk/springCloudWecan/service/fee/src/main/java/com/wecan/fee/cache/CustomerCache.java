@@ -33,6 +33,7 @@ public class CustomerCache implements CommandLineRunner {
     Cache<String, Object> cache;
 
     public  static final String key = "客户缓存";
+    public static final String isAlive="检测";
 
     @Override
     public void run(String... args) throws Exception {
@@ -42,10 +43,12 @@ public class CustomerCache implements CommandLineRunner {
         var data= _pubApi.getFidCache();
         data=data.stream().filter(f->{return f.comxz==1;}).collect(Collectors.toList());
         cache.put(key,data);
+        cache.put(isAlive,true);
     }
 
     public  List<OutputFidCache>getCache(){
-        if(cache.asMap().size()==0){
+
+        if(cache.getIfPresent(isAlive)==null){
             l.lock();
             initCache();
             l.unlock();
