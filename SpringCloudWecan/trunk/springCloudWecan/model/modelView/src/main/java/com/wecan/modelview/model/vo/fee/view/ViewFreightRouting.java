@@ -18,6 +18,8 @@ public class ViewFreightRouting {
 
     private String addman;
 
+    private LocalDateTime addtime;
+
     private String sfg;
 
     private String zzg;

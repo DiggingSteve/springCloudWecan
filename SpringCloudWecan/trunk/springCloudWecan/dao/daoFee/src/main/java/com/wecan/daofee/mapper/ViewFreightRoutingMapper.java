@@ -19,6 +19,7 @@ public interface ViewFreightRoutingMapper extends BaseMapper<ViewFreightRouting>
             "            fee.enddate, \n" +
             "            fee.wffAreaid, \n" +
             "            fee.addman, \n" +
+            "            fee.addtime, \n" +
             "            fee.jfType, \n" +
             "            fee.area, \n" +
             "            fee.gid, \n" +
@@ -46,6 +47,7 @@ public interface ViewFreightRoutingMapper extends BaseMapper<ViewFreightRouting>
             "            fee.enddate, \n" +
             "            fee.wffAreaid, \n" +
             "            fee.addman, \n" +
+            "            fee.addtime, \n" +
             "            fee.jfType, \n" +
             "            fee.area, \n" +
             "            fee.gid, \n" +
