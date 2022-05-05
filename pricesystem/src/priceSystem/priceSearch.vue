@@ -211,9 +211,13 @@
           <span>{{ tableDataRes[pdata.data.index].area }}</span>
         </div>
       </template>
-       <template v-slot:addtime="pdata">
+      <template v-slot:addtime="pdata">
         <div class="row">
-          <span>{{ tableDataRes[pdata.data.index].addtime?tableDataRes[pdata.data.index].addtime.substring(0,10):"" }}</span>
+          <span>{{
+            tableDataRes[pdata.data.index].addtime
+              ? tableDataRes[pdata.data.index].addtime.substring(0, 10)
+              : ""
+          }}</span>
         </div>
       </template>
       <template v-slot:routing="pdata">
@@ -533,11 +537,9 @@
                   </tbody>
                 </table>
               </div>
-
-      
             </div>
             <div class="hbhDetail" v-if="item.isSelfInput == 1">
-                  <div class="row title">
+              <div class="row title">
                 <div class="item30">
                   <span>航班号:</span><span>{{ item.hbh }}</span>
                 </div>
@@ -548,11 +550,11 @@
                   <span>目的港:</span><span>{{ item.mdg }}</span>
                 </div>
               </div>
-           <div class="row">
+              <div class="row">
                 <table>
-                      {{
-                  void (weekList = item.schedule.split(","))
-                }}
+                  {{
+                    void (weekList = item.schedule.split(","))
+                  }}
                   <tbody>
                     <tr>
                       <td>航班日期</td>
@@ -570,9 +572,7 @@
                       </tr>
                       <tr>
                         <td>--</td>
-                        <td>
-                         --
-                        </td>
+                        <td>--</td>
 
                         <td>--</td>
                         <td>--</td>
@@ -832,7 +832,7 @@ export default {
       var dataArrCopy = JSON.parse(JSON.stringify(dataArr));
       var weightArr = this.priceObj.weightArr;
       var volArr = this.priceObj.volArr;
-      calWeight=calWeight.toFixed(0);
+      calWeight = calWeight.toFixed(0);
       dataArrCopy.forEach((item) => {
         let weight = null;
         if (item.jfType == "毛重") {
@@ -842,13 +842,13 @@ export default {
         }
         item.calWeight = weight;
         var exactWeight = this.getWeight(weight);
-        this.reversePrice(item, exactWeight, volType, weight,calWeight);
+        this.reversePrice(item, exactWeight, volType, weight, calWeight);
       });
       return dataArrCopy;
     },
 
     //计算每行的单价是否吃到min 吃到Min就要倒算
-    reversePrice(row, weightCode, volType, weight,calWeight) {
+    reversePrice(row, weightCode, volType, weight, calWeight) {
       var isContainsTruck = this.isContainsTruck;
       var packageDiff = row.packageCusDiffMap[this.selectedPackageType];
       var cusDiff = row.packageCusDiffMap[this.selectedCusType];
@@ -904,15 +904,16 @@ export default {
         return;
       }
       //需要倒算
-       flightTotal =
-        (flightTotal < flightMinPrice ? flightMinPrice : flightTotal) ;
-        truckTotal=  (isContainsTruck
-          ? truckTotal < truckMinPrice
-            ? truckMinPrice
-            : truckTotal
-          : 0);
-         
-      row.exactPrice = ((flightTotal / weight) + (truckTotal/calWeight)).toFixed(2);
+      flightTotal = flightTotal < flightMinPrice ? flightMinPrice : flightTotal;
+      truckTotal = isContainsTruck
+        ? truckTotal < truckMinPrice
+          ? truckMinPrice
+          : truckTotal
+        : 0;
+
+      row.exactPrice = (flightTotal / weight + truckTotal / calWeight).toFixed(
+        2
+      );
       row.isShow = true;
     },
 
@@ -1406,7 +1407,7 @@ export default {
 .hbhDetail {
   & .title {
     background: @blue;
-    
+
     border-radius: 4px;
     color: #fff;
     font-size: 16px;
@@ -1464,10 +1465,13 @@ export default {
 /deep/.trRow td {
   max-width: unset !important;
 }
-/deep/.trRow > td:nth-of-type(9) {
+/deep/.trRow > td:nth-of-type(9) span{
   //备注样式 如果改动列顺序需要同步改
-  word-break: break-word !important;
-  
+  width: 400px !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  display: block;
 }
 </style>
 <style>
