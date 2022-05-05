@@ -1467,7 +1467,8 @@ export default {
 }
 /deep/.trRow > td:nth-of-type(9) span{
   //备注样式 如果改动列顺序需要同步改
-  width: 400px !important;
+  max-width: 400px !important;
+  min-width: 100px !important;
   overflow: hidden !important;
   white-space: nowrap !important;
   text-overflow: ellipsis !important;
