@@ -1464,17 +1464,10 @@ export default {
 /deep/.trRow td {
   max-width: unset !important;
 }
-/deep/.trRow > td:nth-of-type(8) {
+/deep/.trRow > td:nth-of-type(9) {
   //备注样式 如果改动列顺序需要同步改
   word-break: break-word !important;
-  white-space: break-spaces !important;
-  width: 200px !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  display: -webkit-box !important;
-  -webkit-box-orient: vertical !important;
-  //height: 266px !important;
-  //border-bottom: 0 !important;
+  
 }
 </style>
 <style>
