@@ -54,14 +54,26 @@
           :disabled="item[disabledProp]"
           :key="item[keyProp]"
           v-for="item in filteredData">
-          <option-content :option="item"></option-content>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+             <option-content :option="item"></option-content>
+              <!-- 删除按钮 -->
+             <i class="el-icon-circle-close" style="margin-right: 10px; cursor: pointer;" @click.stop.prevent="handleCloseLeft(item)"></i>
+          </div>
         </el-checkbox>
+       
+         
       </el-checkbox-group>
-      <div  v-for="(item, index) in filteredData" :key="index" style="padding: 10px 10px 0 10px">
-        <div style="display: flex; align-items:center">
-          <i class="el-icon-circle-close" style="margin-right: 10px; cursor: pointer;" @click="handleClose(item)"></i><option-content :option="item"></option-content>
+      <div>
+         <div  style="height: 194px; overflow: auto;">
+            <div style="display: flex; align-items:center; padding: 10px 10px 0 10px;"  v-for="(item, index) in filteredData" :key="index">
+              <i class="el-icon-circle-close" style="margin-right: 10px; cursor: pointer;" @click="handleClose(item)"></i><option-content :option="item"></option-content>
+            </div>
+          </div>
+        <div style="padding: 10px; display: flex; justify-content: end;">
+          <el-button type="primary" @click="$emit('handleConfirm')">确认</el-button>
         </div>
       </div>
+     
 
       <p
         class="el-transfer-panel__empty"
@@ -255,6 +267,14 @@
     },
 
     methods: {
+      handleCloseLeft(item) {
+        const self = this;
+         setTimeout(() => {
+           self.$emit('closeItemLeft', item.airnum);
+        }, 100)
+      },
+
+
       handleClose(item){
         const self = this;
         this.checked = [item.airnum]
@@ -266,6 +286,7 @@
 
       handleEnter() {
         this.$emit('enter', this.query.toUpperCase())
+        this.query = '';
       },
 
       updateAllChecked() {

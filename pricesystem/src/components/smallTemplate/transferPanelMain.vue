@@ -9,6 +9,7 @@
       :placeholder="filterPlaceholder || t('el.transfer.filterPlaceholder')"
       @checked-change="onSourceCheckedChange"
       @enter="handleEnter"
+      @closeItemLeft="closeItemLeft"
       >
       <slot name="left-footer"></slot>
     </transfer-panel>
@@ -42,6 +43,7 @@
       :visible="true"
       style="width: 555px;"
       @closeItem="addToLeft"
+      @handleConfirm="$emit('handleConfirm')"
       >
       <slot name="right-footer"></slot>
     </transfer-panel>
@@ -174,6 +176,15 @@
     },
 
     methods: {
+      // 删除左边
+      closeItemLeft(airnum) {
+         this.data.forEach((item, index) => {
+           if (item.airnum == airnum) {
+             this.data.splice(index, 1)
+           }
+         })
+      },
+
       handleEnter(val) {
         this.$emit('enter', val)
       },
