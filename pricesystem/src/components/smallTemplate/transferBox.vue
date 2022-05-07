@@ -13,9 +13,9 @@
     >{{ title }}</span>
     <div
       @click.stop="visible=!visible"
-      style="width: 83%"
+      style="width: calc( 100% - 53px)"
     >
-      <div style="width: 100%; height: 24px;">
+      <div style="width: 100%; min-height: 24px;">
         <el-tag
           v-for="(tag, index) in value"
           :key="index"
@@ -58,6 +58,7 @@
         }"
           @enter="handleEnter"
           @change="handleChange"
+          @handleConfirm="visible=false"
         >
 
           <div slot-scope="{ option }" style="display: flex;">
