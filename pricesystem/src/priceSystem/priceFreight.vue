@@ -143,6 +143,7 @@
               :pagetype="11"
               :multiple="true"
               title="航空公司"
+              :placeholder="'可多选'"
               type="inline"
               required="tip"
               :modelval.sync="priceObj.twoCode"
@@ -195,25 +196,6 @@
           ></transferBox>
         </div>
         <div class="row" style="margin-top: 10px">
-          <div
-            class="item30 descriptionWrap"
-            style="height: 31px; line-height: 31px; display: flex"
-          >
-            <span class="input_title" style="padding-right: 10px"
-              >时间期限</span
-            >
-            <el-date-picker
-              style="width: 205px"
-              v-model="priceObj._timeSpan"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            >
-            </el-date-picker>
-          </div>
-
           <div class="item5"></div>
           <div
             class="item30 descriptionWrap"
@@ -282,6 +264,31 @@
           </div>
         </div>
 
+        <div class="row block">
+          <div style="width: 100%">
+            <span class="blue title">运价有效期</span>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 10px">
+          <div
+            class="item30 descriptionWrap"
+            style="height: 31px; line-height: 31px; display: flex"
+          >
+            <span class="input_title" style="padding-right: 10px"
+              >时间期限</span
+            >
+            <el-date-picker
+              style="width: 205px"
+              v-model="priceObj._timeSpan"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            >
+            </el-date-picker>
+          </div>
+        </div>
         <!-- <div class="row">
           <card-block
             :dataArr.sync="priceObj.weightArr"
@@ -1816,7 +1823,7 @@ export default {
   border-radius: 4px;
   background: #fffcf0;
   padding-left: 5px;
- & .el-input__inner{
+  & .el-input__inner {
     border: 0 !important;
   }
 }
