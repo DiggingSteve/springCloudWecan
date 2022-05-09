@@ -89,13 +89,13 @@ class priceFreightView extends BaseService {
     // 是否没添加cus参数
     get isCusEmpty() {
         var arr = this.cusArr.filter(item => { return item.isAdd })
-        return arr.length == 0;
+        return arr.length == 0||arr.length==this.cusArr.length;
     }
 
     // 是否没添加package参数
     get isPackageTypeEmpty() {
         var arr = this.packageTypeArr.filter(item => { return item.isAdd })
-        return arr.length == 0;
+        return arr.length == 0||arr.length==this.packageTypeArr.length;
     }
 
     /**当前选中的包装类型 */
