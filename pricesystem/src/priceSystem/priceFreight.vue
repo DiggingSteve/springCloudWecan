@@ -1038,7 +1038,7 @@
             <span>{{ item.title }}</span>
             <span
                   class="el-icon-close"
-                  @click="priceObj.delRelationTag(index, 'cus', $event)"
+                  @click="item.isAdd=false;item.isSelect=false;"
                   style="display: none"
                 >
                 </span>
