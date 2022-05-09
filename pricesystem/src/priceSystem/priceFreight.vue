@@ -196,7 +196,7 @@
           ></transferBox>
         </div>
         <div class="row" style="margin-top: 10px">
-          <div class="item5"></div>
+         
           <div
             class="item30 descriptionWrap"
             style="height: 31px; line-height: 31px"
@@ -217,7 +217,6 @@
               height: 28px;
               width: 68px;
               background: #fffcf0;
-              border: 1px solid #dcdfe6;
               border-radius: 4px;
             "
           >
@@ -487,12 +486,12 @@
                 v-show="item.isAdd"
               >
                 <span>{{ item.title }}</span>
-                <span
+                <!-- <span
                   class="el-icon-close"
                   @click="priceObj.delRelationTag(index, 'cus', $event)"
                   style="display: none"
                 >
-                </span>
+                </span> -->
               </div>
             </template>
           </div>
@@ -528,11 +527,11 @@
                 v-show="item.isAdd"
               >
                 <span>{{ item.title }}</span>
-                <span
+                <!-- <span
                   class="el-icon-close"
                   style="display: none"
                   @click="priceObj.delRelationTag(index, 'package', $event)"
-                ></span>
+                ></span> -->
               </div>
             </template>
           </div>
@@ -547,7 +546,7 @@
           </div>
         </div>
         <div class="row relation-wrap">
-          <div class="item10 operate-title">尺寸参数</div>
+          <div class="item10 operate-title">货型参数</div>
           <div class="item75" style="display: flex">
             <template v-for="item in priceObj.volArr">
               <div class="operate-tag-forbidden">

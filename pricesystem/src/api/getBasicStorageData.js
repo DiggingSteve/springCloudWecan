@@ -534,8 +534,8 @@ function createBasicCardData(arr,type) {
   return arr.sort((a, b) => {
       return a.ready02 *1 -b.ready02*1
   }).map((item, index) => {
-      return { code: item.ready01, diff: '', isDefault: index == 0 ? 1 : 2,title:item.typename,isAdd:type=="vol"//是否在参数中被选中
-      ,isSelect:false,standardPrice:''
+      return { code: item.ready01, diff: '', isDefault: index == 0 ? 1 : 2,title:item.typename,isAdd:true/是否在参数中被选中
+      ,isSelect:true,standardPrice:''
      }
   });
 }
