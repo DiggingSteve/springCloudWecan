@@ -36,7 +36,7 @@ public class FreightRateService implements IFreightRate {
     FeeAirFlightServiceImpl flightDao;
 
     final  String minprice="minprice";
-    final  String noRegister="散客";
+    final  String noRegister="官网公布";//散客
     final  String defaultAll="-1";
 
     /**
@@ -59,7 +59,8 @@ public class FreightRateService implements IFreightRate {
         if(type>=0)
             dt=dt.plusMonths(2);
         QueryWrapper<ViewFeeFlyPrice> query=new QueryWrapper<>();
-        query.eq("sfg",sfg);
+        var sfgList=sfg.split(",");
+        query.in("sfg",sfgList);//.eq("sfg",sfg);
         query.eq("ddg",mdg);
        /* query.and(c->c.eq("mdg",mdg).and(d->d.eq("ddg",""))
                 .or(g->g.eq("ddg",mdg))    );*/
