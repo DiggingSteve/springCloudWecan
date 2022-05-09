@@ -220,24 +220,24 @@ class priceFreightEditView extends priceFreightView {
     this.sfg = basicInfo.sfg;
     this.mdg = basicInfo.mdg;
     this.zzg = basicInfo.zzg;
-    this.vueInstance.$set(this,"zzgTitle",basicInfo.zzg==zzgTitle.direct?zzgTitle.direct:zzgTitle.trans);
+    this.vueInstance.$set(this, "zzgTitle", basicInfo.zzg == zzgTitle.direct ? zzgTitle.direct : zzgTitle.trans);
     this.jfType = basicInfo.jfType;
     this.twoCode = basicInfo.twocode
     this.tactPriceDiff = basicInfo.tactPriceDiff;
     this.minPriceMode = basicInfo.minPriceMode;
     this.vueInstance.$set(this._timeSpan, 0, new Date(basicInfo.startdate))
     this.vueInstance.$set(this._timeSpan, 1, new Date(basicInfo.enddate))
-    this.hbhArr =map.hbhArr?
-     map.hbhArr.map(m => {
-      return {
-        hbh: m.hbh,
-        schedule: m.schedule,
-        remark: m.remark,
-        isSelfInput:m.isSelfInput
-      }
-    }):[];
-    this.approvalArr=map.approvalArr?map.approvalArr:[];
-    this.vueInstance.hbhTabVal=this.hbhArr.length>0?this.hbhArr[0].hbh:""
+    this.hbhArr = map.hbhArr ?
+      map.hbhArr.map(m => {
+        return {
+          hbh: m.hbh,
+          schedule: m.schedule,
+          remark: m.remark,
+          isSelfInput: m.isSelfInput
+        }
+      }) : [];
+    this.approvalArr = map.approvalArr ? map.approvalArr : [];
+    this.vueInstance.hbhTabVal = this.hbhArr.length > 0 ? this.hbhArr[0].hbh : ""
     this.remark = basicInfo.remark;
     this.limitDay = basicInfo.limitDay;
     this.gid = basicInfo.gid;
@@ -436,7 +436,7 @@ class priceFreightEditView extends priceFreightView {
       this.canPageOneTopageAdd();// 判断页面能否跳转 用异常中断操作 会被全局捕获
       this.checkWeightStandardPrice();
       this._currentPageMode = pageMode.pageConfirm;
-      this.vueInstance.hbhTabVal=this.hbhArr.length>0?this.hbhArr[0].hbh:""
+      this.vueInstance.hbhTabVal = this.hbhArr.length > 0 ? this.hbhArr[0].hbh : ""
     }
   }
 
@@ -478,7 +478,7 @@ class priceFreightEditView extends priceFreightView {
     }
     await this.request("post", url, data).then((d) => {
       this.ok("保存成功");
-      this.currentPageMode=pageMode.search;
+      this.currentPageMode = pageMode.search;
     });
   }
 
@@ -517,7 +517,7 @@ class priceFreightEditView extends priceFreightView {
     }
     await this.request("post", url, data).then((d) => {
       this.ok("修改成功");
-      this.currentPageMode=pageMode.search;
+      this.currentPageMode = pageMode.search;
     });
   }
   convertDiffArr(arr) {
@@ -1042,7 +1042,7 @@ class priceFreightEditView extends priceFreightView {
             this.cusDisplayIndex = i;
             break;
           }
-          else this.cusDisplayIndex=-1;
+          else this.cusDisplayIndex = -1;
         }
 
       }
@@ -1059,7 +1059,7 @@ class priceFreightEditView extends priceFreightView {
             this.packageDisplayIndex = i;
             break;
           }
-          else this.packageDisplayIndex=-1;
+          else this.packageDisplayIndex = -1;
         }
       }
       this.delMatchFixedMap(this.packageTypeArr[index].title)
@@ -1089,12 +1089,15 @@ class priceFreightEditView extends priceFreightView {
 
   /**确认添加完毕 和 钩稽关系的相关数据 */
   confirmRelation() {
-    this.isShowRelationEdit = false;
+    var isSetDisplayIndex = false;//是否设置展示index 设置过之后不需要再次触发setCurrentRelationDefaultIndex
     this.isNeedClearFixedMap() && this.clearFixedMap();
     this.currentRelationEditArr.forEach((item, index) => {
       if (item.isSelect) {
         item.isAdd = true;
-        this.setCurrentRelationDefaultIndex(index, this.currentRelationMap.title);
+        if (!isSetDisplayIndex) {
+          this.setCurrentRelationDefaultIndex(index, this.currentRelationMap.title);
+          isSetDisplayIndex=true;
+        }
       }
     });
     // 如果取消价格间联动 则需要清空基础参数数组中 isDefault 和 diff上面的值

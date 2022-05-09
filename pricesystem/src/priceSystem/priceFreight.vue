@@ -483,7 +483,7 @@
                   active: priceObj.cusDisplayIndex == index,
                 }"
                 @click="priceObj.cusDisplayIndex = index"
-                v-show="item.isAdd"
+                v-show="item.isAdd&& !priceObj.isCusEmpty"
               >
                 <span>{{ item.title }}</span>
                 <!-- <span
@@ -524,7 +524,7 @@
                   active: priceObj.packageDisplayIndex == index,
                 }"
                 @click="priceObj.packageDisplayIndex = index"
-                v-show="item.isAdd"
+                v-show="item.isAdd&&!priceObj.isPackageTypeEmpty"
               >
                 <span>{{ item.title }}</span>
                 <!-- <span
@@ -1111,7 +1111,7 @@
       </div>
       <div class="row" style="justify-content: flex-end">
         <div class="item10">
-          <el-button type="primary" @click="priceObj.confirmRelation()"
+          <el-button type="primary" @click="priceObj.confirmRelation(); priceObj.isShowRelationEdit = false;"
             >确认</el-button
           >
         </div>
