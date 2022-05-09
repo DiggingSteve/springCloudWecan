@@ -1036,6 +1036,12 @@
         <template v-for="(item, index) in priceObj.currentRelationEditArr">
           <div class="title" v-show="item.isSelect || item.isAdd">
             <span>{{ item.title }}</span>
+            <span
+                  class="el-icon-close"
+                  @click="priceObj.delRelationTag(index, 'cus', $event)"
+                  style="display: none"
+                >
+                </span>
           </div>
         </template>
         <div class="plus" v-show="relationEditTitle != relationTitle.vol">
