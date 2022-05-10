@@ -1087,8 +1087,8 @@ class priceFreightEditView extends priceFreightView {
   selectRelationTitle(index) {
     let item = this.currentRelationEditArr[index];
 
-    if (item.isSelect) { item.isSelect = false; }
-    else { item.isSelect = true; }
+    item.isSelect = !item.isSelect
+    item.isAdd = item.isSelect;
   }
 
   /**取消添加基础参数 */
