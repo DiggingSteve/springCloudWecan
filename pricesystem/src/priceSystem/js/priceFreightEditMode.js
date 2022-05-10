@@ -1042,9 +1042,6 @@ class priceFreightEditView extends priceFreightView {
       else this.currentRelationMap.displayIndex  = -1;
     }
     this.delMatchFixedMap(this.currentRelationEditArr[index].title);
-
-  
-
    
     this.setBasePoint();
     e.stopPropagation();
@@ -1052,13 +1049,14 @@ class priceFreightEditView extends priceFreightView {
 
   //设置基点 固定第一个基点
   setBasePoint() {
-    this.currentRelationEditArr.forEach((item, index) => {
+    for(var i=0;i<this.currentRelationEditArr.length;i++){
+      var item=this.currentRelationEditArr[i];
       if (item.isAdd) {
         this.currentRelationMap.baseIndex = index;
         this.vueInstance.$forceUpdate();
-        return;
+        break;
       }
-    })
+    }
 
   }
 
