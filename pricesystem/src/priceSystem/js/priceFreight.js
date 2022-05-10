@@ -60,10 +60,15 @@ class priceFreightView extends BaseService {
     /**记录用于导入价格的map 被选中的价格最终会复制到 priceDisplayMap */
     priceCopyMap = {};
 
+  
     //记录钩稽参数相关信息
     relationMap = {
-        cus: { title: diffCode.cus, hasRelation: false, baseIndex: -1 },
-        packageType: { title: diffCode.package, hasRelation: false, baseIndex: -1 },
+        cus: { title: diffCode.cus, hasRelation: false, baseIndex: -1,set disPlayIndex(v){
+            this.cusDisplayIndex=v;
+        } },
+        packageType: { title: diffCode.package, hasRelation: false, baseIndex: -1,set disPlayIndex(v){
+            this.packageDisplayIndex=v;
+        } },
         vol: { title: diffCode.vol, hasRelation: false, baseIndex: -1 }
     };
 

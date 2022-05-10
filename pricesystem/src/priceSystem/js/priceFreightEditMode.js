@@ -1030,41 +1030,22 @@ class priceFreightEditView extends priceFreightView {
    * 当删除的基础参数为当前选中参数时 需要切换当前选中基础参数
    */
   delRelationTag(index, e) {
-
-    if (this.currentRelationMap.title == diffCode.cus) {
-      this.cusArr[index].isAdd = false;
-      this.cusArr[index].isSelect = false;
-      if (this.cusDisplayIndex == index) {
-        for (let i = 0; i < this.cusArr.length; i++) {
-          let item = this.cusArr[i];
-          if (item.isAdd) {
-            //移动当前显示index位置 如果没有已添加的数据则设置-1
-            this.cusDisplayIndex = i;
-            break;
-          }
-          else this.cusDisplayIndex = -1;
-        }
-
+    this.currentRelationEditArr[index].isAdd=false;
+    this.currentRelationEditArr[index].isSelect=false;
+    for (let i = 0; i < this.currentRelationEditArr.length; i++) {
+      let item = this.currentRelationEditArr[i];
+      if (item.isAdd) {
+        //移动当前显示index位置 如果没有已添加的数据则设置-1
+        this.currentRelationMap.displayIndex = i;
+        break;
       }
-      this.delMatchFixedMap(this.cusArr[index].title)
+      else this.currentRelationMap.displayIndex  = -1;
     }
+    this.delMatchFixedMap(this.currentRelationEditArr[index].title);
 
-    if (this.currentRelationMap.title == diffCode.package) {
+  
 
-      this.packageTypeArr[index].isAdd = false;
-      this.packageTypeArr[index].isSelect = false;
-      if (this.packageDisplayIndex == index) {
-        for (let i = 0; i < this.packageTypeArr.length; i++) {
-          let item = this.packageTypeArr[i];
-          if (item.isAdd) {
-            this.packageDisplayIndex = i;
-            break;
-          }
-          else this.packageDisplayIndex = -1;
-        }
-      }
-      this.delMatchFixedMap(this.packageTypeArr[index].title)
-    }
+   
     this.setBasePoint();
     e.stopPropagation();
   }
@@ -1091,30 +1072,17 @@ class priceFreightEditView extends priceFreightView {
     item.isAdd = item.isSelect;
   }
 
-  /**取消添加基础参数 */
-  cancelSelectRelation() {
-    this.currentRelationEditArr.forEach(item => {
-
-      item.isSelect = false;
-
-    });
-  }
+ 
 
   /**确认添加完毕 和 钩稽关系的相关数据 */
   confirmRelation() {
     this.isNeedClearFixedMap() && this.clearFixedMap();
-    this.currentRelationEditArr.forEach((item, index) => {
-      if (item.isSelect) {
-        item.isAdd = true;
-      }
-    });
     // 如果取消价格间联动 则需要清空基础参数数组中 isDefault 和 diff上面的值
     if (!this.currentRelationMap.hasRelation) {
       this.currentRelationEditArr.forEach((item) => {
         this.clearDiffRelation(item);
       });
     }
-    this.cancelSelectRelation();
 
   }
 
