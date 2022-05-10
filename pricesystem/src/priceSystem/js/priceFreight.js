@@ -59,17 +59,23 @@ class priceFreightView extends BaseService {
     priceDisplayMap = {};
     /**记录用于导入价格的map 被选中的价格最终会复制到 priceDisplayMap */
     priceCopyMap = {};
+    /**运价展示tab的索引 */
+    cusDisplayIndex = -1;
 
-    _this=this;
+    packageDisplayIndex = -1;
+
     //记录钩稽参数相关信息
     relationMap = {
-        cus: { title: diffCode.cus, hasRelation: false, baseIndex: -1,set displayIndex(v){
-            debugger
-            _this.cusDisplayIndex=v;
-        } },
-        packageType: { title: diffCode.package, hasRelation: false, baseIndex: -1,set displayIndex(v){
-            _this.packageDisplayIndex=v;
-        } },
+        cus: {
+            title: diffCode.cus, hasRelation: false, baseIndex: -1, set displayIndex(v) {
+                 priceFreightView.prototype.cusDisplayIndex = v;
+            }
+        },
+        packageType: {
+            title: diffCode.package, hasRelation: false, baseIndex: -1, set displayIndex(v) {
+                priceFreightView.prototype.packageDisplayIndex = v;
+            }
+        },
         vol: { title: diffCode.vol, hasRelation: false, baseIndex: -1 }
     };
 
@@ -78,10 +84,7 @@ class priceFreightView extends BaseService {
 
     currentCoverType = coverType.all;
 
-    /**运价展示tab的索引 */
-    cusDisplayIndex = -1;
 
-    packageDisplayIndex = -1;
 
     cusImportIndex = -1;
 
@@ -95,13 +98,13 @@ class priceFreightView extends BaseService {
     // 是否没添加cus参数
     get isCusEmpty() {
         var arr = this.cusArr.filter(item => { return item.isAdd })
-        return arr.length == 0||arr.length==this.cusArr.length;
+        return arr.length == 0 || arr.length == this.cusArr.length;
     }
 
     // 是否没添加package参数
     get isPackageTypeEmpty() {
         var arr = this.packageTypeArr.filter(item => { return item.isAdd })
-        return arr.length == 0||arr.length==this.packageTypeArr.length;
+        return arr.length == 0 || arr.length == this.packageTypeArr.length;
     }
 
     /**当前选中的包装类型 */
@@ -205,7 +208,7 @@ class priceFreightView extends BaseService {
     _sfg = "";
 
     get sfg() {
-        if (!this.isEditMode&&this._sfg=="") {
+        if (!this.isEditMode && this._sfg == "") {
             //新增 直接带入选择站点
             return this.vueInstance.$store.state.areaStateCode;
         }
@@ -225,11 +228,11 @@ class priceFreightView extends BaseService {
 
     zzgTitle = zzgTitle.direct;
 
-   
+
 
     zzg = zzgTitle.direct;
 
-  
+
     _standardPrice = -1;
     get standardPrice() {
         if (this._standardPrice < 0) return '--';
@@ -416,7 +419,7 @@ class priceFreightView extends BaseService {
         if (!!!this.twoCode) {
             throw new Error("未选择航司二字码");
         }
-      
+
         if (this.vueInstance.wecanStandard == this.vueInstance.wecanStandardOpts[1].value && this.gid <= 0) {
             throw new Error("请选择客户");
         }
