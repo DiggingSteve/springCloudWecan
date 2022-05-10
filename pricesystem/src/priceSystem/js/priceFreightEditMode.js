@@ -367,7 +367,7 @@ class priceFreightEditView extends priceFreightView {
             this.relationMap.vol.baseIndex = index;
           }
         }
-        if (!isSetIndex && type) {
+        if (!isSetIndex ) {
           if (type == diffCode.cus) this.cusDisplayIndex = index;
           else if (type == diffCode.package) this.packageDisplayIndex = index;
           isSetIndex = true;
@@ -375,6 +375,8 @@ class priceFreightEditView extends priceFreightView {
 
       }
       else {
+        item.isAdd=false;
+        item.isSelect=false;
         this.clearDiffRelation(item)
       }
     });

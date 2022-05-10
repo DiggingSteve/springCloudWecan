@@ -73,10 +73,29 @@ class priceFreightView extends BaseService {
 
     currentCoverType = coverType.all;
 
-    /**运价展示tab的索引 */
-    cusDisplayIndex = -1;
+    _cusDisplayIndex=-1
 
-    packageDisplayIndex = -1;
+    /**运价展示tab的索引 */
+    get cusDisplayIndex (){
+        var arr=this.cusArr.filter((item)=>{return item.isAdd});
+        if(arr.length==this.cusArr.length)return -1;
+        return this._cusDisplayIndex;
+    }
+
+    set cusDisplayIndex(v){
+        this._cusDisplayIndex=v;
+    }
+    _packageDisplayIndex = -1;
+
+    get packageDisplayIndex (){
+        var arr=this.packageTypeArr.filter((item)=>{return item.isAdd});
+        if(arr.length==this.packageTypeArr.length)return -1;
+        return this._packageDisplayIndex;
+    }
+
+    set packageDisplayIndex(v){
+        this._packageDisplayIndex=v;
+    }
 
     cusImportIndex = -1;
 
