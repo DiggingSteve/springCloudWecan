@@ -1032,6 +1032,14 @@ class priceFreightEditView extends priceFreightView {
   delRelationTag(index, e) {
     this.currentRelationEditArr[index].isAdd = false;
     this.currentRelationEditArr[index].isSelect = false;
+    this.setDisplayIndex();
+    this.delMatchFixedMap(this.currentRelationEditArr[index].title);
+
+    
+    e.stopPropagation();
+  }
+
+  setDisplayIndex(){
     var disIndex = -1;
     for (let i = 0; i < this.currentRelationEditArr.length; i++) {
       let item = this.currentRelationEditArr[i];
@@ -1043,31 +1051,14 @@ class priceFreightEditView extends priceFreightView {
       else disIndex = -1;
     }
     if (this.currentRelationMap.title == diffCode.cus) {
-      this.relationMap.cus.baseIndex = disIndex;
       this.cusDisplayIndex=disIndex;
     }
     else if (this.currentRelationMap.title == diffCode.package) {
-      this.relationMap.packageType.baseIndex = disIndex;
       this.packageDisplayIndex=disIndex;
     }
-    this.delMatchFixedMap(this.currentRelationEditArr[index].title);
-
-    
-    e.stopPropagation();
   }
 
-  //设置基点 固定第一个基点
-  setBasePoint() {
-    for (var i = 0; i < this.currentRelationEditArr.length; i++) {
-      var item = this.currentRelationEditArr[i];
-      if (item.isAdd) {
-        this.currentRelationMap.baseIndex = i;
-        this.vueInstance.$forceUpdate();
-        break;
-      }
-    }
 
-  }
 
   /**编辑页选中需要加入的基础参数
    * 选中状态再次点击视为取消
@@ -1077,6 +1068,8 @@ class priceFreightEditView extends priceFreightView {
 
     item.isSelect = !item.isSelect
     item.isAdd = item.isSelect;
+
+    this.setDisplayIndex();
   }
 
 
