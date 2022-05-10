@@ -1052,7 +1052,7 @@ class priceFreightEditView extends priceFreightView {
     for(var i=0;i<this.currentRelationEditArr.length;i++){
       var item=this.currentRelationEditArr[i];
       if (item.isAdd) {
-        this.currentRelationMap.baseIndex = index;
+        this.currentRelationMap.baseIndex = i;
         this.vueInstance.$forceUpdate();
         break;
       }
