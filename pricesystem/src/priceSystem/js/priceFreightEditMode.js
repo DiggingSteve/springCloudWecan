@@ -1065,8 +1065,19 @@ class priceFreightEditView extends priceFreightView {
       }
       this.delMatchFixedMap(this.packageTypeArr[index].title)
     }
-
+    this.setBasePoint();
     e.stopPropagation();
+  }
+
+  //设置基点 固定第一个基点
+  setBasePoint(){
+    this.currentRelationEditArr.forEach((item,index)=>{
+      if(item.isAdd){
+        this.currentRelationMap.baseIndex=index;
+        return;
+      }
+    })
+    
   }
 
   /**编辑页选中需要加入的基础参数

@@ -174,18 +174,18 @@ export default {
     },
   },
   watch: {
-    indexSelf: {
-      handler(val){
-        this.$emit("update:indexSelected",val)
-      this.dataArr.forEach((item, index) => {
-        if (index == val) {
-          item["isDefault"] = 1;
-        } else {
-          item["isDefault"] = 2;
-        }
-      });
-      }
-    },
+    // indexSelf: {
+    //   handler(val){
+    //     this.$emit("update:indexSelected",val)
+    //   this.dataArr.forEach((item, index) => {
+    //     if (index == val) {
+    //       item["isDefault"] = 1;
+    //     } else {
+    //       item["isDefault"] = 2;
+    //     }
+    //   });
+    //   }
+    // },
     // dataArr: {
     //   handler(newValue, oldValue) {
     //     this.indexSelected = newValue.findIndex((p) => {
