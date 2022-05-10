@@ -1,17 +1,29 @@
 <template>
   <div>
     <div class="page-container-box">
-      <newFormCmpt :name="name" :view-data.sync="inputViewData" :model-data.sync="inputModelData"
-        :search-data.sync="searchData" :chinese-where.sync="chineseWhere" :pageshow.sync="pageshow"
-        :whereTmpShow="false" pagetype="1" @reset="reset">
+      <newFormCmpt
+        :name="name"
+        :view-data.sync="inputViewData"
+        :model-data.sync="inputModelData"
+        :search-data.sync="searchData"
+        :chinese-where.sync="chineseWhere"
+        :pageshow.sync="pageshow"
+        :whereTmpShow="false"
+        pagetype="1"
+        @reset="reset"
+      >
         <template :slot="'exForm'">
           <div style="order: 5">
             <div class="input-item">
               <div class="input-title">运价性质</div>
               <div class="input-content">
                 <el-select v-model="wecanStandardPage">
-                  <el-option v-for="item in wecanStandardPageOpts" :key="item.value" :label="item.label"
-                    :value="item.value">
+                  <el-option
+                    v-for="item in wecanStandardPageOpts"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
                   </el-option>
                 </el-select>
               </div>
@@ -25,10 +37,18 @@
       </div>
     </div>
 
-    <tableCompt :name="name" :table-data-res="tableDataRes" :chinese-where="chineseWhere">
+    <tableCompt
+      :name="name"
+      :table-data-res="tableDataRes"
+      :chinese-where="chineseWhere"
+    >
       <template slot="operate" slot-scope="props">
-        <span @click="clickEdit(props.data.row)"><i class="el-icon-edit"></i></span>
-        <span @click="deleteFeeByJson(props.data.row)"><i class="el-icon-delete"></i></span>
+        <span @click="clickEdit(props.data.row)"
+          ><i class="el-icon-edit"></i
+        ></span>
+        <span @click="deleteFeeByJson(props.data.row)"
+          ><i class="el-icon-delete"></i
+        ></span>
       </template>
 
       <template v-slot:approvalStatus="pdata">
@@ -39,19 +59,27 @@
         <div class="row">
           <div class="item60">
             <span style="border-right: 1px solid #dedede; padding-right: 5px">{{
-                getApprovalStatusText(currentRow.approvalStatus)
+              getApprovalStatusText(currentRow.approvalStatus)
             }}</span>
           </div>
           <div class="item40">
-            <i @click="clickEdit(pdata.data.row)" :class="getApprovalStatusColor(currentRow.approvalStatus)"
-              class="el-icon-shenhebohui"></i>
+            <i
+              @click="clickEdit(pdata.data.row)"
+              :class="getApprovalStatusColor(currentRow.approvalStatus)"
+              class="el-icon-shenhebohui"
+            ></i>
           </div>
         </div>
       </template>
     </tableCompt>
 
-    <el-dialog :title="priceObj.dialogTitle" :visible.sync="priceObj.isSHowDialogPage" :width="dialogWidth"
-      :before-close="closeDialog" :close-on-click-modal="false">
+    <el-dialog
+      :title="priceObj.dialogTitle"
+      :visible.sync="priceObj.isSHowDialogPage"
+      :width="dialogWidth"
+      :before-close="closeDialog"
+      :close-on-click-modal="false"
+    >
       <div class="page-one" v-show="priceObj.isShowPageOne">
         <div class="row" style="box-shadow: 0px 1px 3px -2px">
           <div class="item15">
@@ -73,18 +101,37 @@
 
         <div class="row" style="margin-bottom: 10px">
           <div class="item30">
-            <page-select pagetype="6" :modelval.sync="priceObj.sfg" type="inline" required="tip" title="始发港">
+            <page-select
+              pagetype="6"
+              :modelval.sync="priceObj.sfg"
+              type="inline"
+              required="tip"
+              title="始发港"
+            >
             </page-select>
           </div>
           <div class="arrow item5"></div>
           <div class="item30">
-            <page-select :titleVariable="true" pagetype="6" :modelval.sync="priceObj.zzg"
-              :title.sync="priceObj.zzgTitle" :titleOptions="zzgTitleOptions" :disabled="isDisableZzg" type="inline">
+            <page-select
+              :titleVariable="true"
+              pagetype="6"
+              :modelval.sync="priceObj.zzg"
+              :title.sync="priceObj.zzgTitle"
+              :titleOptions="zzgTitleOptions"
+              :disabled="isDisableZzg"
+              type="inline"
+            >
             </page-select>
           </div>
           <div class="arrow item5"></div>
           <div class="item30">
-            <page-select pagetype="6" :modelval.sync="priceObj.mdg" title="基港" type="inline" required="tip">
+            <page-select
+              pagetype="6"
+              :modelval.sync="priceObj.mdg"
+              title="基港"
+              type="inline"
+              required="tip"
+            >
             </page-select>
           </div>
         </div>
@@ -95,20 +142,42 @@
         </div>
         <div class="row" style="margin-bottom: 10px">
           <div class="item30">
-            <pageSelectMultiple :pagetype="11" :multiple="true" title="航空公司" :placeholder="'可多选'" type="inline"
-              required="tip" :modelval.sync="priceObj.twoCode"></pageSelectMultiple>
+            <pageSelectMultiple
+              :pagetype="11"
+              :multiple="true"
+              title="航空公司"
+              :placeholder="'可多选'"
+              type="inline"
+              required="tip"
+              :modelval.sync="priceObj.twoCode"
+            ></pageSelectMultiple>
           </div>
           <div style="width: 40px"></div>
-          <div class="item30 descriptionWrap" style="height: 31px; line-height: 31px">
-            <span class="input_title" style="padding-right: 10px">航班信息</span>
+          <div
+            class="item30 descriptionWrap"
+            style="height: 31px; line-height: 31px"
+          >
+            <span class="input_title" style="padding-right: 10px"
+              >航班信息</span
+            >
 
             <template v-for="item in flightTypeArr">
-              <el-radio v-model="priceObj.flightType" :label="item.label" :key="item.value">{{ item.label }}</el-radio>
+              <el-radio
+                v-model="priceObj.flightType"
+                :label="item.label"
+                :key="item.value"
+                >{{ item.label }}</el-radio
+              >
             </template>
           </div>
           <div style="width: 40px"></div>
         </div>
-        <div class="row" style="min-width: 30%" :style="{ width: hbhWidth }" v-if="priceObj.isSpecifiedFlight">
+        <div
+          class="row"
+          style="min-width: 30%"
+          :style="{ width: hbhWidth }"
+          v-if="priceObj.isSpecifiedFlight"
+        >
           <!-- <pageSelectMultiple
             :pagetype="120"
             :multiple="true"
@@ -119,13 +188,24 @@
             :filterObj="priceObj.hbhOptionCondition"
             :modelval.sync="priceObj.hbhStr"
           ></pageSelectMultiple> -->
-          <transferBox :pagetype="120" title="航班号" type="inline" :allowCreate="true" required="true"
-            :filterObj="priceObj.hbhOptionCondition" :modelval.sync="priceObj.hbhArr"></transferBox>
+          <transferBox
+            :pagetype="120"
+            title="航班号"
+            type="inline"
+            :allowCreate="true"
+            required="true"
+            :filterObj="priceObj.hbhOptionCondition"
+            :modelval.sync="priceObj.hbhArr"
+          ></transferBox>
         </div>
         <div class="row" style="margin-top: 10px">
-
-          <div class="item30 descriptionWrap" style="height: 31px; line-height: 31px">
-            <span class="input_title" style="padding-right: 10px">计费方式</span>
+          <div
+            class="item30 descriptionWrap"
+            style="height: 31px; line-height: 31px"
+          >
+            <span class="input_title" style="padding-right: 10px"
+              >计费方式</span
+            >
             <el-radio v-model="priceObj.jfType" label="计重">计重</el-radio>
             <el-radio v-model="priceObj.jfType" label="毛重">毛重</el-radio>
           </div>
@@ -133,16 +213,26 @@
         <div class="row" style="margin-top: 10px">
           <span style="line-height: 28px; padding-right: 10px">清关后预计</span>
 
-          <el-select v-model.sync="priceObj.limitDay" style="
+          <el-select
+            v-model.sync="priceObj.limitDay"
+            style="
               height: 28px;
               width: 68px;
               background: #fffcf0;
               border-radius: 4px;
-            ">
-            <el-option v-for="item in limitDayArr" :key="item ^ 101" :label="item + '天'" :value="item">
+            "
+          >
+            <el-option
+              v-for="item in limitDayArr"
+              :key="item ^ 101"
+              :label="item + '天'"
+              :value="item"
+            >
             </el-option>
           </el-select>
-          <span style="line-height: 28px; padding-left: 10px">到达目的港(航班准点情况下)</span>
+          <span style="line-height: 28px; padding-left: 10px"
+            >到达目的港(航班准点情况下)</span
+          >
         </div>
         <!--运价性质 第三大块-->
         <div class="row block">
@@ -153,13 +243,24 @@
         <div class="row" style="margin-top: 10px">
           <div class="item30" style="height: 31px; line-height: 31px">
             <template v-for="item in wecanStandardOpts">
-              <el-radio v-model="wecanStandard" :label="item.label" :key="item.value">{{ item.label }}</el-radio>
+              <el-radio
+                v-model="wecanStandard"
+                :label="item.label"
+                :key="item.value"
+                >{{ item.label }}</el-radio
+              >
             </template>
           </div>
           <div style="width: 40px"></div>
           <div class="item30" v-show="!isWecanStandard">
-            <page-select :pagetype="13" :wageinout="1" title="委托客户" type="inline" required="tip"
-              :modelval.sync="priceObj.gid">
+            <page-select
+              :pagetype="13"
+              :wageinout="1"
+              title="委托客户"
+              type="inline"
+              required="tip"
+              :modelval.sync="priceObj.gid"
+            >
             </page-select>
           </div>
         </div>
@@ -170,10 +271,22 @@
           </div>
         </div>
         <div class="row" style="margin-top: 10px">
-          <div class="item30 descriptionWrap" style="height: 31px; line-height: 31px; display: flex">
-            <span class="input_title" style="padding-right: 10px">时间期限</span>
-            <el-date-picker style="width: 205px" v-model="priceObj._timeSpan" value-format="yyyy-MM-dd" type="daterange"
-              range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+          <div
+            class="item30 descriptionWrap"
+            style="height: 31px; line-height: 31px; display: flex"
+          >
+            <span class="input_title" style="padding-right: 10px"
+              >时间期限</span
+            >
+            <el-date-picker
+              style="width: 205px"
+              v-model="priceObj._timeSpan"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            >
             </el-date-picker>
           </div>
         </div>
@@ -238,7 +351,11 @@
                 <tr>
                   <template v-for="(item, index) in priceObj.weightArr">
                     <td style="padding: 5px 15px">
-                      <input type="input" class="price-input" v-model.sync="item.standardPrice" />
+                      <input
+                        type="input"
+                        class="price-input"
+                        v-model.sync="item.standardPrice"
+                      />
                     </td>
                   </template>
                 </tr>
@@ -302,13 +419,20 @@
               </el-select>
             </div> -->
         </div>
-        <div class="row" style="box-shadow: 0 1px 3px -2px; margin-bottom: 10px">
+        <div
+          class="row"
+          style="box-shadow: 0 1px 3px -2px; margin-bottom: 10px"
+        >
           <div class="timespan-wrap" v-if="priceObj.isEditMode">
             <template v-for="(item, index) in priceObj.currentAirComTimeArr">
-              <div class="time-selector" v-bind:class="{
-                active:
-                  item.basicInfo.guid == priceObj.currentFeeid ? true : false,
-              }" @click="clickTimeSelector(item.basicInfo.guid)">
+              <div
+                class="time-selector"
+                v-bind:class="{
+                  active:
+                    item.basicInfo.guid == priceObj.currentFeeid ? true : false,
+                }"
+                @click="clickTimeSelector(item.basicInfo.guid)"
+              >
                 {{ item.basicInfo.startdate }} -
                 {{ item.basicInfo.enddate.substring(0, 10) }}
               </div>
@@ -350,14 +474,23 @@
           <div class="item10 operate-title">客户参数</div>
           <div class="item75" style="display: flex">
             <template>
-              <div v-show="priceObj.isCusEmpty" style="width: 200px" class="operate-tag-forbidden">
+              <div
+                v-show="priceObj.isCusEmpty"
+                style="width: 200px"
+                class="operate-tag-forbidden"
+              >
                 <span>适用于所有客户参数</span>
               </div>
             </template>
             <template v-for="(item, index) in priceObj.cusArr">
-              <div class="operate-tag" v-bind:class="{
-                active: priceObj.cusDisplayIndex == index,
-              }" @click="priceObj.cusDisplayIndex = index" v-show="item.isAdd && !priceObj.isCusEmpty">
+              <div
+                class="operate-tag"
+                v-bind:class="{
+                  active: priceObj.cusDisplayIndex == index,
+                }"
+                @click="priceObj.cusDisplayIndex = index"
+                v-show="item.isAdd && !priceObj.isCusEmpty"
+              >
                 <span>{{ item.title }}</span>
                 <!-- <span
                   class="el-icon-close"
@@ -370,7 +503,10 @@
           </div>
           <div class="item5"></div>
           <div class="item10" v-show="priceObj.canEditCus">
-            <div class="operate-edit" @click="priceObj.openRelationDialog('cus')">
+            <div
+              class="operate-edit"
+              @click="priceObj.openRelationDialog('cus')"
+            >
               <span class="el-icon-setting"></span><span>编辑</span>
             </div>
           </div>
@@ -379,14 +515,23 @@
           <div class="item10 operate-title">包装参数</div>
           <div class="item75" style="display: flex">
             <template>
-              <div v-show="priceObj.isPackageTypeEmpty" style="width: 200px" class="operate-tag-forbidden">
+              <div
+                v-show="priceObj.isPackageTypeEmpty"
+                style="width: 200px"
+                class="operate-tag-forbidden"
+              >
                 <span>适用于所有包装参数</span>
               </div>
             </template>
             <template v-for="(item, index) in priceObj.packageTypeArr">
-              <div class="operate-tag" v-bind:class="{
-                active: priceObj.packageDisplayIndex == index,
-              }" @click="priceObj.packageDisplayIndex = index" v-show="item.isAdd && !priceObj.isPackageTypeEmpty">
+              <div
+                class="operate-tag"
+                v-bind:class="{
+                  active: priceObj.packageDisplayIndex == index,
+                }"
+                @click="priceObj.packageDisplayIndex = index"
+                v-show="item.isAdd && !priceObj.isPackageTypeEmpty"
+              >
                 <span>{{ item.title }}</span>
                 <!-- <span
                   class="el-icon-close"
@@ -398,7 +543,10 @@
           </div>
           <div class="item5"></div>
           <div class="item10">
-            <div class="operate-edit" @click="priceObj.openRelationDialog('package')">
+            <div
+              class="operate-edit"
+              @click="priceObj.openRelationDialog('package')"
+            >
               <span class="el-icon-setting"></span><span>编辑</span>
             </div>
           </div>
@@ -414,13 +562,19 @@
           </div>
           <div class="item5"></div>
           <div class="item10">
-            <div class="operate-edit" @click="priceObj.openRelationDialog('vol')">
+            <div
+              class="operate-edit"
+              @click="priceObj.openRelationDialog('vol')"
+            >
               <span class="el-icon-setting"></span><span>编辑</span>
             </div>
           </div>
         </div>
         <!--钩稽关系end-->
-        <div style="width: 100%" v-if="priceObj._currentPageMode == pageMode.pageConfirm">
+        <div
+          style="width: 100%"
+          v-if="priceObj._currentPageMode == pageMode.pageConfirm"
+        >
           <div class="row">
             <div style="margin-bottom: 10px; text-align: start">
               <span style="font-weight: 800; font-size: 18px">运价编辑</span>
@@ -460,7 +614,9 @@
                 @click="priceObj.isShowImportData = true"
                 >导入数据</el-button
               > -->
-              <el-button type="success" @click="priceObj.loadIataPrice()">TACT运价表查询</el-button>
+              <el-button type="success" @click="priceObj.loadIataPrice()"
+                >TACT运价表查询</el-button
+              >
             </div>
           </div>
           <div class="row">
@@ -469,57 +625,90 @@
                 <tbody>
                   <tr>
                     <td style="height: 26px"></td>
-                    <td style="height: 30px; width: 85px; cursor: pointer" v-for="(weight, j) in priceObj.weightArr"
-                      class="operate-head" @mouseenter="activeColumn(j)" @mouseleave="activeColumn(j)">
-                      <span>{{ weight.title }}</span><span style="display: none" class="circle-del"
-                        @click="priceObj.delTitle(j, null)">
+                    <td
+                      style="height: 30px; width: 85px; cursor: pointer"
+                      v-for="(weight, j) in priceObj.weightArr"
+                      class="operate-head"
+                      @mouseenter="activeColumn(j)"
+                      @mouseleave="activeColumn(j)"
+                    >
+                      <span>{{ weight.title }}</span
+                      ><span
+                        style="display: none"
+                        class="circle-del"
+                        @click="priceObj.delTitle(j, null)"
+                      >
                         <i class="el-icon-close"></i>
                       </span>
                     </td>
                   </tr>
                   <tr v-for="(vol, i) in priceObj.volArr">
-                    <td class="operate-head" @mouseenter="activeRow(i)" @mouseleave="activeRow(i)">
+                    <td
+                      class="operate-head"
+                      @mouseenter="activeRow(i)"
+                      @mouseleave="activeRow(i)"
+                    >
                       <span>{{ vol.code }}</span>
-                      <span style="display: none" class="circle-del" @click="priceObj.delTitle(null, i)">
+                      <span
+                        style="display: none"
+                        class="circle-del"
+                        @click="priceObj.delTitle(null, i)"
+                      >
                         <i class="el-icon-close"></i>
                       </span>
                     </td>
                     <template v-for="(weight, j) in priceObj.weightArr">
                       {{
-                          void (isShowFixed = priceObj.isDisplayPriceActive(
-                            createFixedPriceKey(vol, weight)
-                          ))
+                        void (isShowFixed = priceObj.isDisplayPriceActive(
+                          createFixedPriceKey(vol, weight)
+                        ))
                       }}
                       {{
-                          void (cellValue = setCellValue(
-                            vol,
-                            weight,
-                            priceObj.packageDisplayIndex,
-                            priceObj.cusDisplayIndex
-                          ))
+                        void (cellValue = setCellValue(
+                          vol,
+                          weight,
+                          priceObj.packageDisplayIndex,
+                          priceObj.cusDisplayIndex
+                        ))
                       }}
-                      <td style="width: 68px; height: 26px; cursor: pointer" v-bind:class="{
-                        greyBg: cellValue == '--',
-                      }">
-                        <input type="input" @click="
-                          priceObj.activeFixedPrice(
-                            vol,
-                            weight,
-                            setCellValue(
+                      <td
+                        style="width: 68px; height: 26px; cursor: pointer"
+                        v-bind:class="{
+                          greyBg: cellValue == '--',
+                        }"
+                      >
+                        <input
+                          type="input"
+                          @click="
+                            priceObj.activeFixedPrice(
                               vol,
                               weight,
-                              priceObj.packageDisplayIndex,
-                              priceObj.cusDisplayIndex
+                              setCellValue(
+                                vol,
+                                weight,
+                                priceObj.packageDisplayIndex,
+                                priceObj.cusDisplayIndex
+                              )
                             )
-                          )
-                        " class="price-input" v-model="cellValue" v-show="!isShowFixed" />
-                        <input class="price-input" v-if="isShowFixed" style="color: red" type="input" v-focus
+                          "
+                          class="price-input"
+                          v-model="cellValue"
+                          v-show="!isShowFixed"
+                        />
+                        <input
+                          class="price-input"
+                          v-if="isShowFixed"
+                          style="color: red"
+                          type="input"
+                          v-focus
                           v-model.sync="
                             priceObj.priceDisplayMap[
                               createFixedPriceKey(vol, weight)
                             ].diff
-                          " :ref="priceObj.createFixedPriceRef('fixed', i, j)"
-                          @keydown="priceObj.move(i, j, $event)" />
+                          "
+                          :ref="priceObj.createFixedPriceRef('fixed', i, j)"
+                          @keydown="priceObj.move(i, j, $event)"
+                        />
                       </td>
                     </template>
                   </tr>
@@ -534,19 +723,34 @@
         </div>
         <div class="row">
           <div class="remark">
-            <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 5 }" placeholder="备注" v-model="priceObj.remark">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 3, maxRows: 5 }"
+              placeholder="备注"
+              v-model="priceObj.remark"
+            >
             </el-input>
           </div>
         </div>
         <div v-if="priceObj.approvalArr.length > 0" style="margin-top: 20px">
-          <div @click="isShowApproval = !isShowApproval" style="cursor: pointer; text-align: center">
-            <span v-show="!isShowApproval"><i class="el-icon-arrow-up"></i>展开</span>
-            <span v-show="isShowApproval"><i class="el-icon-arrow-down"></i>收起</span>驳回记录
+          <div
+            @click="isShowApproval = !isShowApproval"
+            style="cursor: pointer; text-align: center"
+          >
+            <span v-show="!isShowApproval"
+              ><i class="el-icon-arrow-up"></i>展开</span
+            >
+            <span v-show="isShowApproval"
+              ><i class="el-icon-arrow-down"></i>收起</span
+            >驳回记录
           </div>
           <div class="row">
             <el-collapse-transition>
               <div class="wagediv" style="width: 100%" v-show="isShowApproval">
-                <div v-for="(item, index) in priceObj.approvalArr" class="rightWageitem">
+                <div
+                  v-for="(item, index) in priceObj.approvalArr"
+                  class="rightWageitem"
+                >
                   <p style="align-items: baseline">
                     <!-- <span class="el-icon-user-solid" :style="{color:item.initiator==initiator?'#5ABFFF':'#F9A527'}"></span> -->
                     <span style="margin: 0 12px">{{ item.addman }}</span>
@@ -567,30 +771,69 @@
           @click="priceObj.resetFixedPrice()"
           >重置一口价</el-button
         > -->
-        <el-button type="primary" style="margin-left: 10px" v-show="priceObj.isShowNextBtn"
-          @click="priceObj.clickNext()">下一步</el-button>
-        <el-button type="primary" v-show="priceObj.isShowConfirmBtn" @click="priceObj.clickSave()">保存</el-button>
-        <el-button type="primary" v-show="priceObj.isShowSaveAs" @click="priceObj.savePrice()">另存为</el-button>
-        <el-button type="danger" v-show="priceObj.isShowDelBtn" @click="deleteFee()">删除</el-button>
+        <el-button
+          type="primary"
+          style="margin-left: 10px"
+          v-show="priceObj.isShowNextBtn"
+          @click="priceObj.clickNext()"
+          >下一步</el-button
+        >
+        <el-button
+          type="primary"
+          v-show="priceObj.isShowConfirmBtn"
+          @click="priceObj.clickSave()"
+          >保存</el-button
+        >
+        <el-button
+          type="primary"
+          v-show="priceObj.isShowSaveAs"
+          @click="priceObj.savePrice()"
+          >另存为</el-button
+        >
+        <el-button
+          type="danger"
+          v-show="priceObj.isShowDelBtn"
+          @click="deleteFee()"
+          >删除</el-button
+        >
 
-        <el-button v-show="priceObj.isShowCancelBtn" @click="clickCancel">取消</el-button>
+        <el-button v-show="priceObj.isShowCancelBtn" @click="clickCancel"
+          >取消</el-button
+        >
       </div>
     </el-dialog>
-    <el-dialog title="导入数据" :visible.sync="priceObj.isShowImportData" :width="'50%'" :close-on-click-modal="false"
-      :before-close="closeImportDialog">
+    <el-dialog
+      title="导入数据"
+      :visible.sync="priceObj.isShowImportData"
+      :width="'50%'"
+      :close-on-click-modal="false"
+      :before-close="closeImportDialog"
+    >
       <div style="height: 600px; width: 100%">
         <div class="row">请选择要复制的目标</div>
         <div class="row">
           <div class="tab-wrap">
             <span class="tab" v-if="priceObj.isSelectPackage">
-              <span class="tab-item" v-for="(item, index) in priceObj.packageTypeArr" v-bind:class="{
-                active: index == priceObj.packageImportIndex ? true : false,
-              }" @click="priceObj.packageImportIndex = index">{{ item.code }}</span>
+              <span
+                class="tab-item"
+                v-for="(item, index) in priceObj.packageTypeArr"
+                v-bind:class="{
+                  active: index == priceObj.packageImportIndex ? true : false,
+                }"
+                @click="priceObj.packageImportIndex = index"
+                >{{ item.code }}</span
+              >
             </span>
             <span class="tab" v-if="priceObj.isSelectCus">
-              <span class="tab-item" v-for="(item, index) in priceObj.cusArr" v-bind:class="{
-                active: index == priceObj.cusImportIndex ? true : false,
-              }" @click="priceObj.cusImportIndex = index">{{ item.code }}</span>
+              <span
+                class="tab-item"
+                v-for="(item, index) in priceObj.cusArr"
+                v-bind:class="{
+                  active: index == priceObj.cusImportIndex ? true : false,
+                }"
+                @click="priceObj.cusImportIndex = index"
+                >{{ item.code }}</span
+              >
             </span>
           </div>
         </div>
@@ -599,32 +842,51 @@
             请选择需要导入的数据(点击<span>单元格表头</span>)或<span>单个单元格</span>进行选择)
           </div>
           <div class="item25 seed-wrap">
-            在此基础<span @click="priceObj.isCopySeedPlus = true"
-              v-bind:class="{ active: priceObj.isCopySeedPlus }">增加</span>
-            <span @click="priceObj.isCopySeedPlus = false" v-bind:class="{ active: !priceObj.isCopySeedPlus }">减去</span>
+            在此基础<span
+              @click="priceObj.isCopySeedPlus = true"
+              v-bind:class="{ active: priceObj.isCopySeedPlus }"
+              >增加</span
+            >
+            <span
+              @click="priceObj.isCopySeedPlus = false"
+              v-bind:class="{ active: !priceObj.isCopySeedPlus }"
+              >减去</span
+            >
             <input style="" type="input" v-model.sync="priceObj.copySeed" />元
           </div>
         </div>
         <div class="row">
           <div class="table-wrap">
-            <table onselectstart="return false;" style="cursor: pointer" v-if="priceObj.isShowImportData">
+            <table
+              onselectstart="return false;"
+              style="cursor: pointer"
+              v-if="priceObj.isShowImportData"
+            >
               <tbody>
                 <tr>
-                  <td style="height: 30px" v-bind:class="{
-                    active: priceObj.priceCopyMap[priceObj.createAllKey()]
-                      ? priceObj.priceCopyMap[priceObj.createAllKey()]
-                        .isActive
-                      : false,
-                  }" @click="priceObj.activeAll()">
+                  <td
+                    style="height: 30px"
+                    v-bind:class="{
+                      active: priceObj.priceCopyMap[priceObj.createAllKey()]
+                        ? priceObj.priceCopyMap[priceObj.createAllKey()]
+                            .isActive
+                        : false,
+                    }"
+                    @click="priceObj.activeAll()"
+                  >
                     全选
                   </td>
                   <template v-for="(weight, j) in priceObj.weightArr">
                     {{ void (headKey = createHeadKey(null, weight)) }}
-                    <td style="height: 30px; width: 68px" @click="priceObj.activeWeightColumn(j)" v-bind:class="{
-                      active: priceObj.priceCopyMap[headKey]
-                        ? priceObj.priceCopyMap[headKey].isActive
-                        : false,
-                    }">
+                    <td
+                      style="height: 30px; width: 68px"
+                      @click="priceObj.activeWeightColumn(j)"
+                      v-bind:class="{
+                        active: priceObj.priceCopyMap[headKey]
+                          ? priceObj.priceCopyMap[headKey].isActive
+                          : false,
+                      }"
+                    >
                       {{ weight.title }}
                     </td>
                   </template>
@@ -633,49 +895,70 @@
                   {{ void (volHeadKey = createHeadKey(vol, null)) }}
 
                   <tr>
-                    <td style="padding: 0 10px" @click="priceObj.activeVolRow(i)" v-bind:class="{
-                      active: priceObj.priceCopyMap[volHeadKey]
-                        ? priceObj.priceCopyMap[volHeadKey].isActive
-                        : false,
-                    }">
+                    <td
+                      style="padding: 0 10px"
+                      @click="priceObj.activeVolRow(i)"
+                      v-bind:class="{
+                        active: priceObj.priceCopyMap[volHeadKey]
+                          ? priceObj.priceCopyMap[volHeadKey].isActive
+                          : false,
+                      }"
+                    >
                       {{ vol.code }}
                     </td>
                     <template v-for="(weight, j) in priceObj.weightArr">
                       {{ void (fixedKey = createImportPriceKey(vol, weight)) }}
                       {{
-                          void (isShowFixed =
-                            priceObj.isDisplayPriceActive(fixedKey))
+                        void (isShowFixed =
+                          priceObj.isDisplayPriceActive(fixedKey))
                       }}
                       {{
-                          void (cellValue = setCellValue(
-                            vol,
-                            weight,
-                            priceObj.packageImportIndex,
-                            priceObj.cusImportIndex
-                          ))
+                        void (cellValue = setCellValue(
+                          vol,
+                          weight,
+                          priceObj.packageImportIndex,
+                          priceObj.cusImportIndex
+                        ))
                       }}
                       {{
-                          //此处 render 的时候会重复调用 如果出现性能问题则应该写在js文件内部 目前问题不大
-                          void (
-                            priceObj.priceCopyMap[fixedKey] ||
-                            priceObj.initPriceCopyMap(
-                              i,
-                              j,
-                              isShowFixed,
-                              cellValue
-                            )
+                        //此处 render 的时候会重复调用 如果出现性能问题则应该写在js文件内部 目前问题不大
+                        void (
+                          priceObj.priceCopyMap[fixedKey] ||
+                          priceObj.initPriceCopyMap(
+                            i,
+                            j,
+                            isShowFixed,
+                            cellValue
                           )
+                        )
                       }}
-                      <td style="width: 68px; height: 30px; cursor: pointer" class="" v-bind:class="{
-                        greyBg: cellValue == '--',
-                        active: priceObj.priceCopyMap[fixedKey]
-                          ? priceObj.priceCopyMap[fixedKey].isActive
-                          : false,
-                      }" @click="priceObj.activeTd(i, j)">
-                        <input type="input" class="price-input" v-model="cellValue" v-if="!isShowFixed" v-nofocus />
+                      <td
+                        style="width: 68px; height: 30px; cursor: pointer"
+                        class=""
+                        v-bind:class="{
+                          greyBg: cellValue == '--',
+                          active: priceObj.priceCopyMap[fixedKey]
+                            ? priceObj.priceCopyMap[fixedKey].isActive
+                            : false,
+                        }"
+                        @click="priceObj.activeTd(i, j)"
+                      >
+                        <input
+                          type="input"
+                          class="price-input"
+                          v-model="cellValue"
+                          v-if="!isShowFixed"
+                          v-nofocus
+                        />
 
-                        <input class="price-input" v-if="isShowFixed" style="color: red" type="input" v-nofocus
-                          v-model.sync="priceObj.priceDisplayMap[fixedKey].diff" />
+                        <input
+                          class="price-input"
+                          v-if="isShowFixed"
+                          style="color: red"
+                          type="input"
+                          v-nofocus
+                          v-model.sync="priceObj.priceDisplayMap[fixedKey].diff"
+                        />
                       </td>
                     </template>
                   </tr>
@@ -686,13 +969,20 @@
         </div>
         <div class="row" style="justify-content: flex-end">
           <div>
-            <el-button type="primary" @click="priceObj.confirmImport()">确认导入</el-button>
+            <el-button type="primary" @click="priceObj.confirmImport()"
+              >确认导入</el-button
+            >
             <el-button @click="closeImportDialog()">取消</el-button>
           </div>
         </div>
       </div>
     </el-dialog>
-    <el-dialog title="TACT运价" :visible.sync="priceObj.isShowIataDialog" :width="'50%'" :close-on-click-modal="false">
+    <el-dialog
+      title="TACT运价"
+      :visible.sync="priceObj.isShowIataDialog"
+      :width="'50%'"
+      :close-on-click-modal="false"
+    >
       <div v-if="priceObj.isShowIataDialog" style="width: 100%; height: 300px">
         <el-tabs v-model="priceObj.tactTwocode" type="card" @tab-click="">
           <template v-for="item in priceObj.singleTwoCodeArr">
@@ -740,39 +1030,73 @@
         </el-tabs>
       </div>
     </el-dialog>
-    <el-dialog :title="relationEditTitle" :visible.sync="priceObj.isShowRelationEdit" :width="'800px'">
-      <div class="row relation-edit-wrap" style="border-bottom: 1px solid #dedede">
+    <el-dialog
+      :title="relationEditTitle"
+      :visible.sync="priceObj.isShowRelationEdit"
+      :width="'800px'"
+    >
+      <div
+        class="row relation-edit-wrap"
+        style="border-bottom: 1px solid #dedede"
+      >
         <template v-for="(item, index) in priceObj.currentRelationEditArr">
           <div class="title" v-show="item.isSelect || item.isAdd">
             <span>{{ item.title }}</span>
-            <span class="el-icon-close" @click="priceObj.delRelationTag(index, $event);" style="display: none">
+            <span
+              class="el-icon-close"
+              @click="priceObj.delRelationTag(index, $event)"
+              style="display: none"
+            >
             </span>
           </div>
         </template>
         <template v-show="relationEditTitle != relationTitle.vol">
-          <el-popover placement="right-end" width="400" trigger="click" v-model="isShowRelationPop">
+          <el-popover
+            placement="right-end"
+            width="400"
+            trigger="click"
+            v-model="isShowRelationPop"
+          >
             <div class="row relation-edit-wrap" style="height: 100px">
-              <template v-for="(item, index) in priceObj.currentRelationEditArr">
-                <div class="title" v-bind:class="{
-                  active: item.isSelect,
-                }" v-show="!item.isAdd" @click="priceObj.selectRelationTitle(index)">
+              <template
+                v-for="(item, index) in priceObj.currentRelationEditArr"
+              >
+                <div
+                  class="title"
+                  v-bind:class="{
+                    active: item.isSelect,
+                  }"
+                  v-show="!item.isAdd"
+                  @click="priceObj.selectRelationTitle(index)"
+                >
                   <span>{{ item.title }}</span>
                 </div>
               </template>
             </div>
             <div class="row" style="float: right">
-              <el-button type="primary" @click="isShowRelationPop = false">关闭</el-button>
+              <el-button type="primary" @click="isShowRelationPop = false"
+                >关闭</el-button
+              >
             </div>
-            <div class="plus" slot="reference"><span class="el-icon-plus"></span></div>
-
+            <div class="plus" slot="reference">
+              <span class="el-icon-plus"></span>
+            </div>
           </el-popover>
         </template>
       </div>
       <div class="row" style="margin: 15px 0; line-height: 15px">
         <div class="item20"><span>是否开启价格间联动</span></div>
 
-        <el-radio v-model="priceObj.currentRelationMap.hasRelation" :label="true">是</el-radio>
-        <el-radio v-model="priceObj.currentRelationMap.hasRelation" :label="false">否</el-radio>
+        <el-radio
+          v-model="priceObj.currentRelationMap.hasRelation"
+          :label="true"
+          >是</el-radio
+        >
+        <el-radio
+          v-model="priceObj.currentRelationMap.hasRelation"
+          :label="false"
+          >否</el-radio
+        >
       </div>
       <div v-show="priceObj.currentRelationMap.hasRelation" style="">
         <div class="row" style="margin: 10px 0">
@@ -782,14 +1106,27 @@
           <span>请输入与基点的价格差(例如:+1 +2 -2)</span>
         </div>
         <div class="row">
-          <card-block :dataArr.sync="priceObj.currentRelationEditArr" class="card-block" :hasContent="true"
-            :hasSeed="false" :isNeedBan="true" :indexSelected.sync="priceObj.currentRelationMap.baseIndex">
+          <card-block
+          :canChangeCard="false"
+            :dataArr.sync="priceObj.currentRelationEditArr"
+            class="card-block"
+            :hasContent="true"
+            :hasSeed="false"
+            :isNeedBan="true"
+            :indexSelected.sync="priceObj.currentRelationMap.baseIndex"
+          >
           </card-block>
         </div>
       </div>
       <div class="row" style="justify-content: flex-end">
         <div class="item10">
-          <el-button type="primary" @click="priceObj.confirmRelation(); priceObj.isShowRelationEdit = false;">确认
+          <el-button
+            type="primary"
+            @click="
+              priceObj.confirmRelation();
+              priceObj.isShowRelationEdit = false;
+            "
+            >确认
           </el-button>
         </div>
         <div class="item10">
@@ -800,34 +1137,59 @@
     <el-dialog :visible.sync="priceObj.isShowClearDialog" :width="'40%'">
       <div class="row">
         <span class="blueText weight" style="font-size: 20px">{{
-            priceObj.clearDataTitle
+          priceObj.clearDataTitle
         }}</span>
       </div>
       <div class="row clear-current-select">
         <span style="line-height: 28px">当前选择</span>
         <template v-for="(item, index) in priceObj.cusArr">
-          <span class="blueText span" v-if="priceObj.cusDisplayIndex == index">{{ item.title }}</span>
+          <span
+            class="blueText span"
+            v-if="priceObj.cusDisplayIndex == index"
+            >{{ item.title }}</span
+          >
         </template>
         <template v-for="(item, index) in priceObj.packageTypeArr">
-          <span class="blueText span" v-if="priceObj.packageDisplayIndex == index">{{ item.title }}</span>
+          <span
+            class="blueText span"
+            v-if="priceObj.packageDisplayIndex == index"
+            >{{ item.title }}</span
+          >
         </template>
       </div>
-      <div class="row" style="margin-top: 20px; font-size: 16px; line-height: 20px"
-        v-show="priceObj.isShowUnSelectedWrap">
+      <div
+        class="row"
+        style="margin-top: 20px; font-size: 16px; line-height: 20px"
+        v-show="priceObj.isShowUnSelectedWrap"
+      >
         <span>是否同步删除</span>
         <template v-for="(item, index) in priceObj.cusArr">
-          <span class="blueText span" v-if="item.isAdd && priceObj.cusDisplayIndex != index">{{ item.title }}</span>
+          <span
+            class="blueText span"
+            v-if="item.isAdd && priceObj.cusDisplayIndex != index"
+            >{{ item.title }}</span
+          >
         </template>
         <template v-for="(item, index) in priceObj.packageTypeArr">
-          <span class="blueText span" v-if="item.isAdd && priceObj.packageDisplayIndex != index">{{ item.title }}</span>
+          <span
+            class="blueText span"
+            v-if="item.isAdd && priceObj.packageDisplayIndex != index"
+            >{{ item.title }}</span
+          >
         </template>
         <span>参数下的内容</span>
-        <el-radio v-model="priceObj.isDelRelationSync" :label="true">是</el-radio>
-        <el-radio v-model="priceObj.isDelRelationSync" :label="false">否</el-radio>
+        <el-radio v-model="priceObj.isDelRelationSync" :label="true"
+          >是</el-radio
+        >
+        <el-radio v-model="priceObj.isDelRelationSync" :label="false"
+          >否</el-radio
+        >
       </div>
       <div class="row" style="justify-content: flex-end">
         <div class="item10">
-          <el-button type="primary" @click="priceObj.clearData()">确认</el-button>
+          <el-button type="primary" @click="priceObj.clearData()"
+            >确认</el-button
+          >
         </div>
       </div>
     </el-dialog>
@@ -1031,7 +1393,7 @@ export default {
       this.priceObj.currentFeeid = key;
       this.priceObj.changeCurrentFeeMap();
     },
-    reset() { },
+    reset() {},
 
     selectText(event) {
       event.currentTarget.select();
@@ -1158,7 +1520,7 @@ export default {
       this.dialogWidth = "1068px";
     }
   },
-  created: function () { },
+  created: function () {},
 
   computed: {
     /**页面类型 区分客户应收维护还是公布运费维护 */

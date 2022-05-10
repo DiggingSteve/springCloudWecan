@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="head-wrap" >
+    <div class="head-wrap">
       <div class="seed-wrap" v-if="hasSeed">
         以单价<input
           type="input"
@@ -9,21 +9,30 @@
           @focus="seed = ''"
         />
         为基础
-        <span style="color: #0f5a8c;cursor:pointer" @click="handleSeed('increase')">递增</span
+        <span
+          style="color: #0f5a8c; cursor: pointer"
+          @click="handleSeed('increase')"
+          >递增</span
         >/
-        <span style="color: #0f5a8c;cursor:pointer" @click="handleSeed('decrease')">递减</span
+        <span
+          style="color: #0f5a8c; cursor: pointer"
+          @click="handleSeed('decrease')"
+          >递减</span
         >/
-        <span style="color: #0f5a8c;cursor:pointer" @click="handleSeed('copy')">复制</span>
+        <span
+          style="color: #0f5a8c; cursor: pointer"
+          @click="handleSeed('copy')"
+          >复制</span
+        >
       </div>
     </div>
     <div class="card-wrap">
       <div
         v-for="(item, index) in dataArr"
-        v-if="item.title!='MIN'"
-        v-show="item.isAdd||item.isSelect"
+        v-if="item.title != 'MIN'"
+        v-show="item.isAdd || item.isSelect"
         class="card"
         v-bind:class="{ active: index == indexSelf ? true : false }"
-       
       >
         <div
           class="row title"
@@ -32,13 +41,22 @@
         >
           <span>{{ item.code }}</span>
         </div>
-        <div class="row content" v-show="hasContent"  v-bind:class="{ ban: index == indexSelf ? true : false }">
+        <div
+          class="row content"
+          v-show="hasContent"
+          v-bind:class="{ ban: index == indexSelf ? true : false }"
+        >
           <input
             v-model="item.diff"
             type="input"
-            v-bind:class="{ ban: (isNeedBan && indexSelf<0)||index==indexSelf ? true : false }"
+            v-bind:class="{
+              ban:
+                (isNeedBan && indexSelf < 0) || index == indexSelf
+                  ? true
+                  : false,
+            }"
             @input="editContent(item)"
-            @focus="handleFocus(index,$event)"
+            @focus="handleFocus(index, $event)"
           />
         </div>
       </div>
@@ -88,7 +106,7 @@ export default {
   },
   data() {
     return {
-      indexSelf:this.indexSelected,
+      indexSelf: this.indexSelected,
       seed: 0, //递增种子
       originalDataArr: [], // 用于还原状态的数组
       displayType: displayType,
@@ -98,13 +116,12 @@ export default {
   methods: {
     selectCard(index, arr) {
       if (!this.canChangeCard) return;
-      this.indexSelf=index;
+      this.indexSelf = index;
       this.setDiffValue(index);
     },
 
     /**给默认选中的card */
     setDiffValue(index) {
-
       this.dataArr.forEach((item, i) => {
         if (i == index) {
           this.$set(item, "isSetValue", true);
@@ -118,7 +135,8 @@ export default {
     handleSeed(type) {
       let val = this.seed;
 
-      if (typeof val == "string" && (val.trim() == "-"||val.trim()=="+")) return;
+      if (typeof val == "string" && (val.trim() == "-" || val.trim() == "+"))
+        return;
       if (isNaN(val * 1)) {
         this.$message({
           type: "error",
@@ -138,28 +156,26 @@ export default {
             item.diff =
               this.dataArr[this.indexSelf].diff * 1 +
               (index - this.indexSelf) * val;
-          }
-          else{
-            
-           if(index!=this.indexSelf)  item.diff=val;
+          } else {
+            if (index != this.indexSelf) item.diff = val;
           }
           this.$set(item, "isSetValue", true);
         });
       }
     },
     editContent(item) {
-      var input=item.diff*1;
-      if(item.diff=="-")return;
-      if(!Number.isFinite(input)){
+      var input = item.diff * 1;
+      if (item.diff == "-") return;
+      if (!Number.isFinite(input)) {
         throw new Error("请输入有效数字");
       }
 
-      if(input>0&&item.diff.indexOf("+")<0)item.diff="+"+item.diff;
+      if (input > 0 && item.diff.indexOf("+") < 0) item.diff = "+" + item.diff;
       this.$set(item, "isSetValue", true);
     },
-    handleFocus(index,e) {
-      debugger
-      if (this.indexSelected==index) {
+    handleFocus(index, e) {
+      debugger;
+      if (this.indexSelected == index) {
         e.srcElement.blur();
       }
     },
@@ -174,18 +190,18 @@ export default {
     },
   },
   watch: {
-    // indexSelf: {
-    //   handler(val){
-    //     this.$emit("update:indexSelected",val)
-    //   this.dataArr.forEach((item, index) => {
-    //     if (index == val) {
-    //       item["isDefault"] = 1;
-    //     } else {
-    //       item["isDefault"] = 2;
-    //     }
-    //   });
-    //   }
-    // },
+    indexSelf: {
+      handler(val) {
+        this.$emit("update:indexSelected", val);
+        this.dataArr.forEach((item, index) => {
+          if (index == val) {
+            item["isDefault"] = 1;
+          } else {
+            item["isDefault"] = 2;
+          }
+        });
+      },
+    },
     // dataArr: {
     //   handler(newValue, oldValue) {
     //     this.indexSelected = newValue.findIndex((p) => {
@@ -199,8 +215,8 @@ export default {
 </script>
 
 <style scoped lang="less">
-@lightBlue    : #cfdee8;
-@blue         : #0f5a8c;
+@lightBlue: #cfdee8;
+@blue: #0f5a8c;
 div {
   text-align: center;
   white-space: nowrap;
@@ -232,13 +248,11 @@ div {
 .content {
   color: @blue;
   padding: 5px;
-
 }
 .card input {
   text-align: center;
   width: 100%;
-  color:@blue;
-
+  color: @blue;
 }
 .card.active {
   border: 1px solid @blue;

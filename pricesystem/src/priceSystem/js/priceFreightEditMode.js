@@ -1070,14 +1070,15 @@ class priceFreightEditView extends priceFreightView {
   }
 
   //设置基点 固定第一个基点
-  setBasePoint(){
-    this.currentRelationEditArr.forEach((item,index)=>{
-      if(item.isAdd){
-        this.currentRelationMap.baseIndex=index;
+  setBasePoint() {
+    this.currentRelationEditArr.forEach((item, index) => {
+      if (item.isAdd) {
+        this.currentRelationMap.baseIndex = index;
+        this.vueInstance.$forceUpdate();
         return;
       }
     })
-    
+
   }
 
   /**编辑页选中需要加入的基础参数
