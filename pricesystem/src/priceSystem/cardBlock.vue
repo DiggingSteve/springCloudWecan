@@ -191,15 +191,24 @@ export default {
   },
   watch: {
     indexSelf: {
-      handler(val) {
-        this.$emit("update:indexSelected", val);
-        this.dataArr.forEach((item, index) => {
-          if (index == val) {
-            item["isDefault"] = 1;
-          } else {
-            item["isDefault"] = 2;
-          }
-        });
+      handler(newval, oldVal) {
+        if (newVal != oldVal) {
+          this.$emit("update:indexSelected", val);
+          this.dataArr.forEach((item, index) => {
+            if (index == val) {
+              item["isDefault"] = 1;
+            } else {
+              item["isDefault"] = 2;
+            }
+          });
+        }
+      },
+    },
+    indexSelected: {
+      handler(newVal, oldVal) {
+        if (newVal != oldVal) {
+          this.indexSelf = newVal;
+        }
       },
     },
     // dataArr: {
