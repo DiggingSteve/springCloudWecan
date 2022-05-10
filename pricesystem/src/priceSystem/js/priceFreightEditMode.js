@@ -1108,10 +1108,11 @@ class priceFreightEditView extends priceFreightView {
 
   // 选中参数从无到有时 一口价需要全部清空
   isNeedClearFixedMap() {
-    var cusArr = this.cusArr.filter(item => { return item.isAdd });
-    if (cusArr.length == 0) return true;
-    var packageArr = this.packageTypeArr.filter(item => { return item.isAdd });
-    if (packageArr.length == 0) return true;
+    
+    if (this.cusDisplayIndex==-1 ) return true;
+    
+    if (this.packageDisplayIndex==-1) return true;
+    return false;
   }
 
   // 删除某一个钩稽关系时 需要清空 包含该关系的key值
