@@ -1027,13 +1027,13 @@ class priceFreightEditView extends priceFreightView {
   }
 
   /**删除基础参数
-   * 必须保留一个基础参数不能删光
    * 当删除的基础参数为当前选中参数时 需要切换当前选中基础参数
    */
-  delRelationTag(index, title, e) {
+  delRelationTag(index, e) {
 
-    if (title == diffCode.cus) {
+    if (this.currentRelationMap.title == diffCode.cus) {
       this.cusArr[index].isAdd = false;
+      this.cusArr[index].isSelect = false;
       if (this.cusDisplayIndex == index) {
         for (let i = 0; i < this.cusArr.length; i++) {
           let item = this.cusArr[i];
@@ -1049,9 +1049,10 @@ class priceFreightEditView extends priceFreightView {
       this.delMatchFixedMap(this.cusArr[index].title)
     }
 
-    if (title == diffCode.package) {
+    if (this.currentRelationMap.title == diffCode.package) {
 
       this.packageTypeArr[index].isAdd = false;
+      this.packageTypeArr[index].isSelect = false;
       if (this.packageDisplayIndex == index) {
         for (let i = 0; i < this.packageTypeArr.length; i++) {
           let item = this.packageTypeArr[i];
@@ -1089,15 +1090,10 @@ class priceFreightEditView extends priceFreightView {
 
   /**确认添加完毕 和 钩稽关系的相关数据 */
   confirmRelation() {
-    var isSetDisplayIndex = false;//是否设置展示index 设置过之后不需要再次触发setCurrentRelationDefaultIndex
     this.isNeedClearFixedMap() && this.clearFixedMap();
     this.currentRelationEditArr.forEach((item, index) => {
       if (item.isSelect) {
         item.isAdd = true;
-        if (!isSetDisplayIndex) {
-          this.setCurrentRelationDefaultIndex(index, this.currentRelationMap.title);
-          isSetDisplayIndex=true;
-        }
       }
     });
     // 如果取消价格间联动 则需要清空基础参数数组中 isDefault 和 diff上面的值
@@ -1116,14 +1112,6 @@ class priceFreightEditView extends priceFreightView {
     item.isSetValue = false;
   }
 
-  setCurrentRelationDefaultIndex(index, title) {
-    if (title == this.relationMap.cus.title) {
-      this.cusDisplayIndex = index;
-    }
-    if (title == this.relationMap.packageType.title) {
-      this.packageDisplayIndex = index;
-    }
-  }
 
   cancelRelation() {
     this.cancelSelectRelation();

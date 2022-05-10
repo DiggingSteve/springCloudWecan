@@ -1038,7 +1038,7 @@
             <span>{{ item.title }}</span>
             <span
                   class="el-icon-close"
-                  @click="item.isAdd=false;item.isSelect=false;priceObj.confirmRelation();"
+                  @click="priceObj.currentRelationMap(index,$event);"
                   style="display: none"
                 >
                 </span>
