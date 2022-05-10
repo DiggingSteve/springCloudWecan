@@ -37,7 +37,7 @@
         <div
           class="row title"
           v-bind:class="{ active: index == indexSelf ? true : false }"
-          @click="selectCard(index, dataArr)"
+          
         >
           <span>{{ item.code }}</span>
         </div>
@@ -114,7 +114,7 @@ export default {
   },
 
   methods: {
-    selectCard(index, arr) {
+    selectCard(index) {
       if (!this.canChangeCard) return;
       this.indexSelf = index;
       this.setDiffValue(index);
@@ -208,6 +208,7 @@ export default {
       handler(newVal, oldVal) {
         if (newVal != oldVal) {
           this.indexSelf = newVal;
+          this.selectCard(newVal);
         }
       },
     },
