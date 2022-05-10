@@ -1107,7 +1107,6 @@
         </div>
         <div class="row">
           <card-block
-          :canChangeCard="false"
             :dataArr.sync="priceObj.currentRelationEditArr"
             class="card-block"
             :hasContent="true"

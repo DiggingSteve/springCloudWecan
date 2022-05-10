@@ -1030,27 +1030,36 @@ class priceFreightEditView extends priceFreightView {
    * 当删除的基础参数为当前选中参数时 需要切换当前选中基础参数
    */
   delRelationTag(index, e) {
-    this.currentRelationEditArr[index].isAdd=false;
-    this.currentRelationEditArr[index].isSelect=false;
+    this.currentRelationEditArr[index].isAdd = false;
+    this.currentRelationEditArr[index].isSelect = false;
+    var disIndex = -1;
     for (let i = 0; i < this.currentRelationEditArr.length; i++) {
       let item = this.currentRelationEditArr[i];
       if (item.isAdd) {
         //移动当前显示index位置 如果没有已添加的数据则设置-1
-        this.currentRelationMap.displayIndex = i;
+        disIndex = i;
         break;
       }
-      else this.currentRelationMap.displayIndex  = -1;
+      else disIndex = -1;
+    }
+    if (this.currentRelationMap.title == diffCode.cus) {
+      this.relationMap.cus.baseIndex = disIndex;
+      this.cusDisplayIndex=disIndex;
+    }
+    else if (this.currentRelationMap.title == diffCode.package) {
+      this.relationMap.packageType.baseIndex = disIndex;
+      this.packageDisplayIndex=disIndex;
     }
     this.delMatchFixedMap(this.currentRelationEditArr[index].title);
-   
-    this.setBasePoint();
+
+    
     e.stopPropagation();
   }
 
   //设置基点 固定第一个基点
   setBasePoint() {
-    for(var i=0;i<this.currentRelationEditArr.length;i++){
-      var item=this.currentRelationEditArr[i];
+    for (var i = 0; i < this.currentRelationEditArr.length; i++) {
+      var item = this.currentRelationEditArr[i];
       if (item.isAdd) {
         this.currentRelationMap.baseIndex = i;
         this.vueInstance.$forceUpdate();
@@ -1070,7 +1079,7 @@ class priceFreightEditView extends priceFreightView {
     item.isAdd = item.isSelect;
   }
 
- 
+
 
   /**确认添加完毕 和 钩稽关系的相关数据 */
   confirmRelation() {
