@@ -1128,9 +1128,7 @@
             >确认
           </el-button>
         </div>
-        <div class="item10">
-          <el-button type="" @click="priceObj.cancelRelation()">取消</el-button>
-        </div>
+      
       </div>
     </el-dialog>
     <el-dialog :visible.sync="priceObj.isShowClearDialog" :width="'40%'">

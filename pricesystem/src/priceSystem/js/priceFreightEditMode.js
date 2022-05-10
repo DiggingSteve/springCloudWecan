@@ -1052,12 +1052,12 @@ class priceFreightEditView extends priceFreightView {
     }
     if (this.currentRelationMap.title == diffCode.cus) {
       this.cusDisplayIndex=disIndex;
+      this.relationMap.cus.baseIndex=disIndex;
     }
     else if (this.currentRelationMap.title == diffCode.package) {
-      this.packageDisplayIndex=disIndex;
+      this.relationMap.packageType.baseIndex=disIndex;
     }
   }
-
 
 
   /**编辑页选中需要加入的基础参数
