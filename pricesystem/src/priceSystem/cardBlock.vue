@@ -191,11 +191,11 @@ export default {
   },
   watch: {
     indexSelf: {
-      handler(newval, oldVal) {
+      handler(newVal, oldVal) {
         if (newVal != oldVal) {
-          this.$emit("update:indexSelected", val);
+          this.$emit("update:indexSelected", newVal);
           this.dataArr.forEach((item, index) => {
-            if (index == val) {
+            if (index == newVal) {
               item["isDefault"] = 1;
             } else {
               item["isDefault"] = 2;
