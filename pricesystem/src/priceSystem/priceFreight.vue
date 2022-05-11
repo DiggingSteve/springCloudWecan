@@ -1071,7 +1071,7 @@
             </span>
           </div>
         </template>
-        <template >
+        
           <el-popover
             placement="right-end"
             width="400"
@@ -1099,11 +1099,11 @@
                 >关闭</el-button
               >
             </div>
-            <div class="plus" slot="reference" v-if="relationEditTitle != relationTitle.vol">
+            <div class="plus" slot="reference" v-show="relationEditTitle != relationTitle.vol">
               <span class="el-icon-plus"></span>
             </div>
           </el-popover>
-        </template>
+       
       </div>
       <div class="row" style="margin: 15px 0; line-height: 15px">
         <div class="item20"><span>是否开启价格间联动</span></div>
