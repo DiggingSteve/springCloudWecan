@@ -618,11 +618,12 @@
             </div>
           </div>
           <!--快捷组合切换-->
-          <div class="row relation-wrap">
+          <div class="row relation-wrap" style="box-shadow:unset">
             <template v-for="(cus,cIndex) in priceObj.cusArr">
               <template v-for="(p,pIndex) in priceObj.packageTypeArr">
                 <div
                   class="operate-tag"
+                  style="min-width:100px"
                   v-bind:class="{
                     active: 
                     (priceObj.cusDisplayIndex == cIndex||priceObj.cusDisplayIndex ==-1)&&
