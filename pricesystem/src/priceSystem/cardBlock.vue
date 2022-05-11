@@ -180,7 +180,9 @@ export default {
       }
     },
   },
-  mounted: function () {},
+  mounted: function () {
+    this.selectCard(0);
+  },
   created: function () {
     this.originalDataArr = [...this.dataArr];
   },
