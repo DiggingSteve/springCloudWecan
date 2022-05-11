@@ -1071,7 +1071,7 @@
             </span>
           </div>
         </template>
-        <template v-show="relationEditTitle != relationTitle.vol">
+        <template >
           <el-popover
             placement="right-end"
             width="400"
@@ -1099,7 +1099,7 @@
                 >关闭</el-button
               >
             </div>
-            <div class="plus" slot="reference">
+            <div class="plus" slot="reference" v-if="relationEditTitle != relationTitle.vol">
               <span class="el-icon-plus"></span>
             </div>
           </el-popover>
