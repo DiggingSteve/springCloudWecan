@@ -624,7 +624,7 @@
                 <div
                   class="operate-tag"
                   v-bind:class="{
-                    active: priceObj.cusDisplayIndex && cIndex||priceObj.packageDisplayIndex==pIndex,
+                    active: priceObj.cusDisplayIndex == cIndex||priceObj.packageDisplayIndex==pIndex,
                   }"
                   @click="priceObj.cusDisplayIndex = cIndex;priceObj.packageDisplayIndex=pIndex;"
                   v-show="cus.isAdd&&p.isAdd"
