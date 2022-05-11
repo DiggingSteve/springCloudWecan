@@ -275,9 +275,7 @@
             class="item30 descriptionWrap"
             style="height: 31px; line-height: 31px; display: flex"
           >
-            <span class="input_title" style="padding-right: 10px"
-              >时间期限</span
-            >
+            <span class="input_title" style="padding-right: 10px">有效期</span>
             <el-date-picker
               style="width: 205px"
               v-model="priceObj._timeSpan"
@@ -618,6 +616,25 @@
                 >TACT运价表查询</el-button
               >
             </div>
+          </div>
+          <!--快捷组合切换-->
+          <div class="row relation-wrap">
+            <template v-for="(cus,cIndex) in priceObj.cusArr">
+              <template v-for="(p,pIndex) in priceObj.packageTypeArr">
+                <div
+                  class="operate-tag"
+                  v-bind:class="{
+                    active: priceObj.cusDisplayIndex == cIndex||priceObj.packageDisplayIndex==pIndex,
+                  }"
+                  @click="priceObj.cusDisplayIndex = cIndex;priceObj.packageDisplayIndex=pIndex;"
+                  v-show="cus.isAdd&&p.isAdd"
+                >
+                  <span v-show="cus.isAdd" style="border:1px solid #dedede">{{ cus.title }}</span>
+                  <span v-show="p.isAdd" >{{ p.title }}</span>
+                 
+                </div>
+              </template>
+            </template>
           </div>
           <div class="row">
             <div class="table-wrap price-preview">
@@ -1043,6 +1060,7 @@
           <div class="title" v-show="item.isSelect || item.isAdd">
             <span>{{ item.title }}</span>
             <span
+              v-if="item.canDelete"
               class="el-icon-close"
               @click="priceObj.delRelationTag(index, $event)"
               style="display: none"
@@ -1128,7 +1146,6 @@
             >确认
           </el-button>
         </div>
-      
       </div>
     </el-dialog>
     <el-dialog :visible.sync="priceObj.isShowClearDialog" :width="'40%'">
