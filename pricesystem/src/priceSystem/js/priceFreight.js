@@ -63,9 +63,9 @@ class priceFreightView extends BaseService {
    
     //记录钩稽参数相关信息
     relationMap = {
-        cus: { title: diffCode.cus, hasRelation: false, baseIndex: -1},
-        packageType: { title: diffCode.package, hasRelation: false, baseIndex: -1},
-        vol: { title: diffCode.vol, hasRelation: false, baseIndex: -1 }
+        cus: { title: diffCode.cus, hasRelation: false, baseIndex: 0},
+        packageType: { title: diffCode.package, hasRelation: false, baseIndex: 0},
+        vol: { title: diffCode.vol, hasRelation: false, baseIndex: 0 }
     };
 
 

@@ -413,7 +413,7 @@
       </div>
     </el-dialog>
     <el-dialog
-      :title="'同步到应收卡车中转费'"
+      :title="'同步到应收目的港卡车转运费'"
       :visible.sync="priceObj.isShowSyncDialog"
       width="70%"
       :close-on-click-modal="false"
@@ -757,7 +757,7 @@ export default {
       this.priceObj = new TruckFee(this);
       this.priceObj.currentPageMode = pagemode.edit;
       this.priceObj.loadEditInfo(data);
-      this.priceObj.dialogTitle = "修改卡车中转费";
+      this.priceObj.dialogTitle = "修改目的港卡车转运费";
     },
     mapTwocodeToFeelist(data) {
       data.forEach((d) => {
@@ -852,7 +852,7 @@ export default {
     },
 
     downloadTemplate() {
-      window.open("~/../boStatic/应付卡车中转费模板.xlsx");
+      window.open("~/../boStatic/应付目的港卡车转运费模板.xlsx");
     },
   },
 
