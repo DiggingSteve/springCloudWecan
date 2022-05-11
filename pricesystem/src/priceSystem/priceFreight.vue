@@ -624,12 +624,12 @@
                 <div
                   class="operate-tag"
                   v-bind:class="{
-                    active: priceObj.cusDisplayIndex == cIndex||priceObj.packageDisplayIndex==pIndex,
+                    active: priceObj.cusDisplayIndex && cIndex||priceObj.packageDisplayIndex==pIndex,
                   }"
                   @click="priceObj.cusDisplayIndex = cIndex;priceObj.packageDisplayIndex=pIndex;"
                   v-show="cus.isAdd&&p.isAdd"
                 >
-                  <span v-show="cus.isAdd" style="border:1px solid #dedede">{{ cus.title }}</span>
+                  <span v-show="cus.isAdd" style="border-right:1px solid #dedede;padding-right:5px">{{ cus.title }}</span>
                   <span v-show="p.isAdd" >{{ p.title }}</span>
                  
                 </div>
