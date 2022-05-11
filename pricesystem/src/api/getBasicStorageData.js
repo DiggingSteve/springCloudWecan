@@ -1,5 +1,5 @@
-const diffCodeKey={package:"packageDiff",cus:"cusDiff",vol:"volDiff",weight:"weightDiff"}
-const hbhinfo="hbhinfo";
+const diffCodeKey = { package: "packageDiff", cus: "cusDiff", vol: "volDiff", weight: "weightDiff" }
+const hbhinfo = "hbhinfo";
 
 
 
@@ -411,17 +411,17 @@ const getTzxm = function () {
     return true
   } else {
     return this.$axios({
-        method: "get",
-        url: this.$store.state.publicWebApi + "api/PubCustom",
-        params: {
-          type: "tz",
-          comxz: "-1",
-          area: "",
-          timestamp: 0,
-          system: ""
-        },
-        loading: false
-      })
+      method: "get",
+      url: this.$store.state.publicWebApi + "api/PubCustom",
+      params: {
+        type: "tz",
+        comxz: "-1",
+        area: "",
+        timestamp: 0,
+        system: ""
+      },
+      loading: false
+    })
       .then(results => {
 
         let xmdata1 = results.data.filter(e => e.usr_status_cw == 1).map(i => {
@@ -441,86 +441,86 @@ const getTzxm = function () {
   }
 }
 
-function loadHbh(){
+function loadHbh() {
   let url = this.$store.state.publicWebApi + "api/AirFlight/GetAllFlight";
   this.$axios({
     method: "get",
     url: url,
     params: {
-   
+
     },
     loading: false,
     tip: false
-  }).then((result)=>{
-  
-    let arr=result.data;
-    let data=JSON.stringify(arr);
-    localStorage.setItem(hbhinfo,data);
+  }).then((result) => {
+
+    let arr = result.data;
+    let data = JSON.stringify(arr);
+    localStorage.setItem(hbhinfo, data);
   });
 }
 
-const getDiffCode=function(){
+const getDiffCode = function () {
   let packageTypeUrl = this.$store.state.publicWebApi + "api/Pubtypecode?groupid=1480";
   let weightUrl = this.$store.state.publicWebApi + "api/Pubtypecode?groupid=1481";
   let volUrl = this.$store.state.publicWebApi + "api/Pubtypecode?groupid=1482";
   let cusUrl = this.$store.state.publicWebApi + "api/Pubtypecode?groupid=1483";
 
- this.$axios({
-        method: "get",
-        url: packageTypeUrl,
-        params: {
-       
-        },
-        loading: false,
-        tip: false
-      }).then((result)=>{
-        console.log(result);
-        let arr=createBasicCardData(result.data);
-        let data=JSON.stringify(arr);
-        localStorage.setItem(diffCodeKey.package,data);
-      });
-      this.$axios({
-        method: "get",
-        url: cusUrl,
-        params: {
-       
-        },
-        loading: false,
-        tip: false
-      }).then((result)=>{
-        let arr=createBasicCardData(result.data);
-        let data=JSON.stringify(arr);
-        localStorage.setItem(diffCodeKey.cus,data);
-      });
-      this.$axios({
-        method: "get",
-        url: volUrl,
-        params: {
-       
-        },
-        loading: false,
-        tip: false
-      }).then((result)=>{
-        let arr=createBasicCardData(result.data,"vol");
-        let data=JSON.stringify(arr);
-        localStorage.setItem(diffCodeKey.vol,data);
-      });
-      this.$axios({
-        method: "get",
-        url: weightUrl,
-        params: {
-       
-        },
-        loading: false,
-        tip: false
-      }).then((result)=>{
-        let arr=createBasicCardData(result.data);
-        arr.forEach(item=>{
-          item.codeNum=item.code.replace("kg","")*1;
-        });
-        let data=JSON.stringify(arr);
-        localStorage.setItem(diffCodeKey.weight,data);
-      });
+  this.$axios({
+    method: "get",
+    url: packageTypeUrl,
+    params: {
+
+    },
+    loading: false,
+    tip: false
+  }).then((result) => {
+    console.log(result);
+    let arr = createBasicCardData(result.data);
+    let data = JSON.stringify(arr);
+    localStorage.setItem(diffCodeKey.package, data);
+  });
+  this.$axios({
+    method: "get",
+    url: cusUrl,
+    params: {
+
+    },
+    loading: false,
+    tip: false
+  }).then((result) => {
+    let arr = createBasicCardData(result.data);
+    let data = JSON.stringify(arr);
+    localStorage.setItem(diffCodeKey.cus, data);
+  });
+  this.$axios({
+    method: "get",
+    url: volUrl,
+    params: {
+
+    },
+    loading: false,
+    tip: false
+  }).then((result) => {
+    let arr = createBasicCardData(result.data, "vol");
+    let data = JSON.stringify(arr);
+    localStorage.setItem(diffCodeKey.vol, data);
+  });
+  this.$axios({
+    method: "get",
+    url: weightUrl,
+    params: {
+
+    },
+    loading: false,
+    tip: false
+  }).then((result) => {
+    let arr = createBasicCardData(result.data);
+    arr.forEach(item => {
+      item.codeNum = item.code.replace("kg", "") * 1;
+    });
+    let data = JSON.stringify(arr);
+    localStorage.setItem(diffCodeKey.weight, data);
+  });
 
 }
 
@@ -530,13 +530,14 @@ const getDiffCode=function(){
  * @param {*} type vol cus package weight 其中vol时 isAdd为true
  * @returns 
  */
-function createBasicCardData(arr,type) {
+function createBasicCardData(arr, type) {
   return arr.sort((a, b) => {
-      return a.ready02 *1 -b.ready02*1
+    return a.ready02 * 1 - b.ready02 * 1
   }).map((item, index) => {
-      return { code: item.ready01, diff: '', isDefault: index == 0 ? 1 : 2,title:item.typename,isAdd:true//是否在参数中被选中
-      ,isSelect:true,standardPrice:'',canDelete:item.ready01!="官网公布"
-     }
+    return {
+      code: item.ready01, diff: index == 0 ? "diff" : '', isDefault: index == 0 ? 1 : 2, title: item.typename, isAdd: true//是否在参数中被选中
+      , isSelect: true, standardPrice: '', canDelete: item.ready01 != "官网公布"
+    }
   });
 }
 
@@ -545,15 +546,15 @@ const getAllTemplates = function () {
   //获取全部模板数据
   return new Promise((resolve, reject) => {
     this.$axios({
-        method: "get",
-        url: this.$store.state.publicWebApi + "api/UserTemplet",
-        params: {
-          logname: localStorage.getItem("usrname"),
-          project: localStorage.system == 'outside' ? "outside" : "bomanagement"
-        },
-        loading: false,
-        tip: false
-      })
+      method: "get",
+      url: this.$store.state.publicWebApi + "api/UserTemplet",
+      params: {
+        logname: localStorage.getItem("usrname"),
+        project: localStorage.system == 'outside' ? "outside" : "bomanagement"
+      },
+      loading: false,
+      tip: false
+    })
       .then(results => {
         let res = results.data;
         this.$store.commit("setTableTmpAll", res);
@@ -579,39 +580,39 @@ const getAllTemplates = function () {
       .then(userSettingTmpAll => {
         if (!userSettingTmpAll || !localStorage.usrname) return;
         // 拿到bo的用户设置模板后继续获取wffmanagement的用户设置模板，并且保存到store中
-        ["wffmanagement","priceSystem"].forEach(i=>{
+        ["wffmanagement", "priceSystem"].forEach(i => {
           this.$axios({
-          method: "get",
-          url: this.$store.state.publicWebApi + "api/UserTemplet",
-          params: {
-            logname: localStorage.getItem("usrname"),
-            project: i
-          },
-          loading: false,
-          tip: false
-        }).then(result => {
-          if(i=='priceSystem'){
-            console.log(result.data)
-          }
-          // wff用户设置模板
-          userSettingTmpAll.push({
-            ...result.data.find(i => i.type == 110),
-            project: i
+            method: "get",
+            url: this.$store.state.publicWebApi + "api/UserTemplet",
+            params: {
+              logname: localStorage.getItem("usrname"),
+              project: i
+            },
+            loading: false,
+            tip: false
+          }).then(result => {
+            if (i == 'priceSystem') {
+              console.log(result.data)
+            }
+            // wff用户设置模板
+            userSettingTmpAll.push({
+              ...result.data.find(i => i.type == 110),
+              project: i
+            });
           });
-        });
         })
 
         this.$store.commit("setUserSettingTmpAll", userSettingTmpAll);
         resolve(userSettingTmpAll)
 
       })
-      .catch(error => {});
+      .catch(error => { });
 
 
   })
 
 }
-const  loadCache =function(_this){
+const loadCache = function (_this) {
   getDiffCode.call(_this);
   //loadHbh.call(_this);
 
@@ -624,6 +625,6 @@ export {
   getTzxm,
   loadCache,
   diffCodeKey,
-  
+
   hbhinfo
 }
