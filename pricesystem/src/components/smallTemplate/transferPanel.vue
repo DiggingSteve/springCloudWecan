@@ -57,7 +57,7 @@
           <div style="display: flex; justify-content: space-between; align-items: center;">
              <option-content :option="item"></option-content>
               <!-- 删除按钮 -->
-             <i class="el-icon-circle-close" style="margin-right: 10px; cursor: pointer;" @click.stop.prevent="handleCloseLeft(item)"></i>
+             <i class="el-icon-circle-close" style="margin-right: 10px; cursor: pointer;" @click.stop.prevent="handleCloseLeft(item)" v-show="!item.id"></i>
           </div>
         </el-checkbox>
        
