@@ -534,9 +534,10 @@ function createBasicCardData(arr, type) {
   return arr.sort((a, b) => {
     return a.ready02 * 1 - b.ready02 * 1
   }).map((item, index) => {
+    var isBase=isBasePoint(item);
     return {
-      code: item.ready01, diff: isBasePoint(item) ? "基点" : '', isDefault: isBasePoint(item) ? 1 : 2, title: item.typename, isAdd: isBasePoint()?true:false//是否在参数中被选中
-      , standardPrice: '', canDelete: isBasePoint()
+      code: item.ready01, diff: isBase ? "基点" : '', isDefault: isBase ? 1 : 2, title: item.typename, isAdd: isBase?true:false//是否在参数中被选中
+      , standardPrice: '', canDelete: isBase
     }
   });
 }
