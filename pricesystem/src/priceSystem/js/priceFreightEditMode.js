@@ -376,7 +376,6 @@ class priceFreightEditView extends priceFreightView {
       }
       else {
         item.isAdd=false;
-        item.isSelect=false;
         this.clearDiffRelation(item)
       }
     });
@@ -591,21 +590,7 @@ class priceFreightEditView extends priceFreightView {
     });
   }
 
-  get isSelectCus() {
-    return this.cusIndex >= 0;
-  }
-
-  get isSelectPackage() {
-    return this.packageIndex >= 0;
-  }
-
-  get isSelectWeight() {
-    return this.weightIndex >= 0;
-  }
-
-  get isSelectVol() {
-    return this.volIndex >= 0;
-  }
+  
 
   //设置一口价默认值 默认 未设置值 diff:0,isAvtive:false 是否激活状态 激活开启编辑模式
   createDefaultDisplayPriceObj(p, c, v, w) {
@@ -717,49 +702,7 @@ class priceFreightEditView extends priceFreightView {
     }, arr)
     return arr;
   }
-  syncCellValue() {
-    if (this.standardPrice * 1 <= 0 || (!Number.isFinite(this.standardPrice * 1))) return;
-    let pArr = [];
-    let cArr = [];
-    let vArr = [];
-    let wArr = [];
-    if (this.isSelectPackage) {
-      pArr = [this.packageTypeArr[this.packageIndex]];
-    }
-    else {
-      pArr = this.packageTypeArr;
-    }
-    if (this.isSelectCus) {
-      cArr = [this.cusArr[this.cusIndex]];
-    }
-    else {
-      cArr = this.cusArr;
-    }
-    if (this.isSelectVol) {
-      vArr = [this.volArr[this.volIndex]];
-    }
-    else {
-      vArr = this.volArr;
-    }
-    if (this.isSelectWeight) {
-      wArr = [this.weightArr[this.weightIndex]];
-    }
-    else {
-      wArr = this.weightArr;
-    }
-    pArr.forEach((p) => {
-      cArr.forEach((c) => {
-        vArr.forEach((v) => {
-          wArr.forEach((w) => {
-            var key = this.createFixedPriceKey(p, c, v, w);
-            this.priceDisplayMap[key].isSetValue = true;
-            this.priceDisplayMap[key].diff = this.standardPrice;
-          });
-        });
-      });
-    });
 
-  }
 
   /**重置一口价 */
   resetFixedPrice() {
@@ -1033,11 +976,8 @@ class priceFreightEditView extends priceFreightView {
    */
   delRelationTag(index, e) {
     this.currentRelationEditArr[index].isAdd = false;
-    this.currentRelationEditArr[index].isSelect = false;
     this.setDisplayIndex();
     this.delMatchFixedMap(this.currentRelationEditArr[index].title);
-
-    
     e.stopPropagation();
   }
 
@@ -1067,9 +1007,7 @@ class priceFreightEditView extends priceFreightView {
    */
   selectRelationTitle(index) {
     let item = this.currentRelationEditArr[index];
-
-    item.isSelect = !item.isSelect
-    item.isAdd = item.isSelect;
+    item.isAdd = !item.isAdd;
 
     this.setDisplayIndex();
   }

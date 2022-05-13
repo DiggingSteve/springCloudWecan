@@ -472,22 +472,12 @@
           <div class="item10 operate-title">客户参数</div>
           <div class="item75" style="display: flex">
             <template>
-              <div
-                v-show="priceObj.isCusEmpty"
-                style="width: 200px"
-                class="operate-tag-forbidden"
-              >
-                <span>适用于所有客户参数</span>
-              </div>
+           
             </template>
             <template v-for="(item, index) in priceObj.cusArr">
               <div
                 class="operate-tag"
-                v-bind:class="{
-                  active: priceObj.cusDisplayIndex == index,
-                }"
-                @click="priceObj.cusDisplayIndex = index"
-                v-show="item.isAdd && !priceObj.isCusEmpty"
+                v-show="item.isAdd "
               >
                 <span>{{ item.title }}</span>
                 <!-- <span
@@ -512,15 +502,6 @@
         <div class="row relation-wrap">
           <div class="item10 operate-title">包装参数</div>
           <div class="item75" style="display: flex">
-            <template>
-              <div
-                v-show="priceObj.isPackageTypeEmpty"
-                style="width: 200px"
-                class="operate-tag-forbidden"
-              >
-                <span>适用于所有包装参数</span>
-              </div>
-            </template>
             <template v-for="(item, index) in priceObj.packageTypeArr">
               <div
                 class="operate-tag"
