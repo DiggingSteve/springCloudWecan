@@ -60,11 +60,11 @@ class priceFreightView extends BaseService {
     /**记录用于导入价格的map 被选中的价格最终会复制到 priceDisplayMap */
     priceCopyMap = {};
 
-   
+
     //记录钩稽参数相关信息
     relationMap = {
-        cus: { title: diffCode.cus, hasRelation: false, baseIndex: 0},
-        packageType: { title: diffCode.package, hasRelation: false, baseIndex: 0},
+        cus: { title: diffCode.cus, hasRelation: false, baseIndex: 0 },
+        packageType: { title: diffCode.package, hasRelation: false, baseIndex: 0 },
         vol: { title: diffCode.vol, hasRelation: false, baseIndex: 0 }
     };
 
@@ -73,28 +73,28 @@ class priceFreightView extends BaseService {
 
     currentCoverType = coverType.all;
 
-    _cusDisplayIndex=-1
+    _cusDisplayIndex = -1
 
     /**运价展示tab的索引 */
-    get cusDisplayIndex (){
-        var arr=this.cusArr.filter((item)=>{return item.isAdd});
-        if(arr.length==this.cusArr.length)return -1;
+    get cusDisplayIndex() {
+        var arr = this.cusArr.filter((item) => { return item.isAdd });
+        if (arr.length == this.cusArr.length) return -1;
         return this._cusDisplayIndex;
     }
 
-    set cusDisplayIndex(v){
-        this._cusDisplayIndex=v;
+    set cusDisplayIndex(v) {
+        this._cusDisplayIndex = v;
     }
     _packageDisplayIndex = -1;
 
-    get packageDisplayIndex (){
-        var arr=this.packageTypeArr.filter((item)=>{return item.isAdd});
-        if(arr.length==this.packageTypeArr.length)return -1;
+    get packageDisplayIndex() {
+        var arr = this.packageTypeArr.filter((item) => { return item.isAdd });
+        if (arr.length == this.packageTypeArr.length) return -1;
         return this._packageDisplayIndex;
     }
 
-    set packageDisplayIndex(v){
-        this._packageDisplayIndex=v;
+    set packageDisplayIndex(v) {
+        this._packageDisplayIndex = v;
     }
 
     cusImportIndex = -1;
@@ -109,13 +109,13 @@ class priceFreightView extends BaseService {
     // 是否没添加cus参数
     get isCusEmpty() {
         var arr = this.cusArr.filter(item => { return item.isAdd })
-        return arr.length == 0||arr.length==this.cusArr.length;
+        return arr.length == 0 || arr.length == this.cusArr.length;
     }
 
     // 是否没添加package参数
     get isPackageTypeEmpty() {
         var arr = this.packageTypeArr.filter(item => { return item.isAdd })
-        return arr.length == 0||arr.length==this.packageTypeArr.length;
+        return arr.length == 0 || arr.length == this.packageTypeArr.length;
     }
 
     /**当前选中的包装类型 */
@@ -219,7 +219,7 @@ class priceFreightView extends BaseService {
     _sfg = "";
 
     get sfg() {
-        if (!this.isEditMode&&this._sfg=="") {
+        if (!this.isEditMode && this._sfg == "") {
             //新增 直接带入选择站点
             return this.vueInstance.$store.state.areaStateCode;
         }
@@ -239,11 +239,11 @@ class priceFreightView extends BaseService {
 
     zzgTitle = zzgTitle.direct;
 
-   
+
 
     zzg = zzgTitle.direct;
 
-  
+
     _standardPrice = -1;
     get standardPrice() {
         if (this._standardPrice < 0) return '--';
@@ -413,6 +413,10 @@ class priceFreightView extends BaseService {
         this.weightArr = JSON.parse(localStorage.getItem(diffCodeKey.weight));
         this.volArr = JSON.parse(localStorage.getItem(diffCodeKey.vol));
         this.cusArr = JSON.parse(localStorage.getItem(diffCodeKey.cus));
+        this.relationMap.cus.baseIndex = this.cusArr.indexOf(f => { f.isDefault == 1 });
+        this.relationMap.packageType.baseIndex = this.packageTypeArr.indexOf(f => { f.isDefault == 1 });
+        this.relationMap.vol.baseIndex = this.volArr.indexOf(f => { f.isDefault == 1 });
+
     }
 
 
@@ -430,7 +434,7 @@ class priceFreightView extends BaseService {
         if (!!!this.twoCode) {
             throw new Error("未选择航司二字码");
         }
-      
+
         if (this.vueInstance.wecanStandard == this.vueInstance.wecanStandardOpts[1].value && this.gid <= 0) {
             throw new Error("请选择客户");
         }
