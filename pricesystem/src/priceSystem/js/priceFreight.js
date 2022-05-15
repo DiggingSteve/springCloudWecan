@@ -411,11 +411,11 @@ class priceFreightView extends BaseService {
     loadBasicData() {
         this.packageTypeArr = JSON.parse(localStorage.getItem(diffCodeKey.package));
         this.weightArr = JSON.parse(localStorage.getItem(diffCodeKey.weight));
-        this.volArr = JSON.parse(localStorage.getItem(diffCodeKey.vol));
+        this.volArr = JSON.parse(localStorage.getItem(diffCodeKey.vol            ));
         this.cusArr = JSON.parse(localStorage.getItem(diffCodeKey.cus));
-        this.relationMap.cus.baseIndex = this.cusArr.indexOf(f => { f.isDefault == 1 });
-        this.relationMap.packageType.baseIndex = this.packageTypeArr.indexOf(f => { f.isDefault == 1 });
-        this.relationMap.vol.baseIndex = this.volArr.indexOf(f => { f.isDefault == 1 });
+        this.relationMap.cus.baseIndex = this.cusArr.findIndex(f => { return f.isDefault == 1 });
+        this.relationMap.packageType.baseIndex = this.packageTypeArr.findIndex(f => { return f.isDefault == 1 });
+        this.relationMap.vol.baseIndex = this.volArr.findIndex(f => { return f.isDefault == 1 });
 
     }
 
