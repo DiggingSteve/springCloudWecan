@@ -450,17 +450,17 @@ class priceFreightView extends BaseService {
                 this.cusIndexArr.push(i);
             }
         }
-        for (let j = 0; j < this.packageTypeArr.length; j++) {
-            var p = this.packageTypeArr[j];
+        for (let j = 0; j < this.packageIndexArr.length; j++) {
+            var p = this.packageIndexArr[j];
             if (p.isDefault) continue;
             if(!p.isAdd)continue;
-            this.packageTypeArr[0] = this.packageTypeArr[0] || [];
+            this.packageIndexArr[0] = this.packageIndexArr[0] || [];
 
             if (p.isSameAsBase) {
-                this.packageTypeArr[0].push(j);
+                this.packageIndexArr[0].push(j);
             }
             else {
-                this.packageTypeArr.push(j);
+                this.packageIndexArr.push(j);
             }
         }
     }
