@@ -267,61 +267,6 @@ class priceFreightEditView extends priceFreightView {
     if (!!map.volArr) {
       this.convertMapToCodeDiff(map.volArr, volArr, diffCode.vol)
     }
-    // !!map.packageTypeArr && packageArr.forEach((item, index) => {
-
-    //   let code = item.code;
-    //   let p = map.packageTypeArr.find(f => { return f.code == code });
-    //   if (!!p) {
-    //     item.isDefault = p.isDefault;
-    //     item.isAdd = true;
-    //     item.diff = p.diff;
-    //     if(p.isDefault)item.diff="基点"
-    //     item.isSetValue = true;
-    //     if (!isSetPIndex) {
-    //       this.packageDisplayIndex = index;
-    //       isSetPIndex = true;
-    //     }
-    //   }
-    //   else {
-    //     item.diff = '--';
-    //     item.isSetValue = false;
-    //   }
-    // });
-    // !!map.cusArr && cusArr.forEach((item, index) => {
-    //   let code = item.code;
-    //   let p = map.cusArr.find(f => { return f.code == code });
-    //   if (!!p) {
-    //     item.isDefault = p.isDefault;
-    //     item.diff = p.diff;
-    //     item.isAdd = true;
-    //     item.isSetValue = true;
-    //     if(p.isDefault)item.diff="基点"
-    //     if (!isSetCIndex) {
-    //       this.cusDisplayIndex = index;
-    //       isSetCIndex = true;
-    //     }
-
-    //   }
-    //   else {
-    //     item.diff = '--';
-    //     item.isSetValue = false;
-    //   }
-    // });
-    // !!map.volArr && volArr.forEach((item, index) => {
-    //   let code = item.code;
-    //   let p = map.volArr.find(f => { return f.code == code });
-    //   if (!!p) {
-    //     item.isDefault = p.isDefault;
-
-    //     item.diff = p.diff;
-    //     item.isSetValue = true;
-    //     if(p.isDefault)item.diff="基点"
-    //   }
-    //   else {
-    //     item.diff = '--';
-    //     item.isSetValue = false;
-    //   }
-    // });
     !!map.weightArr && weightArr.forEach((item, index) => {
       let code = item.code;
       let p = map.weightArr.find(f => { return f.code == code });

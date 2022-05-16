@@ -47,4 +47,10 @@ public class FeeVolRatio extends Parent {
     )
     private Integer isDefault;
 
+    //是否设置了vol的勾稽关系 当前默认渲染1:167 为基点
+    @Column(
+            name = "isSetValue",
+            columnDefinition = "int COMMENT '是否设置值 1 是 2 否'"
+    )
+    private Integer isSetValue;
 }

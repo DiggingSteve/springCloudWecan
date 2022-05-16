@@ -332,7 +332,7 @@
 
         <div class="row block">
           <div style="width: 100%" class="blue title">
-            <span>请填写各重量的运价( CNY )</span>
+            <span>请填写官网公布的1:167散货的运价( CNY )</span>
           </div>
         </div>
         <div class="row">
@@ -1069,7 +1069,7 @@
                     active: item.isSelect,
                   }"
                   v-show="!item.isAdd"
-                  @click="priceObj.selectRelationTitle(index)"
+                  @click="priceObj.selectRelationTitle(index)" 
                 >
                   <span>{{ item.title }}</span>
                 </div>
@@ -1417,6 +1417,9 @@ export default {
     },
 
     /**设置单元格价格 */
+    // 第一页请填写各重量的运价，改为 “请填写官网公布的1:167散货的运价”，这说明默认基点为，1：167，散货，官网公布，其他标准的运价都为空，
+    //且尚未建立勾稽关系，需以编辑->新增方式来添加(原先是减法)
+    //则现在初始只加载第一行的价格
     setCellValue(vol, weight, pIndex, cIndex) {
       let volDiff = vol.diff * 1;
       let weightPrice = weight.standardPrice * 1;
