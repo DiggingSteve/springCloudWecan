@@ -974,7 +974,8 @@ class priceFreightEditView extends priceFreightView {
   }
 
   clearDiffRelation(item) {
-    item.isDefault = 2;
+    if(item.isDefault==1)return;
+    if(item.isSameAsBase)return;
     item.diff = "";
     item.isSetValue = false;
   }

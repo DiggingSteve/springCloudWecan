@@ -554,7 +554,7 @@
               <template v-for="(p, pIndex) in priceObj.packageIndexArr">
                 <div
                   class="operate-tag"
-                  style="min-width: 100px"
+                  style="width:unset;padding:0 5px"
                   v-bind:class="{
                     active: false,
                   }"
@@ -567,7 +567,7 @@
                   <template v-if="cIndex == 0">
                     <template v-for="(cusBaseIndex, ccIdnex) in cus">
                       <span> {{ priceObj.cusArr[cusBaseIndex].title }}</span>
-                      <span v-if="ccIdnex < cus[0].length - 1">\</span>
+                      <span v-if="ccIdnex < (cus[0].length - 1)">\</span>
                     </template>
                   </template>
                   <template v-else>
@@ -581,7 +581,7 @@
                       <span>
                         {{ priceObj.packageTypeArr[pBaseIndex].title }}</span
                       >
-                      <span v-if="ppIndex < p[0].length - 1">\</span>
+                      <span v-if="ppIndex < (p[0].length - 1)">\</span>
                     </template>
                   </template>
                   <template v-else>
