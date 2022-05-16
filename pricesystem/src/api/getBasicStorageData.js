@@ -536,7 +536,7 @@ function createBasicCardData(arr, type) {
   }).map((item, index) => {
     var isBase=isBasePoint(item);
     return {
-      code: item.ready01, diff: isBase ? "基点" : '', isDefault: isBase ? 1 : 2, title: item.typename, isAdd: isBase?true:false//是否在参数中被选中
+      code: item.ready01, diff: isBase ? "基点" : '', isDefault: isBase ? 1 : 2, title: item.typename, isAdd: (isBase||type=="vol")?true:false//是否在参数中被选中
       , standardPrice: '', canDelete: !isBase
     }
   });

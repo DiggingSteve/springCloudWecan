@@ -1041,7 +1041,7 @@
         style="border-bottom: 1px solid #dedede"
       >
         <template v-for="(item, index) in priceObj.currentRelationEditArr">
-          <div class="title" v-show="item.isSelect || item.isAdd">
+          <div class="title" v-show="item.isAdd">
             <span>{{ item.title }}</span>
             <span
               v-if="item.canDelete"
@@ -1421,6 +1421,7 @@ export default {
     //且尚未建立勾稽关系，需以编辑->新增方式来添加(原先是减法)
     //则现在初始只加载第一行的价格
     setCellValue(vol, weight, pIndex, cIndex) {
+      let isVolSetValue=vol.isSetValue;
       let volDiff = vol.diff * 1;
       let weightPrice = weight.standardPrice * 1;
       let currentP = this.priceObj.packageTypeArr[pIndex];
@@ -1429,6 +1430,7 @@ export default {
       let cusDiff = (currentC ? currentC.diff : 0) * 1;
 
       if (!Number.isFinite(weightPrice) || weightPrice == 0) return "--";
+      if(!isVolSetValue)return "--";
       if (weight.title == "MIN") return weightPrice;
       let val =
         (Number.isFinite(volDiff) ? volDiff : 0) +

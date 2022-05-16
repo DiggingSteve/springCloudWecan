@@ -474,7 +474,8 @@ class priceFreightEditView extends priceFreightView {
       if (m.diff == '--') {
         m.diff = 0;
       }
-      m.isAdd = m.isAdd ? 1 : 2
+      m.isAdd = m.isAdd ? 1 : 2;
+      m.isSetValue=m.isSetValue?1:2;
       return m;
     })
   }
