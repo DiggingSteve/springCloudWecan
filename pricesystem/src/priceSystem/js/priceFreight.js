@@ -451,8 +451,8 @@ class priceFreightView extends BaseService {
                 this.cusIndexArr.push(i);
             }
         }
-        for (let j = 0; j < this.packageIndexArr.length; j++) {
-            var p = this.packageIndexArr[j];
+        for (let j = 0; j < this.packageTypeArr.length; j++) {
+            var p = this.packageTypeArr[j];
             if (p.isDefault==1) continue;
             if(!p.isAdd)continue;
             this.packageIndexArr[0] = this.packageIndexArr[0] || [];
