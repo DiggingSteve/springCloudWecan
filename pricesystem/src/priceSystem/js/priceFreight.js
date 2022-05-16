@@ -440,7 +440,7 @@ class priceFreightView extends BaseService {
         debugger;
         for (let i = 0; i < this.cusArr.length; i++) {
             var cus = this.cusArr[i];
-            if (cus.isDefault) continue;
+            if (cus.isDefault==1) continue;
             if(!cus.isAdd)continue;
             this.cusIndexArr[0] = this.cusIndexArr[0] || [];
 
@@ -453,7 +453,7 @@ class priceFreightView extends BaseService {
         }
         for (let j = 0; j < this.packageIndexArr.length; j++) {
             var p = this.packageIndexArr[j];
-            if (p.isDefault) continue;
+            if (p.isDefault==1) continue;
             if(!p.isAdd)continue;
             this.packageIndexArr[0] = this.packageIndexArr[0] || [];
 
