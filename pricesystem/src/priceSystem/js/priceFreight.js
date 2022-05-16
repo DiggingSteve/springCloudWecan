@@ -68,6 +68,8 @@ class priceFreightView extends BaseService {
         vol: { title: diffCode.vol, hasRelation: false, baseIndex: 0 }
     };
 
+    priceTabArr = [];//运价切换tab整合数组
+
 
     limitDay = 1;//清关后多少天承诺完成
 
@@ -280,7 +282,7 @@ class priceFreightView extends BaseService {
      * 能否修改客户关系参数 在gid>0时不能选择 cus关系
      */
     get canEditCus() {
-        return this.gid < 0|| (!Number.isFinite(this.gid));
+        return this.gid < 0 || (!Number.isFinite(this.gid));
     }
 
 
@@ -401,12 +403,66 @@ class priceFreightView extends BaseService {
     loadBasicData() {
         this.packageTypeArr = JSON.parse(localStorage.getItem(diffCodeKey.package));
         this.weightArr = JSON.parse(localStorage.getItem(diffCodeKey.weight));
-        this.volArr = JSON.parse(localStorage.getItem(diffCodeKey.vol            ));
+        this.volArr = JSON.parse(localStorage.getItem(diffCodeKey.vol));
         this.cusArr = JSON.parse(localStorage.getItem(diffCodeKey.cus));
         this.relationMap.cus.baseIndex = this.cusArr.findIndex(f => { return f.isDefault == 1 });
         this.relationMap.packageType.baseIndex = this.packageTypeArr.findIndex(f => { return f.isDefault == 1 });
         this.relationMap.vol.baseIndex = this.volArr.findIndex(f => { return f.isDefault == 1 });
+        this.loadBasePriceTabArr();
 
+    }
+
+    // 和基点相同的index为一组 不同的拆散 然后 packageType 和 cus 之间笛卡尔积 为排列组合总数
+    cusIndexArr = []
+
+    packageIndexArr = []
+    //载入基点tab组合 数组第一个元素记载和基点相同的索引 
+    loadBasePriceTabArr() {
+        var cusIndex = this.cusArr.findIndex(f => { return f.isDefault });
+
+        var packageIndex = this.packageTypeArr.findIndex(f => { return f.isDefault });
+
+        this.cusIndexArr[0] = [];
+        this.cusIndexArr[0].push(cusIndex);
+
+
+        this.packageTypeArr[0] = [];
+        this.packageTypeArr[0].push(packageIndex);
+
+    }
+
+
+
+    confirmPriceTabArr() {
+        this.cusIndexArr=[];
+        this.packageIndexArr=[];
+        this.loadBasePriceTabArr();
+        for (let i = 0; i < this.cusArr.length; i++) {
+            var cus = this.cusArr[i];
+            if (cus.isDefault) continue;
+            if(!cus.isAdd)continue;
+            this.cusIndexArr[0] = this.cusIndexArr[0] || [];
+
+            if (cus.isSameAsBase) {
+                this.cusIndexArr[0].push(i);
+            }
+            else {
+                this.cusIndexArr.push(i);
+            }
+        }
+        for (let j = 0; j < this.packageTypeArr.length; j++) {
+            var p = this.packageTypeArr[j];
+            if (p.isDefault) continue;
+            if(!p.isAdd)continue;
+            this.packageTypeArr[0] = this.packageTypeArr[0] || [];
+
+            if (p.isSameAsBase) {
+                this.packageTypeArr[0].push(j);
+            }
+            else {
+                this.packageTypeArr.push(j);
+            }
+        }
     }
 
 

@@ -550,28 +550,45 @@
           </div>
           <!--快捷组合切换-->
           <div class="row relation-wrap" style="box-shadow: unset">
-            <template v-for="(cus, cIndex) in priceObj.cusArr">
-              <template v-for="(p, pIndex) in priceObj.packageTypeArr">
+            <template v-for="(cus, cIndex) in priceObj.cusIndexArr">
+              <template v-for="(p, pIndex) in priceObj.packageIndexArr">
                 <div
                   class="operate-tag"
                   style="min-width: 100px"
                   v-bind:class="{
-                    active:
-                      (priceObj.cusDisplayIndex == cIndex ||
-                        priceObj.cusDisplayIndex == -1) &&
-                      (priceObj.packageDisplayIndex == pIndex ||
-                        priceObj.packageDisplayIndex == -1),
+                    active: false,
                   }"
                   @click="
                     priceObj.cusDisplayIndex = cIndex;
                     priceObj.packageDisplayIndex = pIndex;
                   "
-                  v-show="cus.isAdd && p.isAdd"
                 >
-                  <span v-show="cus.isAdd" style="padding-right: 5px">{{
-                    cus.title
-                  }}</span>
-                  <span v-show="p.isAdd">{{ p.title }}</span>
+                  <!--cus组合-->
+                  <template v-if="cIndex == 0">
+                    <template v-for="(cusBaseIndex, ccIdnex) in cus[0]">
+                      <span> {{ priceObj.cusArr[cusBaseIndex].title }}</span>
+                      <span v-if="ccIdnex < cus[0].length - 1">\</span>
+                    </template>
+                  </template>
+                  <template v-else>
+                    <span>
+                      {{ cus.title }}
+                    </span>
+                  </template>
+                  <!--package组合-->
+                  <template v-if="pIndex == 0">
+                    <template v-for="(pBaseIndex, ppIndex) in cus[0]">
+                      <span>
+                        {{ priceObj.packageTypeArr[pBaseIndex].title }}</span
+                      >
+                      <span v-if="ppIndex < p[0].length - 1">\</span>
+                    </template>
+                  </template>
+                  <template v-else>
+                    <span>
+                      {{ p.title }}
+                    </span>
+                  </template>
                 </div>
               </template>
             </template>
@@ -1052,20 +1069,17 @@
         </div>
         <div class="item60">是否和基点一致</div>
       </div>
-      <template v-for="(item, index) in priceObj.currentRelationEditArr" v-if="relationEditTitle != relationTitle.vol">
+      <template
+        v-for="(item, index) in priceObj.currentRelationEditArr"
+        v-if="relationEditTitle != relationTitle.vol"
+      >
         <div class="row" v-if="item.isAdd">
           <div class="item20">{{ item.title }}</div>
-          <div class="item60" v-if="item.diff!='基点'">
+          <div class="item60" v-if="item.diff != '基点'">
             <el-radio v-model="item.isSameAsBase" :label="true">是</el-radio>
-            <el-radio
-              v-model="item.isSameAsBase"
-              :label="false"
-              >否</el-radio
-            >
+            <el-radio v-model="item.isSameAsBase" :label="false">否</el-radio>
           </div>
-          <div v-if="item.diff=='基点'">
-            基点
-          </div>
+          <div v-if="item.diff == '基点'">基点</div>
         </div>
       </template>
       <div class="row" style="margin: 15px 0; line-height: 15px">
