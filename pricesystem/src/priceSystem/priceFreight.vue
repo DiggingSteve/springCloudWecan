@@ -1046,19 +1046,19 @@
       <!--
         设置是否和基点相同 合并tab控制面板
       -->
-      <div class="row">
+      <div class="row" v-if="relationEditTitle != relationTitle.vol">
         <div class="item20">
           <span>已添加参数</span>
         </div>
-        <div class="item30">是否和基点一致</div>
+        <div class="item60">是否和基点一致</div>
       </div>
-      <template v-for="(item, index) in priceObj.currentRelationEditArr">
-        <div class="row">
+      <template v-for="(item, index) in priceObj.currentRelationEditArr" v-if="relationEditTitle != relationTitle.vol">
+        <div class="row" v-if="item.isAdd">
           <div class="item20">{{ item.title }}</div>
-          <div class="item30" v-if="item.diff!='基点'">
+          <div class="item60" v-if="item.diff!='基点'">
             <el-radio v-model="item.isSameAsBase" :label="true">是</el-radio>
             <el-radio
-              v-model="priceObj.currentRelationMap.isSameAsBase"
+              v-model="item.isSameAsBase"
               :label="false"
               >否</el-radio
             >
