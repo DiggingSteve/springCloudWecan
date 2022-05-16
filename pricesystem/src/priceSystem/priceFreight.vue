@@ -565,7 +565,7 @@
                 >
                   <!--cus组合-->
                   <template v-if="cIndex == 0">
-                    <template v-for="(cusBaseIndex, ccIdnex) in cus[0]">
+                    <template v-for="(cusBaseIndex, ccIdnex) in cus">
                       <span> {{ priceObj.cusArr[cusBaseIndex].title }}</span>
                       <span v-if="ccIdnex < cus[0].length - 1">\</span>
                     </template>
@@ -577,7 +577,7 @@
                   </template>
                   <!--package组合-->
                   <template v-if="pIndex == 0">
-                    <template v-for="(pBaseIndex, ppIndex) in cus[0]">
+                    <template v-for="(pBaseIndex, ppIndex) in p">
                       <span>
                         {{ priceObj.packageTypeArr[pBaseIndex].title }}</span
                       >
