@@ -585,7 +585,7 @@
                   </template>
                   <template v-else>
                     <span>
-                      {{ priceObj.cusArr[pItem].title }}
+                      {{ priceObj.packageTypeArr[pItem].title }}
                     </span>
                   </template>
                 </div>
