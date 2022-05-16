@@ -471,21 +471,10 @@
         <div class="row relation-wrap">
           <div class="item10 operate-title">客户参数</div>
           <div class="item75" style="display: flex">
-            <template>
-           
-            </template>
+            <template> </template>
             <template v-for="(item, index) in priceObj.cusArr">
-              <div
-                class="operate-tag"
-                v-show="item.isAdd "
-              >
+              <div class="operate-tag" v-show="item.isAdd">
                 <span>{{ item.title }}</span>
-                <!-- <span
-                  class="el-icon-close"
-                  @click="priceObj.delRelationTag(index, 'cus', $event)"
-                  style="display: none"
-                >
-                </span> -->
               </div>
             </template>
           </div>
@@ -503,20 +492,8 @@
           <div class="item10 operate-title">包装参数</div>
           <div class="item75" style="display: flex">
             <template v-for="(item, index) in priceObj.packageTypeArr">
-              <div
-                class="operate-tag"
-                v-bind:class="{
-                  active: priceObj.packageDisplayIndex == index,
-                }"
-                @click="priceObj.packageDisplayIndex = index"
-                v-show="item.isAdd && !priceObj.isPackageTypeEmpty"
-              >
+              <div class="operate-tag" v-show="item.isAdd">
                 <span>{{ item.title }}</span>
-                <!-- <span
-                  class="el-icon-close"
-                  style="display: none"
-                  @click="priceObj.delRelationTag(index, 'package', $event)"
-                ></span> -->
               </div>
             </template>
           </div>
@@ -560,33 +537,6 @@
             </div>
           </div>
           <div class="row" style="margin: 10px 0; width: 100%">
-            <!-- <div style="width: 42%">
-              <div class="tab-wrap">
-                <span class="tab" v-if="priceObj.isSelectPackage">
-                  <span
-                    class="tab-item"
-                    v-for="(item, index) in priceObj.packageTypeArr"
-                    v-bind:class="{
-                      active:
-                        index == priceObj.packageDisplayIndex ? true : false,
-                    }"
-                    @click="priceObj.packageDisplayIndex = index"
-                    >{{ item.code }}</span
-                  >
-                </span>
-                <span class="tab" v-if="priceObj.isSelectCus">
-                  <span
-                    class="tab-item"
-                    v-for="(item, index) in priceObj.cusArr"
-                    v-bind:class="{
-                      active: index == priceObj.cusDisplayIndex ? true : false,
-                    }"
-                    @click="priceObj.cusDisplayIndex = index"
-                    >{{ item.code }}</span
-                  >
-                </span>
-              </div>
-            </div> -->
             <div class="" style="width: 42%; line-height: 39px">
               <!-- <el-button
                 type="success"
@@ -599,23 +549,29 @@
             </div>
           </div>
           <!--快捷组合切换-->
-          <div class="row relation-wrap" style="box-shadow:unset">
-            <template v-for="(cus,cIndex) in priceObj.cusArr">
-              <template v-for="(p,pIndex) in priceObj.packageTypeArr">
+          <div class="row relation-wrap" style="box-shadow: unset">
+            <template v-for="(cus, cIndex) in priceObj.cusArr">
+              <template v-for="(p, pIndex) in priceObj.packageTypeArr">
                 <div
                   class="operate-tag"
-                  style="min-width:100px"
+                  style="min-width: 100px"
                   v-bind:class="{
-                    active: 
-                    (priceObj.cusDisplayIndex == cIndex||priceObj.cusDisplayIndex ==-1)&&
-                   ( priceObj.packageDisplayIndex==pIndex||priceObj.packageDisplayIndex==-1),
+                    active:
+                      (priceObj.cusDisplayIndex == cIndex ||
+                        priceObj.cusDisplayIndex == -1) &&
+                      (priceObj.packageDisplayIndex == pIndex ||
+                        priceObj.packageDisplayIndex == -1),
                   }"
-                  @click="priceObj.cusDisplayIndex = cIndex;priceObj.packageDisplayIndex=pIndex;"
-                  v-show="cus.isAdd&&p.isAdd"
+                  @click="
+                    priceObj.cusDisplayIndex = cIndex;
+                    priceObj.packageDisplayIndex = pIndex;
+                  "
+                  v-show="cus.isAdd && p.isAdd"
                 >
-                  <span v-show="cus.isAdd" style="padding-right:5px">{{ cus.title }}</span>
-                  <span v-show="p.isAdd" >{{ p.title }}</span>
-                 
+                  <span v-show="cus.isAdd" style="padding-right: 5px">{{
+                    cus.title
+                  }}</span>
+                  <span v-show="p.isAdd">{{ p.title }}</span>
                 </div>
               </template>
             </template>
@@ -1052,40 +1008,66 @@
             </span>
           </div>
         </template>
-        
-          <el-popover
-            placement="right-end"
-            width="400"
-            trigger="click"
-            v-model="isShowRelationPop"
+
+        <el-popover
+          placement="right-end"
+          width="400"
+          trigger="click"
+          v-model="isShowRelationPop"
+        >
+          <div class="row relation-edit-wrap" style="height: 100px">
+            <template v-for="(item, index) in priceObj.currentRelationEditArr">
+              <div
+                class="title"
+                v-bind:class="{
+                  active: item.isSelect,
+                }"
+                v-show="!item.isAdd"
+                @click="priceObj.selectRelationTitle(index)"
+              >
+                <span>{{ item.title }}</span>
+              </div>
+            </template>
+          </div>
+          <div class="row" style="float: right">
+            <el-button type="primary" @click="isShowRelationPop = false"
+              >关闭</el-button
+            >
+          </div>
+          <div
+            class="plus"
+            slot="reference"
+            v-show="relationEditTitle != relationTitle.vol"
           >
-            <div class="row relation-edit-wrap" style="height: 100px">
-              <template
-                v-for="(item, index) in priceObj.currentRelationEditArr"
-              >
-                <div
-                  class="title"
-                  v-bind:class="{
-                    active: item.isSelect,
-                  }"
-                  v-show="!item.isAdd"
-                  @click="priceObj.selectRelationTitle(index)" 
-                >
-                  <span>{{ item.title }}</span>
-                </div>
-              </template>
-            </div>
-            <div class="row" style="float: right">
-              <el-button type="primary" @click="isShowRelationPop = false"
-                >关闭</el-button
-              >
-            </div>
-            <div class="plus" slot="reference" v-show="relationEditTitle != relationTitle.vol">
-              <span class="el-icon-plus"></span>
-            </div>
-          </el-popover>
-       
+            <span class="el-icon-plus"></span>
+          </div>
+        </el-popover>
       </div>
+      <!--
+        设置是否和基点相同 合并tab控制面板
+      -->
+      <div class="row">
+        <div class="item20">
+          <span>已添加参数</span>
+        </div>
+        <div class="item30">是否和基点一致</div>
+      </div>
+      <template v-for="(item, index) in priceObj.currentRelationEditArr">
+        <div class="row">
+          <div class="item20">{{ item.title }}</div>
+          <div class="item30" v-if="item.diff!='基点'">
+            <el-radio v-model="item.isSameAsBase" :label="true">是</el-radio>
+            <el-radio
+              v-model="priceObj.currentRelationMap.isSameAsBase"
+              :label="false"
+              >否</el-radio
+            >
+          </div>
+          <div v-if="item.diff=='基点'">
+            基点
+          </div>
+        </div>
+      </template>
       <div class="row" style="margin: 15px 0; line-height: 15px">
         <div class="item20"><span>是否开启价格间联动</span></div>
 
@@ -1421,7 +1403,7 @@ export default {
     //且尚未建立勾稽关系，需以编辑->新增方式来添加(原先是减法)
     //则现在初始只加载第一行的价格
     setCellValue(vol, weight, pIndex, cIndex) {
-      let isVolSetValue=vol.isSetValue;
+      let isVolSetValue = vol.isSetValue;
       let volDiff = vol.diff * 1;
       let weightPrice = weight.standardPrice * 1;
       let currentP = this.priceObj.packageTypeArr[pIndex];
@@ -1430,7 +1412,7 @@ export default {
       let cusDiff = (currentC ? currentC.diff : 0) * 1;
 
       if (!Number.isFinite(weightPrice) || weightPrice == 0) return "--";
-      if(!isVolSetValue)return "--";
+      if (!isVolSetValue) return "--";
       if (weight.title == "MIN") return weightPrice;
       let val =
         (Number.isFinite(volDiff) ? volDiff : 0) +

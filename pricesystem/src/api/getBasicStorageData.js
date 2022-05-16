@@ -534,15 +534,16 @@ function createBasicCardData(arr, type) {
   return arr.sort((a, b) => {
     return a.ready02 * 1 - b.ready02 * 1
   }).map((item, index) => {
-    var isBase=isBasePoint(item);
+    var isBase = isBasePoint(item);
     return {
-      code: item.ready01, diff: isBase ? "基点" : '', isDefault: isBase ? 1 : 2, title: item.typename, isAdd: (isBase||type=="vol")?true:false//是否在参数中被选中
-      , standardPrice: '', canDelete: !isBase
+      code: item.ready01, diff: isBase ? "基点" : '', isDefault: isBase ? 1 : 2, title: item.typename, isAdd: (isBase || type == "vol") ? true : false//是否在参数中被选中
+      , standardPrice: '', canDelete: !isBase, isSetValue: (isBase || type == "vol") ? true : false,
+      isSameAsBase: false//是否和基点一致
     }
   });
 }
-function isBasePoint(item){
-  return item.ready01 == "官网公布"||item.ready01=="散货"||item.ready01=="1:167";
+function isBasePoint(item) {
+  return item.ready01 == "官网公布" || item.ready01 == "散货" || item.ready01 == "1:167";
 }
 
 
