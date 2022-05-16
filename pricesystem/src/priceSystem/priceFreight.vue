@@ -550,8 +550,8 @@
           </div>
           <!--快捷组合切换-->
           <div class="row relation-wrap" style="box-shadow: unset">
-            <template v-for="(cus, cIndex) in priceObj.cusIndexArr">
-              <template v-for="(p, pIndex) in priceObj.packageIndexArr">
+            <template v-for="(cusItem, i) in priceObj.cusIndexArr">
+              <template v-for="(pItem, j) in priceObj.packageIndexArr">
                 <div
                   class="operate-tag"
                   style="width:unset;padding:0 5px"
@@ -559,34 +559,33 @@
                     active: false,
                   }"
                   @click="
-                    priceObj.cusDisplayIndex = cIndex;
-                    priceObj.packageDisplayIndex = pIndex;
+   
                   "
                 >
                   <!--cus组合-->
-                  <template v-if="cIndex == 0">
-                    <template v-for="(cusBaseIndex, ccIdnex) in cus">
+                  <template v-if="i == 0">
+                    <template v-for="(cusBaseIndex, ccIdnex) in cusItem">
                       <span> {{ priceObj.cusArr[cusBaseIndex].title }}</span>
-                      <span v-if="ccIdnex < (cus[0].length - 1)">\</span>
+                      <span v-if="ccIdnex < (cusItem.length - 1)">\</span>
                     </template>
                   </template>
                   <template v-else>
                     <span>
-                      {{ cus.title }}
+                      {{ priceObj.cusArr[cusItem].title}}
                     </span>
                   </template>
                   <!--package组合-->
-                  <template v-if="pIndex == 0">
-                    <template v-for="(pBaseIndex, ppIndex) in p">
+                  <template v-if="j == 0">
+                    <template v-for="(pBaseIndex, ppIndex) in pItem">
                       <span>
                         {{ priceObj.packageTypeArr[pBaseIndex].title }}</span
                       >
-                      <span v-if="ppIndex < (p[0].length - 1)">\</span>
+                      <span v-if="ppIndex < (pItem.length - 1)">\</span>
                     </template>
                   </template>
                   <template v-else>
                     <span>
-                      {{ p.title }}
+                      {{ priceObj.cusArr[pItem].title }}
                     </span>
                   </template>
                 </div>
