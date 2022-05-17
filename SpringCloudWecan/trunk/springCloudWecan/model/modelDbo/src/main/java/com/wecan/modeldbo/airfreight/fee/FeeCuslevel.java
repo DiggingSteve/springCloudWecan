@@ -54,5 +54,11 @@ public class FeeCuslevel extends Parent {
     )
     private Integer isAdd;
 
+    @Column(
+            name = "isSameAsBase",
+            columnDefinition = "int COMMENT '是否等于基点 1 是 2 否'"
+    )
+    public Boolean isSameAsBase;
+
 
 }

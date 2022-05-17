@@ -32,6 +32,8 @@ public class InputCodeDiff {
     //是否设置了值
     public Integer isSetValue;
 
+    public Boolean isSameAsBase;
+
     // 现在标准价格填在 重量上面
     public BigDecimal standardPrice;
 
