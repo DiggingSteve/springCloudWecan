@@ -602,7 +602,7 @@
                           style="color: red"
                           type="input"
                           v-focus
-                          v-model.sync="(priceObj.cusPackageIndexArr[priceObj.tabDisplayIndex].fixedMap[createFixedPriceKey(vol, weight)].diff)"
+                          v-model.sync="getFixedDiff(vol,weight)"
                           :ref="priceObj.createFixedPriceRef('fixed', i, j)"
                           @keydown="priceObj.move(i, j, $event)"
                         />
@@ -1359,6 +1359,13 @@ export default {
         (Number.isFinite(cusDiff) ? cusDiff : 0);
       return val;
     },
+    getFixedDiff(v,w){
+    var selectTab=this.priceObj.cusPackageIndexArr[this.priceObj.tabDisplayIndex];
+    var map=selectTab.fixedMap;
+    var key=this.createFixedPriceKey(v,w);
+    return map.fixedMap[key].diff;
+    }
+    ,
     createFixedPriceKey(v, w) {
       var a = this.priceObj.createFixedPriceKey(
         v,
