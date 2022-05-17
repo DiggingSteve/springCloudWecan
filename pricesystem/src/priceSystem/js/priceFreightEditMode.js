@@ -623,12 +623,16 @@ class priceFreightEditView extends priceFreightView {
       cArr.forEach((cus) => {
 
         pArr.forEach((p) => {
-          let map = { ...item.fixedMap };
-          map.cus = this.cusArr[cus].title;
-          map.packageType = this.packageTypeArr[p].title;
-          if ((map.diff != '--' && map.diff !== '')) {
-            arr.push(map);
+          for (let key in item.fixedMap) {
+            let obj = item.fixedMap[key];
+            let map = { ...obj};
+            map.cus = this.cusArr[cus].title;
+            map.packageType = this.packageTypeArr[p].title;
+            if ((map.diff != '--' && map.diff !== '')) {
+              arr.push(map);
+            }
           }
+
         })
       })
     }
