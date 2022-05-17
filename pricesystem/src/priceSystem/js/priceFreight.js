@@ -475,19 +475,20 @@ class priceFreightView extends BaseService {
 
         for (let i = 0; i < this.cusIndexArr.length; i++) {
             let cusIndex = this.cusIndexArr[i];
-            console.log(cusIndex instanceof Array );
-            let cusTitle = cusIndex instanceof Array ? (cusIndex.reduce((pre, current) => {
-                return (this.cusArr[pre].title + "\\" + this.cusArr[current].title)
-            })) : this.cusArr[cusIndex].title
+            let cusTitle = cusIndex instanceof Array ?this.getTitle(this.cusArr,cusIndex): this.cusArr[cusIndex].title
             for (let j = 0; j < this.packageIndexArr.length; j++) {
                 let pIndex = this.packageIndexArr[j];
-                let pTitle = pIndex instanceof Array ? (pIndex.reduce((pre, current) => {
-                    return (this.packageTypeArr[pre].title + "\\" + this.packageTypeArr[current].title)
-                })) : this.packageTypeArr[pIndex].title
+                let pTitle = pIndex instanceof Array ? this.getTitle(this.packageTypeArr,pIndex) : this.packageTypeArr[pIndex].title
                 var obj = { cus: cusIndex, p: pIndex, cusTitle: cusTitle, pTitle: pTitle }
                 this.cusPackageIndexArr.push(obj);
             }
         }
+    }
+
+    getTitle(arr,indexArr){
+        return indexArr.reduce((pre,cur)=>{
+            return arr[pre].title+"\\"+arr[cur].title;
+        })
     }
 
 
