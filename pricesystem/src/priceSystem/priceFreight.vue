@@ -574,6 +574,7 @@
                       {{ priceObj.cusArr[cusItem].title}}
                     </span>
                   </template>
+                  <span>,</span>
                   <!--package组合-->
                   <template v-if="j == 0">
                     <template v-for="(pBaseIndex, ppIndex) in pItem">

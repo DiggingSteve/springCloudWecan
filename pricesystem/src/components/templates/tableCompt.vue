@@ -409,7 +409,7 @@
                   </slot>
               </template>
               <span class="sortWrap"
-                v-if="isSort&&!relation.ifsort&&(relation.field=='pono'||relation.field=='shipperno'||relation.field=='jobno'||relation.field=='hbrq')">
+                v-if="isSort&&!relation.ifsort">
                 <i>
                   <i class="sort-ascend" @click="tableSort(relation.field,1,$event)"></i>
                   <i class="sort-descend" @click="tableSort(relation.field,2,$event)"></i>
