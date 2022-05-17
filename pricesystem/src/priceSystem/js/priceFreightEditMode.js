@@ -296,8 +296,8 @@ class priceFreightEditView extends priceFreightView {
         item.isDefault = p.isDefault;
         item.diff = p.diff;
         item.isAdd = true;
-        item.isSetValue = p.isSetValue==1;//将数据库值初始化成Boolean
-        item.isSameAsBase=p.isSameAsBase;
+        item.isSetValue = p.isSetValue == 1;//将数据库值初始化成Boolean
+        item.isSameAsBase = p.isSameAsBase;
         if (p.isDefault == 1) {
           item.diff = "基点"
           if (type == diffCode.cus) {
@@ -343,13 +343,17 @@ class priceFreightEditView extends priceFreightView {
     this.priceDisplayMap = {};
     var arr = map.fixedPrice;
     !!arr && arr.forEach((item) => {
-      var key = item.packageType + "_" + item.cus + "_" + item.vol + "_" + item.weight;
-      this.fillFixedMap(item, key);
+      var key = item.vol + "_" + item.weight;
+      let matchTab = this.cusPackageIndexArr.find(f => {
+        return f.cusTitle.indexOf(item.cus) > -1 &&
+          f.pTitle.indexOf(item.packageType) > -1
+      });
+
+      this.fillFixedMap(item, matchTab.fixedMap);
     });
   }
-  fillFixedMap(item, key) {
+  fillFixedMap(item, obj) {
 
-    var obj = this.createDefaultDisplayPriceObj();
     obj.isActive = true;
     obj.isSetValue = true;
     obj.diff = item.diff;
@@ -357,7 +361,6 @@ class priceFreightEditView extends priceFreightView {
     obj.vol = item.vol;
     obj.packageType = item.packageType;
     obj.weight = item.weight;
-    this.priceDisplayMap[key] = obj;
   }
   // 重写 父类方法
   changeSelectedTwoCodeIndex(index) {
@@ -626,7 +629,7 @@ class priceFreightEditView extends priceFreightView {
         pArr.forEach((p) => {
           for (let key in item.fixedMap) {
             let obj = item.fixedMap[key];
-            let map = { ...obj};
+            let map = { ...obj };
             map.cus = this.cusArr[cus].title;
             map.packageType = this.packageTypeArr[p].title;
             if ((map.diff != '--' && map.diff !== '')) {
