@@ -440,7 +440,6 @@ class priceFreightView extends BaseService {
     confirmPriceTabArr() {
         this.cusIndexArr = [];
         this.packageIndexArr = [];
-        this.cusPackageIndexArr = [];
         this.tabDisplayIndex=0;
         this.loadBasePriceTabArr();
         for (let i = 0; i < this.cusArr.length; i++) {
@@ -480,18 +479,37 @@ class priceFreightView extends BaseService {
             for (let j = 0; j < this.packageIndexArr.length; j++) {
                 let pIndex = this.packageIndexArr[j];
                 let pTitle = pIndex instanceof Array ? this.getTitle(this.packageTypeArr, pIndex) : this.packageTypeArr[pIndex].title
-                var obj = {
+                var matchObj=this.cusPackageIndexArr.find(f=>{return f.cusTitle==cusTitle&&f.pTitle==p.title});
+                let cDiff=this.getDiff(this.cusArr,cusIndex);
+                let pDiff=this.getDiff(this.packageTypeArr,pIndex);
+                var obj= {
                     cusIndex: cusIndex,
                     pIndex: pIndex,
                     cusTitle: cusTitle,
                     pTitle: pTitle,
-                    cDiff: this.getDiff(this.cusArr,cusIndex), //记录对应地勾稽参数差值
-                    pDiff: this.getDiff(this.packageTypeArr,pIndex),
-                    fixedMap: {}//记录一口价 此一口价key无需加上cus package
+                    cDiff: cDiff, //记录对应勾稽参数差值
+                    pDiff: pDiff,
+                    fixedMap: {},//记录一口价 此一口价key无需加上cus package
+                    isRemain:true
                 } // 组合tab对象
+                if(!!!matchObj){
                 this.cusPackageIndexArr.push(obj);
+                }
+                else{
+                    matchObj.cusIndex=cusIndex;
+                    matchObj.pIndex=pIndex;
+                    matchObj.cusTitle=cusTitle;
+                    matchObj.pTitle=pTitle;
+                    matchObj.cDiff=cDiff;
+                    matchObj.pDiff=pDiff;
+                    matchObj.isRemain=true;
+                }
             }
         }
+        this.cusPackageIndexArr= this.cusPackageIndexArr.filter(f=>{ return f.isRemain});
+        this.cusPackageIndexArr.forEach((item)=>{
+            item.isRemain=false;
+        })
         this.vueInstance.$forceUpdate();
     }
 
