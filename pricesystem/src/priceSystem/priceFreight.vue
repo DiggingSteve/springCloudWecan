@@ -994,11 +994,14 @@
           v-for="(item, index) in priceObj.currentRelationEditArr"
           v-if="relationEditTitle != relationTitle.vol"
         >
-          <div class="row relation-edit-wrap" v-if="item.isAdd">
-            <div class="item20 title">
+          <div class="row relation-edit-wrap" v-if="item.isAdd&&item.diff != '基点'">
+            <div class="item20">
+                 <div class=" title">
               <span>{{ item.title }}</span>
             </div>
-            <div class="item60" v-if="item.diff != '基点'">
+            </div>
+         
+            <div class="item60" style="line-height:30px">
               <el-radio v-model="item.isSameAsBase" :label="true">是</el-radio>
               <el-radio v-model="item.isSameAsBase" :label="false">否</el-radio>
             </div>
