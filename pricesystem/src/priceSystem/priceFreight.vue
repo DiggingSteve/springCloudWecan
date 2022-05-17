@@ -517,20 +517,10 @@
                   }"
                   @click="priceObj.tabDisplayIndex=i"
                 >
-                  <template>
-                    {{
-                      void(cusSpan=item instanceof Array ? item.cus.reduce.j((pre,current)=>{
-                        ;return priceObj.cusArr[pre].title+"\\"+priceObj.cusArr[current].title
-                      }):priceObj.cusArr[item.cus].title)
-
-                          void(pSpan=item instanceof Array ? item.p.reduce.j((pre,current)=>{
-                        ;return priceObj.packageTypeArr[pre].title+"\\"+priceObj.packageTypeArr[current].title
-                      }):priceObj.packageTypeArr[item.p].title)
-                    }}
-                  </template>
-                  <span>{{cusSpan}}</span>
+                  
+                  <span>{{item.cusTitle}}</span>
                   <span>,</span>
-                  <span>{{pSpan}}</span>
+                  <span>{{item.pTitle}}</span>
                 </div>
             </template>
           </div>

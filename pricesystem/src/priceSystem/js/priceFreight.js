@@ -419,7 +419,7 @@ class priceFreightView extends BaseService {
 
     cusPackageIndexArr = [];
 
-    tabDisplayIndex=0;
+    tabDisplayIndex = 0;
     //载入基点tab组合 数组第一个元素记载和基点相同的索引 
     loadBasePriceTabArr() {
         var cusIndex = this.cusArr.findIndex(f => { return f.isDefault });
@@ -474,9 +474,15 @@ class priceFreightView extends BaseService {
 
         for (let i = 0; i < this.cusIndexArr.length; i++) {
             let cusIndex = this.cusIndexArr[i];
+            cusTitle = cusIndex instanceof Array ? cusIndex.reduce.j((pre, current) => {
+                return this.cusArr[pre].title + "\\" + this.cusArr[current].title
+            }) : this.cusArr[cusIndex].title
             for (let j = 0; j < this.packageIndexArr.length; j++) {
                 let pIndex = this.packageIndexArr[j];
-                var obj={cus:cusIndex,p:pIndex}
+                pTitle = pIndex instanceof Array ? pIndex.reduce.j((pre, current) => {
+                    return this.packageTypeArr[pre].title + "\\" + this.packageTypeArr[current].title
+                }) : this.packageTypeArr[pIndex].title
+                var obj = { cus: cusIndex, p: pIndex ,cusTitle:cusTitle,pTitle:pTitle}
                 this.cusPackageIndexArr.push(obj);
             }
         }
