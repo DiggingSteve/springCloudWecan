@@ -408,7 +408,7 @@ class priceFreightView extends BaseService {
         this.relationMap.cus.baseIndex = this.cusArr.findIndex(f => { return f.isDefault == 1 });
         this.relationMap.packageType.baseIndex = this.packageTypeArr.findIndex(f => { return f.isDefault == 1 });
         this.relationMap.vol.baseIndex = this.volArr.findIndex(f => { return f.isDefault == 1 });
-        this.loadBasePriceTabArr();
+        this.confirmPriceTabArr();
 
     }
 
