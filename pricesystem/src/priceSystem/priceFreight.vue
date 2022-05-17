@@ -1350,7 +1350,7 @@ export default {
       let selectedIndex = this.priceObj.tabDisplayIndex;
       let selectedTab = this.priceObj.cusPackageIndexArr[selectedIndex];
       let cusDiff = selectedTab.cDiff * 1;
-      let pDiff = selectedTab.diff * 1;
+      let pDiff = selectedTab.pDiff * 1;
 
       if (!Number.isFinite(weightPrice) || weightPrice == 0) return "--";
       if (!isVolSetValue) return "--";
