@@ -537,14 +537,14 @@
                       @mouseenter="activeColumn(j)"
                       @mouseleave="activeColumn(j)"
                     >
-                      <span>{{ weight.title }}</span
-                      ><span
+                      <span>{{ weight.title }}</span>
+                      <!-- <span
                         style="display: none"
                         class="circle-del"
                         @click="priceObj.delTitle(j, null)"
                       >
                         <i class="el-icon-close"></i>
-                      </span>
+                      </span> -->
                     </td>
                   </tr>
                   <tr v-for="(vol, i) in priceObj.volArr">
@@ -554,13 +554,13 @@
                       @mouseleave="activeRow(i)"
                     >
                       <span>{{ vol.code }}</span>
-                      <span
+                      <!-- <span
                         style="display: none"
                         class="circle-del"
                         @click="priceObj.delTitle(null, i)"
                       >
                         <i class="el-icon-close"></i>
-                      </span>
+                      </span> -->
                     </td>
                     <template v-for="(weight, j) in priceObj.weightArr">
                       {{
@@ -571,9 +571,7 @@
                       {{
                         void (cellValue = setCellValue(
                           vol,
-                          weight,
-                          priceObj.packageDisplayIndex,
-                          priceObj.cusDisplayIndex
+                          weight
                         ))
                       }}
                       <td
@@ -590,9 +588,7 @@
                               weight,
                               setCellValue(
                                 vol,
-                                weight,
-                                priceObj.packageDisplayIndex,
-                                priceObj.cusDisplayIndex
+                                weight
                               )
                             )
                           "
@@ -607,7 +603,7 @@
                           type="input"
                           v-focus
                           v-model.sync="
-                            priceObj.priceDisplayMap[
+                          item[
                               createFixedPriceKey(vol, weight)
                             ].diff
                           "
@@ -707,7 +703,7 @@
         >
       </div>
     </el-dialog>
-    <el-dialog
+    <!-- <el-dialog
       title="导入数据"
       :visible.sync="priceObj.isShowImportData"
       :width="'50%'"
@@ -881,7 +877,7 @@
           </div>
         </div>
       </div>
-    </el-dialog>
+    </el-dialog> -->
     <el-dialog
       title="TACT运价"
       :visible.sync="priceObj.isShowIataDialog"
@@ -1347,14 +1343,15 @@ export default {
     // 第一页请填写各重量的运价，改为 “请填写官网公布的1:167散货的运价”，这说明默认基点为，1：167，散货，官网公布，其他标准的运价都为空，
     //且尚未建立勾稽关系，需以编辑->新增方式来添加(原先是减法)
     //则现在初始只加载第一行的价格
-    setCellValue(vol, weight, pIndex, cIndex) {
+    setCellValue(vol, weight) {
       let isVolSetValue = vol.isSetValue;
       let volDiff = vol.diff * 1;
       let weightPrice = weight.standardPrice * 1;
-      let currentP = this.priceObj.packageTypeArr[pIndex];
-      let currentC = this.priceObj.cusArr[cIndex];
-      let packageDiff = (currentP ? currentP.diff : 0) * 1;
-      let cusDiff = (currentC ? currentC.diff : 0) * 1;
+      let selectedIndex=this.priceObj.tabDisplayIndex;
+      let selectedTab=this.priceObj.cusPackageIndexArr[selectedIndex];
+      let cusDiff = selectedTab.cusDiff;
+      let pDiff = selectedTab.diff;
+     
 
       if (!Number.isFinite(weightPrice) || weightPrice == 0) return "--";
       if (!isVolSetValue) return "--";
@@ -1362,14 +1359,12 @@ export default {
       let val =
         (Number.isFinite(volDiff) ? volDiff : 0) +
         (Number.isFinite(weightPrice) ? weightPrice : 0) +
-        (Number.isFinite(packageDiff) ? packageDiff : 0) +
+        (Number.isFinite(pDiff) ? packageDiff : 0) +
         (Number.isFinite(cusDiff) ? cusDiff : 0);
       return val;
     },
     createFixedPriceKey(v, w) {
       var a = this.priceObj.createFixedPriceKey(
-        this.priceObj.currentPackageType,
-        this.priceObj.currentCus,
         v,
         w
       );
@@ -1377,8 +1372,6 @@ export default {
     },
     createImportPriceKey(v, w) {
       var a = this.priceObj.createFixedPriceKey(
-        this.priceObj.currentImportPackageType,
-        this.priceObj.currentImportCus,
         v,
         w
       );

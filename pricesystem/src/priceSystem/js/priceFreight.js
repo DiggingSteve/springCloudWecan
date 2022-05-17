@@ -475,20 +475,35 @@ class priceFreightView extends BaseService {
 
         for (let i = 0; i < this.cusIndexArr.length; i++) {
             let cusIndex = this.cusIndexArr[i];
-            let cusTitle = cusIndex instanceof Array ?this.getTitle(this.cusArr,cusIndex): this.cusArr[cusIndex].title
+            let cusTitle = cusIndex instanceof Array ? this.getTitle(this.cusArr, cusIndex) : this.cusArr[cusIndex].title
             for (let j = 0; j < this.packageIndexArr.length; j++) {
                 let pIndex = this.packageIndexArr[j];
-                let pTitle = pIndex instanceof Array ? this.getTitle(this.packageTypeArr,pIndex) : this.packageTypeArr[pIndex].title
-                var obj = { cus: cusIndex, p: pIndex, cusTitle: cusTitle, pTitle: pTitle }
+                let pTitle = pIndex instanceof Array ? this.getTitle(this.packageTypeArr, pIndex) : this.packageTypeArr[pIndex].title
+                var obj = {
+                    cus: cusIndex,
+                    p: pIndex,
+                    cusTitle: cusTitle,
+                    pTitle: pTitle,
+                    cDiff: this.getDiff(this.cusArr,cusIndex), //记录对应地勾稽参数差值
+                    pDiff: this.getDiff(this.packageTypeArr,pIndex),
+                    fixedMap: {}//记录一口价 此一口价key无需加上cus package
+                } // 组合tab对象
                 this.cusPackageIndexArr.push(obj);
             }
         }
     }
 
-    getTitle(arr,indexArr){
-        return indexArr.reduce((pre,cur,index)=>{
-            return pre+(index>0?"\\":"")+arr[cur].title;
-        },'')
+    getDiff(arr,indexOrArr){
+        if(indexOrArr instanceof Array){
+            return  arr[indexOrArr[0]].diff;
+        }
+        else return arr[indexOrArr].diff;
+    }
+
+    getTitle(arr, indexArr) {
+        return indexArr.reduce((pre, cur, index) => {
+            return pre + (index > 0 ? "\\" : "") + arr[cur].title;
+        }, '')
     }
 
 

@@ -556,27 +556,26 @@ class priceFreightEditView extends priceFreightView {
 
   /**一口价是否激活 */
   isDisplayPriceActive(key) {
-    var isExist = !!this.priceDisplayMap[key];
+    var map=this.cusPackageIndexArr[this.tabDisplayIndex].fixedMap;
+    var isExist = !!map[key];
     if (!isExist) return false;
-    return this.priceDisplayMap[key].isActive;
+    return map[key].isActive;
   }
   //激活一口价
   activeFixedPrice(v, w, cellValue) {
-    debugger
-    var p = this.packageTypeArr[this.packageDisplayIndex];
-    var c = this.cusArr[this.cusDisplayIndex];
-    var key = this.createFixedPriceKey(p, c, v, w);
-    var isExist = !!this.priceDisplayMap[key];
+    var map=this.cusPackageIndexArr[this.tabDisplayIndex].fixedMap;
+    var key = this.createFixedPriceKey( v, w);
+    var isExist = !!map[key];
     if (!isExist) {
       var obj = this.createDefaultDisplayPriceObj(p, c, v, w);
       obj.isSetValue = true;
-      this.priceDisplayMap[key] = obj;
+      map[key] = obj;
     }
 
     if (Number.isFinite(cellValue * 1)) {
-      this.priceDisplayMap[key].diff = cellValue;
+      map[key].diff = cellValue;
     }
-    this.vueInstance.$set(this.priceDisplayMap[key], "isActive", true);
+    this.vueInstance.$set(map[key], "isActive", true);
 
     this.vueInstance.$forceUpdate();
   }
@@ -592,8 +591,8 @@ class priceFreightEditView extends priceFreightView {
     this.priceDisplayMap[key].isActive = true;
   }
   //一口价map key生成规则
-  createFixedPriceKey(p, c, v, w) {
-    return (!!p ? p.code : "") + "_" + (!!c ? c.code : "") + "_" + v.code + "_" + w.code;
+  createFixedPriceKey( v, w) {
+    return  v.code + "_" + w.code;
   }
 
   // 导入数据时生成行头 或者 行列 的key 记录在 priceCopyMap中

@@ -174,7 +174,6 @@ export default {
       this.$set(item, "isSetValue", true);
     },
     handleFocus(index, e) {
-      debugger;
       if (this.indexSelected == index) {
         e.srcElement.blur();
       }
