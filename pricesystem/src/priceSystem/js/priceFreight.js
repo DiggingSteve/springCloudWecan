@@ -492,6 +492,7 @@ class priceFreightView extends BaseService {
                 this.cusPackageIndexArr.push(obj);
             }
         }
+        this.vueInstance.$forceUpdate();
     }
 
     getDiff(arr,indexOrArr){

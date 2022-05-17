@@ -350,6 +350,7 @@ class priceFreightEditView extends priceFreightView {
           f.pTitle.indexOf(item.packageType) > -1
       });
 
+      matchTab.fixedMap[key]={};
       this.fillFixedMap(item, matchTab.fixedMap[key]);
     });
   }
