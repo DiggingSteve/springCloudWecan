@@ -983,7 +983,7 @@
         <div
           class="row"
           v-if="relationEditTitle != relationTitle.vol"
-          style="font-size: 15px; font-weight: 800"
+          style="font-size: 14px; font-weight: 800;margin:10px 0;"
         >
           <div class="item20">
             <span>已添加参数</span>

@@ -109,7 +109,7 @@ class priceFreightView extends BaseService {
     clearDataIndex = -1;
 
     get isAddSomeParam(){
-        return !!this.currentRelationEditArr.find(f=>{return f.isAdd});
+        return !!this.currentRelationEditArr.find(f=>{return f.isAdd&&f.isDefault==2});
     }
 
     /**当前选中的包装类型 */
