@@ -1349,8 +1349,8 @@ export default {
       let weightPrice = weight.standardPrice * 1;
       let selectedIndex=this.priceObj.tabDisplayIndex;
       let selectedTab=this.priceObj.cusPackageIndexArr[selectedIndex];
-      let cusDiff = selectedTab.cusDiff;
-      let pDiff = selectedTab.diff;
+      let cusDiff = selectedTab.cusDiff*1;
+      let pDiff = selectedTab.diff*1;
      
 
       if (!Number.isFinite(weightPrice) || weightPrice == 0) return "--";
@@ -1359,7 +1359,7 @@ export default {
       let val =
         (Number.isFinite(volDiff) ? volDiff : 0) +
         (Number.isFinite(weightPrice) ? weightPrice : 0) +
-        (Number.isFinite(pDiff) ? packageDiff : 0) +
+        (Number.isFinite(pDiff) ? pDiff : 0) +
         (Number.isFinite(cusDiff) ? cusDiff : 0);
       return val;
     },
