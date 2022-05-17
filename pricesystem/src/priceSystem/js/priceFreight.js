@@ -440,6 +440,7 @@ class priceFreightView extends BaseService {
     confirmPriceTabArr() {
         this.cusIndexArr = [];
         this.packageIndexArr = [];
+        this.cusPackageIndexArr = [];
         this.loadBasePriceTabArr();
         for (let i = 0; i < this.cusArr.length; i++) {
             var cus = this.cusArr[i];
@@ -474,15 +475,15 @@ class priceFreightView extends BaseService {
 
         for (let i = 0; i < this.cusIndexArr.length; i++) {
             let cusIndex = this.cusIndexArr[i];
-           let cusTitle = cusIndex instanceof Array ? cusIndex.reduce((pre, current) => {
+            let cusTitle = cusIndex instanceof Array ? cusIndex.reduce((pre, current) => {
                 return this.cusArr[pre].title + "\\" + this.cusArr[current].title
             }) : this.cusArr[cusIndex].title
             for (let j = 0; j < this.packageIndexArr.length; j++) {
                 let pIndex = this.packageIndexArr[j];
-               let pTitle = pIndex instanceof Array ? pIndex.reduce((pre, current) => {
+                let pTitle = pIndex instanceof Array ? pIndex.reduce((pre, current) => {
                     return this.packageTypeArr[pre].title + "\\" + this.packageTypeArr[current].title
                 }) : this.packageTypeArr[pIndex].title
-                var obj = { cus: cusIndex, p: pIndex ,cusTitle:cusTitle,pTitle:pTitle}
+                var obj = { cus: cusIndex, p: pIndex, cusTitle: cusTitle, pTitle: pTitle }
                 this.cusPackageIndexArr.push(obj);
             }
         }
