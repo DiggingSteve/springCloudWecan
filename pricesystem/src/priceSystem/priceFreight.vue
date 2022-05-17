@@ -602,7 +602,7 @@
                           style="color: red"
                           type="input"
                           v-focus
-                          v-model.sync="((priceObj.cusPackageIndexArr[priceObj.tabDisplayIndex])['fixedMap'][createFixedPriceKey(vol, weight)].diff)"
+                          v-model.sync="(priceObj.cusPackageIndexArr[priceObj.tabDisplayIndex].fixedMap[createFixedPriceKey(vol, weight)].diff)"
                           :ref="priceObj.createFixedPriceRef('fixed', i, j)"
                           @keydown="priceObj.move(i, j, $event)"
                         />
