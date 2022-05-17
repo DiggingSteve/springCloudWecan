@@ -509,19 +509,18 @@
           <!--快捷组合切换-->
           <div class="row relation-wrap" style="box-shadow: unset">
             <template v-for="(item, i) in priceObj.cusPackageIndexArr">
-                <div
-                  class="operate-tag"
-                  style="width:unset;padding:0 5px"
-                  v-bind:class="{
-                    active: priceObj.tabDisplayIndex==i,
-                  }"
-                  @click="priceObj.tabDisplayIndex=i"
-                >
-                  
-                  <span>{{item.cusTitle}}</span>
-                  <span>,</span>
-                  <span>{{item.pTitle}}</span>
-                </div>
+              <div
+                class="operate-tag"
+                style="width: unset; padding: 0 5px"
+                v-bind:class="{
+                  active: priceObj.tabDisplayIndex == i,
+                }"
+                @click="priceObj.tabDisplayIndex = i"
+              >
+                <span>{{ item.cusTitle }}</span>
+                <span>,</span>
+                <span>{{ item.pTitle }}</span>
+              </div>
             </template>
           </div>
           <div class="row">
@@ -568,12 +567,7 @@
                           createFixedPriceKey(vol, weight)
                         ))
                       }}
-                      {{
-                        void (cellValue = setCellValue(
-                          vol,
-                          weight
-                        ))
-                      }}
+                      {{ void (cellValue = setCellValue(vol, weight)) }}
                       <td
                         style="width: 68px; height: 26px; cursor: pointer"
                         v-bind:class="{
@@ -586,10 +580,7 @@
                             priceObj.activeFixedPrice(
                               vol,
                               weight,
-                              setCellValue(
-                                vol,
-                                weight
-                              )
+                              setCellValue(vol, weight)
                             )
                           "
                           class="price-input"
@@ -602,8 +593,11 @@
                           style="color: red"
                           type="input"
                           v-focus
-                          v-model.sync="(priceObj.cusPackageIndexArr[priceObj.tabDisplayIndex]['fixedMap'][createFixedPriceKey(vol,weight)]).diff"
-                         
+                          v-model.sync="
+                            priceObj.cusPackageIndexArr[
+                              priceObj.tabDisplayIndex
+                            ]['fixedMap'][createFixedPriceKey(vol, weight)].diff
+                          "
                         />
                       </td>
                     </template>
@@ -694,7 +688,7 @@
         >
 
         <el-button v-show="priceObj.isShowCancelBtn" @click="clickCancel"
-          >取消</el-button
+          >上一步</el-button
         >
       </div>
     </el-dialog>
@@ -931,10 +925,7 @@
       :visible.sync="priceObj.isShowRelationEdit"
       :width="'800px'"
     >
-      <div
-        class="row relation-edit-wrap"
-        style="border-bottom: 1px solid #dedede"
-      >
+      <div class="row relation-edit-wrap">
         <template v-for="(item, index) in priceObj.currentRelationEditArr">
           <div class="title" v-show="item.isAdd">
             <span>{{ item.title }}</span>
@@ -985,25 +976,29 @@
       <!--
         设置是否和基点相同 合并tab控制面板
       -->
-      <div class="row" v-if="relationEditTitle != relationTitle.vol">
-        <div class="item20">
-          <span>已添加参数</span>
-        </div>
-        <div class="item60">是否和基点一致</div>
-      </div>
-      <template
-        v-for="(item, index) in priceObj.currentRelationEditArr"
-        v-if="relationEditTitle != relationTitle.vol"
-      >
-        <div class="row" v-if="item.isAdd">
-          <div class="item20">{{ item.title }}</div>
-          <div class="item60" v-if="item.diff != '基点'">
-            <el-radio v-model="item.isSameAsBase" :label="true">是</el-radio>
-            <el-radio v-model="item.isSameAsBase" :label="false">否</el-radio>
+      <div style="border-bottom: 1px solid #dedede" v-if="priceObj.isAddSomeParam">
+        <div class="row" v-if="relationEditTitle != relationTitle.vol"  style="font-size:15px;font-weight:800;">
+          <div class="item20">
+            <span>已添加参数</span>
           </div>
-          <div v-if="item.diff == '基点'">基点</div>
+          <div class="item60">是否和基点一致</div>
         </div>
-      </template>
+        <template
+          v-for="(item, index) in priceObj.currentRelationEditArr"
+          v-if="relationEditTitle != relationTitle.vol"
+        >
+          <div class="row relation-edit-wrap" v-if="item.isAdd">
+            <div class="item20 title">
+              <span>{{ item.title }}</span>
+              </div>
+            <div class="item60" v-if="item.diff != '基点'">
+              <el-radio v-model="item.isSameAsBase" :label="true">是</el-radio>
+              <el-radio v-model="item.isSameAsBase" :label="false">否</el-radio>
+            </div>
+          </div>
+        </template>
+      </div>
+
       <div class="row" style="margin: 15px 0; line-height: 15px">
         <div class="item20"><span>是否开启价格间联动</span></div>
 
@@ -1342,11 +1337,10 @@ export default {
       let isVolSetValue = vol.isSetValue;
       let volDiff = vol.diff * 1;
       let weightPrice = weight.standardPrice * 1;
-      let selectedIndex=this.priceObj.tabDisplayIndex;
-      let selectedTab=this.priceObj.cusPackageIndexArr[selectedIndex];
-      let cusDiff = selectedTab.cDiff*1;
-      let pDiff = selectedTab.diff*1;
-     
+      let selectedIndex = this.priceObj.tabDisplayIndex;
+      let selectedTab = this.priceObj.cusPackageIndexArr[selectedIndex];
+      let cusDiff = selectedTab.cDiff * 1;
+      let pDiff = selectedTab.diff * 1;
 
       if (!Number.isFinite(weightPrice) || weightPrice == 0) return "--";
       if (!isVolSetValue) return "--";
@@ -1358,25 +1352,19 @@ export default {
         (Number.isFinite(cusDiff) ? cusDiff : 0);
       return val;
     },
-    getFixedDiff(v,w){
-    var selectTab=this.priceObj.cusPackageIndexArr[this.priceObj.tabDisplayIndex];
-    var map=selectTab.fixedMap;
-    var key=this.createFixedPriceKey(v,w);
-    return map.fixedMap[key].diff;
-    }
-    ,
+    getFixedDiff(v, w) {
+      var selectTab =
+        this.priceObj.cusPackageIndexArr[this.priceObj.tabDisplayIndex];
+      var map = selectTab.fixedMap;
+      var key = this.createFixedPriceKey(v, w);
+      return map.fixedMap[key].diff;
+    },
     createFixedPriceKey(v, w) {
-      var a = this.priceObj.createFixedPriceKey(
-        v,
-        w
-      );
+      var a = this.priceObj.createFixedPriceKey(v, w);
       return a;
     },
     createImportPriceKey(v, w) {
-      var a = this.priceObj.createFixedPriceKey(
-        v,
-        w
-      );
+      var a = this.priceObj.createFixedPriceKey(v, w);
       return a;
     },
     createHeadKey(v, w) {
