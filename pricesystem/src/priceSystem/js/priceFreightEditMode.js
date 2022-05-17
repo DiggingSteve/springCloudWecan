@@ -567,7 +567,7 @@ class priceFreightEditView extends priceFreightView {
     var key = this.createFixedPriceKey( v, w);
     var isExist = !!map[key];
     if (!isExist) {
-      var obj = this.createDefaultDisplayPriceObj(p, c, v, w);
+      var obj = this.createDefaultDisplayPriceObj(null, null, v, w);
       obj.isSetValue = true;
       map[key] = obj;
     }

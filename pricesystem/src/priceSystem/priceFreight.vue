@@ -1349,7 +1349,7 @@ export default {
       let weightPrice = weight.standardPrice * 1;
       let selectedIndex=this.priceObj.tabDisplayIndex;
       let selectedTab=this.priceObj.cusPackageIndexArr[selectedIndex];
-      let cusDiff = selectedTab.cusDiff*1;
+      let cusDiff = selectedTab.cDiff*1;
       let pDiff = selectedTab.diff*1;
      
 
