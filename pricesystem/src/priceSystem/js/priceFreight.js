@@ -479,7 +479,7 @@ class priceFreightView extends BaseService {
             for (let j = 0; j < this.packageIndexArr.length; j++) {
                 let pIndex = this.packageIndexArr[j];
                 let pTitle = pIndex instanceof Array ? this.getTitle(this.packageTypeArr, pIndex) : this.packageTypeArr[pIndex].title
-                var matchObj=this.cusPackageIndexArr.find(f=>{return f.cusTitle==cusTitle&&f.pTitle==p.title});
+                var matchObj=this.cusPackageIndexArr.find(f=>{return (f.cusTitle==cusTitle)&&(f.pTitle==p.title)});
                 let cDiff=this.getDiff(this.cusArr,cusIndex);
                 let pDiff=this.getDiff(this.packageTypeArr,pIndex);
                 var obj= {
