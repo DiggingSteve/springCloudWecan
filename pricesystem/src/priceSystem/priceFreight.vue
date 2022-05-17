@@ -925,7 +925,7 @@
       :visible.sync="priceObj.isShowRelationEdit"
       :width="'800px'"
     >
-      <div class="row relation-edit-wrap">
+      <div class="row relation-edit-wrap"  style="border-bottom: 1px solid #dedede">
         <template v-for="(item, index) in priceObj.currentRelationEditArr">
           <div class="title" v-show="item.isAdd">
             <span>{{ item.title }}</span>
@@ -976,8 +976,15 @@
       <!--
         设置是否和基点相同 合并tab控制面板
       -->
-      <div style="border-bottom: 1px solid #dedede" v-if="priceObj.isAddSomeParam">
-        <div class="row" v-if="relationEditTitle != relationTitle.vol"  style="font-size:15px;font-weight:800;">
+      <div
+        style="border-bottom: 1px solid #dedede"
+        v-if="priceObj.isAddSomeParam"
+      >
+        <div
+          class="row"
+          v-if="relationEditTitle != relationTitle.vol"
+          style="font-size: 15px; font-weight: 800"
+        >
           <div class="item20">
             <span>已添加参数</span>
           </div>
@@ -990,7 +997,7 @@
           <div class="row relation-edit-wrap" v-if="item.isAdd">
             <div class="item20 title">
               <span>{{ item.title }}</span>
-              </div>
+            </div>
             <div class="item60" v-if="item.diff != '基点'">
               <el-radio v-model="item.isSameAsBase" :label="true">是</el-radio>
               <el-radio v-model="item.isSameAsBase" :label="false">否</el-radio>
