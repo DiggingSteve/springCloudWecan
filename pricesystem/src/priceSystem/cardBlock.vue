@@ -116,7 +116,6 @@ export default {
   methods: {
     selectCard(index) {
       if (!this.canChangeCard) return;
-      debugger
       this.indexSelf = index;
       this.setDiffValue(index);
     },

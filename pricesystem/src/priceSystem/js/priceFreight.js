@@ -416,6 +416,10 @@ class priceFreightView extends BaseService {
     cusIndexArr = []
 
     packageIndexArr = []
+
+    cusPackageIndexArr = [];
+
+    tabDisplayIndex=0;
     //载入基点tab组合 数组第一个元素记载和基点相同的索引 
     loadBasePriceTabArr() {
         var cusIndex = this.cusArr.findIndex(f => { return f.isDefault });
@@ -434,18 +438,19 @@ class priceFreightView extends BaseService {
 
 
     confirmPriceTabArr() {
-        this.cusIndexArr=[];
-        this.packageIndexArr=[];
+        this.cusIndexArr = [];
+        this.packageIndexArr = [];
         this.loadBasePriceTabArr();
-        debugger;
         for (let i = 0; i < this.cusArr.length; i++) {
             var cus = this.cusArr[i];
-            if (cus.isDefault==1) continue;
-            if(!cus.isAdd)continue;
+            if (cus.isDefault == 1) continue;
+            if (!cus.isAdd) continue;
             this.cusIndexArr[0] = this.cusIndexArr[0] || [];
 
             if (cus.isSameAsBase) {
                 this.cusIndexArr[0].push(i);
+                cus.isSetValue = true;
+                cus.diff = 0;
             }
             else {
                 this.cusIndexArr.push(i);
@@ -453,15 +458,26 @@ class priceFreightView extends BaseService {
         }
         for (let j = 0; j < this.packageTypeArr.length; j++) {
             var p = this.packageTypeArr[j];
-            if (p.isDefault==1) continue;
-            if(!p.isAdd)continue;
+            if (p.isDefault == 1) continue;
+            if (!p.isAdd) continue;
             this.packageIndexArr[0] = this.packageIndexArr[0] || [];
 
             if (p.isSameAsBase) {
                 this.packageIndexArr[0].push(j);
+                p.isSetValue = true;
+                p.diff = 0;
             }
             else {
                 this.packageIndexArr.push(j);
+            }
+        }
+
+        for (let i = 0; i < this.cusIndexArr.length; i++) {
+            let cusIndex = this.cusIndexArr[i];
+            for (let j = 0; j < this.packageIndexArr.length; j++) {
+                let pIndex = this.packageIndexArr[j];
+                var obj={cus:cusIndex,p:pIndex}
+                this.cusPackageIndexArr.push(obj);
             }
         }
     }

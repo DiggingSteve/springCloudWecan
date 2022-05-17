@@ -288,48 +288,6 @@
             </el-date-picker>
           </div>
         </div>
-        <!-- <div class="row">
-          <card-block
-            :dataArr.sync="priceObj.weightArr"
-            :title="cardTitle.weight"
-            class="card-block"
-            :hasContent="true"
-            :hasSeed="true"
-            :isNeedBan="true"
-            :indexSelected.sync="priceObj.weightIndex"
-          ></card-block>
-          <card-block
-            :dataArr.sync="priceObj.packageTypeArr"
-            :title="cardTitle.packageType"
-            class="card-block"
-            :hasContent="true"
-            :hasSeed="true"
-            :isNeedBan="true"
-            :indexSelected.sync="priceObj.packageIndex"
-          ></card-block>
-
-          <card-block
-            :dataArr.sync="priceObj.volArr"
-            :title="cardTitle.vol"
-            :isNeedBan="true"
-            class="card-block"
-            :hasContent="true"
-            :hasSeed="true"
-            :indexSelected.sync="priceObj.volIndex"
-          ></card-block>
-
-          <card-block
-            v-show="isWecanStandard"
-            :dataArr.sync="priceObj.cusArr"
-            :title="cardTitle.cus"
-            :isNeedBan="true"
-            class="card-block"
-            :hasContent="true"
-            :hasSeed="true"
-            :indexSelected.sync="priceObj.cusIndex"
-          ></card-block>
-        </div> -->
-
         <div class="row block">
           <div style="width: 100%" class="blue title">
             <span>请填写官网公布的1:167散货的运价( CNY )</span>
@@ -550,47 +508,30 @@
           </div>
           <!--快捷组合切换-->
           <div class="row relation-wrap" style="box-shadow: unset">
-            <template v-for="(cusItem, i) in priceObj.cusIndexArr">
-              <template v-for="(pItem, j) in priceObj.packageIndexArr">
+            <template v-for="(item, i) in priceObj.cusPackageIndexArr">
                 <div
                   class="operate-tag"
                   style="width:unset;padding:0 5px"
                   v-bind:class="{
-                    active: false,
+                    active: priceObj.tabDisplayIndex==i,
                   }"
-                  @click="
-   
-                  "
+                  @click="priceObj.tabDisplayIndex=i"
                 >
-                  <!--cus组合-->
-                  <template v-if="i == 0">
-                    <template v-for="(cusBaseIndex, ccIdnex) in cusItem">
-                      <span> {{ priceObj.cusArr[cusBaseIndex].title }}</span>
-                      <span v-if="ccIdnex < (cusItem.length - 1)">\</span>
-                    </template>
+                  <template>
+                    {{
+                      void(cusSpan=item instanceof Array ? item.cus.reduce.j((pre,current)=>{
+                        return priceObj.cusArr[pre].title+"\\"+priceObj.cusArr[current].title
+                      }):priceObj.cusArr[item.cus].title)
+
+                          void(pSpan=item instanceof Array ? item.p.reduce.j((pre,current)=>{
+                        return priceObj.packageTypeArr[pre].title+"\\"+priceObj.packageTypeArr[current].title
+                      }):priceObj.packageTypeArr[item.p].title)
+                    }}
                   </template>
-                  <template v-else>
-                    <span>
-                      {{ priceObj.cusArr[cusItem].title}}
-                    </span>
-                  </template>
+                  <span>{{cusSpan}}</span>
                   <span>,</span>
-                  <!--package组合-->
-                  <template v-if="j == 0">
-                    <template v-for="(pBaseIndex, ppIndex) in pItem">
-                      <span>
-                        {{ priceObj.packageTypeArr[pBaseIndex].title }}</span
-                      >
-                      <span v-if="ppIndex < (pItem.length - 1)">\</span>
-                    </template>
-                  </template>
-                  <template v-else>
-                    <span>
-                      {{ priceObj.packageTypeArr[pItem].title }}
-                    </span>
-                  </template>
+                  <span>{{pSpan}}</span>
                 </div>
-              </template>
             </template>
           </div>
           <div class="row">
