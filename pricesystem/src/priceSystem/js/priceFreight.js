@@ -441,6 +441,7 @@ class priceFreightView extends BaseService {
         this.cusIndexArr = [];
         this.packageIndexArr = [];
         this.cusPackageIndexArr = [];
+        this.tabDisplayIndex=0;
         this.loadBasePriceTabArr();
         for (let i = 0; i < this.cusArr.length; i++) {
             var cus = this.cusArr[i];
@@ -480,8 +481,8 @@ class priceFreightView extends BaseService {
                 let pIndex = this.packageIndexArr[j];
                 let pTitle = pIndex instanceof Array ? this.getTitle(this.packageTypeArr, pIndex) : this.packageTypeArr[pIndex].title
                 var obj = {
-                    cus: cusIndex,
-                    p: pIndex,
+                    cusIndex: cusIndex,
+                    pIndex: pIndex,
                     cusTitle: cusTitle,
                     pTitle: pTitle,
                     cDiff: this.getDiff(this.cusArr,cusIndex), //记录对应地勾稽参数差值

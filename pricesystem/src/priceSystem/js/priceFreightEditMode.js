@@ -312,7 +312,7 @@ class priceFreightEditView extends priceFreightView {
             this.relationMap.vol.baseIndex = index;
           }
         }
-        if (!isSetIndex ) {
+        if (!isSetIndex) {
           if (type == diffCode.cus) this.cusDisplayIndex = index;
           else if (type == diffCode.package) this.packageDisplayIndex = index;
           isSetIndex = true;
@@ -320,7 +320,7 @@ class priceFreightEditView extends priceFreightView {
 
       }
       else {
-        item.isAdd=false;
+        item.isAdd = false;
         this.clearDiffRelation(item)
       }
     });
@@ -475,7 +475,7 @@ class priceFreightEditView extends priceFreightView {
         m.diff = 0;
       }
       m.isAdd = m.isAdd ? 1 : 2;
-      m.isSetValue=m.isSetValue?1:2;
+      m.isSetValue = m.isSetValue ? 1 : 2;
       return m;
     })
   }
@@ -536,7 +536,7 @@ class priceFreightEditView extends priceFreightView {
     });
   }
 
-  
+
 
   //设置一口价默认值 默认 未设置值 diff:0,isAvtive:false 是否激活状态 激活开启编辑模式
   createDefaultDisplayPriceObj(p, c, v, w) {
@@ -556,15 +556,15 @@ class priceFreightEditView extends priceFreightView {
 
   /**一口价是否激活 */
   isDisplayPriceActive(key) {
-    var map=this.cusPackageIndexArr[this.tabDisplayIndex].fixedMap;
+    var map = this.cusPackageIndexArr[this.tabDisplayIndex].fixedMap;
     var isExist = !!map[key];
     if (!isExist) return false;
     return map[key].isActive;
   }
   //激活一口价
   activeFixedPrice(v, w, cellValue) {
-    var map=this.cusPackageIndexArr[this.tabDisplayIndex].fixedMap;
-    var key = this.createFixedPriceKey( v, w);
+    var map = this.cusPackageIndexArr[this.tabDisplayIndex].fixedMap;
+    var key = this.createFixedPriceKey(v, w);
     var isExist = !!map[key];
     if (!isExist) {
       var obj = this.createDefaultDisplayPriceObj(null, null, v, w);
@@ -591,8 +591,8 @@ class priceFreightEditView extends priceFreightView {
     this.priceDisplayMap[key].isActive = true;
   }
   //一口价map key生成规则
-  createFixedPriceKey( v, w) {
-    return  v.code + "_" + w.code;
+  createFixedPriceKey(v, w) {
+    return v.code + "_" + w.code;
   }
 
   // 导入数据时生成行头 或者 行列 的key 记录在 priceCopyMap中
@@ -615,19 +615,25 @@ class priceFreightEditView extends priceFreightView {
 
   //将一口价取出用于保存 未选择的package cus需要整合过滤 数据库存入太多重复diff 不同key的数据 可以优化
   getFixedPriceFromMap() {
-    let arr = [];
-    var map = {};
+    let arr = [];//结果数组
+    for (let i = 0; i < this.cusPackageIndexArr.length; i++) {
+      let item = this.cusPackageIndexArr[i];
+      let cArr = item.cusIndex instanceof Array ? item.cusIndex : [item.cusIndex];
+      let pArr = item.pIndex instanceof Array ? item.pIndex : [item.pIndex];
+      cArr.forEach((cus) => {
 
-
-    for (var key in this.priceDisplayMap) {
-
-      let obj = this.priceDisplayMap[key];
-      let isSetValue = obj.isSetValue; // 点下一步时同步 isSetValue
-      if (isSetValue && (obj.diff != '--' && obj.diff !== '')) {
-        arr.push(obj);
-      }
-
+        pArr.forEach((p) => {
+          let map = { ...item.fixedMap };
+          map.cus = this.cusArr[cus].title;
+          map.packageType = this.packageTypeArr[p].title;
+          if ((map.diff != '--' && map.diff !== '')) {
+            arr.push(map);
+          }
+        })
+      })
     }
+
+
 
     return arr;
   }
@@ -926,7 +932,7 @@ class priceFreightEditView extends priceFreightView {
     e.stopPropagation();
   }
 
-  setDisplayIndex(){
+  setDisplayIndex() {
     var disIndex = -1;
     for (let i = 0; i < this.currentRelationEditArr.length; i++) {
       let item = this.currentRelationEditArr[i];
@@ -938,11 +944,11 @@ class priceFreightEditView extends priceFreightView {
       else disIndex = -1;
     }
     if (this.currentRelationMap.title == diffCode.cus) {
-      this.cusDisplayIndex=disIndex;
-      this.relationMap.cus.baseIndex=disIndex;
+      this.cusDisplayIndex = disIndex;
+      this.relationMap.cus.baseIndex = disIndex;
     }
     else if (this.currentRelationMap.title == diffCode.package) {
-      this.relationMap.packageType.baseIndex=disIndex;
+      this.relationMap.packageType.baseIndex = disIndex;
     }
   }
 
@@ -973,8 +979,8 @@ class priceFreightEditView extends priceFreightView {
   }
 
   clearDiffRelation(item) {
-    if(item.isDefault==1)return;
-    if(item.isSameAsBase)return;
+    if (item.isDefault == 1) return;
+    if (item.isSameAsBase) return;
     item.diff = "";
     item.isSetValue = false;
   }
@@ -993,10 +999,10 @@ class priceFreightEditView extends priceFreightView {
 
   // 选中参数从无到有时 一口价需要全部清空
   isNeedClearFixedMap() {
-    
-    if (this.cusDisplayIndex==-1 ) return true;
-    
-    if (this.packageDisplayIndex==-1) return true;
+
+    if (this.cusDisplayIndex == -1) return true;
+
+    if (this.packageDisplayIndex == -1) return true;
     return false;
   }
 
