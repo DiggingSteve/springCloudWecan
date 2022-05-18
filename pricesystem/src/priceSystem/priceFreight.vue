@@ -924,6 +924,7 @@
       :title="relationEditTitle"
       :visible.sync="priceObj.isShowRelationEdit"
       :width="'800px'"
+      v-if="priceObj.isShowRelationEdit"
     >
       <div
         class="row relation-edit-wrap"
