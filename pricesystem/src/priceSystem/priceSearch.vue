@@ -972,7 +972,7 @@ export default {
       var matchVol = currentRow.volArr.find((item) => {
         return item.code == volCode;
       });
-      if(!!!matchVol.isSetValue)return "--";
+      if(!matchVol.isSetValue)return "--";
       var matchWeight = currentRow.weightArr.find((item) => {
         return item.code == weightCode;
       });

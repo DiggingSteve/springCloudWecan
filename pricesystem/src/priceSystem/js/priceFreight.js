@@ -366,8 +366,7 @@ class priceFreightView extends BaseService {
         return this.isEditMode && this._currentPageMode == pageMode.pageConfirm;
     }
     get isShowCancelBtn() {
-        return this._currentPageMode == pageMode.pageOne ||
-            this._currentPageMode == pageMode.pageConfirm
+        return this._currentPageMode == pageMode.pageConfirm
     }
 
     //始发港页面

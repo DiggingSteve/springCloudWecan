@@ -538,7 +538,7 @@ function createBasicCardData(arr, type) {
     return {
       code: item.ready01, diff: isBase ? "基点" : '', isDefault: isBase ? 1 : 2, title: item.typename, isAdd: (isBase || type == "vol") ? true : false//是否在参数中被选中
       , standardPrice: '', canDelete: !isBase, isSetValue: (isBase) ? true : false,
-      isSameAsBase: false//是否和基点一致
+      isSameAsBase: null//默认不选一致与否
     }
   });
 }
