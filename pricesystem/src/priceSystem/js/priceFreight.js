@@ -384,6 +384,17 @@ class priceFreightView extends BaseService {
         return hasCus || hasPackage;
     }
 
+    //是否展示基点勾稽关系维护
+    get isShowBasePointEdit(){
+        let item=this.currentRelationEditArr.find(f=>{return f.isSameAsBase&&f.isDefault==2})
+        return !!item;
+    }
+
+    //是否添加参数后没有选择是否和基点一致
+    get isChooseSameAsBase(){
+        this.currentRelationEditArr.find(f=>{return f.isAdd&&f.isDefault==2&&f.isSameAsBase!=null})
+    }
+
 
     /**是否展示导入数据弹框 */
     isShowImportData = false;

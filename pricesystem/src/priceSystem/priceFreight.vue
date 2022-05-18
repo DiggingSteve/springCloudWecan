@@ -469,7 +469,7 @@
           <div class="item10 operate-title">货型参数</div>
           <div class="item75" style="display: flex">
             <template v-for="item in priceObj.volArr">
-              <div class="operate-tag-forbidden">
+              <div class="operate-tag">
                 <span>{{ item.title }}</span>
               </div>
             </template>
@@ -925,7 +925,10 @@
       :visible.sync="priceObj.isShowRelationEdit"
       :width="'800px'"
     >
-      <div class="row relation-edit-wrap"  style="border-bottom: 1px solid #dedede">
+      <div
+        class="row relation-edit-wrap"
+        style="border-bottom: 1px solid #dedede"
+      >
         <template v-for="(item, index) in priceObj.currentRelationEditArr">
           <div class="title" v-show="item.isAdd">
             <span>{{ item.title }}</span>
@@ -983,7 +986,7 @@
         <div
           class="row"
           v-if="relationEditTitle != relationTitle.vol"
-          style="font-size: 14px; font-weight: 800;margin:10px 0;"
+          style="font-size: 14px; font-weight: 800; margin: 10px 0"
         >
           <div class="item20">
             <span>已添加参数</span>
@@ -994,54 +997,59 @@
           v-for="(item, index) in priceObj.currentRelationEditArr"
           v-if="relationEditTitle != relationTitle.vol"
         >
-          <div class="row relation-edit-wrap" v-if="item.isAdd&&item.diff != '基点'">
+          <div
+            class="row relation-edit-wrap"
+            v-if="item.isAdd && item.diff != '基点'"
+          >
             <div class="item20">
-                 <div class=" title">
-              <span>{{ item.title }}</span>
+              <div class="title">
+                <span>{{ item.title }}</span>
+              </div>
             </div>
-            </div>
-         
-            <div class="item60" style="line-height:30px">
+
+            <div class="item60" style="line-height: 30px">
               <el-radio v-model="item.isSameAsBase" :label="true">是</el-radio>
               <el-radio v-model="item.isSameAsBase" :label="false">否</el-radio>
             </div>
           </div>
         </template>
       </div>
+      <div v-show="priceObj.isShowBasePointEdit">
+        <div class="row" style="margin: 15px 0; line-height: 15px">
+          <div class="item20"><span>是否开启价格间联动</span></div>
 
-      <div class="row" style="margin: 15px 0; line-height: 15px">
-        <div class="item20"><span>是否开启价格间联动</span></div>
-
-        <el-radio
-          v-model="priceObj.currentRelationMap.hasRelation"
-          :label="true"
-          >是</el-radio
-        >
-        <el-radio
-          v-model="priceObj.currentRelationMap.hasRelation"
-          :label="false"
-          >否</el-radio
-        >
-      </div>
-      <div v-show="priceObj.currentRelationMap.hasRelation" style="">
-        <div class="row" style="margin: 10px 0">
-          <span class="weight" style="font-size: 16px">请选择基点</span>
-        </div>
-        <div class="row">
-          <span>请输入与基点的价格差(例如:+1 +2 -2)</span>
-        </div>
-        <div class="row">
-          <card-block
-            :dataArr.sync="priceObj.currentRelationEditArr"
-            class="card-block"
-            :hasContent="true"
-            :hasSeed="false"
-            :isNeedBan="true"
-            :indexSelected.sync="priceObj.currentRelationMap.baseIndex"
+          <el-radio
+            v-model="priceObj.currentRelationMap.hasRelation"
+            :label="true"
+            >是</el-radio
           >
-          </card-block>
+          <el-radio
+            v-model="priceObj.currentRelationMap.hasRelation"
+            :label="false"
+            >否</el-radio
+          >
+        </div>
+        <div v-show="priceObj.currentRelationMap.hasRelation" style="">
+          <div class="row" style="margin: 10px 0">
+            <span class="weight" style="font-size: 16px">请选择基点</span>
+          </div>
+          <div class="row">
+            <span>请输入与基点的价格差(例如:+1 +2 -2)</span>
+          </div>
+          <div class="row">
+            <card-block
+              :dataArr.sync="priceObj.currentRelationEditArr"
+              class="card-block"
+              :hasContent="true"
+              :hasSeed="false"
+              :isNeedBan="true"
+              :indexSelected.sync="priceObj.currentRelationMap.baseIndex"
+            >
+            </card-block>
+          </div>
         </div>
       </div>
+
       <div class="row" style="justify-content: flex-end">
         <div class="item10">
           <el-button
@@ -1050,6 +1058,7 @@
               priceObj.confirmRelation();
               priceObj.isShowRelationEdit = false;
             "
+            :class="{ forbidden: priceObj.isChooseSameAsBase ? fasle : true }"
             >确认
           </el-button>
         </div>
