@@ -937,30 +937,13 @@ class priceFreightEditView extends priceFreightView {
    */
   delRelationTag(index, e) {
     this.currentRelationEditArr[index].isAdd = false;
-    this.setDisplayIndex();
-    this.delMatchFixedMap(this.currentRelationEditArr[index].title);
+    this.currentRelationEditArr[index].isSameAsBase = null;//切换到未选是 否状态
+    this.currentRelationEditArr[index].isSetValue = false;
+
     e.stopPropagation();
   }
 
-  setDisplayIndex() {
-    var disIndex = -1;
-    for (let i = 0; i < this.currentRelationEditArr.length; i++) {
-      let item = this.currentRelationEditArr[i];
-      if (item.isAdd) {
-        //移动当前显示index位置 如果没有已添加的数据则设置-1
-        disIndex = i;
-        break;
-      }
-      else disIndex = -1;
-    }
-    if (this.currentRelationMap.title == diffCode.cus) {
-      this.cusDisplayIndex = disIndex;
-      this.relationMap.cus.baseIndex = disIndex;
-    }
-    else if (this.currentRelationMap.title == diffCode.package) {
-      this.relationMap.packageType.baseIndex = disIndex;
-    }
-  }
+
 
 
   /**编辑页选中需要加入的基础参数
@@ -1002,11 +985,6 @@ class priceFreightEditView extends priceFreightView {
     this.isShowRelationEdit = false;
   }
 
-  //清空一口价
-  clearFixedMap() {
-    this.priceDisplayMap = {};
-    this.vueInstance.$forceUpdate();
-  }
 
   // 选中参数从无到有时 一口价需要全部清空
   isNeedClearFixedMap() {

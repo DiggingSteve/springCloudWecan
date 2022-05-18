@@ -985,17 +985,15 @@
       >
         <div
           class="row"
-          v-if="relationEditTitle != relationTitle.vol"
           style="font-size: 14px; font-weight: 800; margin: 10px 0"
         >
           <div class="item20">
             <span>已添加参数</span>
           </div>
-          <div class="item60">是否和基点一致</div>
+          <div class="item60">是否和{{priceObj.currentBasePoint.title}}价格一致</div>
         </div>
         <template
           v-for="(item, index) in priceObj.currentRelationEditArr"
-          v-if="relationEditTitle != relationTitle.vol"
         >
           <div
             class="row relation-edit-wrap"
@@ -1016,7 +1014,7 @@
       </div>
       <div v-show="priceObj.isShowBasePointEdit">
         <div class="row" style="margin: 15px 0; line-height: 15px">
-          <div class="item20"><span>是否开启价格间联动</span></div>
+          <div class="item20"><span>是否开启与{{priceObj.currentBasePoint.title}}的联动</span></div>
 
           <el-radio
             v-model="priceObj.currentRelationMap.hasRelation"
@@ -1034,7 +1032,7 @@
             <span class="weight" style="font-size: 16px">请选择基点</span>
           </div>
           <div class="row">
-            <span>请输入与基点的价格差(例如:+1 +2 -2)</span>
+            <span>请输入与{{priceObj.currentBasePoint.title}}的价格差(CNY)</span>
           </div>
           <div class="row">
             <card-block

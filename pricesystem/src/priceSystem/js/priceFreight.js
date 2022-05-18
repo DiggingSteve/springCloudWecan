@@ -42,6 +42,7 @@ class priceFreightView extends BaseService {
     packageTypeArr = []
     weightArr = []
     volArr = []
+    tableVolArr=[]//表格渲染顺序 仅限渲染表格
     cusArr = []
     approvalArr = [];
 
@@ -394,6 +395,12 @@ class priceFreightView extends BaseService {
     get canConfirmRelation(){
        let item= this.currentRelationEditArr.find(f=>{return f.isAdd&&f.isDefault==2&&f.isSameAsBase==null})
         return !!!item;
+    }
+
+    //当前基点
+    get currentBasePoint(){
+        return this.currentRelationEditArr.find(f=>{return f.isDefault==1});
+
     }
 
 
