@@ -29,7 +29,7 @@
     <div class="card-wrap">
       <div
         v-for="(item, index) in dataArr"
-        v-if="(item.title != 'MIN')|| (!item.isSameAsBase)"
+        v-if="(item.title != 'MIN')&& (item.isSameAsBase==false)"
         v-show="item.isAdd || item.isSelect"
         class="card"
         v-bind:class="{ active: index == indexSelf ? true : false }"
