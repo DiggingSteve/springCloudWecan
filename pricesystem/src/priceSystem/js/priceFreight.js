@@ -456,7 +456,7 @@ class priceFreightView extends BaseService {
     }
 
 
-
+//确认 组合tab以及相关勾稽关系
     confirmPriceTabArr() {
         this.cusIndexArr = [];
         this.packageIndexArr = [];
