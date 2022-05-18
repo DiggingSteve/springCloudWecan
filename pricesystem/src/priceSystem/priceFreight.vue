@@ -431,7 +431,7 @@
           <div class="item75" style="display: flex">
             <template> </template>
             <template v-for="(item, index) in priceObj.cusArr">
-              <div class="operate-tag-forbidden" v-show="item.isAdd">
+              <div class="operate-tag active " style="cursor:not-allowed" v-show="item.isAdd">
                 <span>{{ item.title }}</span>
               </div>
             </template>
@@ -450,7 +450,7 @@
           <div class="item10 operate-title">包装参数</div>
           <div class="item75" style="display: flex">
             <template v-for="(item, index) in priceObj.packageTypeArr">
-              <div class="operate-tag-forbidden" v-show="item.isAdd">
+              <div class="operate-tag active" style="cursor:not-allowed" v-show="item.isAdd" >
                 <span>{{ item.title }}</span>
               </div>
             </template>
@@ -469,7 +469,7 @@
           <div class="item10 operate-title">货型参数</div>
           <div class="item75" style="display: flex">
             <template v-for="item in priceObj.volArr">
-              <div class="operate-tag">
+              <div class="operate-tag active" style="cursor:not-allowed">
                 <span>{{ item.title }}</span>
               </div>
             </template>
@@ -1058,7 +1058,7 @@
               priceObj.confirmRelation();
               priceObj.isShowRelationEdit = false;
             "
-            :class="{ forbidden: priceObj.isChooseSameAsBase ? fasle : true }"
+            :class="{ forbidden: priceObj.canConfirmRelation ? false : true }"
             >确认
           </el-button>
         </div>

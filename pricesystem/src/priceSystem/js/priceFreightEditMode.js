@@ -977,6 +977,7 @@ class priceFreightEditView extends priceFreightView {
 
   /**确认添加完毕 和 钩稽关系的相关数据 */
   confirmRelation() {
+    if(!this.canConfirmRelation)return;
     this.isNeedClearFixedMap() && this.clearFixedMap();
     // 如果取消价格间联动 则需要清空基础参数数组中 isDefault 和 diff上面的值
     if (!this.currentRelationMap.hasRelation) {

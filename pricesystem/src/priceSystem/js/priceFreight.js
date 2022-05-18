@@ -386,12 +386,12 @@ class priceFreightView extends BaseService {
 
     //是否展示基点勾稽关系维护
     get isShowBasePointEdit(){
-        let item=this.currentRelationEditArr.find(f=>{return f.isSameAsBase&&f.isDefault==2})
+        let item=this.currentRelationEditArr.find(f=>{return (f.isSameAsBase==false)&&f.isDefault==2})
         return !!item;
     }
 
     //是否添加参数后没有选择是否和基点一致
-    get isChooseSameAsBase(){
+    get canConfirmRelation(){
         this.currentRelationEditArr.find(f=>{return f.isAdd&&f.isDefault==2&&f.isSameAsBase!=null})
     }
 
