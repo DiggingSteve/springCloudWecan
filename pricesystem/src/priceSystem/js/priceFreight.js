@@ -392,7 +392,8 @@ class priceFreightView extends BaseService {
 
     //是否添加参数后没有选择是否和基点一致
     get canConfirmRelation(){
-        this.currentRelationEditArr.find(f=>{return f.isAdd&&f.isDefault==2&&f.isSameAsBase!=null})
+       let item= this.currentRelationEditArr.find(f=>{return f.isAdd&&f.isDefault==2&&f.isSameAsBase!=null})
+        return !!item;
     }
 
 
