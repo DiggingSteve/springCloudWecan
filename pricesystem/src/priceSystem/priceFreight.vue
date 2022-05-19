@@ -546,7 +546,7 @@
                       </span> -->
                     </td>
                   </tr>
-                  <tr v-for="(vol, i) in priceObj.volArr">
+                  <tr v-for="(vol, i) in priceObj.tableVolArr">
                     <td
                       class="operate-head"
                       @mouseenter="activeRow(i)"

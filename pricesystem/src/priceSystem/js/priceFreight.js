@@ -42,7 +42,12 @@ class priceFreightView extends BaseService {
     packageTypeArr = []
     weightArr = []
     volArr = []
-    tableVolArr=[]//表格渲染顺序 仅限渲染表格
+    //表格渲染顺序 仅限渲染表格 ready
+    get tableVolArr() {
+        this.volArr.sort((a,b)=>{
+            return a.tableSeq-b.tableSeq;
+        })
+    }
     cusArr = []
     approvalArr = [];
 
@@ -109,8 +114,8 @@ class priceFreightView extends BaseService {
 
     clearDataIndex = -1;
 
-    get isAddSomeParam(){
-        return !!this.currentRelationEditArr.find(f=>{return f.isAdd&&f.isDefault==2});
+    get isAddSomeParam() {
+        return !!this.currentRelationEditArr.find(f => { return f.isAdd && f.isDefault == 2 });
     }
 
     /**当前选中的包装类型 */
@@ -386,20 +391,20 @@ class priceFreightView extends BaseService {
     }
 
     //是否展示基点勾稽关系维护
-    get isShowBasePointEdit(){
-        let item=this.currentRelationEditArr.find(f=>{return (f.isSameAsBase==false)&&f.isDefault==2})
+    get isShowBasePointEdit() {
+        let item = this.currentRelationEditArr.find(f => { return (f.isSameAsBase == false) && f.isDefault == 2 })
         return !!item;
     }
 
     //是否添加参数后没有选择是否和基点一致
-    get canConfirmRelation(){
-       let item= this.currentRelationEditArr.find(f=>{return f.isAdd&&f.isDefault==2&&f.isSameAsBase==null})
+    get canConfirmRelation() {
+        let item = this.currentRelationEditArr.find(f => { return f.isAdd && f.isDefault == 2 && f.isSameAsBase == null })
         return !!!item;
     }
 
     //当前基点
-    get currentBasePoint(){
-        return this.currentRelationEditArr.find(f=>{return f.isDefault==1});
+    get currentBasePoint() {
+        return this.currentRelationEditArr.find(f => { return f.isDefault == 1 });
 
     }
 
@@ -428,6 +433,9 @@ class priceFreightView extends BaseService {
         this.relationMap.cus.baseIndex = this.cusArr.findIndex(f => { return f.isDefault == 1 });
         this.relationMap.packageType.baseIndex = this.packageTypeArr.findIndex(f => { return f.isDefault == 1 });
         this.relationMap.vol.baseIndex = this.volArr.findIndex(f => { return f.isDefault == 1 });
+
+
+
         this.confirmPriceTabArr();
 
     }
@@ -456,11 +464,11 @@ class priceFreightView extends BaseService {
     }
 
 
-//确认 组合tab以及相关勾稽关系
+    //确认 组合tab以及相关勾稽关系
     confirmPriceTabArr() {
         this.cusIndexArr = [];
         this.packageIndexArr = [];
-        this.tabDisplayIndex=0;
+        this.tabDisplayIndex = 0;
         this.loadBasePriceTabArr();
         for (let i = 0; i < this.cusArr.length; i++) {
             var cus = this.cusArr[i];
@@ -499,10 +507,10 @@ class priceFreightView extends BaseService {
             for (let j = 0; j < this.packageIndexArr.length; j++) {
                 let pIndex = this.packageIndexArr[j];
                 let pTitle = pIndex instanceof Array ? this.getTitle(this.packageTypeArr, pIndex) : this.packageTypeArr[pIndex].title
-                var matchObj=this.cusPackageIndexArr.find(f=>{return (f.cusTitle==cusTitle)&&(f.pTitle==pTitle)});
-                let cDiff=this.getDiff(this.cusArr,cusIndex);
-                let pDiff=this.getDiff(this.packageTypeArr,pIndex);
-                var obj= {
+                var matchObj = this.cusPackageIndexArr.find(f => { return (f.cusTitle == cusTitle) && (f.pTitle == pTitle) });
+                let cDiff = this.getDiff(this.cusArr, cusIndex);
+                let pDiff = this.getDiff(this.packageTypeArr, pIndex);
+                var obj = {
                     cusIndex: cusIndex,
                     pIndex: pIndex,
                     cusTitle: cusTitle,
@@ -510,32 +518,32 @@ class priceFreightView extends BaseService {
                     cDiff: cDiff, //记录对应勾稽参数差值
                     pDiff: pDiff,
                     fixedMap: {},//记录一口价 此一口价key无需加上cus package
-                    isRemain:true
+                    isRemain: true
                 } // 组合tab对象
-                if(!!!matchObj){
-                this.cusPackageIndexArr.push(obj);
+                if (!!!matchObj) {
+                    this.cusPackageIndexArr.push(obj);
                 }
-                else{
-                    matchObj.cusIndex=cusIndex;
-                    matchObj.pIndex=pIndex;
-                    matchObj.cusTitle=cusTitle;
-                    matchObj.pTitle=pTitle;
-                    matchObj.cDiff=cDiff;
-                    matchObj.pDiff=pDiff;
-                    matchObj.isRemain=true;
+                else {
+                    matchObj.cusIndex = cusIndex;
+                    matchObj.pIndex = pIndex;
+                    matchObj.cusTitle = cusTitle;
+                    matchObj.pTitle = pTitle;
+                    matchObj.cDiff = cDiff;
+                    matchObj.pDiff = pDiff;
+                    matchObj.isRemain = true;
                 }
             }
         }
-        this.cusPackageIndexArr= this.cusPackageIndexArr.filter(f=>{ return f.isRemain});
-        this.cusPackageIndexArr.forEach((item)=>{
-            item.isRemain=false;
+        this.cusPackageIndexArr = this.cusPackageIndexArr.filter(f => { return f.isRemain });
+        this.cusPackageIndexArr.forEach((item) => {
+            item.isRemain = false;
         })
         this.vueInstance.$forceUpdate();
     }
 
-    getDiff(arr,indexOrArr){
-        if(indexOrArr instanceof Array){
-            return  arr[indexOrArr[0]].diff;
+    getDiff(arr, indexOrArr) {
+        if (indexOrArr instanceof Array) {
+            return arr[indexOrArr[0]].diff;
         }
         else return arr[indexOrArr].diff;
     }
