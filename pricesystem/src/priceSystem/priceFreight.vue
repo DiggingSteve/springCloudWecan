@@ -1352,7 +1352,7 @@ export default {
     //且尚未建立勾稽关系，需以编辑->新增方式来添加(原先是减法)
     //则现在初始只加载第一行的价格
     setCellValue(vol, weight) {
-      vol=priceObj.volArr.find(f=>{f.code==vol.code});
+      vol=this.priceObj.volArr.find(f=>{f.code==vol.code});
       let isVolSetValue = vol.isSetValue;
       let volDiff = vol.diff * 1;
       let weightPrice = weight.standardPrice * 1;
