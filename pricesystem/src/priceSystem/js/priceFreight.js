@@ -44,7 +44,7 @@ class priceFreightView extends BaseService {
     volArr = []
     //表格渲染顺序 仅限渲染表格 ready
     get tableVolArr() {
-        this.volArr.sort((a,b)=>{
+       return this.volArr.sort((a,b)=>{
             return a.tableSeq-b.tableSeq;
         })
     }
