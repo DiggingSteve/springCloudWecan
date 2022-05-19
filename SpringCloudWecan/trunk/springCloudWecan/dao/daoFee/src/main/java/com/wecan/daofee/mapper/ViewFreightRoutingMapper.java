@@ -63,7 +63,7 @@ public interface ViewFreightRoutingMapper extends BaseMapper<ViewFreightRouting>
             "left join\n" +
             "(select t.guid, t.mdg , t.ddg as ddg ,a.twocode  ,t.min ,t.fixedMin ,t.minDiff  from Ex_TruckFee as t\n" +
             " left join Ex_TruckFeeAircompany as a on a.feeid=t.guid and a.isdel=1\n" +
-            " where t.isdel=1 \n" +
+            " where t.isdel=1 and t.wageinout=2 \n" +
             ") as truck on truck.mdg=fee.mdg and truck.twocode = hs.twocode\n" +
             "     \n" +
             "             where  fee.isdel=1 and hs.isdel=1  AND truck.ddg is not null \n" + //到达港和航司是必选条件 因为ddg匹配上fee的数据 会混入二字码为null的数据需要剔除

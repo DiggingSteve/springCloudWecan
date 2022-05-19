@@ -272,7 +272,7 @@ class priceFreightEditView extends priceFreightView {
       let p = map.weightArr.find(f => { return f.code == code });
       if (!!p) {
         item.isDefault = p.isDefault;
-        item.standardPrice = p.standardPrice;
+        item.standardPrice = p.standardPrice.toFixed(2);
         item.diff = p.diff;
         item.isSetValue = true;
       }
@@ -358,7 +358,7 @@ class priceFreightEditView extends priceFreightView {
 
     obj.isActive = true;
     obj.isSetValue = true;
-    obj.diff = item.diff;
+    obj.diff = item.diff.toFixed(2);
     obj.cus = item.cus;
     obj.vol = item.vol;
     obj.packageType = item.packageType;

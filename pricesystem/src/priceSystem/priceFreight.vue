@@ -311,6 +311,9 @@
                         type="input"
                         class="price-input"
                         v-model.sync="item.standardPrice"
+                        @blur="
+                          item.standardPrice = item.standardPrice.toFixed(2)
+                        "
                       />
                     </td>
                   </template>
@@ -431,7 +434,11 @@
           <div class="item75" style="display: flex">
             <template> </template>
             <template v-for="(item, index) in priceObj.cusArr">
-              <div class="operate-tag nohover" style="cursor:not-allowed" v-show="item.isAdd">
+              <div
+                class="operate-tag nohover"
+                style="cursor: not-allowed"
+                v-show="item.isAdd"
+              >
                 <span>{{ item.title }}</span>
               </div>
             </template>
@@ -450,7 +457,11 @@
           <div class="item10 operate-title">包装参数</div>
           <div class="item75" style="display: flex">
             <template v-for="(item, index) in priceObj.packageTypeArr">
-              <div class="operate-tag nohover" style="cursor:not-allowed" v-show="item.isAdd" >
+              <div
+                class="operate-tag nohover"
+                style="cursor: not-allowed"
+                v-show="item.isAdd"
+              >
                 <span>{{ item.title }}</span>
               </div>
             </template>
@@ -469,7 +480,7 @@
           <div class="item10 operate-title">货型参数</div>
           <div class="item75" style="display: flex">
             <template v-for="item in priceObj.volArr">
-              <div class="operate-tag nohover" style="cursor:not-allowed">
+              <div class="operate-tag nohover" style="cursor: not-allowed">
                 <span>{{ item.title }}</span>
               </div>
             </template>
@@ -552,7 +563,9 @@
                       @mouseenter="activeRow(i)"
                       @mouseleave="activeRow(i)"
                     >
-                      <span>{{ vol.code }}</span>
+                      <span :class="{ blue: vol.isDefault == 1 }">{{
+                        vol.code
+                      }}</span>
                       <!-- <span
                         style="display: none"
                         class="circle-del"
@@ -584,7 +597,7 @@
                             )
                           "
                           class="price-input"
-                          :class="{blue:vol.isDefault==1}"
+                          :class="{ blue: vol.isDefault == 1 }"
                           v-model="cellValue"
                           v-show="!isShowFixed"
                         />
@@ -593,6 +606,18 @@
                           v-if="isShowFixed"
                           style="color: red"
                           type="input"
+                          @blur="
+                            priceObj.cusPackageIndexArr[
+                              priceObj.tabDisplayIndex
+                            ]['fixedMap'][
+                              createFixedPriceKey(vol, weight)
+                            ].diff =
+                              priceObj.cusPackageIndexArr[
+                                priceObj.tabDisplayIndex
+                              ]['fixedMap'][
+                                createFixedPriceKey(vol, weight)
+                              ].diff.toFixed(2)
+                          "
                           v-focus
                           v-model.sync="
                             priceObj.cusPackageIndexArr[
@@ -992,11 +1017,11 @@
           <div class="item20">
             <span>已添加参数</span>
           </div>
-          <div class="item60">是否和{{priceObj.currentBasePoint.title}}价格一致</div>
+          <div class="item60">
+            是否和{{ priceObj.currentBasePoint.title }}价格一致
+          </div>
         </div>
-        <template
-          v-for="(item, index) in priceObj.currentRelationEditArr"
-        >
+        <template v-for="(item, index) in priceObj.currentRelationEditArr">
           <div
             class="row relation-edit-wrap"
             v-if="item.isAdd && item.diff != '基点'"
@@ -1016,7 +1041,11 @@
       </div>
       <div v-show="priceObj.isShowBasePointEdit">
         <div class="row" style="margin: 15px 0; line-height: 15px">
-          <div class="item40"><span>是否开启与{{priceObj.currentBasePoint.title}}的价格联动</span></div>
+          <div class="item40">
+            <span
+              >是否开启与{{ priceObj.currentBasePoint.title }}的价格联动</span
+            >
+          </div>
 
           <el-radio
             v-model="priceObj.currentRelationMap.hasRelation"
@@ -1030,9 +1059,10 @@
           >
         </div>
         <div v-show="priceObj.currentRelationMap.hasRelation" style="">
-       
           <div class="row">
-            <span>请输入与{{priceObj.currentBasePoint.title}}的价格差(CNY)</span>
+            <span
+              >请输入与{{ priceObj.currentBasePoint.title }}的价格差(CNY)</span
+            >
           </div>
           <div class="row">
             <card-block
@@ -1048,7 +1078,7 @@
         </div>
       </div>
 
-      <div class="row" style="justify-content: flex-end">
+      <div class="row" style="justify-content: flex-end; margin-top: 20px">
         <div class="item10">
           <el-button
             type="primary"
@@ -1351,7 +1381,9 @@ export default {
     //且尚未建立勾稽关系，需以编辑->新增方式来添加(原先是减法)
     //则现在初始只加载第一行的价格
     setCellValue(vol, weight) {
-      vol=this.priceObj.volArr.find(f=>{ return f.code==vol.code});
+      vol = this.priceObj.volArr.find((f) => {
+        return f.code == vol.code;
+      });
       let isVolSetValue = vol.isSetValue;
       let volDiff = vol.diff * 1;
       let weightPrice = weight.standardPrice * 1;
@@ -1368,7 +1400,7 @@ export default {
         (Number.isFinite(weightPrice) ? weightPrice : 0) +
         (Number.isFinite(pDiff) ? pDiff : 0) +
         (Number.isFinite(cusDiff) ? cusDiff : 0);
-      return val;
+      return val.toFixed(2);
     },
     getFixedDiff(v, w) {
       var selectTab =
