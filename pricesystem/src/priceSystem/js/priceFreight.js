@@ -42,12 +42,9 @@ class priceFreightView extends BaseService {
     packageTypeArr = []
     weightArr = []
     volArr = []
-    //表格渲染顺序 仅限渲染表格 ready
-    get tableVolArr() {
-       return this.volArr.sort((a,b)=>{
-            return a.tableSeq-b.tableSeq;
-        })
-    }
+
+    tableVolArr=[];
+
     cusArr = []
     approvalArr = [];
 
@@ -434,7 +431,9 @@ class priceFreightView extends BaseService {
         this.relationMap.packageType.baseIndex = this.packageTypeArr.findIndex(f => { return f.isDefault == 1 });
         this.relationMap.vol.baseIndex = this.volArr.findIndex(f => { return f.isDefault == 1 });
 
-
+        this.tableVolArr= this.volArr.sort((a,b)=>{
+            return a.tableSeq-b.tableSeq;
+        })
 
         this.confirmPriceTabArr();
 
