@@ -500,6 +500,16 @@ class priceFreightView extends BaseService {
             }
         }
 
+        for(let k=0;k<this.volArr.length;k++){
+            var vol = this.volArr[k];
+            if (vol.isDefault == 1) continue;
+            if (!vol.isAdd) continue;
+            if (vol.isSameAsBase) {
+                vol.isSetValue = true;
+                vol.diff = 0;
+            }
+        }
+
         for (let i = 0; i < this.cusIndexArr.length; i++) {
             let cusIndex = this.cusIndexArr[i];
             let cusTitle = cusIndex instanceof Array ? this.getTitle(this.cusArr, cusIndex) : this.cusArr[cusIndex].title
