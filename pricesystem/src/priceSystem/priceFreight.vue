@@ -581,6 +581,12 @@
                         ))
                       }}
                       {{ void (cellValue = setCellValue(vol, weight)) }}
+                      {{void fixedDiff= priceObj.cusPackageIndexArr[
+                              priceObj.tabDisplayIndex
+                            ]['fixedMap'][
+                              createFixedPriceKey(vol, weight)
+                            ].diff
+                      }}
                       <td
                         style="width: 68px; height: 26px; cursor: pointer"
                         v-bind:class="{
@@ -611,12 +617,7 @@
                               priceObj.tabDisplayIndex
                             ]['fixedMap'][
                               createFixedPriceKey(vol, weight)
-                            ].diff =
-                              priceObj.cusPackageIndexArr[
-                                priceObj.tabDisplayIndex
-                              ]['fixedMap'][
-                                createFixedPriceKey(vol, weight)
-                              ].diff.toFixed(2)
+                            ].diff = fixedDiff > 0 ? fixedDiff.toFixed(2) : ''
                           "
                           v-focus
                           v-model.sync="
