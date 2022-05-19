@@ -53,4 +53,11 @@ public class FeeVolRatio extends Parent {
             columnDefinition = "int COMMENT '是否设置值 1 是 2 否'"
     )
     private Integer isSetValue;
+
+
+    @Column(
+            name = "isSameAsBase",
+            columnDefinition = "int COMMENT '是否等于基点 1 是 2 否'"
+    )
+    public Boolean isSameAsBase;
 }
