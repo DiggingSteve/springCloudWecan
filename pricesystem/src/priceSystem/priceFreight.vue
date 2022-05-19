@@ -581,11 +581,11 @@
                         ))
                       }}
                       {{ void (cellValue = setCellValue(vol, weight)) }}
-                      {{void fixedDiff= priceObj.cusPackageIndexArr[
+                      {{void (fixedDiff= priceObj.cusPackageIndexArr[
                               priceObj.tabDisplayIndex
                             ]['fixedMap'][
                               createFixedPriceKey(vol, weight)
-                            ].diff
+                            ].diff)
                       }}
                       <td
                         style="width: 68px; height: 26px; cursor: pointer"
