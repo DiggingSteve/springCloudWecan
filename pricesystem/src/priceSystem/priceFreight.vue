@@ -518,7 +518,7 @@
                 @click="priceObj.tabDisplayIndex = i"
               >
                 <span>{{ item.cusTitle }}</span>
-                <span>,</span>
+                <span>;</span>
                 <span>{{ item.pTitle }}</span>
               </div>
             </template>
@@ -584,6 +584,7 @@
                             )
                           "
                           class="price-input"
+                          :class="{blue:vol.isDefault==1}"
                           v-model="cellValue"
                           v-show="!isShowFixed"
                         />
@@ -1015,7 +1016,7 @@
       </div>
       <div v-show="priceObj.isShowBasePointEdit">
         <div class="row" style="margin: 15px 0; line-height: 15px">
-          <div class="item20"><span>是否开启与{{priceObj.currentBasePoint.title}}的联动</span></div>
+          <div class="item40"><span>是否开启与{{priceObj.currentBasePoint.title}}的价格联动</span></div>
 
           <el-radio
             v-model="priceObj.currentRelationMap.hasRelation"
@@ -1029,9 +1030,7 @@
           >
         </div>
         <div v-show="priceObj.currentRelationMap.hasRelation" style="">
-          <div class="row" style="margin: 10px 0">
-            <span class="weight" style="font-size: 16px">请选择基点</span>
-          </div>
+       
           <div class="row">
             <span>请输入与{{priceObj.currentBasePoint.title}}的价格差(CNY)</span>
           </div>

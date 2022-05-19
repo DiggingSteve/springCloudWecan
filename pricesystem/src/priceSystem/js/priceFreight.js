@@ -559,7 +559,7 @@ class priceFreightView extends BaseService {
 
     getTitle(arr, indexArr) {
         return indexArr.reduce((pre, cur, index) => {
-            return pre + (index > 0 ? "|" : "") + arr[cur].title;
+            return pre + (index > 0 ? "," : "") + arr[cur].title;
         }, '')
     }
 
