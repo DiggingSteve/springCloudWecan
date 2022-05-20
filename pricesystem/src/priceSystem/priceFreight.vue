@@ -616,11 +616,11 @@
                               priceObj.tabDisplayIndex
                             ]['fixedMap'][
                               createFixedPriceKey(vol, weight)
-                            ].diff > 0 ? priceObj.cusPackageIndexArr[
+                            ].diff > 0 ? (priceObj.cusPackageIndexArr[
                               priceObj.tabDisplayIndex
                             ]['fixedMap'][
                               createFixedPriceKey(vol, weight)
-                            ].diff.toFixed(2) : ''
+                            ].diff*1).toFixed(2) : ''
                           "
                           v-focus
                           v-model.sync="
