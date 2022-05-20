@@ -350,7 +350,7 @@ class priceFreightEditView extends priceFreightView {
           f.pTitle.indexOf(item.packageType) > -1
       });
 
-      matchTab.fixedMap[key]={};
+      matchTab.fixedMap[key] = {};
       this.fillFixedMap(item, matchTab.fixedMap[key]);
     });
   }
@@ -959,7 +959,7 @@ class priceFreightEditView extends priceFreightView {
 
   /**确认添加完毕 和 钩稽关系的相关数据 */
   confirmRelation() {
-    if(!this.canConfirmRelation)return;
+    if (!this.canConfirmRelation) return;
     // 如果取消价格间联动 则需要清空基础参数数组中 isDefault 和 diff上面的值
     if (!this.currentRelationMap.hasRelation) {
       this.currentRelationEditArr.forEach((item) => {
@@ -1084,15 +1084,17 @@ class priceFreightEditView extends priceFreightView {
   }
 
   //自动填补大重量运价 后面运价追溯前面得运价 如果中间跳开 则 跳开部分追溯前面得运价
-  autoFillWeightPrice(index){
-    
-    for(let i=0;i<=this.weightArr.length;i++){
-      let cur=this.weightArr[i];
-      let next=this.weightArr[i+1];
-      if(!!!next)break;
-      if(Number.isFinite(cur.standardPrice*1)&&(cur.standardPrice*1)>0){
-        if(next.standardPrice==''||(!Number.isFinite(next.standardPrice*1))){
-          next.standardPrice=(cur.standardPrice*1).toFixed(2);
+  autoFillWeightPrice(index) {
+
+    for (let i = 0; i <= this.weightArr.length; i++) {
+      let cur = this.weightArr[i];
+      let next = this.weightArr[i + 1];
+      if (!!!next) break;
+      if (Number.isFinite(cur.standardPrice * 1) && (cur.standardPrice * 1 > 0)) {
+        cur.standardPrice = (cur.standardPrice * 1).toFixed(2);
+
+        if (next.standardPrice == '' || (!Number.isFinite(next.standardPrice * 1))) {
+          next.standardPrice = (cur.standardPrice * 1).toFixed(2);
         }
       }
     }

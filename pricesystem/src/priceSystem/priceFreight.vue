@@ -311,9 +311,7 @@
                         type="input"
                         class="price-input"
                         v-model.sync="item.standardPrice"
-                        @blur="
-                          item.standardPrice = item.standardPrice.toFixed(2);
-                          priceObj.autoFillWeightPrice();
+                        @blur="priceObj.autoFillWeightPrice();
                         "
                       />
                     </td>
@@ -621,7 +619,8 @@
                               priceObj.tabDisplayIndex
                             ]['fixedMap'][
                               createFixedPriceKey(vol, weight)
-                            ].diff*1).toFixed(2) : ''
+                            ].diff*1).toFixed(2) : '';
+                            $forceUpdate();
                           "
                           v-focus
                           v-model.sync="
