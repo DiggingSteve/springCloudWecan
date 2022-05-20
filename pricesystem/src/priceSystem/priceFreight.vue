@@ -312,7 +312,8 @@
                         class="price-input"
                         v-model.sync="item.standardPrice"
                         @blur="
-                          item.standardPrice = item.standardPrice.toFixed(2)
+                          item.standardPrice = item.standardPrice.toFixed(2);
+                          priceObj.autoFillWeightPrice();
                         "
                       />
                     </td>
