@@ -1089,15 +1089,56 @@ class priceFreightEditView extends priceFreightView {
     for (let i = 0; i <= this.weightArr.length; i++) {
       let cur = this.weightArr[i];
       let next = this.weightArr[i + 1];
-      if (!!!next) break;
+      if(cur.code=="+0kg"){
+        continue;
+      }
+      
       if (Number.isFinite(cur.standardPrice * 1) && (cur.standardPrice * 1 > 0)) {
         cur.standardPrice = (cur.standardPrice * 1).toFixed(2);
-
+        if (!!!next) break;
         if (next.standardPrice == '' || (!Number.isFinite(next.standardPrice * 1))) {
           next.standardPrice = (cur.standardPrice * 1).toFixed(2);
         }
       }
     }
+  }
+
+  //自动填补一口价
+  /**
+   * 
+   * @param {weight对应的index} wIndex 
+   * @param {当前td对应得vol 得index} vIndex
+   * @param {当前选中的tab} tabDisplayIndex 
+   */
+  autoFillFixedPrice(wIndex,vIndex,tabDisplayIndex){
+    
+    var curtable=this.cusPackageIndexArr[tabDisplayIndex];
+    var fixedMap=curtable.fixedMap;
+    for(let i=wIndex;i<this.weightArr.length;i++){
+      let curWeight=this.weightArr[i];
+      let curVol=this.tableVolArr[vIndex]
+      let curKey=this.createFixedPriceKey(curVol.code,curWeight.code);
+      let obj=fixedMap[curKey];
+      if(!!!obj)break;
+      let price=obj.diff*1;
+      if(!Number.isFinite(price)||price<=0)break;
+      //可以进行往后匹配赋值 赋值逻辑是 判断有没有一口价 有没有 常规参数价 都没有则激活赋值
+      let nextWeight=this.weightArr[i+1];
+      if(!!!nextWeight)break;
+      let nextWeightDiff=nextWeight.standardPrice*1;
+      let isNextWeightSetValue= Number.isFinite(nextWeightDiff)&&nextWeightDiff>0;
+      let isVolSetValue=curVol.isSetValue;
+      if(isNextWeightSetValue&&isVolSetValue)break;//有常规价格则停止向后查找
+      let nextKey=this.createFixedPriceKey(curVol.code,nextWeight.code);
+      let nextObj=fixedMap[nextKey];
+      if(!!!nextObj)this.activeFixedPrice(curVol.code,nextWeight.code,obj.diff);//下一格没激活
+      else if(nextObj.diff==''||(!Number.isFinite(nextObj.diff*1))){
+          // 激活了如果无效值则替换
+          nextObj.diff=obj.diff;
+      }
+
+    }
+    this.vueInstance.$forceUpdate();
   }
 
 }
