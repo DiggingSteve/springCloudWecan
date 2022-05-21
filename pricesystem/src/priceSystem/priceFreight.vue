@@ -620,7 +620,7 @@
                             ]['fixedMap'][
                               createFixedPriceKey(vol, weight)
                             ].diff*1).toFixed(2) : '';
-                            priceObj.autoFillFixedPrice();
+                            priceObj.autoFillFixedPrice(j,i);
                           "
                           v-focus
                           v-model.sync="

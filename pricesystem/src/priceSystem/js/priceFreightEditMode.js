@@ -1108,11 +1108,10 @@ class priceFreightEditView extends priceFreightView {
    * 
    * @param {weight对应的index} wIndex 
    * @param {当前td对应得vol 得index} vIndex
-   * @param {当前选中的tab} tabDisplayIndex 
    */
-  autoFillFixedPrice(wIndex,vIndex,tabDisplayIndex){
+  autoFillFixedPrice(wIndex,vIndex){
     
-    var curtable=this.cusPackageIndexArr[tabDisplayIndex];
+    var curtable=this.cusPackageIndexArr[this.tabDisplayIndex];
     var fixedMap=curtable.fixedMap;
     for(let i=wIndex;i<this.weightArr.length;i++){
       let curWeight=this.weightArr[i];
