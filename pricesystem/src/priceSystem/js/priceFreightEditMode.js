@@ -1115,7 +1115,9 @@ class priceFreightEditView extends priceFreightView {
     var fixedMap=curtable.fixedMap;
     for(let i=wIndex;i<this.weightArr.length;i++){
       let curWeight=this.weightArr[i];
-      let curVol=this.tableVolArr[vIndex]
+      if(curWeight.code=="+0kg")break;
+      let curVolCode=this.tableVolArr[vIndex].code;
+      let curVol=this.volArr.find(f=>{return f.code==curVolCode});
       let curKey=this.createFixedPriceKey(curVol,curWeight);
       let obj=fixedMap[curKey];
       if(!!!obj)break;
