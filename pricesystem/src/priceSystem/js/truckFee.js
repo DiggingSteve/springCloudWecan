@@ -8,8 +8,8 @@
 // 显示此条的卡车费列表,默认值首次为+0，并可进行做加权填写，保存完毕后,则根据航空公司+到达港同步到应收，
 // 同步时判断如果数据库中没有，则新增，否则为更新。
 
-// 应收航线目的港卡车转运费 1).新增/修改卡车费时,当选择完基港，
-// 航空公司和到达港后，判断有无对应的应付条件为(基港+航空公司+到达港），如果有，
+// 应收航线目的港卡车转运费 1).新增/修改卡车费时,当选择完目的港，
+// 航空公司和到达港后，判断有无对应的应付条件为(目的港+航空公司+到达港），如果有，
 //   则询问"是否需要带入此到达港的应付卡车费"，选择"是",则显示应付的值，并可进行加权，并将加权关系记录到数据库。如果没有则直接过
 // 注意：只要手动更改过应收的值，则视为加权无效。
 import {
@@ -30,7 +30,7 @@ class TruckFee extends BaseService {
   currentPageMode = pagemode.search;
 
 
-  /**编辑页数据[{ddg:"卡车从基港运往的最终地",zzg:"到达港","twocodeStr":"航司逗号拼接",min:1,flat:2,codeArr:[{code:"+45kg",diff:0,guid:1231223}]}] */
+  /**编辑页数据[{ddg:"卡车从目的港运往的最终地",zzg:"到达港","twocodeStr":"航司逗号拼接",min:1,flat:2,codeArr:[{code:"+45kg",diff:0,guid:1231223}]}] */
   feeArr = [];
 
   currentFeeid = "";
@@ -440,7 +440,7 @@ class TruckFee extends BaseService {
     var groupLength = this.getExcelGroupLength(fileData)// 有多少行数据 
     for (var i = 0; i < groupLength; i++) {
       let key = i + 2;
-      if (!!!fileData["A" + key]) { throw new Error("基港三字码必填") }
+      if (!!!fileData["A" + key]) { throw new Error("目的港三字码必填") }
       var mdg = fileData["A" + key].v;
       if (!!!fileData["B" + key]) { throw new Error("航司二字码必填") }
       var twocodeStr = fileData["B" + key].v;

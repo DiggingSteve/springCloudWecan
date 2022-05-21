@@ -128,7 +128,7 @@
             <page-select
               pagetype="6"
               :modelval.sync="priceObj.mdg"
-              title="基港"
+              title="目的港"
               type="inline"
               required="tip"
             >
@@ -333,7 +333,7 @@
                     <td class=""></td>
                     <td class="">中转港</td>
                     <td class=""></td>
-                    <td class="">基港</td>
+                    <td class="">目的港</td>
                     <td class="">航司二字码</td>
                     <td class="">航班号</td>
                     <td class="">服务描述</td>

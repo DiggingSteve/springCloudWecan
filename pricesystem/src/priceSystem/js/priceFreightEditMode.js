@@ -30,7 +30,7 @@ class priceFreightEditView extends priceFreightView {
 
   _currentFeeMap = null;
 
-  /**航线分区id 从基港得出 */
+  /**航线分区id 从目的港得出 */
 
 
 

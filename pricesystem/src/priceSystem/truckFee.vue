@@ -28,7 +28,7 @@
           pagetype="6"
           :modelval.sync="searchData.mdg"
           type="inline"
-          title="基港"
+          title="目的港"
         ></page-select>
       </div>
       <div class="item15">
@@ -166,7 +166,7 @@
             <thead>
               <tr>
                 <td v-if="!priceObj.isEditMode">操作</td>
-                <td>基港</td>
+                <td>目的港</td>
                 <td>航司二字码</td>
                 <td>到达港</td>
                 <td>MIN</td>
@@ -197,7 +197,7 @@
                   <td>
                     <page-select
                       :pagetype="6"
-                      placeholder="基港"
+                      placeholder="目的港"
                       :modelval.sync="pageArr[index].mdg"
                       :changeFunction="checkIsExistWageoutFee"
                       :triggerKey="index"
@@ -423,7 +423,7 @@
           class="item100"
           style="font-size: 16px; font-weight: 800; margin-bottom: 10px"
         >
-          <span>基港:</span><span>{{ priceObj.feeArr[0].mdg }}</span>
+          <span>目的港:</span><span>{{ priceObj.feeArr[0].mdg }}</span>
           <span>航司:</span><span>{{ priceObj.feeArr[0].twocodeStr }}</span>
           <span>币种:</span><span>CNY</span>
         </div>
@@ -624,14 +624,14 @@
       width="50%"
       :close-on-click-modal="false"
     >
-    <div class="row" style="margin:20px 0">以下数据存在重复的 航司 基港 到达港 数据,请检查数据后重新导入</div>
+    <div class="row" style="margin:20px 0">以下数据存在重复的 航司 目的港 到达港 数据,请检查数据后重新导入</div>
       
           <div class="row" style="">
             <table class="duplicateTable">
               <tbody>
                 <tr>
                   <td style="">
-                    基港
+                    目的港
                   </td>
                   <td>
                     到达港

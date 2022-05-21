@@ -8,7 +8,7 @@ import { error } from 'shelljs';
 import { diffCodeKey } from '../../api/getBasicStorageData';
 import { BaseService } from '../js/base';
 
-const pageMode = { search: "查询", pageOne: "选择始发港基港", pageConfirm: "确认页面" }
+const pageMode = { search: "查询", pageOne: "选择始发港目的港", pageConfirm: "确认页面" }
 
 // 1 随直达价 2 固定价格
 const priceMode = { equalDirect: 1, fixed: 2 }
@@ -573,7 +573,7 @@ class priceFreightView extends BaseService {
         }
 
         if (!!!this.mdg) {
-            throw new Error("基港未填");
+            throw new Error("目的港未填");
         }
         if (!!!this.twoCode) {
             throw new Error("未选择航司二字码");

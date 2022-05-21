@@ -451,7 +451,7 @@
       </template>
     </tableCompt>
     <el-dialog
-      :title="`卡车信息 基港:${truckInfo.mdg} -> 到达港: ${truckInfo.ddg}`"
+      :title="`卡车信息 目的港:${truckInfo.mdg} -> 到达港: ${truckInfo.ddg}`"
       :visible.sync="isShowTruckDetail"
       :width="'90%'"
       :center="true"
