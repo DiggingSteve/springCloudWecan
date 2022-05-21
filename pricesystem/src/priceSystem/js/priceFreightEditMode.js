@@ -1116,7 +1116,7 @@ class priceFreightEditView extends priceFreightView {
     for(let i=wIndex;i<this.weightArr.length;i++){
       let curWeight=this.weightArr[i];
       let curVol=this.tableVolArr[vIndex]
-      let curKey=this.createFixedPriceKey(curVol.code,curWeight.code);
+      let curKey=this.createFixedPriceKey(curVol,curWeight);
       let obj=fixedMap[curKey];
       if(!!!obj)break;
       let price=obj.diff*1;
@@ -1128,9 +1128,9 @@ class priceFreightEditView extends priceFreightView {
       let isNextWeightSetValue= Number.isFinite(nextWeightDiff)&&nextWeightDiff>0;
       let isVolSetValue=curVol.isSetValue;
       if(isNextWeightSetValue&&isVolSetValue)break;//有常规价格则停止向后查找
-      let nextKey=this.createFixedPriceKey(curVol.code,nextWeight.code);
+      let nextKey=this.createFixedPriceKey(curVol,nextWeight);
       let nextObj=fixedMap[nextKey];
-      if(!!!nextObj)this.activeFixedPrice(curVol.code,nextWeight.code,obj.diff);//下一格没激活
+      if(!!!nextObj)this.activeFixedPrice(curVol,nextWeight,obj.diff);//下一格没激活
       else if(nextObj.diff==''||(!Number.isFinite(nextObj.diff*1))){
           // 激活了如果无效值则替换
           nextObj.diff=obj.diff;
