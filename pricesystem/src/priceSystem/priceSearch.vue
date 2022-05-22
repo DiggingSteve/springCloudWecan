@@ -224,7 +224,7 @@
         <div style="padding: 5px">
           <div
             class="row"
-            style="width: 175px; line-height: 20px; margin-bottom: 10px"
+            style=" margin-bottom: 5px"
           >
           
             <div class="item100">
