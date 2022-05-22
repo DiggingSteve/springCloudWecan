@@ -224,7 +224,7 @@
         <div style="padding: 5px">
           <div
             class="row"
-            style="width: 150px; line-height: 20px; margin-bottom: 10px"
+            style="width: 175px; line-height: 20px; margin-bottom: 10px"
           >
           
             <div class="item100">
@@ -245,7 +245,7 @@
           >
             <div class="item100" style="padding-left: 5px">
               <span>{{ tableDataRes[pdata.data.index].mdg }}</span>
-             <span class="icon-truck" style="display:inline-block;width:18px;height:16px;margin:0 10px"
+             <span class="icon-truck" style="display:inline-block;width:23px;height:16px;margin:0 10px"
              @click="loadTruckInfo(tableDataRes[pdata.data.index].truckFeeid)"
              ></span>
               <span>{{ tableDataRes[pdata.data.index].ddg }}</span>
