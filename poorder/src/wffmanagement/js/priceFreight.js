@@ -385,6 +385,15 @@ class priceFreightView extends BaseService {
         this.weightArr = JSON.parse(localStorage.getItem(diffCodeKey.weight));
         this.volArr = JSON.parse(localStorage.getItem(diffCodeKey.vol));
         this.cusArr = JSON.parse(localStorage.getItem(diffCodeKey.cus));
+        this.relationMap.cus.baseIndex = this.cusArr.findIndex(f => { return f.isDefault == 1 });
+        this.relationMap.packageType.baseIndex = this.packageTypeArr.findIndex(f => { return f.isDefault == 1 });
+        this.relationMap.vol.baseIndex = this.volArr.findIndex(f => { return f.isDefault == 1 });
+
+        this.tableVolArr= this.volArr.sort((a,b)=>{
+            return a.tableSeq-b.tableSeq;
+        })
+
+        this.confirmPriceTabArr();
     }
 
 
@@ -442,6 +451,133 @@ class priceFreightView extends BaseService {
             this.minPrice = num.toFixed(2);
         }
     }
+
+     // 和基点相同的index为一组 不同的拆散 然后 packageType 和 cus 之间笛卡尔积 为排列组合总数
+     cusIndexArr = []
+
+     packageIndexArr = []
+ 
+     cusPackageIndexArr = [];
+ 
+     tabDisplayIndex = 0;
+     //载入基点tab组合 数组第一个元素记载和基点相同的索引 
+     loadBasePriceTabArr() {
+         var cusIndex = this.cusArr.findIndex(f => { return f.isDefault });
+ 
+         var packageIndex = this.packageTypeArr.findIndex(f => { return f.isDefault });
+ 
+         this.cusIndexArr[0] = [];
+         this.cusIndexArr[0].push(cusIndex);
+ 
+ 
+         this.packageIndexArr[0] = [];
+         this.packageIndexArr[0].push(packageIndex);
+ 
+     }
+ 
+ 
+     //确认 组合tab以及相关勾稽关系
+     confirmPriceTabArr() {
+         this.cusIndexArr = [];
+         this.packageIndexArr = [];
+         this.tabDisplayIndex = 0;
+         this.loadBasePriceTabArr();
+         for (let i = 0; i < this.cusArr.length; i++) {
+             var cus = this.cusArr[i];
+             if (cus.isDefault == 1) continue;
+             if (!cus.isAdd) continue;
+             this.cusIndexArr[0] = this.cusIndexArr[0] || [];
+ 
+             if (cus.isSameAsBase) {
+                 this.cusIndexArr[0].push(i);
+                 cus.isSetValue = true;
+                 cus.diff = 0;
+             }
+             else {
+                 this.cusIndexArr.push(i);
+             }
+         }
+         for (let j = 0; j < this.packageTypeArr.length; j++) {
+             var p = this.packageTypeArr[j];
+             if (p.isDefault == 1) continue;
+             if (!p.isAdd) continue;
+             this.packageIndexArr[0] = this.packageIndexArr[0] || [];
+ 
+             if (p.isSameAsBase) {
+                 this.packageIndexArr[0].push(j);
+                 p.isSetValue = true;
+                 p.diff = 0;
+             }
+             else {
+                 this.packageIndexArr.push(j);
+             }
+         }
+ 
+         for(let k=0;k<this.volArr.length;k++){
+             var vol = this.volArr[k];
+             if (vol.isDefault == 1) continue;
+             if (!vol.isAdd) continue;
+             if (vol.isSameAsBase) {
+                 vol.isSetValue = true;
+                 vol.diff = 0;
+             }
+         }
+ 
+         for (let i = 0; i < this.cusIndexArr.length; i++) {
+             let cusIndex = this.cusIndexArr[i];
+             let cusTitle = cusIndex instanceof Array ? this.getTitle(this.cusArr, cusIndex) : this.cusArr[cusIndex].title
+             for (let j = 0; j < this.packageIndexArr.length; j++) {
+                 let pIndex = this.packageIndexArr[j];
+                 let pTitle = pIndex instanceof Array ? this.getTitle(this.packageTypeArr, pIndex) : this.packageTypeArr[pIndex].title
+                 var matchObj = this.cusPackageIndexArr.find(f => { return (f.cusTitle == cusTitle) && (f.pTitle == pTitle) });
+                 let cDiff = this.getDiff(this.cusArr, cusIndex);
+                 let pDiff = this.getDiff(this.packageTypeArr, pIndex);
+                 var obj = {
+                     cusIndex: cusIndex,
+                     pIndex: pIndex,
+                     cusTitle: cusTitle,
+                     pTitle: pTitle,
+                     cDiff: cDiff, //记录对应勾稽参数差值
+                     pDiff: pDiff,
+                     fixedMap: {},//记录一口价 此一口价key无需加上cus package
+                     isRemain: true
+                 } // 组合tab对象
+                 if (!!!matchObj) {
+                     this.cusPackageIndexArr.push(obj);
+                 }
+                 else {
+                     matchObj.cusIndex = cusIndex;
+                     matchObj.pIndex = pIndex;
+                     matchObj.cusTitle = cusTitle;
+                     matchObj.pTitle = pTitle;
+                     matchObj.cDiff = cDiff;
+                     matchObj.pDiff = pDiff;
+                     matchObj.isRemain = true;
+                 }
+             }
+         }
+         this.cusPackageIndexArr = this.cusPackageIndexArr.filter(f => { return f.isRemain });
+         this.cusPackageIndexArr.forEach((item) => {
+             item.isRemain = false;
+         })
+         this.vueInstance.$forceUpdate();
+     }
+ 
+     getDiff(arr, indexOrArr) {
+         if (indexOrArr instanceof Array) {
+             return arr[indexOrArr[0]].diff;
+         }
+         else return arr[indexOrArr].diff;
+     }
+ 
+     getTitle(arr, indexArr) {
+         return indexArr.reduce((pre, cur, index) => {
+             return pre + (index > 0 ? "," : "") + arr[cur].title;
+         }, '')
+     }
+ 
+ 
+ 
 
 
 

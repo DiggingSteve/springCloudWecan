@@ -662,6 +662,127 @@
                 @click="priceObj.loadIataPrice()"
               >TACT运价表查询</el-button>
             </div> -->
+
+              <!--快捷组合切换-->
+          <div class="row relation-wrap" style="box-shadow: unset">
+            <template v-for="(item, i) in priceObj.cusPackageIndexArr">
+              <div
+                class="operate-tag"
+                style="width: unset; padding: 0 5px"
+                v-bind:class="{
+                  active: priceObj.tabDisplayIndex == i,
+                }"
+                @click="priceObj.tabDisplayIndex = i"
+              >
+                <span>{{ item.cusTitle }}</span>
+                <span>;</span>
+                <span>{{ item.pTitle }}</span>
+              </div>
+            </template>
+          </div>
+          <div class="row">
+            <div class="table-wrap price-preview">
+              <table id="tbPricePreview">
+                <tbody>
+                  <tr>
+                    <td style="height: 26px"></td>
+                    <td
+                      style="height: 30px; width: 85px; cursor: pointer"
+                      v-for="(weight, j) in priceObj.weightArr"
+                      class="operate-head"
+                      @mouseenter="activeColumn(j)"
+                      @mouseleave="activeColumn(j)"
+                    >
+                      <span>{{ weight.title }}</span>
+                      <!-- <span
+                        style="display: none"
+                        class="circle-del"
+                        @click="priceObj.delTitle(j, null)"
+                      >
+                        <i class="el-icon-close"></i>
+                      </span> -->
+                    </td>
+                  </tr>
+                  <tr v-for="(vol, i) in priceObj.tableVolArr">
+                    <td
+                      class="operate-head"
+                      @mouseenter="activeRow(i)"
+                      @mouseleave="activeRow(i)"
+                    >
+                      <span :class="{ blue: vol.isDefault == 1 }">{{
+                        vol.code
+                      }}</span>
+                      <!-- <span
+                        style="display: none"
+                        class="circle-del"
+                        @click="priceObj.delTitle(null, i)"
+                      >
+                        <i class="el-icon-close"></i>
+                      </span> -->
+                    </td>
+                    <template v-for="(weight, j) in priceObj.weightArr">
+                      {{
+                        void (isShowFixed = priceObj.isDisplayPriceActive(
+                          createFixedPriceKey(vol, weight)
+                        ))
+                      }}
+                      {{ void (cellValue = setCellValue(vol, weight)) }}
+                
+                      <td
+                        style="width: 68px; height: 26px; cursor: pointer"
+                        v-bind:class="{
+                          greyBg: cellValue == '--',
+                        }"
+                      >
+                        <input
+                          type="input"
+                          @click="
+                            priceObj.activeFixedPrice(
+                              vol,
+                              weight,
+                              setCellValue(vol, weight)
+                            )
+                          "
+                          class="price-input"
+                          :class="{ blue: vol.isDefault == 1 }"
+                          v-model="cellValue"
+                          v-show="!isShowFixed"
+                        />
+                        <input
+                          class="price-input"
+                          v-if="isShowFixed"
+                          style="color: red"
+                          type="input"
+                          @blur="
+                            priceObj.cusPackageIndexArr[
+                              priceObj.tabDisplayIndex
+                            ]['fixedMap'][
+                              createFixedPriceKey(vol, weight)
+                            ].diff = priceObj.cusPackageIndexArr[
+                              priceObj.tabDisplayIndex
+                            ]['fixedMap'][
+                              createFixedPriceKey(vol, weight)
+                            ].diff > 0 ? (priceObj.cusPackageIndexArr[
+                              priceObj.tabDisplayIndex
+                            ]['fixedMap'][
+                              createFixedPriceKey(vol, weight)
+                            ].diff*1).toFixed(2) : '';
+                            priceObj.autoFillFixedPrice(j,i);
+                          "
+                          v-focus
+                          v-model.sync="
+                            priceObj.cusPackageIndexArr[
+                              priceObj.tabDisplayIndex
+                            ]['fixedMap'][createFixedPriceKey(vol, weight)].diff
+                          "
+                        />
+                      </td>
+                    </template>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
           </div>
           <div class="row" :class="{'disabled': priceObj.disabled}">
             <div class="table-wrap price-preview">

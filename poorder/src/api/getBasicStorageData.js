@@ -530,12 +530,18 @@ function createBasicCardData(arr,type) {
   return arr.sort((a, b) => {
       return a.ready02 *1 -b.ready02*1
   }).map((item, index) => {
-      return { code: item.ready01, diff: '', isDefault: index == 0 ? 1 : 2,title:item.typename,isAdd:type=="vol"//是否在参数中被选中
-      ,isSelect:false,standardPrice:''
-     }
+    var isBase = isBasePoint(item);
+    return {
+      code: item.ready01, diff: isBase ? "基点" : '', isDefault: isBase ? 1 : 2, title: item.typename, isAdd: (isBase || type == "vol") ? true : false//是否在参数中被选中
+      , standardPrice: '', canDelete: !isBase&&type!="vol", isSetValue: (isBase) ? true : false,
+      isSameAsBase: null, //默认不选一致与否
+      tableSeq:item.ready03//渲染表格的排序
+    }
   });
 }
-
+function isBasePoint(item) {
+  return item.ready01 == "官网公布" || item.ready01 == "散货" || item.ready01 == "1:167";
+}
 const getAllTemplates = function () {
   //获取全部模板数据
   return new Promise((resolve, reject) => {
