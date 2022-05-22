@@ -633,7 +633,7 @@
               </div>
             </template>
           </div>
-          <div class="row" class="disabled">
+          <div class="row disabled" >
             <div class="table-wrap price-preview">
               <table id="tbPricePreview">
                 <tbody>
