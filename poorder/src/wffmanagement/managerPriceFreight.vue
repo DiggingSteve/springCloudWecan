@@ -704,7 +704,6 @@
                         <input
                           class="price-input"
                           v-if="isShowFixed"
-                          style="color: red"
                           type="input"
                           @blur="
                             priceObj.cusPackageIndexArr[
