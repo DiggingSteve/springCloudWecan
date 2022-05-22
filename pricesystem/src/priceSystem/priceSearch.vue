@@ -221,21 +221,21 @@
         </div>
       </template>
       <template v-slot:routing="pdata">
-        <div style="padding: 5px">
+        <div style="padding: 5px" class="routing">
           <div
             class="row"
             style=" margin-bottom: 5px"
           >
           
             <div class="item100">
-              <span>{{ tableDataRes[pdata.data.index].sfg }}</span>
+              <span class="txt">{{ tableDataRes[pdata.data.index].sfg }}</span>
               <span class="icon-flight" style="display:inline-block;width:18px;height:16px;margin:0 10px"></span>
                <template v-if="tableDataRes[pdata.data.index].zzg != '直达'">
-                   <span >{{ tableDataRes[pdata.data.index].zzg }}</span>
+                   <span class="txt">{{ tableDataRes[pdata.data.index].zzg }}</span>
                    <span class="icon-flight" style="display:inline-block;width:18px;height:16px;margin:0 10px"></span>
                </template >
             
-              <span>{{ tableDataRes[pdata.data.index].mdg }}</span>
+              <span class="txt">{{ tableDataRes[pdata.data.index].mdg }}</span>
             </div>
           </div>
           <div
@@ -244,11 +244,11 @@
             v-if="tableDataRes[pdata.data.index].hasTruckRouting"
           >
             <div class="item100" style="padding-left: 5px">
-              <span>{{ tableDataRes[pdata.data.index].mdg }}</span>
+              <span class="txt">{{ tableDataRes[pdata.data.index].mdg }}</span>
              <span class="icon-truck" style="display:inline-block;width:23px;height:16px;margin:0 10px"
              @click="loadTruckInfo(tableDataRes[pdata.data.index].truckFeeid)"
              ></span>
-              <span>{{ tableDataRes[pdata.data.index].ddg }}</span>
+              <span class="txt">{{ tableDataRes[pdata.data.index].ddg }}</span>
             </div>
           </div>
         </div>
@@ -1425,6 +1425,12 @@ export default {
       line-height: 30px;
       border: 1px solid #dedede;
     }
+  }
+}
+.routing{
+  & .txt{
+    display: inline-block;
+    width: 30px;
   }
 }
 /deep/.detail {
