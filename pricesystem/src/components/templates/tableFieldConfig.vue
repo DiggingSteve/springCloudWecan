@@ -702,6 +702,8 @@ export default {
         addtime: { title: '发布时间', fieldtype: 3 },
         addman: { title: '发布人', fieldtype: 3 },
         term: { title: '有效期', fieldtype: 3 },
+        startdate: { title: '起始时间', fieldtype: 3 },
+        enddate: { title: '结束时间', fieldtype: 3 },
         hs:{ title: '航司', fieldtype: 3 },
         jfType: { title: '计费方式', fieldtype: 3 },
         wecanStandard: { title: '运价性质', fieldtype: 3 },
