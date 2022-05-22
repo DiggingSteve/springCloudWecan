@@ -226,15 +226,15 @@
             class="row"
             style="width: 150px; line-height: 20px; margin-bottom: 10px"
           >
-            <div
-              class="item15 icon-flight"
-              style="width: 20px; height: 20px"
-            ></div>
-            <div class="item85" style="padding-left: 5px">
-              <span>{{ tableDataRes[pdata.data.index].sfg }}-</span>
-              <span v-if="tableDataRes[pdata.data.index].zzg != '直达'"
-                >{{ tableDataRes[pdata.data.index].zzg }}-</span
-              >
+          
+            <div class="item85">
+              <span>{{ tableDataRes[pdata.data.index].sfg }}</span>
+              <span class="icon-flight" style="display:inline-block;width:10px;height:10px;"></span>
+               <template v-if="tableDataRes[pdata.data.index].zzg != '直达'">
+                   <span >{{ tableDataRes[pdata.data.index].zzg }}</span>
+                   <span class="icon-flight" style="display:inline-block;width:10px;height:10px;"></span>
+               </template >
+            
               <span>{{ tableDataRes[pdata.data.index].mdg }}</span>
             </div>
           </div>
