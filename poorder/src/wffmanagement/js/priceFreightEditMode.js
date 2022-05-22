@@ -341,7 +341,7 @@ class priceFreightEditView extends priceFreightView {
     this.cusArr = cusArr;
     this.weightArr = weightArr;
     this.volArr = volArr;
-
+    this.confirmPriceTabArr();
   }
   //编辑页载入详情 将数据库数据转换成基础参数
   convertMapToCodeDiff(mapArr, cacheArr, type) {
