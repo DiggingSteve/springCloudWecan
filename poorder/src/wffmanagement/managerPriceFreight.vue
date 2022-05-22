@@ -498,43 +498,23 @@
             <span class="pageTwoTitle">运价基础参数</span>
           </div>
         </div>
-        <!--钩稽关系维护start-->
+          <!--钩稽关系维护start-->
         <div class="row relation-wrap">
           <div class="item10 operate-title">客户参数</div>
-          <div
-            class="item75"
-            style="display: flex"
-          >
-            <template>
-              <div
-                v-show="priceObj.isCusEmpty"
-                style="width: 200px"
-                class="operate-tag-forbidden"
-              >
-                <span>适用于所有客户参数</span>
-              </div>
-            </template>
+          <div class="item75" style="display: flex">
+            <template> </template>
             <template v-for="(item, index) in priceObj.cusArr">
               <div
-                class="operate-tag"
-                v-bind:class="{
-                  active: priceObj.cusDisplayIndex == index,
-                }"
-                @click="priceObj.cusDisplayIndex = index"
+                class="operate-tag nohover"
+                style="cursor: not-allowed"
                 v-show="item.isAdd"
               >
                 <span>{{ item.title }}</span>
-                <!-- <span
-                  class="el-icon-close"
-                  @click="priceObj.delRelationTag(index, 'cus', $event)"
-                  style="display: none"
-                >
-                </span> -->
               </div>
             </template>
           </div>
           <div class="item5"></div>
-          <div class="item10">
+          <div class="item10" v-show="false">
             <div
               class="operate-edit"
               @click="priceObj.openRelationDialog('cus')"
@@ -545,39 +525,19 @@
         </div>
         <div class="row relation-wrap">
           <div class="item10 operate-title">包装参数</div>
-          <div
-            class="item75"
-            style="display: flex"
-          >
-            <template>
-              <div
-                v-show="priceObj.isPackageTypeEmpty"
-                style="width: 200px"
-                class="operate-tag-forbidden"
-              >
-                <span>适用于所有包装参数</span>
-              </div>
-            </template>
+          <div class="item75" style="display: flex">
             <template v-for="(item, index) in priceObj.packageTypeArr">
               <div
-                class="operate-tag"
-                v-bind:class="{
-                  active: priceObj.packageDisplayIndex == index,
-                }"
-                @click="priceObj.packageDisplayIndex = index"
+                class="operate-tag nohover"
+                style="cursor: not-allowed"
                 v-show="item.isAdd"
               >
                 <span>{{ item.title }}</span>
-                <!-- <span
-                  class="el-icon-close"
-                  style="display: none"
-                  @click="priceObj.delRelationTag(index, 'package', $event)"
-                ></span> -->
               </div>
             </template>
           </div>
           <div class="item5"></div>
-          <div class="item10">
+          <div class="item10" v-show="false">
             <div
               class="operate-edit"
               @click="priceObj.openRelationDialog('package')"
@@ -587,19 +547,16 @@
           </div>
         </div>
         <div class="row relation-wrap">
-          <div class="item10 operate-title">尺寸参数</div>
-          <div
-            class="item75"
-            style="display: flex"
-          >
+          <div class="item10 operate-title">货型参数</div>
+          <div class="item75" style="display: flex">
             <template v-for="item in priceObj.volArr">
-              <div class="operate-tag-forbidden">
+              <div class="operate-tag nohover" style="cursor: not-allowed">
                 <span>{{ item.title }}</span>
               </div>
             </template>
           </div>
           <div class="item5"></div>
-          <div class="item10">
+          <div class="item10" v-show="false">
             <div
               class="operate-edit"
               @click="priceObj.openRelationDialog('vol')"
@@ -613,11 +570,7 @@
           style="width: 100%"
           v-if="priceObj._currentPageMode == pageMode.pageConfirm"
         >
-          <div class="row">
-            <div style="margin-bottom: 10px; text-align: start">
-              <span style="font-weight: 800; font-size: 18px">运价编辑</span>
-            </div>
-          </div>
+      
           <div
             class="row"
             style="margin: 10px 0; width: 100%"
@@ -1789,31 +1742,41 @@ export default {
       }
     },
 
-    /**设置单元格价格 */
-    setCellValue(vol, weight, pIndex, cIndex) {
+   /**设置单元格价格 */
+    // 第一页请填写各重量的运价，改为 “请填写官网公布的1:167散货的运价”，这说明默认基点为，1：167，散货，官网公布，其他标准的运价都为空，
+    //且尚未建立勾稽关系，需以编辑->新增方式来添加(原先是减法)
+    //则现在初始只加载第一行的价格
+    setCellValue(vol, weight) {
+      vol = this.priceObj.volArr.find((f) => {
+        return f.code == vol.code;
+      });
+      let isVolSetValue = vol.isSetValue;
       let volDiff = vol.diff * 1;
       let weightPrice = weight.standardPrice * 1;
-      let currentP = this.priceObj.packageTypeArr[pIndex];
-      let currentC = this.priceObj.cusArr[cIndex];
-      let packageDiff = (currentP ? currentP.diff : 0) * 1;
-      let cusDiff = (currentC ? currentC.diff : 0) * 1;
+      let selectedIndex = this.priceObj.tabDisplayIndex;
+      let selectedTab = this.priceObj.cusPackageIndexArr[selectedIndex];
+      let cusDiff = selectedTab.cDiff * 1;
+      let pDiff = selectedTab.pDiff * 1;
 
       if (!Number.isFinite(weightPrice) || weightPrice == 0) return "--";
-      if(weight.title=="MIN")return weightPrice;
+      if (!isVolSetValue) return "--";
+      if (weight.title == "MIN") return weightPrice;
       let val =
         (Number.isFinite(volDiff) ? volDiff : 0) +
         (Number.isFinite(weightPrice) ? weightPrice : 0) +
-        (Number.isFinite(packageDiff) ? packageDiff : 0) +
+        (Number.isFinite(pDiff) ? pDiff : 0) +
         (Number.isFinite(cusDiff) ? cusDiff : 0);
-      return val;
+      return val.toFixed(2);
+    },
+    getFixedDiff(v, w) {
+      var selectTab =
+        this.priceObj.cusPackageIndexArr[this.priceObj.tabDisplayIndex];
+      var map = selectTab.fixedMap;
+      var key = this.createFixedPriceKey(v, w);
+      return map.fixedMap[key].diff;
     },
     createFixedPriceKey(v, w) {
-      var a = this.priceObj.createFixedPriceKey(
-        this.priceObj.currentPackageType,
-        this.priceObj.currentCus,
-        v,
-        w
-      );
+      var a = this.priceObj.createFixedPriceKey(v, w);
       return a;
     },
     createImportPriceKey(v, w) {
