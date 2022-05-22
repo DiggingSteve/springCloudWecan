@@ -227,12 +227,12 @@
             style="width: 150px; line-height: 20px; margin-bottom: 10px"
           >
           
-            <div class="item85">
+            <div class="item100">
               <span>{{ tableDataRes[pdata.data.index].sfg }}</span>
-              <span class="icon-flight" style="display:inline-block;width:10px;height:10px;"></span>
+              <span class="icon-flight" style="display:inline-block;width:18px;height:16px;margin:0 10px"></span>
                <template v-if="tableDataRes[pdata.data.index].zzg != '直达'">
                    <span >{{ tableDataRes[pdata.data.index].zzg }}</span>
-                   <span class="icon-flight" style="display:inline-block;width:10px;height:10px;"></span>
+                   <span class="icon-flight" style="display:inline-block;width:18px;height:16px;margin:0 10px"></span>
                </template >
             
               <span>{{ tableDataRes[pdata.data.index].mdg }}</span>
@@ -243,13 +243,11 @@
             style="line-height: 20px"
             v-if="tableDataRes[pdata.data.index].hasTruckRouting"
           >
-            <div
-              class="item15 icon-truck"
-              style="width: 20px; height: 20px"
-              @click="loadTruckInfo(tableDataRes[pdata.data.index].truckFeeid)"
-            ></div>
-            <div class="item85" style="padding-left: 5px">
-              <span>{{ tableDataRes[pdata.data.index].mdg }}-</span>
+            <div class="item100" style="padding-left: 5px">
+              <span>{{ tableDataRes[pdata.data.index].mdg }}</span>
+             <span class="icon-truck" style="display:inline-block;width:18px;height:16px;margin:0 10px"
+             @click="loadTruckInfo(tableDataRes[pdata.data.index].truckFeeid)"
+             ></span>
               <span>{{ tableDataRes[pdata.data.index].ddg }}</span>
             </div>
           </div>
