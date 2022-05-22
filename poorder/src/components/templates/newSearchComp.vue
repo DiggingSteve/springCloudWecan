@@ -165,7 +165,9 @@
           <div v-for="item of fieldTypeArr"
             :class="['fieldtype-title-item', {'active': templateConfig.activeFieldtype === item.fieldtype}]"
             :style="setBgcolor(userSerColor[item.fieldtype])" :key="item.fieldtype"
-            @click="templateConfig.activeFieldtype = item.fieldtype">
+            >
+            <!-- 禁用点击 madarong  -->
+            <!-- @click="templateConfig.activeFieldtype = item.fieldtype" -->
             <!-- <el-color-picker size="mini" class="myColorPicker"></el-color-picker> -->
             {{ item.label }}
           </div>
@@ -361,6 +363,9 @@
             whereStr: "like",
             fieldtype: 1,
             businesstype: 1
+          },
+          jsconfirmstatus:{
+
           },
           khjcbh: {
             title: "进仓编号",
@@ -630,6 +635,17 @@
             fieldtype: 3,
             hideLabel: ["待合并", "已审单"]
           },
+          jsconfirmstatus: {
+            title: "结算费用状态",
+            type: 5,
+            whereStr: "in",
+            dom: "结算费用状态",
+            fieldtype: 3,
+            options: [
+              { label: '结算费用未确认', value: '1' },
+              { label: '结算费用已确认', value: '700' }
+            ]
+          },
           docstatus: {
             title: "文档状态",
             type: 5,
@@ -723,13 +739,13 @@
             fieldtype: 3
           },
           confirmstatus: {
-            title: "费用状态",
+            title: this.$store.state.situationState == 'costConfirmation' ? "结算费用状态" : "费用状态",
             type: 5,
             whereStr: "in",
             fieldtype: 3,
             options: [
-              { label: "费用未确认", value: "1" },
-              { label: "费用已确认", value: "700" }
+              { label: this.$store.state.situationState == 'costConfirmation' ? "结算费用未确认" : "费用未确认", value: "1" },
+              { label: this.$store.state.situationState == 'costConfirmation' ? "结算费用已确认" :  "费用已确认", value: "700" }
             ]
           },
           kfconfirmstatus: {
@@ -1034,6 +1050,9 @@
           },
           hbh: { title: "航班号", type: 1, whereStr: "like", fieldtype: 4 },
           yqhbh: { title: "要求航班号", type: 1, whereStr: "like", fieldtype: 4 },
+
+        
+
           real_hbh: {
             title: "航班号",
             type: 1,
@@ -1460,6 +1479,13 @@
             fieldtype: 4,
             pagetype:61
           },
+
+          ybvolumeremark: {
+            title: '预报尺寸备注',
+            type: 1,
+            whereStr: "like",
+            fieldtype: 4,
+          },
           // 岗位查询 fieldtype: 5
           examineman_sett: { title: "审核人", type: 1, fieldtype: 5 },
           addman: { title: "创建人", type: 1, fieldtype: 5 },
@@ -1814,6 +1840,9 @@
         if (tempname == "customerSearch.vue" ) {
           fields[1].push(...["releasestatus", 'pdfinishstatus', 'pdfinishdate', 'pdfinishman']);
         }
+
+       
+
         // if (tempname == "customerSearch.vue" || tempname =='airLineSearch.vue') {
         //   fields[1].push(...["signpiece","signweight","signvolume"]);
         // }
@@ -1823,8 +1852,7 @@
             ["pono","shipperno","mawb","hbrq","adddate","orderfinishdate","status","","pcstatus","fid","gid","addman","orderconfirmman","signman","rollbackroute",],
             ["khjcbh"]
            ]
-
-          //  console.log(this.$stroe.state.situationState)
+      
            if(this.$store.state.situationState == 'hxCostCassify'){
 
                fields[0].splice(7,1,'hxconfirmstatus')
@@ -1833,6 +1861,8 @@
 
                fields[0].splice(7,1,'kfconfirmstatus')
  
+           } else if(this.$store.state.situationState == 'costConfirmation') {
+               fields[0].splice(7,1,'confirmstatus')
            }
         }
 
@@ -2226,6 +2256,11 @@
           fields[0] = fields[0].filter(i => i != "shipperno");
           fields[1] = fields[1].filter(i => i != "shipperno");
 
+        }
+
+         // 空出的综合查询和客服综合查询加“预报尺寸备注”查询条件和列表字段
+        if ( tempname == 'orderSearch.vue' || tempname == 'customerSearch.vue') {
+          fields[1].push('ybvolumeremark')
         }
 
         // fields[1]=Object.keys(this.allViewData); //显示全部字段
@@ -2901,7 +2936,7 @@
           let basicArr = this.pageBasicField.flat() || []
           let arr = [];
           Object.keys(this.allViewData).forEach(i => {
-            if (this.allViewData[i].fieldtype == fieldtype && !basicArr.includes(i)) {
+            if (this.allViewData[i].fieldtype == fieldtype && !basicArr.includes(i) && i != 'ybvolumeremark') {
               if (this.name == 'managerExamine.vue' && !['pono', 'hbh', 'hbrq', 'mdg'].includes(i)) {
                 arr.push(i)
               }
@@ -2913,7 +2948,8 @@
           if (this.name == 'tZsearch.vue') {
             arr.push(...['jobno'])
           }
-          result.push(...arr); //显示全部字段
+          
+          result.unshift(...arr); //显示全部字段
         }
 
         return [...new Set(result)];

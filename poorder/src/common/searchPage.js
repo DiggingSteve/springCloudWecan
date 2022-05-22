@@ -194,9 +194,9 @@ export const createPage = function (name) {
 
       methods: {
         search() {
-          if (this.mng) {
+          if (this.mng=='1') {
             this.$refs.fir.search()
-          } else {
+          } else if(this.mng=='2') {
             this.$refs.sec.search()
           }
         },
@@ -206,23 +206,24 @@ export const createPage = function (name) {
           this.tableData = data;
         
         },
-        handleTagStatus(val){
-          this.mng = val
-        },
+        // handleTagStatus(val){
+        //   this.mng = val
+        //   this.$store.commit('setMngstatus',val)
+        // },
 
       },
 
       template: `
       <div class="reconciliationMng">
       <el-button-group  class="buttonTabs" >
-          <el-button @click.native="handleTagStatus(1)" :class="[mng == 1 ?'active':'']" >${first.title}</el-button>
-          <el-button @click.native="handleTagStatus(2)" :class="[mng == 2?'active':'']" >
+          <el-button  :class="[mng == 1 ?'active':'']" @click="mng=1">${first.title}</el-button>
+          <el-button  :class="[mng == 2?'active':'']" @click="mng=2">
             <el-badge is-dot class="item" v-if="tableData&&tableData.length">
             ${second.title}
             </el-badge>
             <span v-else> ${second.title}</span>
           </el-button>
-          <el-button @click.native="handleTagStatus(3)" :class="[mng == 3 ?'active':'']"  v-if="${third.title !== undefined}">${third.title}</el-button>
+          <el-button  :class="[mng == 3 ?'active':'']"  v-if="${third.title !== undefined}" @click="mng=3">${third.title}</el-button>
       </el-button-group>
       
       <keep-alive>

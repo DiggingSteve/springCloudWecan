@@ -350,7 +350,8 @@ export default {
         pzcontent: { title: '舱位内容', fieldtype: 3 },
         cargoopertype: { title: '货物操作', fieldtype: 3 },
         ybkhjcno: { title: '预报进仓编号', fieldtype: 3 },
-
+        ybvolumeremark: { title: '预报尺寸备注', fieldtype: 3},
+        
         // fieldtype:1 单号类
         mawb: { title: '总运单号', fieldtype: 1 },
         hawb: { title: '分运单号', fieldtype: 1 },

@@ -260,7 +260,7 @@ export default {
           ],
           hidden: true
         },
-        accountcomgid: { title: "结算对象", type: 20, pagetype: 1 },
+        accountcomgid: { title: "结算对象", type: 20, pagetype: 12 },
         confirmman: {
           title: this.wageinout == "1" ? "客户确认人" : "供应商确认人",
           type: 1,

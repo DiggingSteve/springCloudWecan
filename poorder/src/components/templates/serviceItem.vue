@@ -3,13 +3,16 @@
     <!-- {{czlx}} -->
     <span style="display:none">{{servicedata}}</span>
     <slot></slot>
+    
     <el-checkbox v-if="servicedata.servicecode!='OA0010'||(servicedata.servicecode=='OA0010'&&type==1)" class="checkbox"
-      :value="servicedata.model" @input="change" :disabled="servicedata.disabled">
+      :value="servicedata.model" @input="change" :disabled="servicedata.disabled || servicedata.port == '国内操作服务' ? true : false">
       <p class="serviceTitle">{{ getTitle }}</p>
     </el-checkbox>
-    <el-checkbox v-else class="checkbox" :value="!servicedata.model" @input="val=>change(val, 1)" :disabled="servicedata.disabled">
+
+    <el-checkbox v-else class="checkbox" :value="system!='空进'?!servicedata.model:servicedata.model2" @input="val=>change(val, 1)" :disabled="servicedata.disabled">
       <p class="serviceTitle">{{ getTitle }}</p>
     </el-checkbox>
+
     <div class="oprequest" style="flex-grow:1" @click.stop="showtextarea = !showtextarea">
       <p style="cursor:pointer">
         <i class="el-icon-edit" :style="{color:servicedata.oprequest?'red':''}"></i>
@@ -33,7 +36,8 @@
     props: {
       servicedata: Object,
       czlx: String,
-      type: [Number, String]
+      type: [Number, String],
+      system:String
     },
     data() {
       return {
@@ -46,7 +50,23 @@
     methods: {
       change(val, type) {
         // 出港操作主营与订舱操作联动
-        this.servicedata.model = type?!val:val
+        //this.servicedata.model = type?!val:val
+        if(this.system=='空进'){
+            if(type){//唯凯代操作
+              this.servicedata.model2=val
+              if(this.servicedata.model){
+                this.servicedata.model=false
+              }
+            }else{
+              this.servicedata.model=val
+              if(this.servicedata.model2){
+                this.servicedata.model2=false
+              }
+            }
+        }else{
+          this.servicedata.model = type?!val:val
+        }
+        
         // changeCount用来记录最后一个修改过的servicedata
         // this.servicedata.changeCount = ++changeCount
       },

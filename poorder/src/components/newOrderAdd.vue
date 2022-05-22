@@ -2,15 +2,15 @@
   <div v-scroll="onScroll" style="width:100%;height:100%;overflow:hidden scroll;"
     :style="{'max-height':pagetype==2&&frompage!=3?'750px':''}" class="newOrderAdd" :frompage="frompage">
     <!-- {{ybstoreListBackup}} -->
-    <!-- {{inputModelData.hawbList}}
-    <p></p> -->
     <!-- {{inputModelData.serviceList}} -->
     <!-- {{inputModelData.ybstoreList}} -->
     <!-- {{getInitData()}} -->
+    {{version}}
     <!-- {{inputModelData}} -->
-    <!-- {{inputModelData.opersystem}}
-    {{inputModelData.opersystemdom}}
-    {{inputModelData.system}} -->
+    <!-- {{inputModelData.customerRelList}} -->
+     <!-- {{inputModelData.opersystem}}
+    {{this.inputModelData.opersystemdom}} 
+    {{inputModelData.gid}} -->
     <!-- {{inputModelData.isneedfenpei}} -->
     <!-- {{inputModelData.cus_real_bp_freight_in}} -->
 
@@ -59,7 +59,7 @@
       <div v-show="outPagestep==1">
 
         <!-- start第一页内容开始 -->
-        <newFormCmpt @click.native="formclick($event)" :system="inputModelData.system"
+        <newFormCmpt @click.native="formclick($event)" :system="inputModelData.system"   
           :required.sync="basicinfoRequired" :view-data.sync="basicinfoView" :model-data.sync="inputModelData"
           :pagetype="2" :area="inputModelData.area" @changeRelData="inputModelData.customerRelList = $event" id="baseContent" 
           :is-order-add="true">
@@ -75,331 +75,35 @@
             </customerRel>
           </template>
         </newFormCmpt>
+         <!-- v-if="inputModelData.opersystem == '进口'" 234-->
+         <!-- 进口111 -->
 
-
-
-        <!-- 当选择国内服务时的服务列表 -->
-        <div class="detail" v-if="inputModelData.opersystem=='国内服务'&&tempConfigShow">
+        <newOrderAddEntrance
+        v-show="inputModelData.opersystem == '进口' && version == 2 "
+        :inputModelData="inputModelData"
+        ></newOrderAddEntrance>
+        
+        <!-- 当选择国内服务时，显示的基本信息-->
+        <!-- <div class="detail" v-if="inputModelData.opersystem=='国内'&&tempConfigShow">
           <div class="detail-title">
-            服务项目
+            基本信息
           </div>
           <div class="detail-c" style="padding:8px">
-            <tempConfig name="mawbAddNew.vue" style="position:absolute;top:1px;right:0px;"
-              :system="inputModelData.system" :type="80" :jsondata.sync="serviceList">
-            </tempConfig>
-            <serviceList pagetype="1" :newService.sync="newService" :opersystem="inputModelData.opersystem"
-              :orderdom="inputModelData.orderdom" :system="inputModelData.system">
-            </serviceList>
+        <newFormCmpt 
+        :view-data.sync="baseInfoInputViewData"
+        :model-data.sync="baseInfoModelData"
+        :pagetype="2"
+        >
+        </newFormCmpt>
           </div>
-        </div>
-
-
-        <div style="text-align: right;" v-show="pagestep==1">
-          <!-- 批量新增 -->
-          <mawbImport
-            v-if="inputModelData.orderdom == '总单' && !isMawbImport&&inputModelData.system=='空出'&&inputModelData.ordertype==2"
-            class="mawb-import" :area="inputModelData.area" 
-            :fid="inputModelData.fid" 
-            :gid="inputModelData.gid"
-            :customer="inputModelData.customerRelList"
-            :orderdom="inputModelData.orderdom">
-          </mawbImport>
-          <el-button @click="checkFirstPage()" type="primary" v-else v-show="pagetype==1&&nextstepshow">下一步</el-button>
-        </div>
-        <!-- end第一页内容结束 -->
-
-
-        <!-- start:第二页内容开始 -->
-        <!-- 第二页的时候非国内服务的内容 -->
-        <div v-show="pagestep==2&&inputModelData.opersystem!='国内服务'">
-          <!-- 订舱信息 -->
-          <div 
-            class="reconciliationMng" 
-            style="text-align: center;" 
-            v-if="pagetype==1">
-            <el-button-group class="buttonTabs">
-              <el-button 
-                @click.native="inputModelData.isimperfect=2" 
-                v-if="inputModelData.czlx!='代操作'"
-                :class="[inputModelData.isimperfect==2?'active':'']">
-                预订舱
-              </el-button>
-              <el-button 
-                @click.native="inputModelData.isimperfect=1" 
-                v-if="inputModelData.czlx!='代操作'"
-                :class="[inputModelData.isimperfect==1?'active':'']">
-                正式订舱
-              </el-button>
-            </el-button-group>
-          </div>
-
-          <commonTabs :list="goodsinfoTabs" style="margin-top: 12px;" v-show='inputModelData.isimperfect'
-            :showExpanionBtn="false" :checkedIndex.sync="goodsinfoTabsChecked" :showTooltip="false" titlefield="title">
-
-            <div class="detail" id="goodsinfoView" style="margin-top: 0;">
-              <div class="detail-title">
-                <!-- 订舱信息 -->
-                {{goodsinfoTabs[goodsinfoTabsChecked].title.split('（')[0]}}
-              </div>
-              <div class="detail-c">
-                <div v-show="goodsinfoTabsChecked==0">
-                  <newFormCmpt :system="inputModelData.system" :view-data.sync="goodsinfoView"
-                    :required.sync="goodsinfoRequired" :model-data.sync="inputModelData" :pagetype="2"
-                    :area="inputModelData.area" ref="formCompt">
-                    <!-- <template slot="mawbAe">
-                  <div v-if="pagetype==1">
-                    <el-input v-model.lazy="inputModelData.mawb" style="width:144px;"
-                      :disabled="importActiveName === 'repeatOrder'" clearable v-verify="supplementView.mawbAe.verify"
-                      maxlength="12"></el-input>
-                    <i title="总运单维护" class="el-icon-edit-outline" @click="mawbDialogFunc"
-                      style="font-size:20px;color:#30C76C;cursor:pointer;position:relative;left:2px;top:2px"></i>
-                    <span style="margin-left:30px;" v-if="mawbgys">运单供应商：{{mawbgys.split('-')[1]}}</span>
-                  </div>
-                  <configMawb :inputModelData="inputModelData" v-if="pagetype==2"></configMawb>
-                </template> -->
-                    <hwxzComptNew slot="exForm1" showGuageString :gooodsOutgauge="gooodsOutgauge"
-                      :inputModelData="inputModelData">
-                    </hwxzComptNew>
-                    <template slot="mawbAe">
-                      <div v-if="pagetype==1">
-                        <el-input v-model.lazy="inputModelData.mawb" style="width:168px;"
-                          :disabled="importActiveName === 'repeatOrder'" clearable
-                          v-verify="goodsinfoView.mawbAe.verify" maxlength="12"></el-input>
-                        <!-- <i title="总运单维护" class="el-icon-edit-outline" @click="mawbDialogFunc"
-                          style="font-size:20px;color:#30C76C;cursor:pointer;position:relative;left:2px;top:2px"></i> -->
-                        <span style="margin-left:30px;" v-if="mawbgys">运单供应商：{{mawbgys.split('-')[1]}}</span>
-                      </div>
-                      <configMawb :inputModelData="inputModelData" v-if="pagetype==2"></configMawb>
-                    </template>
-                  </newFormCmpt>
-
-                </div>
-
-                <div v-show="goodsinfoTabsChecked==1">
-                  <newFormCmpt :system="inputModelData.system" :view-data.sync="supplementView"
-                    :model-data.sync="inputModelData" :pagetype="2" :required.sync="supplementRequired"
-                    :area="inputModelData.area" @wtdataP="wtdataP"
-                    @changeRelData="inputModelData.customerRelList = $event">
-                    <template slot="mawbAe">
-                      <div v-if="pagetype==1">
-                        <el-input v-model.lazy="inputModelData.mawb" style="width:168px;"
-                          :disabled="importActiveName === 'repeatOrder'" clearable
-                          v-verify="supplementView.mawbAe.verify" maxlength="12"></el-input>
-                        <!-- <i title="总运单维护" class="el-icon-edit-outline" @click="mawbDialogFunc"
-                          style="font-size:20px;color:#30C76C;cursor:pointer;position:relative;left:2px;top:2px"></i> -->
-                        <span style="margin-left:30px;" v-if="mawbgys">运单供应商：{{mawbgys.split('-')[1]}}</span>
-                      </div>
-                      <configMawb :inputModelData="inputModelData" v-if="pagetype==2"></configMawb>
-                    </template>
-                  </newFormCmpt>
-                </div>
-
-
-                <div v-show="goodsinfoTabsChecked==2">
-                  <revSedMawb :dzinfo="inputModelData" ref="makeBillRevSed" v-if="inputModelData.orderdom!='分单'">
-                  </revSedMawb>
-                  <revSedMawb :dzinfo="inputModelData" ref="makeBillRevSedHawb" v-else>
-                  </revSedMawb>
-                  <revSed :dzinfo="inputModelData" ref="tzrRev">
-                    <el-input slot="textCode" type="textarea" rows="1" placeholder="信用代码"
-                      v-model="inputModelData.taxcode_tzr_mawb" v-verify="'creditCode'"></el-input>
-                  </revSed>
-                </div>
-                
-                <!-- TODO: 分单信息（选填） -->
-                <div v-show="goodsinfoTabsChecked==3">
-                   <div>
-                      <hawbAdd :mawbdetail="inputModelData" ref="hawbtab" :showContent="detailShow.supplement"></hawbAdd>
-                  </div>
-                </div>
-
-
-              </div>
-            </div>
-
-          </commonTabs>
-
-          <!-- 运价信息 -->
-          <div id="fareInputViewData" v-show="isBookingInformation">
-            <div class="detail" v-show="inputModelData.czlx!='代操作'&&inputModelData.opersystem=='出口'">
-              <div class="detail-title">
-                <p>运价信息</p>
-              </div>
-              <div class="detail-c">
-               <!-- 此处备注系统卡的关键 -->
-               <!-- :required.sync="fareinfoRequired" -->
-                <newFormCmpt :view-data.sync="fareInputViewDataYdc"  v-enterfocus
-                  :model-data.sync="inputModelData" :area="inputModelData.area" :pagetype="2"
-                  @inwageallinpriceFunc="inwageallinpriceFunc" v-show="inputModelData.isimperfect==2"></newFormCmpt>
-               <!--  :required.sync="fareinfoRequired" -->
-                <newFormCmpt :view-data.sync="fareInputViewData"  v-enterfocus
-                  :model-data.sync="inputModelData" :area="inputModelData.area" :pagetype="2"
-                  @inwageallinpriceFunc="inwageallinpriceFunc" v-show="inputModelData.isimperfect==1"></newFormCmpt>
-              </div>
-            </div>
-
-            <div class="detail" v-show="inputModelData.czlx=='代操作'&&inputModelData.opersystem=='出口'">
-              <div class="detail-title">
-                <p>操作费信息</p>
-              </div>
-              <div class="detail-c">
-                <newFormCmpt :view-data.sync="operfareViewData" :model-data.sync="inputModelData"
-                  :area="inputModelData.area" :pagetype="2"></newFormCmpt>
-              </div>
-            </div>
-          </div>
-
-          <!-- 服务项目 -->
-          <div class="detail" id="serviceDetail" style="z-index: 2;"
-            v-show="inputModelData.isimperfect==1&&isBookingInformation">
-            <div class="detail-title">
-              服务项目
-            </div>
-            <div class="detail-c" style="padding:8px">
-              <tempConfig name="mawbAddNew.vue" style="position:absolute;top:1px;right:0px;"
-                :system="inputModelData.system" :type="80" :jsondata.sync="serviceList" v-if="tempConfigShow">
-              </tempConfig>
-
-              <div v-if="isoutside">
-                <serviceListOutside pagetype="1" v-if="pagetype==1" :newService.sync="newService"
-                  :opersystemdom="inputModelData.opersystemdom" :orderdom="inputModelData.orderdom" ref="service"
-                  :system="inputModelData.system" @exInfoClick="exInfo">
-                </serviceListOutside>
-
-                <serviceListOutside :newService.sync="newService" v-if="pagetype==2&&inputModelData.boguid"
-                  :opersystem="inputModelData.opersystem" pagetype="2" :serviceList="inputModelData.serviceList"
-                  ref="serviceTemp" :orderguid="inputModelData.orderguid" :orderdom="inputModelData.orderdom"
-                  :system="inputModelData.system" @exInfoClick="exInfo"></serviceListOutside>
-
-              </div>
-
-
-              <serviceList v-else :pagetype="inputModelData.guid>0?2:1"
-                :serviceList="inputModelData.guid>0?inputModelData.serviceList:[]" :newService.sync="newService"
-                :opersystem="inputModelData.opersystem" :orderdom="inputModelData.orderdom"
-                :system="inputModelData.system" :czlx="inputModelData.czlx">
-              </serviceList>
-
-
-
-            </div>
-          </div>
-
-           <!-- 货物信息 -->
-          <div class="detail" id="houseNumberAdd" v-show="inputModelData.isimperfect==1&&isBookingInformation">
-            <div class="detail-title" style="display:flex;justify-content: space-between;">
-              <span>货物信息</span>
-              <!-- <span>
-                    <span style="margin-right:30px;color:red" v-show="gooodsOutgauge"><i
-                        class="el-icon-question"></i>含有超规货物</span>
-                    <el-button type="primary" size="small" icon="el-icon-plus" v-visible="false">新增进仓编号</el-button>
-                  </span> -->
-            </div>
-            <div class="detail-c" style="padding:0px;" v-if="pagetype==2?inputModelData.guid>0:true">
-              <houseNumberAdd :serviceSelArr="serviceSelArr" @goodsHawbChange="goodsHawbChange"
-                :inputModelData="inputModelData" ref="houseNumberAdd" :applicationPage="isoutside?2:1" 
-                :isWaybill="inputModelData.orderdom=='直单'&& inputModelData.czlx == '代操作'">
-              </houseNumberAdd>
-            </div>
-          </div>
-
-          
-          
-          <div style="margin-bottom:20px;position: relative;padding-top:40px" id="supplementView"
-            v-show="detailShow.supplementView&&inputModelData.isimperfect==1&&false">
-            
-            <div style="cursor:pointer;position: absolute;padding:8px;left:0px;top:0px;z-index: 999;">请填写分单信息 </div>
-
-            <el-button @click="detailShow.supplement=!detailShow.supplement;"
-              style="cursor:pointer;position: absolute;padding:8px;right:10px;top:0px;z-index: 999;"
-              :icon="detailShow.supplement?'el-icon-caret-top':'el-icon-caret-bottom'">
-              {{!detailShow.supplement?'展开面板':'收起面板'}}</el-button>
-
-            <div>
-             <!--  <hawbAdd :mawbdetail="inputModelData" ref="hawbtab" :showContent="detailShow.supplement"></hawbAdd> -->
-            </div>
-            <!-- <commonTabs :list="tabsList" :showExpanionBtn="false" :showContent="detailShow.supplement"
-            :checkedIndex.sync="tabsChecked" titlefield="title" color="rgb(255,0,5)" @toggle="handleClick"
-            :showTooltip="false">
-            <div v-show="tabsChecked==0">
-              <newFormCmpt :system="inputModelData.system" :view-data.sync="supplementView"
-                :model-data.sync="inputModelData" :pagetype="2" :required.sync="supplementRequired"
-                :area="inputModelData.area" @wtdataP="wtdataP" @changeRelData="inputModelData.customerRelList = $event">
-
-                <template slot="sfhinfo">
-                  <revSedMawb :dzinfo="inputModelData" ref="makeBillRevSed" v-if="inputModelData.orderdom!='分单'">
-                  </revSedMawb>
-                  <revSedMawb :dzinfo="inputModelData" ref="makeBillRevSedHawb" v-else>
-                  </revSedMawb>
-                </template>
-
-                <template slot="tzrinfo">
-                  <revSed :dzinfo="inputModelData" ref="tzrRev">
-                    <el-input slot="textCode" type="textarea" rows="1" placeholder="信用代码"
-                      v-model="inputModelData.taxcode_tzr_mawb" v-verify="'creditCode'"></el-input>
-                  </revSed>
-                </template>
-
-              </newFormCmpt>
-            </div>
-            <div v-show="tabsChecked==1">
-              <hawbAdd :mawbdetail="inputModelData" ref="hawbtab"></hawbAdd>
-            </div>
-          </commonTabs> -->
-          </div>
-
-          <!-- 底部按钮->start -->
-          <div class="footer" v-if="inputModelData.isimperfect&&isBookingInformation">
-            <div class="right-btn" v-if="!isMawbImport&&pagetype==1">
-              <!-- <el-button :disabled="saveBtnDisabled" @click="saveWaitFp(1)" type="primary">保存待处理</el-button> -->
-              <!-- <el-button :disabled="saveBtnDisabled" @click="saveWaitFunc" type="primary"
-              v-if="inputModelData.orderdom!=='分单'">保存并分配
-            </el-button> -->
-
-              <!-- <el-button :disabled="saveBtnDisabled" @click="assignH" type="primary"
-              v-if="inputModelData.orderdom!=='分单'">保存并分配
-            </el-button>
-
-            <el-button :disabled="saveBtnDisabled" v-if="inputModelData.orderdom!=='分单'"
-              @click="saveMawbInfo" type="primary">
-              {{areaStateCode}}操作</el-button>
-            <el-button @click="pagestep=1" v-if="inputModelData.system!='国内服务'">返回</el-button> -->
-              <el-button @click="pageChange(2)" v-if="isoutside" type="primary">
-                下一步</el-button>
-              <section v-else>
-                  <!--  done: 确认订舱按钮旁加重置按钮，功能初使化到最初页面 -->
-                  <el-button 
-                    type="danger"
-                    @click="resetInitData"
-                    >
-                    重置
-                  </el-button>
-                 <el-button @click="confirmSave"  type="primary">
-                确认订舱</el-button>
-              </section>  
-             
-
-            </div>
-            <div class="right-btn" v-if="pagetype==2&&inputModelData.status!=600">
-              <!-- <el-button @click="orderCancel=true" type="primary" style="background:#FA1A1A">
-              撤单/驳回/退关</el-button> -->
-              <!-- <el-button @click="putMawbInfo" type="primary" title="保存修改">保存</el-button> -->
-            </div>
-          </div>
-
-          <div class="pointDiv" v-if="pagetype==1">
-            <span v-for="(item,index) in pointArr" v-show="item.show" :class="{pointChecked:pointIndex==index}">
-              <i></i>
-              <a :href="item.href" @click="pointIndex=index">{{item.title}}</a></span>
-          </div>
-
-        </div>
+        </div> -->
 
 
         <!-- 第一页的时候非国内服务的内容 -->
 
         <!-- 国内服务的基本信息及各个服务内容 -->
-        <div v-if="pagestep==2&&inputModelData.opersystem=='国内服务'">
+        <!-- pagestep==2&&inputModelData.opersystem=='国内' -->
+        <div v-if="inputModelData.opersystem=='国内' || inputModelData.opersystem=='国内服务'  ">
 
           <!-- <div class="detail">
           <div class="detail-title">
@@ -434,6 +138,21 @@
           </div>
 
 
+       <!-- 当选择国内服务时的服务列表 -->
+       <!-- inputModelData.opersystem=='国内' || inputModelData.opersystem== '进口' &&tempConfigShow -->
+        <div class="detail" v-if="inputModelData.opersystem=='国内' || inputModelData.opersystem== '进口'  || inputModelData.opersystem=='国内服务' &&tempConfigShow">
+          <div class="detail-title">
+            服务项目 
+          </div>
+          <div class="detail-c" style="padding:8px">
+            <tempConfig name="mawbAddNew.vue" style="position:absolute;top:1px;right:0px;"
+              :system="inputModelData.system" :type="80" :jsondata.sync="serviceList">
+            </tempConfig>
+            <serviceList pagetype="1" :newService.sync="newService" :opersystem="inputModelData.opersystem"
+              :orderdom="inputModelData.orderdom" :system="inputModelData.opersystemdom == '其它' ? '国内服务' : inputModelData.opersystemdom.substr(0,1)+inputModelData.system.substr(0,1)">
+            </serviceList>
+          </div>
+        </div>
 
           <div style="margin-top:20px">
             <commonTabs :list="serviceTabsList" :showContent="false" :showTooltip="false" :titleStyle="serviceTabsStyle"
@@ -566,23 +285,440 @@
             <!--贴签服务 -->
             <myServicePane code="AG0135"></myServicePane>
           </div>
-
+        
           <div class="footer">
             <div class="right-btn">
               <!-- <el-button :disabled="saveBtnDisabled" @click="saveWaitFp(1)" type="primary">保存待处理</el-button> -->
               <!-- <el-button :disabled="saveBtnDisabled" @click="saveWaitFp(2)" type="primary">保存并分配</el-button> -->
               <!-- <el-button :disabled="saveBtnDisabled" @click="saveWaitFunc" type="primary">保存并分配</el-button> -->
+              <!-- gnShow||(!gnShow&&inputModelData.opersystem!='进口') -->
+              
               <el-button :disabled="saveBtnDisabled" @click="assignH" type="primary" v-if="gnShow||(!gnShow&&inputModelData.system!='国内服务')">保存并分配
               </el-button>
               <el-button :disabled="saveBtnDisabled" @click="saveWaitFp(3)" type="primary" v-if="gnShow||(!gnShow&&inputModelData.system!='国内服务')">保存并完成</el-button>
               <el-button :disabled="saveBtnDisabled" @click="saveMawbInfo" type="primary">
                 {{areaStateCode}}操作</el-button>
-              <el-button @click="pagestep=1" v-if="inputModelData.system!='国内服务'">返回</el-button>
+              <!-- <el-button @click="pagestep=1" v-if="inputModelData.system!='国内' ">返回 </el-button> -->
 
             </div>
           </div>
         </div>
 
+
+
+        <div style="text-align: right;" v-show="pagestep==1">
+          <!-- 批量新增 -->
+          <mawbImport
+            v-if="inputModelData.orderdom == '总单' && !isMawbImport&&inputModelData.system=='空出'&&inputModelData.ordertype==2"
+            class="mawb-import" :area="inputModelData.area" 
+            :fid="inputModelData.fid" 
+            :gid="inputModelData.gid"
+            :customer="inputModelData.customerRelList"
+            :orderdom="inputModelData.orderdom">
+          </mawbImport>
+          <!-- <el-button @click="checkFirstPage()" type="primary" v-else v-show="pagetype==1&&nextstepshow">下一步111</el-button> -->
+        </div>
+        <!-- end第一页内容结束 -->
+
+
+        <!-- start:第二页内容开始 -->
+        <!-- 第二页的时候非国内服务的内容 -->
+        <div v-show="pagestep==2&&inputModelData.opersystem!='国内' ">
+          <!-- 订舱信息 -->
+          <!-- <div 
+            class="reconciliationMng" 
+            style="text-align: center;" 
+            v-if="pagetype==1">
+            <el-button-group class="buttonTabs">
+              <el-button 
+                @click.native="inputModelData.isimperfect=2" 
+                v-if="inputModelData.czlx!='代操作'"
+                :class="[inputModelData.isimperfect==2?'active':'']">
+                预订舱
+              </el-button>
+              <el-button 
+                @click.native="inputModelData.isimperfect=1" 
+                v-if="inputModelData.czlx!='代操作'"
+                :class="[inputModelData.isimperfect==1?'active':'']">
+                正式订舱
+              </el-button>
+            </el-button-group>
+          </div> -->
+
+
+
+
+          <!-- 订舱信息 -->
+          
+            <div class="detail" id="goodsinfoView" style="margin-top: 0;"  v-show="isBookingInformation && inputModelData.opersystem != '进口' && inputModelData.opersystemdom != '其它' ">
+              <div class="detail-title">
+                <!-- 订舱信息 -->
+                订舱信息
+              </div>
+              <div class="detail-c">
+                <div>
+                  <newFormCmpt :system="inputModelData.system" :view-data.sync="goodsinfoView"
+                    :required.sync="goodsinfoRequired" :model-data.sync="inputModelData" :pagetype="2"
+                    :area="inputModelData.area" ref="formCompt">
+                    <!-- <template slot="mawbAe">
+                  <div v-if="pagetype==1">
+                    <el-input v-model.lazy="inputModelData.mawb" style="width:144px;"
+                      :disabled="importActiveName === 'repeatOrder'" clearable v-verify="supplementView.mawbAe.verify"
+                      maxlength="12"></el-input>
+                    <i title="总运单维护" class="el-icon-edit-outline" @click="mawbDialogFunc"
+                      style="font-size:20px;color:#30C76C;cursor:pointer;position:relative;left:2px;top:2px"></i>
+                    <span style="margin-left:30px;" v-if="mawbgys">运单供应商：{{mawbgys.split('-')[1]}}</span>
+                  </div>
+                  <configMawb :inputModelData="inputModelData" v-if="pagetype==2"></configMawb>
+                </template> -->
+                    <hwxzComptNew slot="exForm1" showGuageString :gooodsOutgauge="gooodsOutgauge"
+                      :inputModelData="inputModelData">
+                    </hwxzComptNew>
+                    <template slot="mawbAe">
+                      <div v-if="pagetype==1">
+                        <el-input v-model.lazy="inputModelData.mawb" style="width:168px;"
+                          :disabled="importActiveName === 'repeatOrder'" clearable
+                          v-verify="goodsinfoView.mawbAe.verify" maxlength="12"></el-input>
+                        <!-- <i title="总运单维护" class="el-icon-edit-outline" @click="mawbDialogFunc"
+                          style="font-size:20px;color:#30C76C;cursor:pointer;position:relative;left:2px;top:2px"></i> -->
+                        <span style="margin-left:30px;" v-if="mawbgys">运单供应商：{{mawbgys.split('-')[1]}}</span>
+                      </div>
+                      <configMawb :inputModelData="inputModelData" v-if="pagetype==2"></configMawb>
+                    </template>
+                  </newFormCmpt>
+
+                </div>
+
+
+
+
+              </div>
+            </div>
+
+
+          <!-- 运价信息 -->
+          <div id="fareInputViewData" v-show="isBookingInformation">
+            <div class="detail" v-show="inputModelData.czlx!='代操作'&&inputModelData.opersystem=='出口'">
+              <div class="detail-title">
+                <p>运价信息</p>
+              </div>
+              <div class="detail-c">
+               <!-- 此处备注系统卡的关键 -->
+               <!-- :required.sync="fareinfoRequired" -->
+                <newFormCmpt :view-data.sync="fareInputViewDataYdc"  v-enterfocus
+                  :model-data.sync="inputModelData" :area="inputModelData.area" :pagetype="2"
+                  @inwageallinpriceFunc="inwageallinpriceFunc" v-show="inputModelData.isimperfect==2"></newFormCmpt>
+               <!--  :required.sync="fareinfoRequired" -->
+                <newFormCmpt :view-data.sync="fareInputViewData"  v-enterfocus
+                  :model-data.sync="inputModelData" :area="inputModelData.area" :pagetype="2"
+                  @inwageallinpriceFunc="inwageallinpriceFunc" v-show="inputModelData.isimperfect==1"></newFormCmpt>
+              </div>
+            </div>
+
+            <div class="detail" v-show="inputModelData.czlx=='代操作'&&inputModelData.opersystem=='出口'">
+              <div class="detail-title">
+                <p>操作费信息</p>
+              </div>
+              <div class="detail-c">
+                <newFormCmpt :view-data.sync="operfareViewData" :model-data.sync="inputModelData"
+                  :area="inputModelData.area" :pagetype="2"></newFormCmpt>
+              </div>
+            </div>
+          </div>
+
+          <!-- 货物信息 -->
+          <!-- 新版本 -->
+          <!-- <div class="detail" id="houseNumberAdd" v-show="isBookingInformation  && inputModelData.opersystem != '进口' "> -->
+          <div class="detail" id="houseNumberAdd" v-show="isBookingInformation && inputModelData.opersystem == '出口' ">
+            <div class="detail-title" style="display:flex;justify-content: space-between;">
+              <span>货物信息</span>
+              <!-- <span>
+                    <span style="margin-right:30px;color:red" v-show="gooodsOutgauge"><i
+                        class="el-icon-question"></i>含有超规货物</span>
+                    <el-button type="primary" size="small" icon="el-icon-plus" v-visible="false">新增进仓编号</el-button>
+                  </span> -->
+            </div>
+            <div class="detail-c" style="padding:0px;" v-if="pagetype==2?inputModelData.guid>0:true">
+              <houseNumberAdd :serviceSelArr="serviceSelArr" @goodsHawbChange="goodsHawbChange"
+                :inputModelData="inputModelData" ref="houseNumberAdd" :applicationPage="isoutside?2:1" 
+                :isWaybill="inputModelData.orderdom=='直单'&& inputModelData.czlx == '代操作'">
+              </houseNumberAdd>
+            </div>
+          </div>
+
+
+
+  
+
+          <commonTabs :list="goodsinfoTabs" style="margin-top: 12px;"
+          v-show="inputModelData.opersystemdom != '其它' && version == 1"
+            :showExpanionBtn="false" :checkedIndex.sync="goodsinfoTabsChecked" :showTooltip="false" titlefield="title">
+            <div class="detail" id="goodsinfoView" style="margin-top: 0;">
+              <div class="detail-title" @click="getDetailTitle(goodsinfoTabs[goodsinfoTabsChecked].title)" >
+                {{goodsinfoTabs[goodsinfoTabsChecked].title.split('（')[0]}}
+              </div>
+              <div class="detail-c">
+                <!-- 订舱消息 -->
+                <div v-show="goodsinfoTabsChecked==0 && inputModelData.opersystem != '出口' ">
+                  <newFormCmpt :system="inputModelData.system" :view-data.sync="goodsinfoView"
+                    :required.sync="goodsinfoRequired" :model-data.sync="inputModelData" :pagetype="2"
+                    :area="inputModelData.area" ref="formCompt">
+                    <!-- <template slot="mawbAe">
+                  <div v-if="pagetype==1">
+                    <el-input v-model.lazy="inputModelData.mawb" style="width:144px;"
+                      :disabled="importActiveName === 'repeatOrder'" clearable v-verify="supplementView.mawbAe.verify"
+                      maxlength="12"></el-input>
+                    <i title="总运单维护" class="el-icon-edit-outline" @click="mawbDialogFunc"
+                      style="font-size:20px;color:#30C76C;cursor:pointer;position:relative;left:2px;top:2px"></i>
+                    <span style="margin-left:30px;" v-if="mawbgys">运单供应商：{{mawbgys.split('-')[1]}}</span>
+                  </div>
+                  <configMawb :inputModelData="inputModelData" v-if="pagetype==2"></configMawb>
+                </template> -->
+                    <hwxzComptNew slot="exForm1" showGuageString :gooodsOutgauge="gooodsOutgauge"
+                      :inputModelData="inputModelData">
+                    </hwxzComptNew>
+                    <template slot="mawbAe">
+                      <div v-if="pagetype==1">
+                        <el-input v-model.lazy="inputModelData.mawb" style="width:168px;"
+                          :disabled="importActiveName === 'repeatOrder'" clearable
+                          v-verify="goodsinfoView.mawbAe.verify" maxlength="12"></el-input>
+                        <!-- <i title="总运单维护" class="el-icon-edit-outline" @click="mawbDialogFunc"
+                          style="font-size:20px;color:#30C76C;cursor:pointer;position:relative;left:2px;top:2px"></i> -->
+                        <span style="margin-left:30px;" v-if="mawbgys">运单供应商：{{mawbgys.split('-')[1]}}</span>
+                      </div>
+                      <configMawb :inputModelData="inputModelData" v-if="pagetype==2"></configMawb>
+                    </template>
+                  </newFormCmpt>
+
+                </div>
+       
+
+
+            <!-- 服务项目 -->
+            <div v-show="goodsinfoTabsChecked==0 &&isBookingInformation && inputModelData.opersystem == '出口'&&showProject">
+              <tempConfig name="mawbAddNew.vue" style="position:absolute;top:1px;right:0px;"
+                :system="inputModelData.system" :type="80" :jsondata.sync="serviceList" v-if="tempConfigShow">
+              </tempConfig>
+
+              <div v-if="isoutside">
+                <serviceListOutside pagetype="1" v-if="pagetype==1" :newService.sync="newService"
+                  :opersystemdom="inputModelData.opersystemdom" :orderdom="inputModelData.orderdom" ref="service"
+                  :system="inputModelData.system" @exInfoClick="exInfo">
+                </serviceListOutside>
+
+                <serviceListOutside :newService.sync="newService" v-if="pagetype==2&&inputModelData.boguid"
+                  :opersystem="inputModelData.opersystem" pagetype="2" :serviceList="inputModelData.serviceList"
+                  ref="serviceTemp" :orderguid="inputModelData.orderguid" :orderdom="inputModelData.orderdom"
+                  :system="inputModelData.system" @exInfoClick="exInfo"></serviceListOutside>
+
+              </div>
+              <serviceList v-else :pagetype="inputModelData.guid>0?2:1"
+                :serviceList="inputModelData.guid>0?inputModelData.serviceList:[]" :newService.sync="newService"
+                :opersystem="inputModelData.opersystem" :orderdom="inputModelData.orderdom"
+                :system="inputModelData.system" :czlx="inputModelData.czlx">
+              </serviceList>
+            </div> 
+          </el-collapse-transition>
+
+              <!-- 补充信息 -->
+              <div v-show="goodsinfoTabsChecked==1 ">
+                  <newFormCmpt :system="inputModelData.system" :view-data.sync="supplementView"
+                    :model-data.sync="inputModelData" :pagetype="2" :required.sync="supplementRequired"
+                    :area="inputModelData.area" @wtdataP="wtdataP"
+                    @changeRelData="inputModelData.customerRelList = $event">
+                    <template slot="mawbAe">
+                      <div v-if="pagetype==1">
+                        <el-input v-model.lazy="inputModelData.mawb" style="width:168px;"
+                          :disabled="importActiveName === 'repeatOrder'" clearable
+                          v-verify="supplementView.mawbAe.verify" maxlength="12"></el-input>
+                        <!-- <i title="总运单维护" class="el-icon-edit-outline" @click="mawbDialogFunc"
+                          style="font-size:20px;color:#30C76C;cursor:pointer;position:relative;left:2px;top:2px"></i> -->
+                        <span style="margin-left:30px;" v-if="mawbgys">运单供应商：{{mawbgys.split('-')[1]}}</span>
+                      </div>
+                      <configMawb :inputModelData="inputModelData" v-if="pagetype==2"></configMawb>
+                    </template>
+                  </newFormCmpt>
+                </div>
+
+              <!-- 总单收发货人信息 -->
+                <div v-show=" goodsinfoTabsChecked==2  ">
+                  <revSedMawb :dzinfo="inputModelData" ref="makeBillRevSed" v-if="inputModelData.orderdom!='分单'">
+                  </revSedMawb>
+                  <revSedMawb :dzinfo="inputModelData" ref="makeBillRevSedHawb" v-else>
+                  </revSedMawb>
+                  <revSed :dzinfo="inputModelData" ref="tzrRev">
+                    <el-input slot="textCode" type="textarea" rows="1" placeholder="信用代码"
+                      v-model="inputModelData.taxcode_tzr_mawb" v-verify="'creditCode'"></el-input>
+                  </revSed>
+                </div>
+                
+                <!-- 分单信息 -->
+                <div v-show=" goodsinfoTabsChecked==3">
+                   <div>
+                      <hawbAdd :mawbdetail="inputModelData" ref="hawbtab" :showContent="detailShow.supplement"></hawbAdd>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+
+          </commonTabs>
+
+
+
+          <!-- 服务项目   改的 -->
+          <!-- 老版本 -->
+        <div class="detail" id="serviceDetail" style="z-index: 2;"
+            v-show="inputModelData.isimperfect==1&&isBookingInformation &&inputModelData.opersystem !== '出口' && inputModelData.opersystemdom != '其它' && version == 1">
+            <div class="detail-title" >
+              服务项目 
+            </div>
+             
+            <div class="detail-c" style="padding:8px" >
+              <tempConfig name="mawbAddNew.vue" style="position:absolute;top:1px;right:0px;"
+                :system="inputModelData.system" :type="80" :jsondata.sync="serviceList" v-if="tempConfigShow">
+              </tempConfig>
+
+              <div v-if="isoutside">
+                <serviceListOutside pagetype="1" v-if="pagetype==1" :newService.sync="newService"
+                  :opersystemdom="inputModelData.opersystemdom" :orderdom="inputModelData.orderdom" ref="service"
+                  :system="inputModelData.system" @exInfoClick="exInfo">
+                </serviceListOutside>
+
+                <serviceListOutside :newService.sync="newService" v-if="pagetype==2&&inputModelData.boguid"
+                  :opersystem="inputModelData.opersystem" pagetype="2" :serviceList="inputModelData.serviceList"
+                  ref="serviceTemp" :orderguid="inputModelData.orderguid" :orderdom="inputModelData.orderdom"
+                  :system="inputModelData.system" @exInfoClick="exInfo"></serviceListOutside>
+
+              </div>
+
+
+              <serviceList v-else :pagetype="inputModelData.guid>0?2:1"
+                :serviceList="inputModelData.guid>0?inputModelData.serviceList:[]" :newService.sync="newService"
+                :opersystem="inputModelData.opersystem" :orderdom="inputModelData.orderdom"
+                :system="inputModelData.opersystemdom == '其它' ? '国内服务' : inputModelData.system" :czlx="inputModelData.czlx">
+              </serviceList>
+
+            </div>
+          </div> 
+
+
+          <div class="detail" id="houseNumberAdd" v-show="isBookingInformation && inputModelData.opersystemdom != '其它'  && inputModelData.opersystem != '出口' && version == 1 ">
+            <div class="detail-title" style="display:flex;justify-content: space-between;">
+              <span>货物信息</span>
+              <!-- <span>
+                    <span style="margin-right:30px;color:red" v-show="gooodsOutgauge"><i
+                        class="el-icon-question"></i>含有超规货物</span>
+                    <el-button type="primary" size="small" icon="el-icon-plus" v-visible="false">新增进仓编号</el-button>
+                  </span> -->
+            </div>
+            <div class="detail-c" style="padding:0px;" v-if="pagetype==2?inputModelData.guid>0:true">
+              <houseNumberAdd :serviceSelArr="serviceSelArr" @goodsHawbChange="goodsHawbChange"
+                :inputModelData="inputModelData" ref="houseNumberAdd" :applicationPage="isoutside?2:1" 
+                :isWaybill="inputModelData.orderdom=='直单'&& inputModelData.czlx == '代操作'">
+              </houseNumberAdd>
+            </div>
+          </div>
+
+
+
+
+          
+          
+          <div style="margin-bottom:20px;position: relative;padding-top:40px" id="supplementView"
+            v-show="detailShow.supplementView&&inputModelData.isimperfect==1&&false">
+            
+            <div style="cursor:pointer;position: absolute;padding:8px;left:0px;top:0px;z-index: 999;">请填写分单信息 </div>
+
+            <el-button @click="detailShow.supplement=!detailShow.supplement;"
+              style="cursor:pointer;position: absolute;padding:8px;right:10px;top:0px;z-index: 999;"
+              :icon="detailShow.supplement?'el-icon-caret-top':'el-icon-caret-bottom'">
+              {{!detailShow.supplement?'展开面板':'收起面板'}}</el-button>
+
+            <div>
+             <!--  <hawbAdd :mawbdetail="inputModelData" ref="hawbtab" :showContent="detailShow.supplement"></hawbAdd> -->
+            </div>
+            <!-- <commonTabs :list="tabsList" :showExpanionBtn="false" :showContent="detailShow.supplement"
+            :checkedIndex.sync="tabsChecked" titlefield="title" color="rgb(255,0,5)" @toggle="handleClick"
+            :showTooltip="false">
+            <div v-show="tabsChecked==0">
+              <newFormCmpt :system="inputModelData.system" :view-data.sync="supplementView"
+                :model-data.sync="inputModelData" :pagetype="2" :required.sync="supplementRequired"
+                :area="inputModelData.area" @wtdataP="wtdataP" @changeRelData="inputModelData.customerRelList = $event">
+
+                <template slot="sfhinfo">
+                  <revSedMawb :dzinfo="inputModelData" ref="makeBillRevSed" v-if="inputModelData.orderdom!='分单'">
+                  </revSedMawb>
+                  <revSedMawb :dzinfo="inputModelData" ref="makeBillRevSedHawb" v-else>
+                  </revSedMawb>
+                </template>
+
+                <template slot="tzrinfo">
+                  <revSed :dzinfo="inputModelData" ref="tzrRev">
+                    <el-input slot="textCode" type="textarea" rows="1" placeholder="信用代码"
+                      v-model="inputModelData.taxcode_tzr_mawb" v-verify="'creditCode'"></el-input>
+                  </revSed>
+                </template>
+
+              </newFormCmpt>
+            </div>
+            <div v-show="tabsChecked==1">
+              <hawbAdd :mawbdetail="inputModelData" ref="hawbtab"></hawbAdd>
+            </div>
+          </commonTabs> -->
+          </div>
+
+          <!-- 底部按钮->start -->
+          <div class="footer" v-if="inputModelData.isimperfect&&isBookingInformation">
+            <div class="right-btn" v-if="!isMawbImport&&pagetype==1">
+              <!-- <el-button :disabled="saveBtnDisabled" @click="saveWaitFp(1)" type="primary">保存待处理</el-button> -->
+              <!-- <el-button :disabled="saveBtnDisabled" @click="saveWaitFunc" type="primary"
+              v-if="inputModelData.orderdom!=='分单'">保存并分配
+            </el-button> -->
+
+              <!-- <el-button :disabled="saveBtnDisabled" @click="assignH" type="primary"
+              v-if="inputModelData.orderdom!=='分单'">保存并分配
+            </el-button>
+
+            <el-button :disabled="saveBtnDisabled" v-if="inputModelData.orderdom!=='分单'"
+              @click="saveMawbInfo" type="primary">
+              {{areaStateCode}}操作</el-button>
+            <el-button @click="pagestep=1" v-if="inputModelData.system!='国内'">返回</el-button> -->
+              <el-button @click="pageChange(2)" v-if="isoutside" type="primary">
+                下一步</el-button>
+              <section v-else>
+                  <!--  done: 确认订舱按钮旁加重置按钮，功能初使化到最初页面 -->
+                  <!-- 新版本 -->
+                  <!-- v-show="inputModelData.opersystem != '进口'" -->
+                  <el-button 
+                    type="danger"
+                    @click="resetInitData"
+                    v-if=" inputModelData.opersystem == '出口'"
+                    >
+                    重置
+                  </el-button>
+                   <!-- v-show="inputModelData.opersystem != '进口' -->
+                 <el-button @click="confirmSave" v-if=" inputModelData.opersystem == '出口'" type="primary" >
+                确认订舱</el-button>
+              </section>  
+             
+
+            </div>
+            <div class="right-btn" v-if="pagetype==2&&inputModelData.status!=600">
+              <!-- <el-button @click="orderCancel=true" type="primary" style="background:#FA1A1A">
+              撤单/驳回/退关</el-button> -->
+              <!-- <el-button @click="putMawbInfo" type="primary" title="保存修改">保存</el-button> -->
+            </div>
+          </div>
+
+          <div class="pointDiv" v-if="pagetype==1  && inputModelData.opersystem != '进口' && inputModelData.opersystemdom != '其它'">
+            <span v-for="(item,index) in pointArr" v-show="item.show" :class="{pointChecked:pointIndex==index}">
+              <i></i>
+              <a :href="item.href" @click="pointIndex=index">{{item.title}}</a></span>
+          </div>
+
+        </div>
         <!-- end:第二页内容结束 -->
 
       </div>
@@ -681,6 +817,8 @@
 
       </div>
 
+
+      
 
       <!-- 分配 -->
       <el-dialog :visible.sync="assignShow" :close-on-click-modal="false" v-if="assignShow" append-to-body
@@ -887,7 +1025,7 @@
   import { orderAddMixin } from '@/components/mixins/newOrderAdd'
   import serviceListOutside from "@/outsideDom/orderDetails/serviceListOutside"
   import customerRel from '@/components/templates/customerRel'
-
+  import newOrderAddEntrance from '@/components/newOrderAddEntrance.vue'
 
   import {
     formatDate,
@@ -959,7 +1097,7 @@
     mixins: [getServiceView(1), serviceSplit(1), orderAddMixin()],
 
     components: {
-      serviceList, houseNumberAdd, revSedMawb, revSedHawb, serviceItemSmall, hawbTabsNew, hawbAdd, fenpei, tempConfig, myServicePane, mawbImport, makingBill, storeCompSize, takeGoodsAdd, takeGoodsAddMdg, declareAtcustomsAdd, enterWarehouseBogn, configMawb, revSed, serviceListOutside, customerRel
+      serviceList, newOrderAddEntrance,  houseNumberAdd, revSedMawb, revSedHawb, serviceItemSmall, hawbTabsNew, hawbAdd, fenpei, tempConfig, myServicePane, mawbImport, makingBill, storeCompSize, takeGoodsAdd, takeGoodsAddMdg, declareAtcustomsAdd, enterWarehouseBogn, configMawb, revSed, serviceListOutside, customerRel
     },
 
     data() {
@@ -967,20 +1105,35 @@
     },
 
     methods: {
+      getDetailTitle(str) {
+        if(str == '服务项目（选填）'){
+          this.showProject = !this.showProject
+        }
+      },
       formclick(e) {
         let id = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.id;
-        if ((id == "opersystemdom" || id == 'opersystem') && e.target.value) {
-          let system = id == "opersystemdom" ? (e.target.value.charAt(0) + this.inputModelData.opersystem.charAt(0)) : (this.inputModelData.opersystemdom.charAt(0) + e.target.value.charAt(0));
-          if (this.disabledSystemOption.includes(system)) {
-            e.preventDefault();  //阻止选中
-            // this.$message.error('目前项目下，无法设置系统为' + system + "，请重新选择！");
-            this.$message.error(`该项目没有${system}系统权限！`)
-          }
-        }
+        // alert(this.inputModelData.opersystem)
+        // if(this.inputModelData.opersystem !== '国内'){
+            if ((id == "opersystemdom" || id == 'opersystem') && e.target.value) {
+                  let system = id == "opersystemdom" ? (e.target.value.charAt(0) + this.inputModelData.opersystem.charAt(0)) : (this.inputModelData.opersystemdom.charAt(0) + e.target.value.charAt(0));
+                 if(system.indexOf('国') !== 1) {
+                       if (this.disabledSystemOption.includes(system)) {
+                        e.preventDefault();  //阻止选中
+                        // this.$message.error('目前项目下，无法设置系统为' + system + "，请重新选择！");
+                        this.$message.error(`该项目没有${system}系统权限！`)
+                    }
+                 }
+                
+            }
+        // }
+
+
         
         // note: 本票客户客服联系人未选择，提示选择
         if (id === 'ordertype') {
-          if (!this.inputModelData.customerRelList.length) {
+          if(this.inputModelData.opersystem == "进口") {
+            return true
+          } else if (!this.inputModelData.customerRelList.length) {
             e.preventDefault();  //阻止选中
             this.$message.error('请先选择本票客户客服联系人');
           }
@@ -1018,9 +1171,62 @@
         return {
           name: "newOrderAdd.vue",
           outPagestep: 1,
+          version: 1, //默认第一版本 
           gnShow:true,//国内服务信用被控显示
           pagestep: 1,
+          baseInfoInputViewData:{
+            khjcno: {
+              title: '进仓编号',
+              required: true,
+              idStyle: { width: 'calc(50% - 4px)', 'margin-right': '8px' },
+              placeholder: '多个用逗号隔开',
+              // type: 1,
+              type: 5,
+              options: []
+            },
+          },
+          baseInfoModelData:{},
+          showProject: true,
           basicinfoView: {//第一步
+            opersystemdom: {
+              title: '服务方式',
+              type: 3,
+              options: [
+                { label: '空运', value: "空运" },
+                { label: '海运', value: "海运" },
+                { label: '陆运', value: "陆运" },
+                { label: '铁运', value: "铁运" },
+                { label: '其它', value: "其它" }
+              ],
+              idStyle: { width: '100%' },
+              itemStyle: { width: '100%' },
+              hidden: false,
+              required: true
+            },
+            opersystem: {
+              title: '运输种类',
+              type: 3,
+              options: [
+                { label: '出口', value: "出口" },
+                { label: '进口', value: "进口" },
+                { label: '国内', value: "国内" },
+              ],
+              idStyle: { width: '100%' },
+              itemStyle: { width: '100%' },
+              hidden: false,
+              required: true
+            },
+            area: {
+              title: '委托唯凯站点',
+              type: 37,
+              required: true,
+              multiple: false,
+              idStyle: { width: '100%' },
+              placeholder: '请选择唯凯站点',
+              itemStyle: { width: '300px' },
+              //pagetype: 2,
+              hidden: false,
+            },
             fid: {
               title: "委托客户",
               type: 11,
@@ -1095,17 +1301,7 @@
               itemStyle: { width: '320px' },
               hidden: true,
             },
-            area: {
-              title: '委托唯凯站点',
-              type: 37,
-              required: true,
-              multiple: false,
-              // idStyle: { width: '100%' },
-              placeholder: '请选择唯凯站点',
-              itemStyle: { width: 'auto' },
-              //pagetype: 2,
-              hidden: false,
-            },
+
             customRelOutside: {
               title: "",
               titleStyle: { width: '20px' },
@@ -1123,7 +1319,7 @@
             //     { label: '陆进', value: "陆进" },
             //     { label: '铁出', value: "铁出" },
             //     { label: '铁进', value: "铁进" },
-            //     { label: '国内服务', value: "国内服务" },
+            //     { label: '国内', value: "国内" },
             //   ],
             //   idStyle: { width: '100%' },
             //   itemStyle: { width: '100%' },
@@ -1131,33 +1327,10 @@
             //   hidden: false,
             //   required: true
             // },
-            opersystem: {
-              title: '运输种类',
-              type: 3,
-              options: [
-                { label: '出口', value: "出口" },
-                { label: '进口', value: "进口" },
-                { label: '国内服务', value: "国内服务" },
-              ],
-              idStyle: { width: '100%' },
-              itemStyle: { width: '100%' },
-              hidden: false,
-              required: true
-            },
-            opersystemdom: {
-              title: '运输方式',
-              type: 3,
-              options: [
-                { label: '空运', value: "空运" },
-                { label: '海运', value: "海运" },
-                { label: '陆运', value: "陆运" },
-                { label: '铁运', value: "铁运" }
-              ],
-              idStyle: { width: '100%' },
-              itemStyle: { width: '100%' },
-              hidden: false,
-              required: true
-            },
+
+
+
+
             // done: 配舱操作改成订舱操作
             czlx: {
               title: "订舱操作",
@@ -1171,11 +1344,13 @@
                 value: "代操作"
               }
               ],
-              itemStyle: {
-                width: "560px"
-              },
+              // itemStyle: {
+              //   width: "560px"
+              // },
+             idStyle: { width: '100%' },
+              itemStyle: { width: '100%' },
               // default: '自货',
-              hidden: false,
+              hidden:  false,
               required: true
             },
             orderdom: {
@@ -1184,7 +1359,7 @@
               options: [
                 { label: () => { return this.inputModelData.czlx == '自货' ? '总单(货代委托)' : '总分单(货代委托)' }, value: "总单" },
                 { label: '总直单(货代委托)', value: "直单", hidden: () => { return this.inputModelData.czlx == '自货' } },
-                { label: '分单(直客委托)', value: "分单", hidden: () => { return this.inputModelData.czlx == '代操作' } }
+                { label: '分单(直客委托)', value: "分单", hidden: () => { return this.inputModelData.czlx == '代操作' || this.inputModelData.opersystem == '进口' } }
               ],
               idStyle: { width: '100%' },
               itemStyle: { width: '100%' },
@@ -1193,7 +1368,7 @@
               required: true
             },
             orderdomOut: {
-              title: "",
+              title: "订单类型",
               alertTitle: '订单类型',
               type: 3,
               options: [
@@ -1723,18 +1898,18 @@
               seque: "first",
               occupyRestSpace: true
             },
-            priceabout: {
-              title: '本票唯凯销售',
-              type: 1,
-              idStyle: {
-                width: "100%"
-              },
-              itemStyle: {
-                width: "460px"
-              },
-              explainText: '如您已在线下就此次委托咨询过唯凯销售,可在此处填写其姓名',
-              // hidden: () => { return !this.inputModelData.inwageallinprice }
-            },
+            // priceabout: {
+            //   title: '本票唯凯销售',
+            //   type: 1,
+            //   idStyle: {
+            //     width: "100%"
+            //   },
+            //   itemStyle: {
+            //     width: "460px"
+            //   },
+            //   explainText: '如您已在线下就此次委托咨询过唯凯销售,可在此处填写其姓名',
+            //   // hidden: () => { return !this.inputModelData.inwageallinprice }
+            // },
             isinwageallin_trans: {
               title: "中转费",
               itemStyle: {
@@ -2046,7 +2221,6 @@
               // type: 1,
               type: 5,
               options: []
-
             },
             piece: {
               title: '件数 PCS',
@@ -2403,6 +2577,7 @@
           // done: 订舱必填，其它选填
           goodsinfoTabs: [
             { title: '订舱信息（必填）' },
+            // { title: '服务项目（必填）' },  新版本
             { title: '补充信息（选填）' },
             { title: '总单收发货人信息（选填）' },
             // { title: '分单信息（选填）' },
@@ -2442,13 +2617,14 @@
         } else if (this.$store.state.areaState && this.$store.state.areaState.split(',').length === 1) {
           this.inputModelData.area = this.$store.state.areaState
         }
-
+        // debugger
         if (this.$store.getters.userSetting.mawbAddSystem) {
-          this.inputModelData.opersystem = this.$store.getters.userSetting.mawbAddSystem.opersystem || ''
-          this.inputModelData.opersystemdom = this.$store.getters.userSetting.mawbAddSystem.opersystemdom == "国内服务" ? '' : this.$store.getters.userSetting.mawbAddSystem.opersystemdom
+          // alert(this.$store.getters.userSetting.mawbAddSystem.opersystem )
+          this.inputModelData.opersystem = this.$store.getters.userSetting.mawbAddSystem.opersystem 
+          this.inputModelData.opersystemdom = this.$store.getters.userSetting.mawbAddSystem.opersystemdom == "国内" ? '' : this.$store.getters.userSetting.mawbAddSystem.opersystemdom
 
-          this.inputModelData.system = this.inputModelData.opersystem == "国内服务" ?
-            "国内服务" : (this.inputModelData.opersystemdom.charAt(0) + this.inputModelData.opersystem.charAt(0));
+          this.inputModelData.system = this.inputModelData.opersystem == "国内" ?
+            "国内" : (this.inputModelData.opersystemdom.charAt(0) + this.inputModelData.opersystem.charAt(0));
         } else {
           let systemCheck = this.$store.state.systemCheck;
           if (systemCheck.length == 2) {
@@ -2456,7 +2632,7 @@
             this.inputModelData.opersystemdom = systemCheck[0] + "运";
           }
           if (systemCheck.length == 4) {
-            this.inputModelData.opersystem = "国内服务";
+            this.inputModelData.opersystem = "国内";
           }
         }
 
@@ -2485,10 +2661,13 @@
       onScroll(e, position) {//滚动定位到面板
         if (this.isoutside) return;
         for (let k in this.pointArr) {
-          if ($(this.pointArr[k].href).offset().top > 40) {
-            this.pointIndex = k;
-            break;
+          if($(this.pointArr[k].href).offset().top !== 'undefined'){
+              if ($(this.pointArr[k].href).offset().top > 40) {
+                this.pointIndex = k;
+                break;
+              }
           }
+
         }
       },
       newCancelOrder() { //新撤单
@@ -2689,7 +2868,7 @@
             return false;
           }
 
-          if (this.inputModelData.opersystem == '国内服务' && this.serviceSelArr.length == 0) {
+          if (this.inputModelData.opersystem == '国内' && this.serviceSelArr.length == 0) {
             this.$message.error("请选择服务");
             return false;
           }
@@ -2706,7 +2885,7 @@
           this.pagestep = 2;
         } else {
 
-          if (this.inputModelData.opersystem != "国内服务") {
+          if (this.inputModelData.opersystem != "国内"&&this.inputModelData.opersystem != "国内服务") {
 
             if (this.goodsinfoRequired) {
               this.$message.error("请填写" + this.goodsinfoRequired);
@@ -2793,13 +2972,15 @@
         return true;
       },
       getInfo(checkRequired = true, isSave = true) {//验证并获取最终的表单数据
-
+          
          /* 
           ((订舱操作 == 唯凯配舱 && 订单类型 == 总直单) ||
           (订舱操作 == 唯凯代操作 && 订单类型 === '分单' ))
           => throw new Error('请选择订单类型！')
 
           */
+         //alert(11)
+         console.log(this.inputModelData)
           if ((this.inputModelData.czlx === '自货' && this.inputModelData.orderdom === '直单')||
             (this.inputModelData.czlx === '代操作' && this.inputModelData.orderdom === '分单')
           ) {
@@ -2833,7 +3014,8 @@
 
 
         
-        if (this.inputModelData.opersystem != "国内服务") {
+        if (this.inputModelData.opersystem != "国内"&&this.inputModelData.opersystem != "国内服务") {
+     
           mawbInfo = JSON.parse(JSON.stringify(this.inputModelData));
           let ybstoreList = this.inputModelData.ybstoreList.filter(i => !i.isadd);
 
@@ -3017,14 +3199,14 @@
                     this.$message.error(`请填写分运单${e.hawb}信息`);
                     this.scrollTop(this.$refs.hawbtab)
                     location.href="#goodsinfoView";
-                    this.goodsinfoTabsChecked = 3;
+                    this.inputModelData.opersystem == '出口' ? this.goodsinfoTabsChecked = 2 :  this.goodsinfoTabsChecked = 3 ;
                     return;
                   }
                   if (!e.khjcno) {
                     this.$message.error(`请选择分运单${e.hawb}的进仓编号`);
                     this.scrollTop(this.$refs.hawbtab)
                     location.href="#goodsinfoView";
-                    this.goodsinfoTabsChecked = 3;
+                    this.inputModelData.opersystem == '出口' ? this.goodsinfoTabsChecked = 2 :  this.goodsinfoTabsChecked = 3 ;
                     return;
                   }
                   if (!e.tradeterm) {
@@ -3037,7 +3219,7 @@
                     this.tabsChecked = 1;
                     this.scrollTop(this.$refs.hawbtab)
                     location.href="#goodsinfoView";
-                    this.goodsinfoTabsChecked = 3;
+                    this.inputModelData.opersystem == '出口' ? this.goodsinfoTabsChecked = 2 :  this.goodsinfoTabsChecked = 3 ;
                     this.$message.error(message + `请选择分单${e.hawb}贸易方式`);
                     return;
                   }
@@ -3130,7 +3312,8 @@
           delete mawbInfo.jsonArr;
           delete mawbInfo.khjcnolist;
         } else {
-          //国内服务
+          //国内
+          console.log(this.gnServiceRequired)
           if (this.gnServiceRequired) {
             this.$message.error("请填写" + this.gnServiceRequired);
             return;
@@ -3232,7 +3415,7 @@
             (this.$refs.makingbillmawb && this.$refs.makingbillmawb.getInfo()) || {};
           mawbInfo.hawbdocInfo =
             (this.$refs.makingbillhawb && this.$refs.makingbillhawb.getInfo()) || {};
-          mawbInfo.opersystemdom = "";
+          // mawbInfo.opersystemdom = "";
 
           // if(this.serviceSelArr.length==1&&this.serviceSelArr[0]=='AG0110'){
           //   mawbInfo.fid=-1
@@ -3398,6 +3581,19 @@
           mawbInfo.nodecode = "AO5020";
         }
 
+        if(mawbInfo.opersystem == '国内'){
+          mawbInfo.opersystem = '国内服务'
+          mawbInfo.opersystemdom = ''
+          mawbInfo.system = '国内服务'
+        }
+
+
+      if(mawbInfo.opersystemdom == '其它'){
+          mawbInfo.opersystem = '国内服务'
+          mawbInfo.opersystemdom = ''
+          mawbInfo.system = '国内服务'
+        }
+
         this.saveBtnDisabled = true;
         this.$axios({
           method: "post",
@@ -3409,7 +3605,7 @@
           .then(results => {
             //  console.log(results);
             if (results.data.resultstatus == 0) {
-              if (mawbInfo.opersystem == "国内服务") {
+              if (mawbInfo.opersystem == "国内") {
                 this.$alert(
                   "订单编号为" +
                   results.data.resultno +
@@ -3505,6 +3701,7 @@
       },
       saveWaitFp(type) {
         //1.保存待处理 2保存并分配 3.保存并完成
+        console.log('start')
         var mawbInfo = this.getInfo();
         console.log(mawbInfo)
         console.log(JSON.stringify(mawbInfo))
@@ -3523,6 +3720,19 @@
         // } else {
         //   this.saveBtnDisabled = true;
         // }
+        if(mawbInfo.opersystem == '国内'){
+          mawbInfo.opersystem = '国内服务'
+          mawbInfo.opersystemdom = ''
+          mawbInfo.system = '国内服务'
+        }
+
+
+      if(mawbInfo.opersystemdom == '其它'){
+          mawbInfo.opersystem = '国内服务'
+          mawbInfo.opersystemdom = ''
+          mawbInfo.system = '国内服务'
+        }
+
         this.$axios({
           method: "post",
           url: this.$store.state.webApi + "api/ExHpoAxpline",
@@ -3536,7 +3746,7 @@
                 this.saveBtnDisabled = false;
                 this.$refs.fenpei.confirmFp(results.data.resultguid, results.data.resultno)
               } else {
-                if (this.inputModelData.opersystem == "国内服务") {
+                if (this.inputModelData.opersystem == "国内") {
                   this.$alert(
                     "订单编号为" +
                     results.data.resultno +
@@ -3728,7 +3938,7 @@
           let data = results.data;
           data.frompage = this.frompage;
           data.serviceList = data.serviceList.filter(i => {
-            if (data.opersystem == "国内服务") {
+            if (data.opersystem == "国内") {
               return i.servicecode != "OA0010" && i.servicecode != "YS0010";
             } else {
               return i.servicecode != "YS0010";
@@ -3798,6 +4008,18 @@
       },
       async putMawbInfo(type) {//单纯的修改详细信息的接口
         let mawbInfo = this.getInfo();
+      if(mawbInfo.opersystem == '国内'){
+          mawbInfo.opersystem = '国内服务'
+          mawbInfo.opersystemdom = ''
+          mawbInfo.system = '国内服务'
+        }
+
+
+      if(mawbInfo.opersystemdom == '其它'){
+          mawbInfo.opersystem = '国内服务'
+          mawbInfo.opersystemdom = ''
+          mawbInfo.system = '国内服务'
+        }
         if (!mawbInfo) {
           return;
         }
@@ -3821,7 +4043,7 @@
       },
       async getHawbNum() {
         //获取分单号
-        if (this.inputModelData.opersystem == '国内服务') return;
+        if (this.inputModelData.opersystem == '国内') return;
         // await this.$axios({
         //   method: "get",
         //   url: this.$store.state.webApi + "api/ExAxpline",
@@ -3868,7 +4090,28 @@
     },
 
     watch: {
-
+    'inputModelData.area':{
+      handler(val){
+      
+        if( val == '上海'){
+          this.version = 2
+          
+        } else {
+          this.version = 1
+        
+        }
+      },
+      deep:true
+    },
+    version(val){
+      if(val == 1) {
+        this.basicinfoView.fid.hidden = false
+        this.basicinfoView.gid.hidden = false
+      } else if(val == 2 && this.inputModelData.opersystem == '进口') {
+        this.basicinfoView.fid.hidden = true
+        this.basicinfoView.gid.hidden = true
+      }
+    },
       "inputModelData.weight": {
         handler(val) {
           this.inputModelData.jfweight =
@@ -3876,6 +4119,68 @@
               computedWeight(this.inputModelData.volume, val) :
               val;
           this.inputModelData.accountweightin = val;
+        },
+        immediate: true
+      },
+      'inputModelData.opersystem':{
+        handler(val){
+      this.basicinfoView.fid.required = true;
+      this.basicinfoView.gid.required = true;
+      const data = JSON.parse(localStorage.groupType).filter(i=>i.groupid=='53')
+      const obj = data.filter(k => k.typename == this.inputModelData.area)
+          if(val == '进口'){
+            if(this.version == 1) {
+              this.goodsinfoTabs = [
+                { title: '订舱信息（必填）' },
+                { title: '补充信息（选填）' },
+                { title: '总单收发货人信息（选填）' },
+                { title: '分单信息（选填）' },
+              ]
+              this.inputModelData.mdg = obj[0].ready06
+              this.inputModelData.sfg = ""
+                this.basicinfoView.fid.hidden = false
+                this.basicinfoView.gid.hidden = false
+            } else if(this.version ==2) {
+                this.basicinfoView.area.title = "唯凯销售站点"
+                // this.basicinfoView.ordertype.hidden = false
+                // this.basicinfoView.orderdomOut.hidden = false
+                this.basicinfoView.fid.hidden = true
+                this.basicinfoView.gid.hidden = true
+                this.basicinfoView.creditlevel.hidden = true
+                this.basicinfoView.czlx.hidden = true
+                this.basicinfoView.ordertype.hidden = false  
+                this.basicinfoView.orderdom.hidden = false
+            }
+
+          } else if(val == '出口') {
+            this.goodsinfoTabs = [
+              { title: '服务项目（选填）' },
+              { title: '补充信息（选填） '},
+              { title: '总单收发货人信息（选填）' },
+              { title: '分单信息（选填）' },
+            ]
+              this.inputModelData.mdg = ""
+              this.inputModelData.sfg = obj[0].ready06
+              console.log(this.goodsinfoTabs)
+                this.basicinfoView.fid.hidden = false
+                this.basicinfoView.gid.hidden = false
+
+                this.basicinfoView.ordertype.hidden = true 
+                this.basicinfoView.orderdom.hidden = true
+          } else if(val == "国内") {
+              this.homeInformation.fid.hidden = true
+              this.homeInformation.gid.hidden = true 
+              this.basicinfoView.fid.hidden = false
+              this.basicinfoView.gid.hidden = false
+              const codeList = Object.keys(this.newService)
+              codeList.forEach(code => {
+                if(this.newService[code].port == '国内操作服务'){
+                  this.newService[code].disabled = true
+                }
+              })
+              console.log(this.newService)
+            }
+
         },
         immediate: true
       },
@@ -3887,6 +4192,33 @@
               this.inputModelData.weight;
         },
         immediate: true
+      },
+      "inputModelData.opersystemdom": {
+        handler(val) {
+          console.log(this.inputModelData.czlx)
+          this.inputModelData.czlx = this.inputModelData.czlx
+          if(this.inputModelData.opersystem == '国内服务'){
+            this.inputModelData.opersystem = '国内'
+          }
+          if(val == '其它'){
+            // alert(222)
+            this.basicinfoView.opersystem.hidden = true
+            this.basicinfoView.czlx.hidden = true
+            this.basicinfoView.ordertype.hidden = true
+
+            // this.basicinfoView.ordertype.hidden = true 
+            // this.basicinfoView.orderdom.hidden = true
+            // this.basicinfoView.orderdomOut.hidden = true
+            // this.basicinfoView.ordertype.hidden = true
+            this.inputModelData.opersystem = '国内服务'
+            // this.inputModelData.opersystem = '国内'
+          }  else {
+            
+            this.basicinfoView.opersystem.hidden = false
+            // this.inputModelData.opersystem = ''
+
+          }
+        }
       },
       "inputModelData.bglx"(val) {
         this.supplementView.bgweight.required = !!val;
@@ -3929,14 +4261,23 @@
       "newService": {
         handler(val) {
           // 唯凯配舱，唯凯代操作
-          let OA0010 = val['OA0010'];
-          if (OA0010 && this.pagestep == 2) {
-            if (OA0010.model) {
-              this.inputModelData.czlx = "自货";
-            } else {
-              this.inputModelData.czlx = "代操作";
-            }
+          // let OA0010 = val['OA0010'];
+          // if (OA0010 && this.pagestep == 2) {
+          //   if (OA0010.model) {
+          //     this.inputModelData.czlx = "自货";
+          //   } else {
+          //     this.inputModelData.czlx = "代操作";
+          //   }
+          // }
+          let AG0110 = val['AG0110']
+          if(AG0110 && AG0110.model && this.serviceSelArr.length == 1 && this.inputModelData.opersystemdom == '其它'){
+            this.basicinfoView.fid.required = false
+            this.basicinfoView.gid.required = false
+          } else {
+            this.basicinfoView.fid.required = true
+            this.basicinfoView.gid.required = true
           }
+          console.log(val)
         },
         deep: true,
       },
@@ -3979,28 +4320,50 @@
           }, () => {
             let val = this.inputModelData;
             this.$nextTick(() => {
-
+              // debugger
               // if (val.system) {
-              let arr = ['opersystemdom', 'fid', 'gid', 'creditlevel', 'ispay_pre', 'czlx', 'orderdom', 'ordertype'];
-              if (val.system.length == 4) {//国内服务
-                arr.forEach(i => {
-                  this.basicinfoView[i].hidden = true
-                })
-              } else {
+              let arr = [ 'creditlevel', 'ispay_pre', 'czlx', 'orderdom', 'ordertype'];
+              // if (val.opersystemdom == "其它" &&  val.opersystem == "国内") {
+              //     arr.forEach(i => {
+              //     this.basicinfoView[i].hidden = true
+              //   })
+              // } else 
+              // if (val.system.length == 4) {//国内
+                
+              //   arr.forEach(i => {
+              //     this.basicinfoView[i].hidden = true
+              //   })
+
+              // } 
+              // alert(val.system )
+            if (val.system == '其国') {
+              this.basicinfoView.czlx.hidden = true
+              this.basicinfoView.orderdom.hidden = true
+              } else if(val.opersystem == '进口' && this.version == 2){
+              //   this.basicinfoView.fid.hidden = true
+              //   this.basicinfoView.gid.hidden = true
+                this.basicinfoView.creditlevel.hidden = true
+                this.basicinfoView.ordertype.hidden = false
+              //   this.basicinfoView.czlx.hidden = true
+              }else {
                 arr.forEach(i => {
                   this.basicinfoView[i].hidden = false
                 });
 
-                this.basicinfoView.area.hidden = this.basicinfoView.gid.hidden || !val.gid
-                this.basicinfoView.opersystem.hidden = this.basicinfoView.area.hidden || !val.area
+                // this.basicinfoView.area.hidden = this.basicinfoView.gid.hidden || !val.gid
+                // this.basicinfoView.opersystem.hidden = this.basicinfoView.area.hidden || !val.area
 
+            
+                // this.basicinfoView.opersystemdom.hidden = this.basicinfoView.opersystem.hidden || !val.opersystem
+                
 
-                this.basicinfoView.opersystemdom.hidden = this.basicinfoView.opersystem.hidden || !val.opersystem
                 this.basicinfoView.czlx.hidden = this.basicinfoView.area.hidden || !val.area
                 this.basicinfoView.orderdom.hidden = this.basicinfoView.czlx.hidden || !val.czlx
                 this.basicinfoView.ordertype.hidden = this.basicinfoView.orderdom.hidden || !val.orderdom
                 // this.basicinfoView.ispay_pre.hidden = !val.fid
                 this.basicinfoView.ispay_pre.hidden = this.inputModelData.opersystem  != '出口' || !val.fid
+                
+               
               }
               // }
 
@@ -4017,7 +4380,7 @@
               // note: 运价信息 显示
               this.fareInputViewData.inwageallinclude.hidden = inwage
               this.fareInputViewData.first.hidden = inwage
-              this.fareInputViewData.priceabout.hidden = flag
+              // this.fareInputViewData.priceabout.hidden = flag
               this.fareInputViewData.isinwageallin_trans.hidden = flag
               this.fareInputViewData.inwageallinprice_trans.hidden = flag
               this.fareInputViewData.second.hidden = flag
@@ -4029,8 +4392,8 @@
               this.pointArr[1].show = !!val.isimperfect
               this.pointArr[2].show = !!val.isimperfect
               // this.pointArr[3].show = this.detailShow.supplementView && this.inputModelData.isimperfect == 1
-              // this.nextstepshow = val.system == "国内服务" ? val.system : (val.gid && val.customerRelList.length > 0 && val.ordertype)
-              this.nextstepshow = val.system == "国内服务" ? val.system : false
+              // this.nextstepshow = val.system == "国内" ? val.system : (val.gid && val.customerRelList.length > 0 && val.ordertype)
+              this.nextstepshow = val.system == "国内" ? val.system : false
               this.supplementView.mawbAe.idStyle = this.pagetype == 1 ? { width: '560px' } : { width: '100%' }
 
 
@@ -4071,12 +4434,16 @@
               console.log(this.basicinfoRequired)
                console.log(this.inputModelData.ordertype)
               this.$nextTick(() => {
+                console.log(333333333333333333)
+                console.log(this.basicinfoRequired)
+                console.log(this.inputModelData.ordertype)
                 if (this.basicinfoRequired || this.inputModelData.ordertype == 2) {
                   //this.inputModelData.isimperfect = "";
                   this.pagestep = 1;
                   if (this.isoutside) {
                     this.outPagestep = 1;
                   }
+            
                 } else {
                   this.fieldsInit();
                   this.pagestep = 2;
@@ -4091,9 +4458,9 @@
             console.log(res)
             this.fieldsInit();
             this.pagestep = 2;
-            if (this.frompage == 4) {
-              this.inputModelData.isimperfect = 1;//订单未完善进去，把类型修改为正式订舱
-            }
+            // if (this.frompage == 4) {
+            //   this.inputModelData.isimperfect = 1;//订单未完善进去，把类型修改为正式订舱
+            // }
 
             if (this.isoutside) {
               ['fid', 'gid', 'ispay_pre', 'ordertype', "creditlevel"].forEach(i => {
@@ -4124,7 +4491,7 @@
 
             this.supplementView.mawbAe.idStyle = this.pagetype == 1 ? { width: '560px' } : { width: '100%' }
 
-            if (this.inputModelData.system == '国内服务') {
+            if (this.inputModelData.system == '国内') {
               ['fid', 'gid', 'creditlevel', 'ispay_pre', 'czlx', 'orderdom', 'orderdomOut', 'ordertype'].forEach(i => {
                 this.basicinfoView[i].hidden = true
               })
@@ -4142,7 +4509,7 @@
           this.$watch(() => {
             return this.inputModelData.opersystem + this.inputModelData.opersystemdom
           }, () => {
-            this.inputModelData.system = this.inputModelData.opersystem == "国内服务" ? "国内服务" : this.inputModelData.opersystemdom.charAt(0) + this.inputModelData.opersystem.charAt(0);
+            this.inputModelData.system = this.inputModelData.opersystem == "国内" ? "国内" : this.inputModelData.opersystemdom.charAt(0) + this.inputModelData.opersystem.charAt(0);
           }, { immediate: true })
 
           this.$watch(
@@ -4235,22 +4602,34 @@
             () => {
               return this.inputModelData.gid
             }, (val) => {
+
               if (val) {
                 let wtxmNoname=getxmdata("wtxmNoname")
                 let codes = wtxmNoname.filter(i => i.id == val && i.customxz != 2).map(i => i.system).toString();
                 this.disabledSystemOption = JSON.parse(localStorage.groupType).filter(i => i.groupid == 57 && !codes.includes(i.id)&&codes!="-1").map(i => i.typename)//不能选择的运输种类和运输方式
 
-                if (this.inputModelData.opersystem == "国内服务") {
-                  if (this.disabledSystemOption.includes(this.inputModelData.opersystem)) {
-                    this.inputModelData.opersystemdom = '';
-                    this.inputModelData.opersystem = '';
-                  }
-                } else {
-                  if (this.disabledSystemOption.includes(`${this.inputModelData.opersystemdom[0]}${this.inputModelData.opersystem[0]}`)) {
-                    this.inputModelData.opersystemdom = '';
-                    this.inputModelData.opersystem = '';
-                  }
-                }
+                // if (this.inputModelData.opersystem == "国内" && this.inputModelData.opersystemdom !== "其它") {
+                //   if (this.disabledSystemOption.includes(this.inputModelData.opersystem)) {
+                //     this.inputModelData.opersystemdom = '';
+                //     this.inputModelData.opersystem = '';
+                //   }
+                 
+                // } else {
+                  // if (this.disabledSystemOption.includes(`${   this.inputModelData.opersystemdom[0]}${this.inputModelData.opersystem[0]}`)) {
+                    
+                  //   // this.inputModelData.opersystemdom = '';
+
+                  //   // this.inputModelData.opersystem = '';
+                  //   alert(111)
+                  //   console.log(this.disabledSystemOption)
+                  //   console.log(this.inputModelData.opersystemdom[0])
+                  //   console.log(this.inputModelData.opersystemdom)
+                  //   console.log(this.inputModelData.opersystem)
+                  //   console.log(this.inputModelData.opersystem[0])
+                  //   console.log(`${this.inputModelData.opersystemdom[0]}${this.inputModelData.opersystem[0]}`)
+                  //   console.log(this.disabledSystemOption.includes(`${this.inputModelData.opersystemdom[0]}${this.inputModelData.opersystem[0]}`))
+                  // }
+                // }
             
                let data = wtxmNoname.filter(item => item.id == val);
               if (data.length === 1) {
@@ -4301,7 +4680,7 @@
               );
             },
             function () {
-              if (this.inputModelData.opersystem == "国内服务") return;
+              if (this.inputModelData.opersystem == "国内") return;
               var json = {
                 czlx: this.inputModelData.czlx,
                 gid: this.inputModelData.gid,
@@ -4353,7 +4732,7 @@
             );
           },
           function () {
-            if (this.inputModelData.opersystem == "国内服务") return;
+            if (this.inputModelData.opersystem == "国内") return;
             if (
               this.inputModelData.hbh &&
               this.inputModelData.hbh.length >= 2 &&
@@ -4398,7 +4777,7 @@
               if (this.newService.OA0010) {
                 this.newService.OA0010.model = this.inputModelData.czlx == '自货'
                 // done: 唯凯配舱，唯凯代操作不禁用
-                // this.newService.OA0010.disabled = this.inputModelData.opersystem != '国内服务'
+                // this.newService.OA0010.disabled = this.inputModelData.opersystem != '国内'
               }
 
             })
@@ -4446,7 +4825,7 @@
         this.$watch(() => {
           return this.serviceSelArr
         }, (val) => {
-          if (this.inputModelData.opersystem == "国内服务") {
+          if (this.inputModelData.opersystem == "国内") {
             this.gnFieldDisplay();
           } else {
             if (!this.basicinfoView.ordertype.hidden) {
@@ -4512,7 +4891,7 @@
                 this.inputModelData.mdg = "";
               }
 
-              if (this.inputModelData.opersystem == '国内服务') {
+              if (this.inputModelData.opersystem == '国内') {
                 this.inputModelData.opersystemdom = ''
               }
             }
@@ -4542,6 +4921,14 @@
               this.detailShow.supplementView = val;
               if (val) {
                this.goodsinfoTabs = [
+                  // 新版本
+                  // { title: '服务项目（必填）' },
+                  // { title: '补充信息（选填）' },
+                  // { title: '总单收发货人信息（选填）' },
+                  // { title: '分单信息（选填）' },
+
+
+                  // 老版本
                   { title: '订舱信息（必填）' },
                   { title: '补充信息（选填）' },
                   { title: '总单收发货人信息（选填）' },
@@ -4549,6 +4936,13 @@
                 ]
               } else {
                   this.goodsinfoTabs = [
+                    // 新版本
+                  // { title: '服务项目（必填）' },
+                  // { title: '补充信息（选填）' },
+                  // { title: '总单收发货人信息（选填）' },
+
+
+                  // 老版本
                   { title: '订舱信息（必填）' },
                   { title: '补充信息（选填）' },
                   { title: '总单收发货人信息（选填）' },
@@ -4557,11 +4951,25 @@
 
                if( this.inputModelData.orderdom === '分单') {
                 this.goodsinfoTabs = [
+                  // 新版本
+                  // { title: '服务项目（必填）' },
+                  // { title: '补充信息（选填）' },
+                  // { title: '分单信息（选填）' },
+
+                  // 老版本
                   { title: '订舱信息（必填）' },
                   { title: '补充信息（选填）' },
                   { title: '分单信息（选填）' },
                 ]
               } 
+              if(this.inputModelData.opersystem == "出口"){
+                this.goodsinfoTabs = [
+                  { title: '服务项目（选填）' },
+                  { title: '补充信息（选填）' },
+                  { title: '总单收发货人信息（选填）' },
+                  { title: '分单信息（选填）' },
+                ]
+              }
             
           }, { immediate: true }
         )
@@ -4696,9 +5104,11 @@
             if (this.newService[item.servicecode]) {
               if(this.newService[item.servicecode].disabled==false){
                 this.newService[item.servicecode].model =
-                item.servicecode == 'OA0010' ? this.inputModelData.system != '国内服务' && this.inputModelData.czlx == '自货' : item.isdel == 1;
+                item.servicecode == 'OA0010' ? this.inputModelData.system != '国内' && this.inputModelData.czlx == '自货' : item.isdel == 1;
                  this.newService[item.servicecode].oprequest = item.oprequest;
               }
+              
+
             }
           });
         }
@@ -4731,7 +5141,8 @@
 
       // done:是否为订仓信息 goodsinfoTabsChecked == 0 为订仓信息
       isBookingInformation() {
-        return this.goodsinfoTabsChecked == 0;
+        // return this.goodsinfoTabsChecked == 0;
+        return true
       },
 
       isHawbShow() {

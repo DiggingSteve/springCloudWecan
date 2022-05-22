@@ -300,12 +300,12 @@ export default {
        .then(result => {
           if (result.data.resultstatus == 0) {
             this.$message.success('已解锁')
+            this.$store.commit('setAgainShow',false)
+            this.rePassword=""
             this.$websoketGlobal.ws.send(JSON.stringify({
               messagetype: "againShow",
               calllist:[{"logname":localStorage.usrname}]
             }));
-            this.$store.commit('setAgainShow',false)
-            this.rePassword=""
             return
           }else{
             this.$message.error(result.data.resultmessage)
@@ -354,11 +354,11 @@ export default {
     },
     againShow:{
       get(){
-        console.log(this.$store.state.againShow)
+       // console.log(this.$store.state.againShow)
         return this.$store.state.againShow
       },
       set(){
-
+        
       }
     },
     logname(){
@@ -995,7 +995,7 @@ td .disabled {
 
 .input-required .inputGroup {
   .input-item {
-    background: #fff8ef;
+    background: #fff8ef !important;
   }
 }
 
@@ -1006,7 +1006,7 @@ td .disabled {
 }
 
 .input-required input {
-  background: #fff8ef;
+  background: #fff8ef !important;
 }
 
 .notrequired input {
@@ -1221,7 +1221,7 @@ td .disabled {
 //.el-scrollbar__wrap{max-height:720px;}
 .input-required textarea {
   // border:1px solid #F7CBCB;
-  background-color: #fff8ef;
+  background-color: #fff8ef !important;
 }
 
 .dropdown-wrapper-box::-webkit-scrollbar-thumb {
@@ -1860,7 +1860,7 @@ td .disabled {
   }
 
   .input-required .el-textarea__inner {
-    background-color: #fff8ef;
+    background-color: #fff8ef !important;
     color: #333;
   }
 }

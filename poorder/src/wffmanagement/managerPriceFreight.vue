@@ -407,7 +407,7 @@
                     <td class="">
                       <div class="arrow"></div>
                     </td>
-                    <td class="zzgFont">{{ priceObj.zzgTitle }}</td>
+                    <td class="zzgFont">{{ priceObj.zzg }}</td>
                     <td class="">
                       <div class="arrow"></div>
                     </td>
@@ -862,7 +862,6 @@
                         <input
                           class="price-input"
                           v-if="isShowFixed"
-                          style="color: red"
                           type="input"
                           v-model.sync="
                             priceObj.priceDisplayMap[
@@ -906,6 +905,30 @@
           class="row"
           v-if="priceObj.standardPrice > 0"
         ></div>
+
+          <!-- 驳回历史 -->
+        <div style="margin-top: 20px;">
+            <p @click="historyPaneOne=!historyPaneOne"  style="text-align:center;margin-top:18px; cursor: pointer;" v-if="rejectRecord.length">
+              <i :class="historyPaneOne?'el-icon-arrow-up':'el-icon-arrow-down'"></i>
+              {{historyPaneOne?'收起':'展开'}}驳回历史记录
+          </p>
+          <el-collapse-transition>
+              <div v-show="historyPaneOne">
+              <div ex="驳回历史记录"  class="wagediv">
+                <div v-for="(item,index) in rejectRecord" class="rightWageitem">
+                  <p style="align-items: baseline">
+                    <!-- <span class="el-icon-user-solid" :style="{color:item.initiator==initiator?'#5ABFFF':'#F9A527'}"></span> -->
+                    <span style="margin:0 12px">{{item.addman}}</span>
+                    <span style="color:#B0B0B0;">{{item.addtime}}</span>
+                  </p>
+                  <p style="text-align: left !important;">{{item.remark}}</p>
+                </div>
+              </div>
+            </div> 
+          </el-collapse-transition>
+        </div>
+        <!-- 驳回历史 -->
+
       </div>
       <div
         class="bottom-wrap"
@@ -940,11 +963,15 @@
           @click="deleteFee()"
         >删除</el-button> -->
         <el-button type="success" 
+          :disabled="rejectStatus"
           @click="confirmReject(2)">
           同意
         </el-button>
 
-        <el-button type="danger" @click="rejectDialogVisible = true">
+        <el-button 
+        :disabled="rejectStatus"
+        type="danger"
+         @click="rejectDialogVisible = true">
           驳回
         </el-button>
 
@@ -1115,7 +1142,6 @@
                         <input
                           class="price-input"
                           v-if="isShowFixed"
-                          style="color: red"
                           type="input"
                           v-nofocus
                           v-model.sync="priceObj.priceDisplayMap[fixedKey].diff"
@@ -1419,7 +1445,7 @@
       </div>
 
       <!-- 驳回历史 -->
-      <p @click="historyPane=!historyPane"  style="text-align:center;margin-top:18px" v-if="rejectRecord.length">
+      <p @click="historyPane=!historyPane"  style="text-align:center;margin-top:18px; cursor: pointer;" v-if="rejectRecord.length">
         <i :class="historyPane?'el-icon-arrow-up':'el-icon-arrow-down'"></i>
         {{historyPane?'收起':'展开'}}驳回历史记录
     </p>
@@ -1437,7 +1463,7 @@
         </div>
       </div> 
     </el-collapse-transition>
-  <!-- 驳回历史 -->
+     <!-- 驳回历史 -->
 
       <div slot="footer">
         <el-button type="primary" @click="confirmReject(1)">确认驳回</el-button>
@@ -1480,16 +1506,10 @@ export default {
     return {
       rejectDialogVisible: false, // 驳回详情弹出框
       rejectReason: '', // 驳回理由
+      historyPaneOne: false, // 同意下面驳回理由
       historyPane: false, // 驳回历史
       currentRejectReocrd: {},
       usrname: localStorage.getItem("usrname"),
-      tableData: [
-        {
-          rollbackman: 'test',
-          rollbackdate: '2022-3-7',
-          rollbackreason: '接受不了',
-        }
-      ],
       window: window,
       name: "managerPriceFreight.vue",
       wecanStandard: normalCus, //新增编辑的normalCus
@@ -1514,7 +1534,13 @@ export default {
       inputViewData: {
         //wagestandard: { title: '标准', type: 4, options: [{ label: 'normalCus', value: 'normalCus' }, { label: '客户标准', value: '客户标准' }] },
       },
-      inputModelData: { sfg: "", mdg: "", zzg: "",approvalStatus:"100" },
+      inputModelData: { sfg: "", mdg: "", zzg: "",approvalStatus:"100",
+        validityDate: {
+          begin: '',
+          end: '',
+        }
+
+      },
       dialogWidth: "1068px",
       searchData: {},
       tableDataRes: [],
@@ -1561,24 +1587,28 @@ export default {
       // 驳回记录
       let data = {
           feeid: this.priceObj.props.feeid,
-          remark: status ? '' : this.rejectReason,
+          remark: status ? '同意' : this.rejectReason,
           approvalStatus: status ? '200' : '500',
       };
 
         this.$axios({ method: "post", url, data, loading: true, tip: false }).then(results=>{
         if(results.data.resultstatus == 0){
           if ( type == 1) { //驳回成功 => 把新驳回的原因添加到驳回记录里
+            this.rejectDialogVisible = false;
+           this.closeDialog();
             this.currentRejectReocrd = {
               addman: this.usrname,
               addtime: formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),
               remark: this.rejectReason
             }
+          } else {
+             this.closeDialog()
           }
-          this.$message.success(`${ status ? "确认" : "驳回"} 成功`);
+          this.$message.success(`${ status ? "同意" : "驳回"} 成功`);
 
           this.search() // 重新寻找一遍
         }else{
-          this.$message.error(results.data.resultmessage)
+          this.$message.error(results.data.resultmessage||'系统异常，请联系后台管理人员')
         }
       })
     },
@@ -1654,6 +1684,9 @@ export default {
         queryData["pageType"] = pageType.customer;
       }
       this.priceObj.request("get", url, queryData).then(({ data }) => {
+        if (data.resultdata && !data.resultdata.length) {
+          this.$message("无查询结果");
+        }
         this.tableDataRes = data.resultdata;
       });
     },
@@ -1708,6 +1741,10 @@ export default {
       if (this.historyPane) { // 判断驳回历史弹出框打开 => 关闭弹出框
         this.historyPane = false
       }
+      if (this.historyPaneOne) {
+        this.historyPaneOne = false;
+      }
+      this.currentRejectReocrd = {};
       this.rejectReason = ''; // 清空驳回原因
       // 编辑模式 priceObj会使用新的实现继承自原class
       this.priceObj = new priceFreightEditView(this);
@@ -1836,9 +1873,14 @@ export default {
   created: function () {},
 
   computed: {
+    rejectStatus() {
+      return  this.priceObj.props && (this.priceObj.props.approvalStatus == '200' || this.priceObj.props.approvalStatus == '500' )
+    },
+
     // 驳回记录
     rejectRecord() {
-      let data = this.priceObj.approvalArr;
+      let data = JSON.parse(JSON.stringify(this.priceObj.approvalArr));
+      data = data.reverse()
 
       if (this.currentRejectReocrd.addman) {
         data.unshift(this.currentRejectReocrd)
@@ -2192,9 +2234,9 @@ export default {
 /deep/ .contentCmpt {
   max-width: 100% !important;
 }
-/deep/.el-input__inner {
-  border: 0;
-}
+// /deep/.el-input__inner {
+//   border: 0;
+// }
 /deep/.el-range-editor .el-range-input {
   background: transparent !important;
 }

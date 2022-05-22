@@ -62,9 +62,6 @@ export const getServiceView = function (mixpagetype) {
       code: String
     },
     created() {
-      // alert(mixpagetype)
-      // console.log(this.code)
-      // console.log(this.$parent)
     },
     data() {
       return {
@@ -598,7 +595,8 @@ export const getServiceView = function (mixpagetype) {
             },
             linkage: "gid",
             pagetype: isaddpage ? 8 : 1,
-            disabled: !isaddpage || this.isMawbImport
+            disabled: !isaddpage || this.isMawbImport,
+            hidden: false
           },
           gid: {
             title: "项目：",
@@ -611,7 +609,8 @@ export const getServiceView = function (mixpagetype) {
               display: "flex"
             },
             disabled: !isaddpage || this.isMawbImport,
-            showCustomerRel: isaddpage
+            showCustomerRel: isaddpage,
+            hidden: false
           },
           khjcno: {
             title: "进仓编号：",
@@ -1237,16 +1236,23 @@ export const getServiceView = function (mixpagetype) {
         this.serviceViewData.AA0510ViewData.ifws.hidden = !this.serviceSelArr.includes("AA0510");
         this.serviceViewData.AA0510ViewData.ysthwage.hidden = !(this.serviceSelArr.includes("AA0510") && this.inputModelData.ifws == 1);
         this.serviceViewData.AA0510ViewData.truckgid.hidden = !(this.serviceSelArr.includes("AA0510") && this.inputModelData.ifws == 2);
-
+        console.log("=========")
+        console.log(this.serviceSelArr)
         if (
           this.serviceSelArr.length == 1 &&
-          this.serviceSelArr[0] == "AG0110"
+          this.serviceSelArr[0] == "AG0110" && 
+          (this.inputModelData.opersystem == "国内" || this.inputModelData.opersystem == "国内服务"|| this.inputModelData.opersystemdom == '其它')
         ) {
-          this.homeInformation.fid.required = false;
-          this.homeInformation.gid.required = false;
+          // this.homeInformation.fid.required = false;
+          // this.homeInformation.gid.required = false;
+          // alert(this.inputModelData.opersystemdom)
+          // alert(this.inputModelData.opersystemdom)
+          // alert(222)
+          this.basicinfoView.fid.required = false;
+          this.basicinfoView.gid.required = false;
         } else {
-          this.homeInformation.fid.required = true;
-          this.homeInformation.gid.required = true;
+          this.basicinfoView.fid.required = true;
+          this.basicinfoView.gid.required = true;
         }
       }
 
@@ -1258,6 +1264,15 @@ export const getServiceView = function (mixpagetype) {
           this.serviceViewData.AA0510ViewData.truckgid.hidden = val == 1
         },
         immediate: true
+      },
+      'inputModelData.opersystem' : {
+        handler(val){
+
+        if(val == "国内" || this.inputModelData.opersystemdom == "其它") {
+            this.homeInformation.fid.hidden = true
+            this.homeInformation.gid.hidden = true
+          } 
+        }
       }
 
     }
@@ -1265,23 +1280,6 @@ export const getServiceView = function (mixpagetype) {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

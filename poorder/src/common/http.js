@@ -10,8 +10,8 @@ import {
   formatDate
 } from "@/api/localStorage.js"
 axios.defaults.timeout = 90000;
-
-// 添加请求拦截器
+   
+//   添加请求拦截器
 // var CancelToken = axios.CancelToken;
 // var source = CancelToken.source();
 

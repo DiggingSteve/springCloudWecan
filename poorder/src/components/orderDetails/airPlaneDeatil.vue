@@ -2108,7 +2108,7 @@ curObjectKyYs:{
           tip: false
         }).then(results => {
           console.log("起飞时间");
-          //console.log(results.data);
+          console.log(results.data.resultdic);
           var qfsj =results.data.resultdic &&results.data.resultdic.flytime;
 
           if (qfsj && qfsj.indexOf("1900") == -1) {
@@ -2130,7 +2130,7 @@ curObjectKyYs:{
           }else{
             this.dmfwf={currencyin:"人民币",pricein:0.4,priceout:0.4,itemstypein:"结算重量",itemstypeout:"计重",min_price:10,isallin:1,changeratein:1.0000,items:'货站地面费',servicecode:'AA0240',gid:'',settname:'',currencyout:"人民币",changerateout:1.0000}
           }
-          if(results.data.resultdic.zzg&&!results.data.resultdic.zzg.split(',').includes(this.inputModelData.zzg)){
+          if(results.data.resultdic&&results.data.resultdic.zzg&&!results.data.resultdic.zzg.split(',').includes(this.inputModelData.zzg)){
             this.zzgList=results.data.resultdic.zzg
             this.inputModelData.zzg=''
           }
@@ -3064,13 +3064,13 @@ curObjectKyYs:{
             console.log(this.inputModelData.jfweight)
           }
 
-            this.inputModelData.yqhbrq = results.data.resultdic.allinfo.shipaceInfo.hbrq && results.data.resultdic.allinfo.shipaceInfo.hbrq.indexOf('1900') == -1 ? results.data.resultdic.allinfo.shipaceInfo.hbrq.substring(0, 11) : results.data.resultdic.allinfo.yqhbrq.substring(0, 11)
-
-            this.inputModelData.yqhbh = results.data.resultdic.allinfo.shipaceInfo && results.data.resultdic.allinfo.shipaceInfo.hbh || results.data.resultdic.allinfo.yqhbh
+            this.inputModelData.yqhbrq = results.data.resultdic.allinfo.shipaceInfo.hbrq && results.data.resultdic.allinfo.shipaceInfo.hbrq.indexOf('1900') == -1 ? results.data.resultdic.allinfo.shipaceInfo.hbrq.substring(0, 11) : this.inputModelData.yqhbrq.substring(0, 11)
+            this.inputModelData.yqhbh = results.data.resultdic.allinfo.shipaceInfo && results.data.resultdic.allinfo.shipaceInfo.hbh?results.data.resultdic.allinfo.shipaceInfo.hbh:this.inputModelData.yqhbh
 
             this.inputModelData.terminalname=results.data.resultdic.allinfo.shipaceInfo&&results.data.resultdic.allinfo.shipaceInfo.terminalname
 
-            this.inputModelData.qcts = results.data.resultdic.allinfo.shipaceInfo.qcts || results.data.resultdic.allinfo.yqqcts;
+            console.log(this.inputModelData.terminalname,'qeqeqwe')
+            this.inputModelData.qcts = results.data.resultdic.allinfo.shipaceInfo.qcts || ''
             
             if(!this.inputModelData.zzg){
               //alert('1')
@@ -3639,7 +3639,7 @@ curObjectKyYs:{
         loading: false,
         tip: false
       }).then(results => {
-         console.log(results.data.resultdic.zzg)
+        // console.log(results.data.resultdic.zzg)
         if(results.data.resultdic){
          
          if(results.data.resultdic.zzg&&results.data.resultdic.zzg.indexOf(',')=='-1'){
@@ -6027,6 +6027,7 @@ costData = costData.map(x => ({
       },
       function(val) {
         if (val) {
+          console.log(11112222)
           //console.log(this.inputModelData.qfsj)
           //if(!this.inputModelData.qfsj||this.inputModelData.qfsj.indexOf('00:00')!='-1'){
             //2021-8-10 不需要提示

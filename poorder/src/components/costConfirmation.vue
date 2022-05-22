@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <div class="page-container-box">
             <newSearchComp :name="name" :view-data.sync="inputViewData" :model-data.sync="inputModelData"
                 :search-data.sync="searchData" :pageshow.sync='pageshow' :pagetype="1"
@@ -93,6 +92,9 @@
             isMonitor: {
                 type: Boolean,
                 default: false
+            },
+            pagetype:{
+                type:[Number,String]
             }
         },
         data() {
@@ -132,8 +134,9 @@
                     },
                 },
                 inputModelData: {
-                    status: 'AO5060,AO5065',
+                    status: this.pagetype == 2 ? 'AO5060,AO5070' : 'AO5060,AO5065',
                     "confirmstatus": "1",
+                    //signman:  this.pagetype == 2?localStorage.getItem("usrname"):''
                 },
                 selectedTableIndex: "",
                 showReason: false,
@@ -182,6 +185,11 @@
                 //search.orderguid="-1"//本站
                 if (this.isMonitor) {
                     search.delbillreason = ''
+                    if (search.hbrq && !search.hbrq.begin) {
+                            let begin = new Date();
+                            begin.setFullYear(begin.getFullYear() - 1);
+                            search.hbrq.begin = formatDate(begin, "yyyy-MM-dd") + " 00:00:00";
+                    }
                 } else {
                     if (!search.status) {
                         search.status = {
@@ -347,7 +355,7 @@
             }
         },
         mounted() {
-
+        console.log(this.mng)
             this.childrenComponent = renderHtml.call(
                 this,
                 parentComponent,

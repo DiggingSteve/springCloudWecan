@@ -185,6 +185,7 @@
                     :modelval.sync="gid"
                     :pagetype="2"
                     area="上海"
+                    :pageSelectStatus="pageSelectStatus"
                     :wtxmname="wtxmname"
                     :ifRefreshData.sync="ifRefreshData"
                     :fid="fid"
@@ -357,6 +358,8 @@ export default {
         }
       },
       tagStatus: "",
+      pageSelectStatus: "情况补充说明",
+      pageshow: true,
       inputFormModelData: {},
       searchData: {},
       searchFormData: {},
@@ -423,11 +426,9 @@ export default {
       fid: "",
       inputModelData: {
         hxconfirmstatus: "700",
+        confirmstatus: "700",
         status: "AO5060,AO5065,AO5070",
-        signman:
-          this.routername == "hxCostCassify"
-            ? localStorage.getItem("usrname")
-            : "",
+        //signman: localStorage.getItem("usrname"),
         kfconfirmstatus: "700",
         applysignman:
           this.routername == "kfCostCassify"
@@ -513,7 +514,7 @@ export default {
         },
         {
           title: "制单件重体",
-          field: "czlx"
+          field: "dzjzt"
         }
       ],
       inPcData: [],
@@ -619,11 +620,14 @@ export default {
     routername: {
       immediate: true,
       handler(val) {
-        if (this.routername == "hxCostCassify") {
-          this.$store.commit("setSituationState", "hxCostCassify");
-        } else if (this.routername == "kfCostCassify") {
-          this.$store.commit("setSituationState", "kfCostCassify");
+        if(this.routername){
+          this.$store.commit("setSituationState", this.routername);
         }
+        // if (this.routername == "hxCostCassify") {
+        //   this.$store.commit("setSituationState", "hxCostCassify");
+        // } else if (this.routername == "kfCostCassify") {
+        //   this.$store.commit("setSituationState", "kfCostCassify");
+        // }
       }
     }
   },
@@ -688,16 +692,16 @@ export default {
       }
       var jsonArr2 = {
         where: this.searchData,
-        order: "adddate desc"
+        order: "adddate desc",
       };
-      var json = { json: JSON.stringify(jsonArr2) };
-
+      var json = { json: JSON.stringify(jsonArr2) ,routerName:'conditionExplain'};
+      console.log(this.searchData)
       this.$axios({
         method: "get",
-        url: this.$store.state.webApi + "api/ExHpoboAxplineGeneralMissDoc",
+        url: this.$store.state.webApi + (this.routername == "hxCostCassify" || this.routername == "kfCostCassify" ? "api/ExHpoboAxplineGeneralDomMissDoc": "api/ExHpoboAxplineGeneralMissDoc"),
         params: json,
         loading: true,
-        tip: false
+        tip: false,
       })
         .then(results => {
           //console.log(results)

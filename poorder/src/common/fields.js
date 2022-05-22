@@ -349,7 +349,7 @@ export const cassifyObj = {
       title: '已驳回未确认'
     },
     third: {
-      title: '情况补充说明',
+      title: '发票抬头更改未确认',
       propsStr: `routername="kfCostCassify"`,
       componentname: 'conditionExplain'
     }
@@ -363,10 +363,24 @@ export const cassifyObj = {
       title: '已驳回未确认'
     },
     third: {
-      title: '情况补充说明',
+      title: '发票抬头更改未确认',
       propsStr: `routername="hxCostCassify"`,
       componentname: 'conditionExplain'
     }
+  },
+  costConfirmation: {
+      routername: 'costConfirmation',
+      first: {
+        title: '正常未确认'
+      },
+      second: {
+        title: '已驳回未确认'
+      },
+      third: {
+        title: '发票抬头更改未确认',
+        propsStr: `routername="costConfirmation"`,
+        componentname: 'conditionExplain'
+      }
   },
   costConfirmFob: {
     routername: 'hwzzCostCassify',
@@ -546,6 +560,7 @@ export const cassifyObj = {
       title: '费用未确认',
       componentname: "costConfirmation",
       propsStr: "isMonitor",
+      
     }
   },
   axplineDzHawbSearch: { //单证制作

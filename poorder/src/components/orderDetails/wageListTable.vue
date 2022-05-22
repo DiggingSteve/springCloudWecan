@@ -195,20 +195,32 @@ export default {
     // console.log(min_price)
     // console.log(type)
      //三字码 160- 618- 297- 999- 需要验证min_price
-     let thereCode=this.mawbinfo.mawb&&this.mawbinfo.mawb.substr(0,3)||''
-     if(['112','160','618','297','999', '180'].includes(thereCode)){
-              if(type==2){
-                return  priceTotal>=min_price
-              }else{
-                return  priceTotal>=min_price?priceTotal:min_price
-              }
-        }else{
-             if(type==2){
-                return  true
-              }else{
-                return  priceTotal
-              }
-       }
+
+     if (this.mawbinfo.area == '上海') {
+        // area=="上海"，再去判断这3字码，然后验证min_price
+        let thereCode=this.mawbinfo.mawb&&this.mawbinfo.mawb.substr(0,3)||''
+        if(['112','160','618','297','999', '180'].includes(thereCode)){
+                  if(type==2){
+                    return  priceTotal>=min_price
+                  }else{
+                    return  priceTotal>=min_price?priceTotal:min_price
+                  }
+            }else{
+                if(type==2){
+                    return  true
+                  }else{
+                    return  priceTotal
+                  }
+          }
+     } else {
+       // 非area=="上海"，你就直接去验证min_price
+         if(type==2){
+            return  priceTotal>=min_price
+          }else{
+            return  priceTotal>=min_price?priceTotal:min_price
+          }
+     }
+    
 
        return  priceTotal;
    }

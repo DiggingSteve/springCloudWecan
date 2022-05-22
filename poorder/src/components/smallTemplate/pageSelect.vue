@@ -65,6 +65,9 @@
         type: String,
         default: ''
       },
+      pageSelectStatus: {
+        type: String
+      },
       fid: {
         type: [String, Number],
         default: ''
@@ -371,11 +374,20 @@
                  return (i.area==-1||i.area=='全部')||((area=='市场部'||area=='海外部')?(areaArr.includes('市场部')||areaArr.includes('海外部')||areaArr.includes('香港')):areaArr.includes(area))
          } */
         if (val == 2) {
+          console.log(pageDataBackups)
+          console.log(1111111111111111)
+          console.log(this.modelval)
+          console.log(this.wtxmname)
+          console.log(this.pageSelectStatus)
           pageDataBackups = pageDataBackups.filter(i => {
             i.usr_name = i.usr_name.split('-')[1];
             i.usr_code = i.usr_code.split('-')[0];
+            i.usr_name == this.wtxmname
             if (i.usr_name !== '临时客户') {
-              if (this.wtxmname && this.wtxmname.split('-')[0] != '电商') {
+              if(this.pageSelectStatus && this.pageSelectStatus == "情况补充说明"  && this.wtxmname && this.wtxmname.split('-')[0] != '电商' ){
+                // alert(222)
+                return i.fid == this.fid && i.isbasic == 1 && i.usr_name !== this.wtxmname
+              } if (this.wtxmname && this.wtxmname.split('-')[0] != '电商') {
                 return i.fid == this.fid && i.isbasic == 1
               } else {
                 return i.isbasic == 1 || i.id == this.modelval

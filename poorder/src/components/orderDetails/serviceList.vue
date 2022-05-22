@@ -1,18 +1,20 @@
 <template>
-  <div style="display: grid;grid-template-columns: 750px 1fr;gap:8px">
+<!-- grid-template-columns: 750px 1fr; -->
+  <div style="display: grid;gap:8px;grid-template-columns: 600px 1fr;">
     <div v-for="(item,indexT) in serviceDataGroup" :key="indexT"
       :style="[setItemStyle(item,1),{'background-color':system!='国内服务'?'#F8F8F8':''}]"
       style="padding:8px;margin:0 8px 8px">
       <h3>{{item.port}}</h3>
       <div class="portItemDiv" :style="[setItemStyle(item,2)]">
         <div v-for="type in getServiceType(item.serviceBasicList)" :style="[setItemStyle(type,3)]">
-          <span style="margin:8px;margin-left:0px;font-size:15px;color:#000;font-weight:600">{{type}}</span>
+          <!-- v-if="(opersystem!='进口')||(opersystem=='进口'&&!item.serviceBasicList.filter(i=>i.servicetype==type).map(i=>i.servicecode).includes('OA0010'))" -->
+          <span style="margin:8px;margin-left:0px;font-size:15px;color:#000;font-weight:600" >{{type}}</span>
           <template v-for="code in item.serviceBasicList.filter(i=>i.servicetype==type)">
             <div class="service" :code="code.servicecode" v-if="newService[code.servicecode]" :key="code.servicecode">
-              <serviceItem :servicedata="newService[code.servicecode]" v-if="code.servicecode!='OA0010'"></serviceItem>
+              <serviceItem :servicedata="newService[code.servicecode]" v-if="code.servicecode!='OA0010'" :system="system"></serviceItem>
               <template v-else>
-                <serviceItem :servicedata="newService[code.servicecode]" :czlx="czlx" type=1></serviceItem>
-                <serviceItem :servicedata="newService[code.servicecode]" :czlx="czlx" type=2></serviceItem>
+                <serviceItem :servicedata="newService[code.servicecode]" :czlx="czlx" :system="system" type=1></serviceItem>
+                <serviceItem :servicedata="newService[code.servicecode]" :czlx="czlx" :system="system" type=2></serviceItem>
               </template>
             </div>
           </template>
@@ -62,6 +64,10 @@
       danhaoConfirmd:{//单号是否确认,确认后需要显示信息发送
          type:Boolean,
          default:false
+      },
+      ysfs:{
+        type:String,
+        default:''
       }
     },
     components: {
@@ -102,6 +108,7 @@
 
           serviceData.forEach(item => {
             if (item.dom == "总单") {
+              //console.log(this.ysfs=='外仓货')
               if (serviceList.length == 0) {
                 //新增页面
                 this.$set(this.newService, item.servicecode, {
@@ -109,18 +116,21 @@
                   title: item.servicename,
                   // servicetype: item.servicetype,
                   model:
-                    (item.servicecode == "OB0020" && this.system == "空进"),
+                    ((item.servicecode == "OB0020"  && this.system == "空进")||(item.servicecode=='AB0420'&&this.ysfs!='外仓货'&& this.system == "空进")),
+                  model2:'',  //空进出港服务主营唯凯代操作
                   //  model:false,
                   oprequest: "",
-                  disabled: (this.orderdom == '直单' && item.servicecode == 'AA0120') || item.servicecode == 'AA0150' || item.servicecode == 'AA0140' || item.servicecode == 'AA0160',
+                  disabled: (this.orderdom == '直单' && item.servicecode == 'AA0120') || item.servicecode == 'AA0150' || item.servicecode == 'AA0140'|| (item.servicecode == "OB0020" && this.system == "空进")||item.servicecode == 'AA0160',
                   servicecode: item.servicecode,
                   assignstatus: 0
                 });
+                
               } else {
                 //修改页面
                 let guid = -1;
                 let sid = -1;
                 let model = false;
+                //let model2=false;//空进出港服务主营唯凯代操作
                 var oprequest = "";
                 let disabled = false;
                 let profitmode = "";
@@ -136,13 +146,14 @@
                 if (this.orderdom == "直单" && item.servicecode == "AA0120") {
                   disabled = true;
                 }
-                // 海关联系单禁用
-                if (item.servicecode == "OA0010" || item.servicecode == 'AA0150' || item.servicecode == 'AA0140' || item.servicecode == 'AA0160') {
+
+                if (item.servicecode == "OA0010" && this.system!='空进' || item.servicecode == 'AA0150' || item.servicecode == 'AA0140' || item.servicecode == 'AA0160') {
                   disabled = true;
                 }
                 serviceList.forEach(se => {
                   if (se.servicecode == item.servicecode) {
                     model = se.isdel == 1 ? true : false;
+                    //model2= se.isdel != 1&&this.system=='空进' ? true : false;
                     oprequest = se.oprequest;
                     guid = se.guid;
                     sid = se.sid;
@@ -158,7 +169,7 @@
                   guid: guid,
                   sid: sid,
                   //  servicetype: item.servicetype,
-                  title: title,
+                  title: title?title:this.getTitleName(item.servicename, ''),
                   id: item.id,
                   model: model,
                   oprequest: oprequest,

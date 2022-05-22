@@ -5124,11 +5124,13 @@
                 //     ifshow = this.ordertype == 2;
                 // }
                 if (num == 98) {
-                    ifshow = this.inputModelData.dzstatus >= 700 && this.inputModelData.commbillmodifystatus != '2' && this.inputModelData.status < 500 && this.inputModelData.czlx == '代操作';
+                    ifshow=false
+                    //ifshow = this.inputModelData.dzstatus >= 700 && this.inputModelData.commbillmodifystatus != '2' && this.inputModelData.status < 500 && this.inputModelData.czlx == '代操作';
                 }
 
                 if (num == 99) {
-                    ifshow = this.inputModelData.dzstatus >= 700 && this.inputModelData.commbillmodifystatus == '2' && this.inputModelData.status < 500 && this.inputModelData.czlx == '代操作';
+                    ifshow=false
+                    //ifshow = this.inputModelData.dzstatus >= 700 && this.inputModelData.commbillmodifystatus == '2' && this.inputModelData.status < 500 && this.inputModelData.czlx == '代操作';
                 }
                 //签单申请
                 if (num == 101) {

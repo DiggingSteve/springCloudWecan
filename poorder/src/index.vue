@@ -650,13 +650,14 @@ export default {
       if (!resultid) return;
       let vm = this;
       let vmsearch = "";
-
+      console.log(temp)
       let intervalID = setInterval(() => {
         if (
           temp == "costConfirmationkf" ||
           temp == "costConfirmationhx" ||
           temp == "gnCostConfirm" ||
-          temp == "asignSearch"
+          temp == "asignSearch" ||
+          temp=="costConfirmation"
         ) {
           if (
             resultid == 11 ||
@@ -665,7 +666,7 @@ export default {
             resultid == 30
           ) {
             //航线驳回费用  11       客服驳回费用12  国内服务驳回费用16  签单确认已签单30 需要打开第二个tab
-            vm.$refs.search.mng = false;
+            vm.$refs.search.mng = 2;
             // vm.$nextTick(() => {
             vmsearch = vm.$refs.search.$refs.sec;
             // })
@@ -673,7 +674,8 @@ export default {
             vmsearch = vm.$refs.search.$refs.fir;
           }
         } else {
-          vmsearch = vm.$refs.search;
+          vmsearch = vm.$refs.search
+          console.log(vmsearch)
         }
         // 电脑卡的时候页面打开会很慢，轮询判断页面打开成功时才设置查询条件
         if (vmsearch) {
@@ -690,8 +692,10 @@ export default {
           ![4, 5, 15].includes(resultid)
         ) {
           //console.log(2323232323)
+          console.log(vmsearch)
           vmsearch.inputModelData = {};
           vmsearch.searchData = {};
+          
 
           let fieldArr = [
             { field: "hbrq", title: "航班日期" },
@@ -703,8 +707,10 @@ export default {
 
           for (let key of Object.keys(resultdic)) {
             let arr = fieldArr.filter((i) => i.field == key);
+            console.log(arr)
             if (arr.length) {
               vm.$set(vmsearch.inputModelData, key, "");
+              console.log(vmsearch.inputViewData)
               vm.$set(vmsearch.inputViewData, key, {
                 title: arr[0].title,
                 type: 15,
@@ -712,6 +718,8 @@ export default {
                 defaultVal: false,
                 defaultEnd: false,
               });
+               console.log(2)
+              //console.log(vmsearch.inputViewData)
               vmsearch.inputModelData[key] = {
                 begin:
                   (resultdic[key].begin &&
@@ -722,6 +730,7 @@ export default {
                     new Date(resultdic[key].end).Format("yyyy-MM-dd")) ||
                   "",
               };
+              console.log(vmsearch.inputModelData[key])
               // if(key=='rollbackcust'||key=='rollbackroute'){
               //   vmsearch.inputModelData[key]= resultdic[key]
               // }

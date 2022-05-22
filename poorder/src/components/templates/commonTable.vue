@@ -67,8 +67,8 @@
             </template>
           </th>
         </tr>
-
-        <tr v-if="tableData.length === 0 && emptyText">
+        
+        <tr v-if="tableData && tableData.length === 0 && emptyText">
           <td colspan="100">{{ emptyText }}</td>
         </tr>
 
@@ -544,6 +544,12 @@ export default {
       };
     }
   },
+  mounted(){
+    console.log(this.head)
+    console.log(this.tableIndex)
+    console.log(this.tableNData)
+
+  },
 
   computed: {
     transform() {
@@ -638,7 +644,7 @@ export default {
       },
       immediate: true
     }
-  }
+  },
 };
 </script>
 

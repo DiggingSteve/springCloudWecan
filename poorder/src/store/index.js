@@ -265,7 +265,8 @@ var store = new Vuex.Store({
     nodemanList:[],
     againShow:false,
     // 情况补充说明 - 模块区分
-    situationState: ""
+    situationState: "",
+    //mngStatus: "",
   },
   getters: {
     userSetting: state => {
@@ -540,7 +541,10 @@ var store = new Vuex.Store({
     // 修改 状态
     setSituationState(state, payload){
       state.situationState = payload
-    }
+    },
+    // setMngstatus(state, payload){
+    //   state.mngStatus = payload
+    // }
   },
   actions: {
     updateUserSetting({

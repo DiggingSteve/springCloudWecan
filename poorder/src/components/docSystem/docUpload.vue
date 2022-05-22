@@ -37,7 +37,7 @@
           {{item}}
         </el-button>
       </el-button-group>
-      <div class="orderListContainer" v-if="firstLevelIndex == 0">
+      <div class="orderListContainer" v-if="firstLevelIndex == 0 && orderList && orderList.length > 0">
         <div class="item-all"  @click="getClickObj('all')">
           全部
         </div>
