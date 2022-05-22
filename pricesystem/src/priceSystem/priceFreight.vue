@@ -1950,6 +1950,9 @@ export default {
 /deep/.el-select__tags {
   overflow: unset !important;
 }
+/deep/ #headFixed{
+  width: 400px;
+}
 </style>
 <style >
 .el-dialog__title {
