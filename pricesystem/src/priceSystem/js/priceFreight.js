@@ -635,27 +635,31 @@ class priceFreightView extends BaseService {
         this.truckAlertArr = [];
         let twocodeArr = this.twoCode.split(',');
         if (twocodeArr.length == 0) return;
+        let task=[];
         twocodeArr.forEach((item) => {
-            this.getMatchTruck(this.zzg, this.mdg, item);
+           task.push (this.getMatchTruck(this.zzg, this.mdg, item));
         });
         let twocodeStr = "";
 
-        if (this.truckAlertArr.length > 0) {
-            //提示
-            twocodeStr = this.truckAlertArr.reduce((pre, cur, index) => {
-                return pre.twocode + (index > 0 ? "," : "") + cur.twocode;
-            }, '')
-            let txt = `${this.zzg}至${this.mdg}的航司二字码${twocodeStr}已维护卡车转运费，具体可至"目的港卡车转运费"页面中查看`;
-            this.vueInstance.$alert(txt, '提示', {
-                confirmButtonText: '确定',
-                callback: action => {
-
-                }
-            });
-        }
+        Promise.all(task).then(()=>{
+            if (this.truckAlertArr.length > 0) {
+                //提示
+                twocodeStr = this.truckAlertArr.reduce((pre, cur, index) => {
+                    return pre.twocode + (index > 0 ? "," : "") + cur.twocode;
+                }, '')
+                let txt = `${this.zzg}至${this.mdg}的航司二字码${twocodeStr}已维护卡车转运费，具体可至"目的港卡车转运费"页面中查看`;
+                this.vueInstance.$alert(txt, '提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+    
+                    }
+                });
+            }
+        });
+      
     }
 
-    getMatchTruck(zzg, mdg, twocode) {
+ async   getMatchTruck(zzg, mdg, twocode) {
         if (!!!twocode) return;
         var jsonArr = {
             where: {
@@ -664,7 +668,7 @@ class priceFreightView extends BaseService {
         };
         let url = this.vueInstance.$store.state.feeWebApi + "TruckFee/getList";
 
-        this.request("get", url, { json: JSON.stringify(jsonArr) })
+    return    this.request("get", url, { json: JSON.stringify(jsonArr) })
             .then(({ data }) => {
                 var d = data.resultdata;
                 if (d.length > 0) {
