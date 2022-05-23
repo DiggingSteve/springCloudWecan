@@ -230,7 +230,7 @@ class priceFreightView extends BaseService {
 
     mdg = "";
 
-    twoCode = "";
+
     _twocode="";
 
     get twoCode(){
@@ -238,7 +238,7 @@ class priceFreightView extends BaseService {
     }
     set twoCode(v){
         this._twocode=v;
-        
+        this.queryMatchTruck();
     }
 
     tactTwocode = "";
