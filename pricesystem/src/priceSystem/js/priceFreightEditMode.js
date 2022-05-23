@@ -1133,7 +1133,7 @@ class priceFreightEditView extends priceFreightView {
       let nextKey = this.createFixedPriceKey(curVol, nextWeight);
       let nextObj = fixedMap[nextKey];
       if (!!nextObj) {
-        if ((nextObj.diff * 1) >= (obj.doff * 1)) {
+        if ((nextObj.diff * 1) >= (obj.diff * 1)) {
           nextObj.diff = obj.diff;
         }
       }
