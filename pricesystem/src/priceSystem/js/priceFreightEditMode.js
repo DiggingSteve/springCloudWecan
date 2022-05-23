@@ -1176,54 +1176,7 @@ class priceFreightEditView extends priceFreightView {
     return val.toFixed(2);
   }
 
-  //匹配卡车路线 从而进行提示中转港到目的港有卡车路线 可以不必维护这条线路 从而省钱
-
-  //匹配的卡车路线
-  truckAlertArr = [];
-  queryMatchTruck() {
-    let twocodeArr = this.twoCode.split(',');
-    if (twocodeArr.length == 0) return;
-    twocodeArr.forEach((item) => {
-      this.getMatchTruck(this.zzg, this.mdg, item);
-    });
-    let twocodeStr = "";
-    if (this.truckAlertArr.length > 0) {
-      //提示
-      twocodeStr = this.truckAlertArr.reduce((pre, cur,index) => {
-        return pre.twocode + (index > 0 ? "," : "") + cur.twocode;
-      }, '')
-      let txt = `${this.zzg}至${this.mdg}的航司二字码${twocodeStr}已维护卡车转运费，具体可至"目的港卡车转运费"页面中查看`;
-      this.vueInstance.$alert(txt, '提示', {
-        confirmButtonText: '确定',
-        callback: action => {
-
-        }
-      });
-    }
-  }
-
-  getMatchTruck(zzg, mdg, twocode) {
-    var jsonArr = {
-      where: {
-        mdg: zzg, ddg: mdg, twocodeStr: { like: twocode }, wageinout: 2
-      },
-    };
-    let url = this.vueInstance.$store.state.feeWebApi + "TruckFee/getList";
-
-    this.request("get", url, { json: JSON.stringify(jsonArr) })
-      .then(({ data }) => {
-        var d = data.resultdata;
-        if (d.length > 0) {
-          //将数据加到提示框中
-          var obj = {
-            twocode: twocode,
-            zzg: zzg,
-            mdg: mdg
-          };
-          this.truckAlertArr.push(obj);
-        }
-      });
-  }
+ 
 
 }
 export { priceFreightEditView }

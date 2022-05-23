@@ -43,7 +43,7 @@ class priceFreightView extends BaseService {
     weightArr = []
     volArr = []
 
-    tableVolArr=[];
+    tableVolArr = [];
 
     cusArr = []
     approvalArr = [];
@@ -218,8 +218,8 @@ class priceFreightView extends BaseService {
     get sfg() {
         if (!this.isEditMode && this._sfg == "") {
             //新增 直接带入选择站点
-            let area= this.area;
-            let index=this.vueInstance.$store.state.areaState.split(',').findIndex(f=>{return f==area});
+            let area = this.area;
+            let index = this.vueInstance.$store.state.areaState.split(',').findIndex(f => { return f == area });
             return this.vueInstance.$store.state.areaStateCode.split(',')[index];
         }
         return this._sfg;
@@ -231,13 +231,13 @@ class priceFreightView extends BaseService {
     mdg = "";
 
 
-    _twocode="";
+    _twocode = "";
 
-    get twoCode(){
+    get twoCode() {
         return this._twocode;
     }
-    set twoCode(v){
-        this._twocode=v;
+    set twoCode(v) {
+        this._twocode = v;
         this.queryMatchTruck();
     }
 
@@ -442,8 +442,8 @@ class priceFreightView extends BaseService {
         this.relationMap.packageType.baseIndex = this.packageTypeArr.findIndex(f => { return f.isDefault == 1 });
         this.relationMap.vol.baseIndex = this.volArr.findIndex(f => { return f.isDefault == 1 });
 
-        this.tableVolArr= JSON.parse(localStorage.getItem(diffCodeKey.vol)).sort((a,b)=>{
-            return a.tableSeq-b.tableSeq;
+        this.tableVolArr = JSON.parse(localStorage.getItem(diffCodeKey.vol)).sort((a, b) => {
+            return a.tableSeq - b.tableSeq;
         })
 
         this.confirmPriceTabArr();
@@ -511,7 +511,7 @@ class priceFreightView extends BaseService {
             }
         }
 
-        for(let k=0;k<this.volArr.length;k++){
+        for (let k = 0; k < this.volArr.length; k++) {
             var vol = this.volArr[k];
             if (vol.isDefault == 1) continue;
             if (!vol.isAdd) continue;
@@ -627,58 +627,57 @@ class priceFreightView extends BaseService {
         }
     }
 
- //匹配卡车路线 从而进行提示中转港到目的港有卡车路线 可以不必维护这条线路 从而省钱
+    //匹配卡车路线 从而进行提示中转港到目的港有卡车路线 可以不必维护这条线路 从而省钱
 
-  //匹配的卡车路线
-  truckAlertArr = [];
-  queryMatchTruck() {
-      this.truckAlertArr=[];
-    let twocodeArr = this.twoCode.split(',');
-    if (twocodeArr.length == 0) return;
-    twocodeArr.forEach((item) => {
-      this.getMatchTruck(this.zzg, this.mdg, item);
-    });
-    let twocodeStr = "";
-    debugger
-    if (this.truckAlertArr.length > 0) {
-      //提示
-      twocodeStr = this.truckAlertArr.reduce((pre, cur,index) => {
-        return pre.twocode + (index > 0 ? "," : "") + cur.twocode;
-      },'')
-      let txt = `${this.zzg}至${this.mdg}的航司二字码${twocodeStr}已维护卡车转运费，具体可至"目的港卡车转运费"页面中查看`;
-      this.vueInstance.$alert(txt, '提示', {
-        confirmButtonText: '确定',
-        callback: action => {
+    //匹配的卡车路线
+    truckAlertArr = [];
+    queryMatchTruck() {
+        this.truckAlertArr = [];
+        let twocodeArr = this.twoCode.split(',');
+        if (twocodeArr.length == 0) return;
+        twocodeArr.forEach((item) => {
+            this.getMatchTruck(this.zzg, this.mdg, item);
+        });
+        let twocodeStr = "";
 
+        if (this.truckAlertArr.length > 0) {
+            //提示
+            twocodeStr = this.truckAlertArr.reduce((pre, cur, index) => {
+                return pre.twocode + (index > 0 ? "," : "") + cur.twocode;
+            }, '')
+            let txt = `${this.zzg}至${this.mdg}的航司二字码${twocodeStr}已维护卡车转运费，具体可至"目的港卡车转运费"页面中查看`;
+            this.vueInstance.$alert(txt, '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+
+                }
+            });
         }
-      });
     }
-  }
 
-  getMatchTruck(zzg, mdg, twocode) {
-      if(!!!twocode)return;
-    var jsonArr = {
-      where: {
-        mdg: zzg, ddg: mdg, twocodeStr: { like: twocode }, wageinout: 2
-      },
-    };
-    let url = this.vueInstance.$store.state.feeWebApi + "TruckFee/getList";
+    getMatchTruck(zzg, mdg, twocode) {
+        if (!!!twocode) return;
+        var jsonArr = {
+            where: {
+                mdg: zzg, ddg: mdg, twocodeStr: { like: twocode }, wageinout: 2
+            },
+        };
+        let url = this.vueInstance.$store.state.feeWebApi + "TruckFee/getList";
 
-    this.request("get", url, { json: JSON.stringify(jsonArr) })
-      .then(({ data }) => {
-        var d = data.resultdata;
-        if (d.length > 0) {
-          //将数据加到提示框中
-          var obj = {
-            twocode: twocode,
-            zzg: zzg,
-            mdg: mdg
-          };
-          debugger;
-          this.truckAlertArr.push(obj);
-        }
-      });
-  }
+        this.request("get", url, { json: JSON.stringify(jsonArr) })
+            .then(({ data }) => {
+                var d = data.resultdata;
+                if (d.length > 0) {
+                    //将数据加到提示框中
+                    var obj = {
+                        twocode: twocode,
+                        zzg: zzg,
+                        mdg: mdg
+                    };
+                    this.truckAlertArr.push(obj);
+                }
+            });
+    }
 
 
 
