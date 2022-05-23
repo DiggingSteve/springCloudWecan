@@ -85,8 +85,8 @@ class BaseService{
 
     get area(){
         if(!!this.currentArea)return this.currentArea;
-        var area=this.vueInstance.$store.state.areaState
-        if(area.indexOf(',')>-1)return "";
+        var area=localStorage.getItem("loginarea");
+        if(area=='集团总')return "上海";
         return area;
     }
     // 定义一个深拷贝函数  接收目标target参数
