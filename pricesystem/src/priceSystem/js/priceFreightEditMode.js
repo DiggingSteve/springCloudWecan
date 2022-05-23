@@ -1208,10 +1208,9 @@ class priceFreightEditView extends priceFreightView {
         mdg: zzg, ddg: mdg, twocodeStr: { like: twocode }, wageinout: 2
       },
     };
-    let url = this.$store.state.feeWebApi + "TruckFee/getList";
+    let url = this.vueInstance.$store.state.feeWebApi + "TruckFee/getList";
 
-    this.priceObj
-      .request("get", url, { json: JSON.stringify(jsonArr) })
+    this.request("get", url, { json: JSON.stringify(jsonArr) })
       .then(({ data }) => {
         var d = data.resultdata;
         if (d.length > 0) {
