@@ -632,6 +632,7 @@ class priceFreightView extends BaseService {
   //匹配的卡车路线
   truckAlertArr = [];
   queryMatchTruck() {
+      this.truckAlertArr=[];
     let twocodeArr = this.twoCode.split(',');
     if (twocodeArr.length == 0) return;
     twocodeArr.forEach((item) => {
