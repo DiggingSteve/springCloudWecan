@@ -219,7 +219,7 @@ class priceFreightView extends BaseService {
         if (!this.isEditMode && this._sfg == "") {
             //新增 直接带入选择站点
             let area= this.area;
-            let idnex=this.vueInstance.$store.state.areaState.split(',').findIndex(f=>{return f==area});
+            let index=this.vueInstance.$store.state.areaState.split(',').findIndex(f=>{return f==area});
             return this.vueInstance.$store.state.areaStateCode.split(',')[index];
         }
         return this._sfg;
