@@ -149,7 +149,6 @@
               :placeholder="'可多选'"
               type="inline"
               required="tip"
-              @change="priceObj.queryMatchTruck()"
               :modelval.sync="priceObj.twoCode"
             ></pageSelectMultiple>
           </div>
