@@ -36,7 +36,7 @@ public class FreightRateService implements IFreightRate {
     FeeAirFlightServiceImpl flightDao;
 
     final  String minprice="minprice";
-    final  String noRegister="官网公布";//散客
+    final  String noRegister="官网公布";//散客官网公布
     final  String defaultAll="-1";
 
     /**
@@ -45,7 +45,7 @@ public class FreightRateService implements IFreightRate {
      * @param dt 时间格式:yyyy-MM-dd HH:mm:ss
      * @param type 时间类型:-1.减 0.减1加1,1.加
      * @param gid
-     * @param level 客户等级:A类,B类,C类,散客
+     * @param level 客户等级:A类,B类,C类,官网公布
      * @description: 运价查询
      * @return:
      * @author:  hzh
@@ -58,12 +58,14 @@ public class FreightRateService implements IFreightRate {
             lowDt= dt.plusMonths(-1);
         if(type>=0)
             dt=dt.plusMonths(2);
+        if (level.toUpperCase()=="C类")
+        {
+            level=noRegister;
+        }
         QueryWrapper<ViewFeeFlyPrice> query=new QueryWrapper<>();
         var sfgList=sfg.split(",");
-        query.in("sfg",sfgList);//.eq("sfg",sfg);
+        query.in("sfg",sfgList);
         query.eq("ddg",mdg);
-       /* query.and(c->c.eq("mdg",mdg).and(d->d.eq("ddg",""))
-                .or(g->g.eq("ddg",mdg))    );*/
 
         //散客 gid-1
         GetQuerWrapper(gid, level, query);
@@ -93,12 +95,13 @@ public class FreightRateService implements IFreightRate {
             var currList= list.stream().filter(c-> c.getStartdate().compareTo(temp)<=0
                     && c.getEnddate().compareTo(temp)>=0).sorted(Comparator.comparing(c->c.getCusLevel())).collect(Collectors.toList());
             var count=currList.size();
+            hp.minprice = BigDecimal.ZERO;
             if (count==0) {
-                hp.minprice= BigDecimal.ZERO;
+               // hp.minprice= BigDecimal.ZERO;
             }
             else {
-                var minFee = currList.stream().min(Comparator.comparing(c -> c.getNewStandardPrice())).get();
-                hp.minprice = getMinprice(minFee);
+                //var minFee = currList.stream().min(Comparator.comparing(c -> c.getNewStandardPrice())).get();
+               //getMinprice(minFee);
                 //查询详情
                 Map<Object, List<ViewFeeFlyPrice>> gp = currList.stream().collect(Collectors.groupingBy(groupByKey));
                 var outList = getOutputFreightRouting(gp, result.bodyList);
@@ -117,8 +120,7 @@ public class FreightRateService implements IFreightRate {
 
     private void GetQuerWrapper(Integer gid, String level, QueryWrapper<ViewFeeFlyPrice> query) {
         //没登录的散客
-        if (isNoRegister(level)) {
-            gid =-1;
+        if (gid==-1) {
             query.eq("gid", gid);
             query.and(c -> c.eq("cusLevel", level.trim()).or().eq("cusLevel", defaultAll));
         }
@@ -130,10 +132,10 @@ public class FreightRateService implements IFreightRate {
         }
     }
 
-    //判断是否为未登录的散客
-    private boolean isNoRegister(String level) {
-        return !level.isEmpty() && level.trim().compareTo(noRegister)==0;
-    }
+    /*//判断是否为未登录的散客
+    private boolean isNoRegister(Integer gid) {
+        return  gid==-1;
+    }*/
 
     private  List<OutputFreightRouting>  getOutputFreightRouting(Map<Object,List<ViewFeeFlyPrice>> origlist,
                                                                  List<OutputFreightRouting> bodyList){
