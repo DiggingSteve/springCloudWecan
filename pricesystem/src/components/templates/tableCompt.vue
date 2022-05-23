@@ -94,6 +94,7 @@
               :key="relation.field+index" :width="{width:getWidth(relation.field)}">
               <span v-html="setzhHtml(relation.title,relation)"></span>
               <span class="sortWrap" v-if="isSort&&!relation.ifsort">
+                11
                 <i>
                   <i class="sort-ascend"></i>
                   <i class="sort-descend"></i>
