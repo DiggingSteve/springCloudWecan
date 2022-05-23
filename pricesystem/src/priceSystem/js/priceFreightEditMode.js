@@ -1143,6 +1143,7 @@ class priceFreightEditView extends priceFreightView {
         if ((nextCellValue * 1) >= (obj.diff * 1)) {
           this.activeFixedPrice(curVol, nextWeight, obj.diff);
         }
+        break;
       }
 
       if (!!!nextObj) this.activeFixedPrice(curVol, nextWeight, obj.diff);//下一格没激活
