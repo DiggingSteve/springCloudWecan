@@ -639,6 +639,7 @@ class priceFreightView extends BaseService {
       this.getMatchTruck(this.zzg, this.mdg, item);
     });
     let twocodeStr = "";
+    debugger
     if (this.truckAlertArr.length > 0) {
       //提示
       twocodeStr = this.truckAlertArr.reduce((pre, cur,index) => {
@@ -655,6 +656,7 @@ class priceFreightView extends BaseService {
   }
 
   getMatchTruck(zzg, mdg, twocode) {
+      if(!!!twocode)return;
     var jsonArr = {
       where: {
         mdg: zzg, ddg: mdg, twocodeStr: { like: twocode }, wageinout: 2
@@ -672,6 +674,7 @@ class priceFreightView extends BaseService {
             zzg: zzg,
             mdg: mdg
           };
+          debugger;
           this.truckAlertArr.push(obj);
         }
       });
