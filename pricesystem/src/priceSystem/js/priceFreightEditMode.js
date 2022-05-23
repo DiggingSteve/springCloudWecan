@@ -1086,7 +1086,7 @@ class priceFreightEditView extends priceFreightView {
   //自动填补大重量运价 后面运价追溯前面得运价 如果中间跳开 则 跳开部分追溯前面得运价
   autoFillWeightPrice(index) {
 
-    for (let i = 0; i <= this.weightArr.length; i++) {
+    for (let i = 0; i < this.weightArr.length; i++) {
       let cur = this.weightArr[i];
       let next = this.weightArr[i + 1];
       if (cur.code == "+0kg") {
