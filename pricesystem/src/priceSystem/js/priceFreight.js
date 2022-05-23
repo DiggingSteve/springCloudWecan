@@ -433,7 +433,7 @@ class priceFreightView extends BaseService {
         this.relationMap.packageType.baseIndex = this.packageTypeArr.findIndex(f => { return f.isDefault == 1 });
         this.relationMap.vol.baseIndex = this.volArr.findIndex(f => { return f.isDefault == 1 });
 
-        this.tableVolArr= this.volArr.sort((a,b)=>{
+        this.tableVolArr= JSON.parse(localStorage.getItem(diffCodeKey.vol)).sort((a,b)=>{
             return a.tableSeq-b.tableSeq;
         })
 
