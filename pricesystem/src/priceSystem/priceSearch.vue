@@ -243,7 +243,7 @@
             style="line-height: 20px"
             v-if="tableDataRes[pdata.data.index].hasTruckRouting"
           >
-            <div class="item100" style="padding-left: 5px">
+            <div class="item100" >
               <span class="txt">{{ tableDataRes[pdata.data.index].mdg }}</span>
              <span class="icon-truck" style="display:inline-block;width:23px;height:16px;margin:0 10px"
              @click="loadTruckInfo(tableDataRes[pdata.data.index].truckFeeid)"
