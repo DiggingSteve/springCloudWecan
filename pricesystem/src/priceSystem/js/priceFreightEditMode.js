@@ -1089,14 +1089,14 @@ class priceFreightEditView extends priceFreightView {
     for (let i = 0; i <= this.weightArr.length; i++) {
       let cur = this.weightArr[i];
       let next = this.weightArr[i + 1];
-      if(cur.code=="+0kg"){
+      if (cur.code == "+0kg") {
         continue;
       }
-      
+
       if (Number.isFinite(cur.standardPrice * 1) && (cur.standardPrice * 1 > 0)) {
         cur.standardPrice = (cur.standardPrice * 1).toFixed(2);
         if (!!!next) break;
-        if (next.standardPrice == '' || (!Number.isFinite(next.standardPrice * 1))) {
+        if (next.standardPrice == '' || ((next.standardPrice * 1) >= (cur.standardPrice * 1))) {
           next.standardPrice = (cur.standardPrice * 1).toFixed(2);
         }
       }
@@ -1109,37 +1109,70 @@ class priceFreightEditView extends priceFreightView {
    * @param {weight对应的index} wIndex 
    * @param {当前td对应得vol 得index} vIndex
    */
-  autoFillFixedPrice(wIndex,vIndex){
-    
-    var curtable=this.cusPackageIndexArr[this.tabDisplayIndex];
-    var fixedMap=curtable.fixedMap;
-    for(let i=wIndex;i<this.weightArr.length;i++){
-      let curWeight=this.weightArr[i];
-      if(curWeight.code=="+0kg")break;
-      let curVolCode=this.tableVolArr[vIndex].code;
-      let curVol=this.volArr.find(f=>{return f.code==curVolCode});
-      let curKey=this.createFixedPriceKey(curVol,curWeight);
-      let obj=fixedMap[curKey];
-      if(!!!obj)break;
-      let price=obj.diff*1;
-      if(!Number.isFinite(price)||price<=0)break;
+  autoFillFixedPrice(wIndex, vIndex) {
+
+    var curtable = this.cusPackageIndexArr[this.tabDisplayIndex];
+    var fixedMap = curtable.fixedMap;
+    for (let i = wIndex; i < this.weightArr.length; i++) {
+      let curWeight = this.weightArr[i];
+      if (curWeight.code == "+0kg") break;
+      let curVolCode = this.tableVolArr[vIndex].code;
+      let curVol = this.volArr.find(f => { return f.code == curVolCode });
+      let curKey = this.createFixedPriceKey(curVol, curWeight);
+      let obj = fixedMap[curKey];
+      if (!!!obj) break;
+      let price = obj.diff * 1;
+      if (!Number.isFinite(price) || price <= 0) break;
       //可以进行往后匹配赋值 赋值逻辑是 判断有没有一口价 有没有 常规参数价 都没有则激活赋值
-      let nextWeight=this.weightArr[i+1];
-      if(!!!nextWeight)break;
-      let nextWeightDiff=nextWeight.standardPrice*1;
-      let isNextWeightSetValue= Number.isFinite(nextWeightDiff)&&nextWeightDiff>0;
-      let isVolSetValue=curVol.isSetValue;
-      if(isNextWeightSetValue&&isVolSetValue)break;//有常规价格则停止向后查找
-      let nextKey=this.createFixedPriceKey(curVol,nextWeight);
-      let nextObj=fixedMap[nextKey];
-      if(!!!nextObj)this.activeFixedPrice(curVol,nextWeight,obj.diff);//下一格没激活
-      else if(nextObj.diff==''||(!Number.isFinite(nextObj.diff*1))){
-          // 激活了如果无效值则替换
-          nextObj.diff=obj.diff;
+      let nextWeight = this.weightArr[i + 1];
+      if (!!!nextWeight) break;
+      let nextWeightDiff = nextWeight.standardPrice * 1;
+      let isNextWeightSetValue = Number.isFinite(nextWeightDiff) && nextWeightDiff > 0;
+      let isVolSetValue = curVol.isSetValue;
+      // 先查找有没有激活价格
+      let nextKey = this.createFixedPriceKey(curVol, nextWeight);
+      let nextObj = fixedMap[nextKey];
+      if (!!nextObj) {
+        if ((nextObj.diff * 1) >= (obj.doff * 1)) {
+          nextObj.diff = obj.diff;
+        }
       }
+      //有常规价格如果大于前面则替换
+      if (isNextWeightSetValue && isVolSetValue) {
+        var nextCellValue = this.getCellValue(curVol, nextWeight);
+        if ((nextCellValue * 1) >= (obj.diff * 1)) {
+          this.activeFixedPrice(curVol, nextWeight, obj.diff);
+        }
+      }
+
+      if (!!!nextObj) this.activeFixedPrice(curVol, nextWeight, obj.diff);//下一格没激活
+
 
     }
     this.vueInstance.$forceUpdate();
+  }
+
+  getCellValue(vol, weight) {
+    vol = this.volArr.find((f) => {
+      return f.code == vol.code;
+    });
+    let isVolSetValue = vol.isSetValue;
+    let volDiff = vol.diff * 1;
+    let weightPrice = weight.standardPrice * 1;
+    let selectedIndex = this.tabDisplayIndex;
+    let selectedTab = this.cusPackageIndexArr[selectedIndex];
+    let cusDiff = selectedTab.cDiff * 1;
+    let pDiff = selectedTab.pDiff * 1;
+
+    if (!Number.isFinite(weightPrice) || weightPrice == 0) return "--";
+    if (!isVolSetValue) return "--";
+    if (weight.title == "MIN") return weightPrice;
+    let val =
+      (Number.isFinite(volDiff) ? volDiff : 0) +
+      (Number.isFinite(weightPrice) ? weightPrice : 0) +
+      (Number.isFinite(pDiff) ? pDiff : 0) +
+      (Number.isFinite(cusDiff) ? cusDiff : 0);
+    return val.toFixed(2);
   }
 
 }
