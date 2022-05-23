@@ -1189,7 +1189,7 @@ class priceFreightEditView extends priceFreightView {
     let twocodeStr = "";
     if (this.truckAlertArr.length > 0) {
       //提示
-      twocodeStr = this.truckAlertArr.reduce((pre, cur) => {
+      twocodeStr = this.truckAlertArr.reduce((pre, cur,index) => {
         return pre + (index > 0 ? "," : "") + cur;
       }, '')
       let txt = `${this.zzg}至${this.mdg}的航司二字码${twocodeStr}已维护卡车转运费，具体可至"目的港卡车转运费"页面中查看`;
