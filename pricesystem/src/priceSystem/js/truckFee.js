@@ -143,19 +143,19 @@ class TruckFee extends BaseService {
       }
       this.ok("保存成功");
       // 应付需要弹框提示
-      this.vueInstance.wageinout == 2 && this.vueInstance.$confirm("是否将应付费用同步到应收", "提示", {
-        confirmButtonText: "确认",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(() => {
-        //同步过去
+      // this.vueInstance.wageinout == 2 && this.vueInstance.$confirm("是否将应付费用同步到应收", "提示", {
+      //   confirmButtonText: "确认",
+      //   cancelButtonText: "取消",
+      //   type: "warning",
+      // }).then(() => {
+      //   //同步过去
 
-        this.isShowSyncDialog = true;
-        this.feeArr.forEach((item, index) => {
-          item.wageoutId = d.data.resultdata[index].guid;//应付的guid为应收的wageoutId
-          item.guid = item.wageoutId;
-        });
-      })
+      //   this.isShowSyncDialog = true;
+      //   this.feeArr.forEach((item, index) => {
+      //     item.wageoutId = d.data.resultdata[index].guid;//应付的guid为应收的wageoutId
+      //     item.guid = item.wageoutId;
+      //   });
+      // })
       
       this.currentPageMode = pagemode.search;
       this.vueInstance.search();
@@ -442,6 +442,7 @@ class TruckFee extends BaseService {
       let key = i + 2;
       if (!!!fileData["A" + key]) { throw new Error("目的港三字码必填") }
       var mdg = fileData["A" + key].v;
+      if(mdg=='')break;
       if (!!!fileData["B" + key]) { throw new Error("航司二字码必填") }
       var twocodeStr = fileData["B" + key].v;
       if (!!!fileData["C" + key]) { throw new Error("到达港必填") }
