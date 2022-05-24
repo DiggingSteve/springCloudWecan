@@ -284,25 +284,30 @@
 
 .expired-wrap{
     text-align: center;
-    line-height: 26px;
+    line-height: 27px;
+    height: 27px;
+    font-size: 15px;
     vertical-align: middle;
+    cursor: pointer;
+    transform: translateX(-20%);
+    display: flex;
     & .no-expired{
         color: #fff;
         background: @greyBorder;
         width: 80px;
-        border-radius: 5px;
+        border-radius: 3px;
         margin-right:10px ;
     }
 
     & .no-expired.active{
-        background: @green;
+        background: #42bc42;
     }
 
     & .expired{
         color: #fff;
         background: @greyBorder;
         width: 80px;
-        border-radius: 5px;
+        border-radius: 3px;
     }
 
     & .expired.active{

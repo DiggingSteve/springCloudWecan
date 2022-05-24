@@ -33,22 +33,22 @@
       </newFormCmpt>
       <div class="searchForm row">
         <div class="item50">
-          <el-button @click="search">查询</el-button>
-          <el-button @click="clickNew()">新增</el-button>
+          <el-button type="primary" @click="search">查询</el-button>
+          <el-button type="primary" @click="clickNew()">新增</el-button>
         </div>
 
         <div class="item50 expired-wrap">
           <div
             class="no-expired"
             :class="{ active: !isShowExpired }"
-            @click="isShowExpired = false"
+            @click="isShowExpired = false;search();"
           >
             <span>有效运价</span>
           </div>
           <div
             class="expired"
             :class="{ active: isShowExpired }"
-            @click="isShowExpired = true"
+            @click="isShowExpired = true;search();"
           >
             <span>过期运价</span>
           </div>
@@ -1301,6 +1301,7 @@ export default {
       }
       where["area"] = {};
       where["area"]["in"] = this.$store.state.areaState;
+      where["isExpired"]=this.isExpired?1:0;//是否已过期
       var jsonArr = {
         where: {
           ...where,
@@ -1312,7 +1313,8 @@ export default {
         queryData["pageType"] = pageType.customer;
       }
       this.priceObj.request("get", url, queryData).then(({ data }) => {
-        this.tableDataRes = data.resultdata;
+        let arr=data.resultdata;
+        this.tableDataRes =arr;
       });
     },
     deleteFee() {

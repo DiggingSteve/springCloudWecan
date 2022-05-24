@@ -31,6 +31,7 @@ public interface ViewFreightFeeMapper extends BaseMapper<ViewFreightFee> {
             "            fee.gid,\n" +
             "            fee.approvalStatus,\n" +
             "            fee.hbh ,\n" +
+            "            case when fee.enddate<now() then 1 else 0 end 'isExpired'   ,"+
             "            approval.addtime as approvalTime, \n" +
             "            approval.addman as approvalMan\n" +
             "            from Ex_FreightFeePending as fee \n" +
