@@ -39,11 +39,11 @@
 
 <div class="row expired-wrap" style="justify-content:center">
   <div class="no-expired"  :class="{active:!isShowExpired}"
-   @click="isShowExpired=!isShowExpired">
+   @click="isShowExpired=false">
     <span>有效运价</span>
   </div>
   <div class="expired"  :class="{active:isShowExpired}"
-   @click="isShowExpired=!isShowExpired">
+   @click="isShowExpired=true">
     <span>过期运价</span>
   </div>
 </div>

@@ -284,14 +284,14 @@
 
 .expired-wrap{
     text-align: center;
-    line-height: 30px;
-    height: 30px;
+    line-height: 26px;
     vertical-align: middle;
     & .no-expired{
         color: #fff;
-        background: @greenBorder;
+        background: @greyBorder;
         width: 80px;
-        border-radius: 15px;
+        border-radius: 5px;
+        margin-right:10px ;
     }
 
     & .no-expired.active{
@@ -300,12 +300,12 @@
 
     & .expired{
         color: #fff;
-        background: @greenBorder;
+        background: @greyBorder;
         width: 80px;
-        border-radius: 15px;
+        border-radius: 5px;
     }
 
-    & .no-expired.active{
+    & .expired.active{
         background: @red;
     }
 }
