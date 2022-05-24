@@ -393,15 +393,6 @@ export const cassifyObj = {
       title: '调账监控'
     }
   },
-  priceFreight:{
-    routername: 'priceFreightClassify',
-    first: {
-      title: '有效运价'
-    },
-    second: {
-      title: '无效运价'
-    }
-  },
   gnmonitor: { //国内服务的订单监控
     routername: 'gnmonitor',
     first: {
