@@ -1301,7 +1301,7 @@ export default {
       }
       where["area"] = {};
       where["area"]["in"] = this.$store.state.areaState;
-      where["isExpired"]=this.isExpired//是否已过期
+      where["isExpired"]=this.isExpired?1:0//是否已过期
       var jsonArr = {
         where: {
           ...where,

@@ -98,6 +98,6 @@ public class ViewFreightFee {
 
     private LocalDateTime approvalTime;
 
-    private Boolean isExpired;
+    private Integer isExpired;
 
 }
