@@ -3,6 +3,19 @@
     font-size: 18px;
     margin-bottom: 15px;
 }
+@green :#519d1a;
+@red : #eb0000;
+.red {
+    color: @red;
+  }
+  
+  .green {
+    color: @green;
+  }
+  
+  .orange {
+    color: #ff9200;
+  }
 
 @operateHeight: 35px;
 @lightBlue : #cfdee8;
@@ -266,5 +279,19 @@
             background: #dff3fe;
             text-align: right !important;
         }
+    }
+}
+
+.expired-wrap{
+    & .no-expired{
+        color: #fff;
+        background: @green;
+        width: 120px;
+    }
+
+    & .expired{
+        color: #fff;
+        background: @red;
+        width: 120px;
     }
 }

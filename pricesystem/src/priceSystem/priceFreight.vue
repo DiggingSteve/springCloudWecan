@@ -37,6 +37,14 @@
       </div>
     </div>
 
+<div class="row expired-wrap" style="justify-content:center">
+  <div class="no-expired"  :class="{active:!isShowExpired}">
+    <span>有效运价</span>
+  </div>
+  <div class="expired"  :class="{active:isShowExpired}">
+    <span>过期运价</span>
+  </div>
+</div>
     <tableCompt
       :name="name"
       :table-data-res="tableDataRes"
@@ -1808,17 +1816,7 @@ export default {
   vertical-align: middle;
 }
 
-.red {
-  color: #eb0000;
-}
 
-.green {
-  color: #519d1a;
-}
-
-.orange {
-  color: #ff9200;
-}
 
 .price-input {
   text-align: center;
