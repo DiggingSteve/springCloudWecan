@@ -31,22 +31,31 @@
           </div>
         </template>
       </newFormCmpt>
-      <div class="searchForm">
-        <el-button @click="search">查询</el-button>
-        <el-button @click="clickNew()">新增</el-button>
+      <div class="searchForm row">
+        <div class="item50">
+          <el-button @click="search">查询</el-button>
+          <el-button @click="clickNew()">新增</el-button>
+        </div>
+
+        <div class="item50 expired-wrap">
+          <div
+            class="no-expired"
+            :class="{ active: !isShowExpired }"
+            @click="isShowExpired = false"
+          >
+            <span>有效运价</span>
+          </div>
+          <div
+            class="expired"
+            :class="{ active: isShowExpired }"
+            @click="isShowExpired = true"
+          >
+            <span>过期运价</span>
+          </div>
+        </div>
       </div>
     </div>
 
-<div class="row expired-wrap" style="justify-content:center">
-  <div class="no-expired"  :class="{active:!isShowExpired}"
-   @click="isShowExpired=false">
-    <span>有效运价</span>
-  </div>
-  <div class="expired"  :class="{active:isShowExpired}"
-   @click="isShowExpired=true">
-    <span>过期运价</span>
-  </div>
-</div>
     <tableCompt
       :name="name"
       :table-data-res="tableDataRes"
@@ -321,8 +330,7 @@
                         type="input"
                         class="price-input"
                         v-model.sync="item.standardPrice"
-                        @blur="priceObj.autoFillWeightPrice();
-                        "
+                        @blur="priceObj.autoFillWeightPrice()"
                       />
                     </td>
                   </template>
@@ -590,7 +598,7 @@
                         ))
                       }}
                       {{ void (cellValue = setCellValue(vol, weight)) }}
-                
+
                       <td
                         style="width: 68px; height: 26px; cursor: pointer"
                         v-bind:class="{
@@ -621,16 +629,20 @@
                               priceObj.tabDisplayIndex
                             ]['fixedMap'][
                               createFixedPriceKey(vol, weight)
-                            ].diff = priceObj.cusPackageIndexArr[
-                              priceObj.tabDisplayIndex
-                            ]['fixedMap'][
-                              createFixedPriceKey(vol, weight)
-                            ].diff > 0 ? (priceObj.cusPackageIndexArr[
-                              priceObj.tabDisplayIndex
-                            ]['fixedMap'][
-                              createFixedPriceKey(vol, weight)
-                            ].diff*1).toFixed(2) : '';
-                            priceObj.autoFillFixedPrice(j,i);
+                            ].diff =
+                              priceObj.cusPackageIndexArr[
+                                priceObj.tabDisplayIndex
+                              ]['fixedMap'][createFixedPriceKey(vol, weight)]
+                                .diff > 0
+                                ? (
+                                    priceObj.cusPackageIndexArr[
+                                      priceObj.tabDisplayIndex
+                                    ]['fixedMap'][
+                                      createFixedPriceKey(vol, weight)
+                                    ].diff * 1
+                                  ).toFixed(2)
+                                : '';
+                            priceObj.autoFillFixedPrice(j, i);
                           "
                           v-focus
                           v-model.sync="
@@ -1234,7 +1246,7 @@ export default {
       relationEditTitle: relationEditTitle.cus,
       relationTitle: relationEditTitle,
       isShowApproval: false,
-      isShowExpired:false
+      isShowExpired: false,
       // mergeRowFields: {
       //   sfg: { key: ["sfg", "mdg", "zzg"], rowspanArr: [] },
       //   mdg: { key: ["sfg", "mdg", "zzg"], rowspanArr: [] },
@@ -1819,8 +1831,6 @@ export default {
   vertical-align: middle;
 }
 
-
-
 .price-input {
   text-align: center;
   width: 60px;
@@ -1951,7 +1961,7 @@ export default {
 /deep/.el-select__tags {
   overflow: unset !important;
 }
-/deep/ #headFixed{
+/deep/ #headFixed {
   width: 400px;
 }
 </style>
