@@ -283,15 +283,29 @@
 }
 
 .expired-wrap{
+    text-align: center;
+    line-height: 30px;
+    height: 30px;
+    vertical-align: middle;
     & .no-expired{
         color: #fff;
+        background: @greenBorder;
+        width: 80px;
+        border-radius: 15px;
+    }
+
+    & .no-expired.active{
         background: @green;
-        width: 120px;
     }
 
     & .expired{
         color: #fff;
+        background: @greenBorder;
+        width: 80px;
+        border-radius: 15px;
+    }
+
+    & .no-expired.active{
         background: @red;
-        width: 120px;
     }
 }

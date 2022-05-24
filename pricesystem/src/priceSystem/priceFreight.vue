@@ -38,10 +38,12 @@
     </div>
 
 <div class="row expired-wrap" style="justify-content:center">
-  <div class="no-expired"  :class="{active:!isShowExpired}">
+  <div class="no-expired"  :class="{active:!isShowExpired}"
+   @click="isShowExpired=!isShowExpired">
     <span>有效运价</span>
   </div>
-  <div class="expired"  :class="{active:isShowExpired}">
+  <div class="expired"  :class="{active:isShowExpired}"
+   @click="isShowExpired=!isShowExpired">
     <span>过期运价</span>
   </div>
 </div>
@@ -1232,6 +1234,7 @@ export default {
       relationEditTitle: relationEditTitle.cus,
       relationTitle: relationEditTitle,
       isShowApproval: false,
+      isShowExpired:false
       // mergeRowFields: {
       //   sfg: { key: ["sfg", "mdg", "zzg"], rowspanArr: [] },
       //   mdg: { key: ["sfg", "mdg", "zzg"], rowspanArr: [] },
