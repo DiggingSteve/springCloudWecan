@@ -74,9 +74,9 @@
         <span @click="clickEdit(props.data.row)"
           ><i class="el-icon-edit"></i
         ></span>
-        <span v-if="wageinout == 2" @click="syncToWagein(props.data.row)"
+        <!-- <span v-if="wageinout == 2" @click="syncToWagein(props.data.row)"
           ><i class="el-icon-document-copy"></i
-        ></span>
+        ></span> -->
       </template>
       <template v-slot:min="rowObj">
         ￥{{ rowObj.data.value.toFixed(2) }}
