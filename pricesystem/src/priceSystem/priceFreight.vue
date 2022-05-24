@@ -503,7 +503,7 @@
           <div class="item10 operate-title">货型参数</div>
           <div class="item75" style="display: flex">
             <template v-for="item in priceObj.volArr">
-              <div class="operate-tag nohover" style="cursor: not-allowed">
+              <div class="operate-tag nohover" style="cursor: not-allowed" v-show="item.isAdd">
                 <span>{{ item.title }}</span>
               </div>
             </template>
@@ -1033,7 +1033,6 @@
           <div
             class="plus"
             slot="reference"
-            v-show="relationEditTitle != relationTitle.vol"
           >
             <span class="el-icon-plus"></span>
           </div>
