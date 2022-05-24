@@ -41,14 +41,20 @@
           <div
             class="no-expired"
             :class="{ active: !isShowExpired }"
-            @click="isShowExpired = false;search();"
+            @click="
+              isShowExpired = false;
+              search();
+            "
           >
             <span>有效运价</span>
           </div>
           <div
             class="expired"
             :class="{ active: isShowExpired }"
-            @click="isShowExpired = true;search();"
+            @click="
+              isShowExpired = true;
+              search();
+            "
           >
             <span>过期运价</span>
           </div>
@@ -574,86 +580,90 @@
                       </span> -->
                     </td>
                   </tr>
-                  <tr v-for="(vol, i) in priceObj.tableVolArr">
-                    <td
-                      class="operate-head"
-                      @mouseenter="activeRow(i)"
-                      @mouseleave="activeRow(i)"
-                    >
-                      <span :class="{ blue: vol.isDefault == 1 }">{{
-                        vol.code
-                      }}</span>
-                      <!-- <span
+                  <template v-for="(vol, i) in priceObj.tableVolArr">
+                    {{ void (realVol = getRealVol(vol.code)) }}
+                    <tr v-if="realVol.isAdd">
+                      <td
+                        class="operate-head"
+                        @mouseenter="activeRow(i)"
+                        @mouseleave="activeRow(i)"
+                      >
+                        <span :class="{ blue: vol.isDefault == 1 }">{{
+                          vol.code
+                        }}</span>
+                        <!-- <span
                         style="display: none"
                         class="circle-del"
                         @click="priceObj.delTitle(null, i)"
                       >
                         <i class="el-icon-close"></i>
                       </span> -->
-                    </td>
-                    <template v-for="(weight, j) in priceObj.weightArr">
-                      {{
-                        void (isShowFixed = priceObj.isDisplayPriceActive(
-                          createFixedPriceKey(vol, weight)
-                        ))
-                      }}
-                      {{ void (cellValue = setCellValue(vol, weight)) }}
+                      </td>
+                      <template v-for="(weight, j) in priceObj.weightArr">
+                        {{
+                          void (isShowFixed = priceObj.isDisplayPriceActive(
+                            createFixedPriceKey(vol, weight)
+                          ))
+                        }}
+                        {{ void (cellValue = setCellValue(vol, weight)) }}
 
-                      <td
-                        style="width: 68px; height: 26px; cursor: pointer"
-                        v-bind:class="{
-                          greyBg: cellValue == '--',
-                        }"
-                      >
-                        <input
-                          type="input"
-                          @click="
-                            priceObj.activeFixedPrice(
-                              vol,
-                              weight,
-                              setCellValue(vol, weight)
-                            )
-                          "
-                          class="price-input"
-                          :class="{ blue: vol.isDefault == 1 }"
-                          v-model="cellValue"
-                          v-show="!isShowFixed"
-                        />
-                        <input
-                          class="price-input"
-                          v-if="isShowFixed"
-                          style="color: red"
-                          type="input"
-                          @blur="
-                            priceObj.cusPackageIndexArr[
-                              priceObj.tabDisplayIndex
-                            ]['fixedMap'][
-                              createFixedPriceKey(vol, weight)
-                            ].diff =
+                        <td
+                          style="width: 68px; height: 26px; cursor: pointer"
+                          v-bind:class="{
+                            greyBg: cellValue == '--',
+                          }"
+                        >
+                          <input
+                            type="input"
+                            @click="
+                              priceObj.activeFixedPrice(
+                                vol,
+                                weight,
+                                setCellValue(vol, weight)
+                              )
+                            "
+                            class="price-input"
+                            :class="{ blue: vol.isDefault == 1 }"
+                            v-model="cellValue"
+                            v-show="!isShowFixed"
+                          />
+                          <input
+                            class="price-input"
+                            v-if="isShowFixed"
+                            style="color: red"
+                            type="input"
+                            @blur="
+                              priceObj.cusPackageIndexArr[
+                                priceObj.tabDisplayIndex
+                              ]['fixedMap'][
+                                createFixedPriceKey(vol, weight)
+                              ].diff =
+                                priceObj.cusPackageIndexArr[
+                                  priceObj.tabDisplayIndex
+                                ]['fixedMap'][createFixedPriceKey(vol, weight)]
+                                  .diff > 0
+                                  ? (
+                                      priceObj.cusPackageIndexArr[
+                                        priceObj.tabDisplayIndex
+                                      ]['fixedMap'][
+                                        createFixedPriceKey(vol, weight)
+                                      ].diff * 1
+                                    ).toFixed(2)
+                                  : '';
+                              priceObj.autoFillFixedPrice(j, i);
+                            "
+                            v-focus
+                            v-model.sync="
                               priceObj.cusPackageIndexArr[
                                 priceObj.tabDisplayIndex
                               ]['fixedMap'][createFixedPriceKey(vol, weight)]
-                                .diff > 0
-                                ? (
-                                    priceObj.cusPackageIndexArr[
-                                      priceObj.tabDisplayIndex
-                                    ]['fixedMap'][
-                                      createFixedPriceKey(vol, weight)
-                                    ].diff * 1
-                                  ).toFixed(2)
-                                : '';
-                            priceObj.autoFillFixedPrice(j, i);
-                          "
-                          v-focus
-                          v-model.sync="
-                            priceObj.cusPackageIndexArr[
-                              priceObj.tabDisplayIndex
-                            ]['fixedMap'][createFixedPriceKey(vol, weight)].diff
-                          "
-                        />
-                      </td>
-                    </template>
-                  </tr>
+                                .diff
+                            "
+                          />
+                        </td>
+                      </template>
+                    </tr>
+                  </template>
                 </tbody>
               </table>
             </div>
@@ -1301,7 +1311,7 @@ export default {
       }
       where["area"] = {};
       where["area"]["in"] = this.$store.state.areaState;
-      where["isExpired"]=this.isShowExpired?1:0//是否已过期
+      where["isExpired"] = this.isShowExpired ? 1 : 0; //是否已过期
       var jsonArr = {
         where: {
           ...where,
@@ -1313,8 +1323,8 @@ export default {
         queryData["pageType"] = pageType.customer;
       }
       this.priceObj.request("get", url, queryData).then(({ data }) => {
-        let arr=data.resultdata;
-        this.tableDataRes =arr;
+        let arr = data.resultdata;
+        this.tableDataRes = arr;
       });
     },
     deleteFee() {
@@ -1430,6 +1440,12 @@ export default {
         (Number.isFinite(pDiff) ? pDiff : 0) +
         (Number.isFinite(cusDiff) ? cusDiff : 0);
       return val.toFixed(2);
+    },
+    //取实际 vol
+    getRealVol(code) {
+      return this.priceObj.volArr.find((f) => {
+        return f.code == code;
+      });
     },
     getFixedDiff(v, w) {
       var selectTab =
