@@ -1417,7 +1417,7 @@ export default {
       vol = this.priceObj.volArr.find((f) => {
         return f.code == vol.code;
       });
-      let isVolSetValue = vol.isAdd;
+      let isVolSetValue = vol.isSetValue;
       let volDiff = vol.diff * 1;
       let weightPrice = weight.standardPrice * 1;
       let selectedIndex = this.priceObj.tabDisplayIndex;
