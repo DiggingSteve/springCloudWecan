@@ -29,7 +29,7 @@
     <div class="card-wrap">
       <div
         v-for="(item, index) in dataArr"
-        v-if="(item.title != 'MIN')&& (item.isSameAsBase==false||item.isDefault==1)"
+        v-if="(item.title != 'MIN')&& (item.isSameAsBase==false||item.isDefault)"
         v-show="item.isAdd || item.isSelect"
         class="card"
         v-bind:class="{ active: index == indexSelf ? true : false }"
@@ -72,7 +72,7 @@ export default {
     dataArr: {
       type: Array,
       default: () => [],
-    }, //数组数据 [{code:"散货",diff:0,isDefault:1}]
+    }, //数组数据 [{code:"散货",diff:0,isDefault:true}]
     title: {
       type: String,
       default: () => "散货托盘设置",
@@ -194,9 +194,9 @@ export default {
           this.$emit("update:indexSelected", newVal);
           this.dataArr.forEach((item, index) => {
             if (index == newVal) {
-              item["isDefault"] = 1;
+              item["isDefault"] = true;
             } else {
-              item["isDefault"] = 2;
+              item["isDefault"] = false;
             }
           });
         }
@@ -210,14 +210,7 @@ export default {
         }
       },
     },
-    // dataArr: {
-    //   handler(newValue, oldValue) {
-    //     this.indexSelected = newValue.findIndex((p) => {
-    //       return p.isDefault == 1;
-    //     });
-    //   },
-    //   deep: true,
-    // },
+   
   },
 };
 </script>
