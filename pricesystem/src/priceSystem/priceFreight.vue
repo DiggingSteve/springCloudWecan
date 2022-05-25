@@ -1063,8 +1063,8 @@
             </div>
 
             <div class="item60" style="line-height: 30px">
-              <el-radio v-model="item.isSameAsBase" :label="true">是</el-radio>
-              <el-radio v-model="item.isSameAsBase" :label="false">否</el-radio>
+              <el-radio v-model="item.isSameAsBase" :label="true" @change="priceObj.confirmPriceTabArr()">是</el-radio>
+              <el-radio v-model="item.isSameAsBase" :label="false" @change="priceObj.confirmPriceTabArr()">否</el-radio>
             </div>
           </div>
         </template>
