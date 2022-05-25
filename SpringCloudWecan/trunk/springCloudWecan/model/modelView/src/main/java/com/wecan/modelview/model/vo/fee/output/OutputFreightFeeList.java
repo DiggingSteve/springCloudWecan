@@ -53,6 +53,11 @@ public class OutputFreightFeeList {
 
     private LocalDateTime enddate;
 
+    public String getEnddate(){
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return df.format(enddate);
+    }
+
     /**
      * 标准价格模式 1 随直达价 2 固定价格
      */
