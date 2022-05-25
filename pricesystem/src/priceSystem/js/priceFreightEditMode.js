@@ -963,6 +963,7 @@ class priceFreightEditView extends priceFreightView {
         this.clearDiffRelation(item);
       });
     }
+    this.vueInstance.$forceUpdate();
 
   }
 
