@@ -437,7 +437,7 @@
                   (!inputModelData.scale ||
                     inputModelData.scale == vol.code ||
                     typeStatus == '1') &&
-                  vol.isAdd
+                 isShowVol(currentRow,vol.code)
                 "
               >
                 <td>{{ vol.code }}</td>
@@ -929,7 +929,13 @@ export default {
       if (!Number.isFinite(matchFlightPrice) || matchFlightPrice == 0) {
         //此时需要上下追溯到有价格的格子 适合用递归做
         //追溯逻辑为 1:167 为分割线 向 1:167的方向追溯
-        return this.reversePrice(row, weightCode, this.getMovedVol(volType), weight, calWeight);
+        return this.reversePrice(
+          row,
+          weightCode,
+          this.getMovedVol(volType),
+          weight,
+          calWeight
+        );
       }
       //fixedmin价格
       var minFixedPrice = row.fixedFeeList.find((item) => {
@@ -1007,8 +1013,7 @@ export default {
       }
       if (curIndex < baseIndex) {
         return arr[++curIndex].code;
-      }
-      else{
+      } else {
         return arr[--curIndex].code;
       }
     },
@@ -1029,7 +1034,11 @@ export default {
           this.truckInfo = data.resultdata[0];
         });
     },
-
+    isShowVol(currentRow, volCode) {
+      return !!currentRow.volArr.find((f) => {
+        return f.code == volCode;
+      });
+    },
     /**
      * @vol 当前对应的比例
      * @weight 当前对应重量
