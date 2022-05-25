@@ -336,7 +336,6 @@
                         type="input"
                         class="price-input"
                         v-model.sync="item.standardPrice"
-                        @blur="priceObj.autoFillWeightPrice()"
                       />
                     </td>
                   </template>
@@ -649,9 +648,7 @@
                                         createFixedPriceKey(vol, weight)
                                       ].diff * 1
                                     ).toFixed(2)
-                                  : '';
-                              priceObj.autoFillFixedPrice(j, i);
-                            "
+                                  : ''"
                             v-focus
                             v-model.sync="
                               priceObj.cusPackageIndexArr[
