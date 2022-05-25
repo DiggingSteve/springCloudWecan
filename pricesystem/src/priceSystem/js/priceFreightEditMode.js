@@ -410,9 +410,9 @@ class priceFreightEditView extends priceFreightView {
       threeCodeStr: this.getThreeCodeStr(this.twoCode),
       hbh: this.isSpecifiedFlight ? this.hbhStr : '',
       weightArr: this.convertDiffArr(this.weightArr.filter(f => { return (f.standardPrice * 1) > 0 })),
-      volRatioArr: this.convertDiffArr(this.volArr).filter(f => { return f.isAdd==1 }),
-      cusLevelArr: this.convertDiffArr(this.cusArr.filter(f => { return f.isAdd==1 })),
-      packageTypeArr: this.convertDiffArr(this.packageTypeArr.filter(f => { return f.isAdd==1 })),
+      volRatioArr: this.convertDiffArr(this.volArr).filter(f => { return f.isAdd }),
+      cusLevelArr: this.convertDiffArr(this.cusArr.filter(f => { return f.isAdd })),
+      packageTypeArr: this.convertDiffArr(this.packageTypeArr.filter(f => { return f.isAdd })),
       aircomArr: airComArr,
       remark: this.remark,
       jfType: this.jfType,
@@ -451,9 +451,9 @@ class priceFreightEditView extends priceFreightView {
       threeCodeStr: this.getThreeCodeStr(this.twoCode),
       hbh: this.isSpecifiedFlight ? this.hbhStr : '',
       weightArr: this.convertDiffArr(this.weightArr.filter(f => { return (f.standardPrice * 1) > 0 })),
-      volRatioArr: this.convertDiffArr(this.volArr).filter(f => { return f.isAdd==1 }),
-      cusLevelArr: this.convertDiffArr(this.cusArr.filter(f => { return f.isAdd==1 })),
-      packageTypeArr: this.convertDiffArr(this.packageTypeArr.filter(f => { return f.isAdd==1 })),
+      volRatioArr: this.convertDiffArr(this.volArr).filter(f => { return f.isAdd }),
+      cusLevelArr: this.convertDiffArr(this.cusArr.filter(f => { return f.isAdd })),
+      packageTypeArr: this.convertDiffArr(this.packageTypeArr.filter(f => { return f.isAdd })),
       aircomArr: airComArr,
       remark: this.remark,
       jfType: this.jfType,
@@ -968,7 +968,7 @@ class priceFreightEditView extends priceFreightView {
   }
 
   clearDiffRelation(item) {
-    if (item.isDefault == 1) return;
+    if (item.isDefault ) return;
     if (item.isSameAsBase) return;
     item.diff = "";
     item.isSetValue = false;
