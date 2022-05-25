@@ -49,7 +49,7 @@ public class FeeWeight extends Parent {
             name = "isDefault",
             columnDefinition = "int COMMENT '是否默认选中值 1 是 2 否'"
     )
-    private Integer isDefault;
+    private Boolean isDefault;
 
     /**
      * 标准价格
