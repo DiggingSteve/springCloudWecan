@@ -1113,7 +1113,6 @@
           <el-button
             type="primary"
             @click="
-              priceObj.confirmRelation();
               priceObj.isShowRelationEdit = false;
             "
             :class="{ forbidden: priceObj.canConfirmRelation ? false : true }"

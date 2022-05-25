@@ -112,7 +112,7 @@ class priceFreightView extends BaseService {
     clearDataIndex = -1;
 
     get isAddSomeParam() {
-        return !!this.currentRelationEditArr.find(f => { return f.isAdd && f.isDefault  });
+        return !!this.currentRelationEditArr.find(f => { return f.isAdd && (!f.isDefault)  });
     }
 
     /**当前选中的包装类型 */
@@ -410,11 +410,11 @@ class priceFreightView extends BaseService {
         //存在不和基点相同的数据
         let hasNotSame = this.currentRelationEditArr.find(f => { return (f.isSameAsBase == false) &&(f.isAdd) })
         //是否所有已添加参数都设置了和基点的关系
-        let isAllParamSet = this.currentRelationEditArr.find(f => { return (f.isSameAsBase != null) && f.isAdd });
+        let isAllParamSet = this.currentRelationEditArr.find(f => { return (f.isSameAsBase == null) && f.isAdd });
 
 
 
-        return (!!isAllParamSet) && (!!hasNotSame);
+        return (!!!isAllParamSet) && (!!hasNotSame);
     }
 
     //是否添加参数后没有选择是否和基点一致
@@ -489,6 +489,7 @@ class priceFreightView extends BaseService {
 
     //确认 组合tab以及相关勾稽关系
     confirmPriceTabArr() {
+        
         this.cusIndexArr = [];
         this.packageIndexArr = [];
         this.tabDisplayIndex = 0;
@@ -506,8 +507,6 @@ class priceFreightView extends BaseService {
             }
             else {
                 this.cusIndexArr.push(i);
-                cus.isSetValue = false;
-                cus.diff = 0;
             }
         }
         for (let j = 0; j < this.packageTypeArr.length; j++) {
@@ -523,8 +522,7 @@ class priceFreightView extends BaseService {
             }
             else {
                 this.packageIndexArr.push(j);
-                p.isSetValue = false;
-                p.diff = 0;
+      
             }
         }
 
@@ -534,11 +532,6 @@ class priceFreightView extends BaseService {
             if (!vol.isAdd) continue;
             if (vol.isSameAsBase) {
                 vol.isSetValue = true;
-                vol.diff = 0;
-            }
-            else {
-                
-                vol.isSetValue = false;
                 vol.diff = 0;
             }
             
