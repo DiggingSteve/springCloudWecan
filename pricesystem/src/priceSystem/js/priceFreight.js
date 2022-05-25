@@ -407,7 +407,7 @@ class priceFreightView extends BaseService {
 
         
 
-        return (!!isAllParamSet) && (!!hasNotSame);
+        return (!!!isAllParamSet) && (!!hasNotSame);
     }
 
     //是否添加参数后没有选择是否和基点一致

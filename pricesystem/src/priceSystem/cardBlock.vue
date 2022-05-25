@@ -126,9 +126,6 @@ export default {
         if (i == index) {
           this.$set(item, "isSetValue", true);
           this.$set(item, "diff", "基点");
-        } else {
-          this.$set(item, "isSetValue", false);
-          this.$set(item, "diff", "");
         }
       });
     },
