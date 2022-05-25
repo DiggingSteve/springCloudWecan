@@ -1008,7 +1008,7 @@
           trigger="click"
           v-model="isShowRelationPop"
         >
-          <div class="row relation-edit-wrap" style="height: 100px">
+          <div class="row relation-edit-wrap" style="height: 120px">
             <template v-for="(item, index) in priceObj.currentRelationEditArr">
               <div
                 class="title"

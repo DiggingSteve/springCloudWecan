@@ -222,19 +222,33 @@
       </template>
       <template v-slot:routing="pdata">
         <div style="padding: 5px" class="routing">
-          <div
-            class="row"
-            style=" margin-bottom: 5px"
-          >
-          
+          <div class="row" style="margin-bottom: 5px">
             <div class="item100">
               <span class="txt">{{ tableDataRes[pdata.data.index].sfg }}</span>
-              <span class="icon-flight" style="display:inline-block;width:18px;height:16px;margin:0 10px"></span>
-               <template v-if="tableDataRes[pdata.data.index].zzg != '直达'">
-                   <span class="txt">{{ tableDataRes[pdata.data.index].zzg }}</span>
-                   <span class="icon-flight" style="display:inline-block;width:18px;height:16px;margin:0 10px"></span>
-               </template >
-            
+              <span
+                class="icon-flight"
+                style="
+                  display: inline-block;
+                  width: 18px;
+                  height: 16px;
+                  margin: 0 10px;
+                "
+              ></span>
+              <template v-if="tableDataRes[pdata.data.index].zzg != '直达'">
+                <span class="txt">{{
+                  tableDataRes[pdata.data.index].zzg
+                }}</span>
+                <span
+                  class="icon-flight"
+                  style="
+                    display: inline-block;
+                    width: 18px;
+                    height: 16px;
+                    margin: 0 10px;
+                  "
+                ></span>
+              </template>
+
               <span class="txt">{{ tableDataRes[pdata.data.index].mdg }}</span>
             </div>
           </div>
@@ -243,11 +257,20 @@
             style="line-height: 20px"
             v-if="tableDataRes[pdata.data.index].hasTruckRouting"
           >
-            <div class="item100" >
+            <div class="item100">
               <span class="txt">{{ tableDataRes[pdata.data.index].mdg }}</span>
-             <span class="icon-truck" style="display:inline-block;width:23px;height:16px;margin:0 10px"
-             @click="loadTruckInfo(tableDataRes[pdata.data.index].truckFeeid)"
-             ></span>
+              <span
+                class="icon-truck"
+                style="
+                  display: inline-block;
+                  width: 23px;
+                  height: 16px;
+                  margin: 0 10px;
+                "
+                @click="
+                  loadTruckInfo(tableDataRes[pdata.data.index].truckFeeid)
+                "
+              ></span>
               <span class="txt">{{ tableDataRes[pdata.data.index].ddg }}</span>
             </div>
           </div>
@@ -412,8 +435,9 @@
                 v-for="(vol, i) in priceObj.volArr"
                 v-if="
                   (!inputModelData.scale ||
-                  inputModelData.scale == vol.code ||
-                  typeStatus == '1')&&vol.isAdd
+                    inputModelData.scale == vol.code ||
+                    typeStatus == '1') &&
+                  vol.isAdd
                 "
               >
                 <td>{{ vol.code }}</td>
@@ -643,8 +667,8 @@ export default {
       selectedCurrency: "人民币", //选中的汇率
       transportTypeArr: transportTypeData, //运输方式数据
       selectedTransportType: all, //选中的运输方式
-      selectedPackageType: "托盘", //选中的包装类型
-      selectedCusType: "A类", //选中的客户类型
+      selectedPackageType: "散货", //选中的包装类型
+      selectedCusType: "官网公布", //选中的客户类型
       isContainsTruck: true,
       booleanArr: [
         { code: true, name: "是" },
@@ -813,13 +837,43 @@ export default {
       }
     },
 
-    //计算空运货重
+    //计算空运货重 结果需要 不满0.5进位0.5 大于0.5进1
     calWeight() {
       var volWeight = (this.inputModelData.vol * 1) / 0.006;
-      return volWeight > this.inputModelData.weight * 1
-        ? volWeight
-        : this.inputModelData.weight * 1;
+      let calWeight =
+        volWeight > this.inputModelData.weight * 1
+          ? volWeight
+          : this.inputModelData.weight * 1;
+      let wc = calWeight - parseInt(calWeight);
+      if (wc == 0 || wc == 0.5) {
+        return calWeight;
+      } else {
+        calWeight =
+          wc > 0.5 ? parseInt(calWeight) + 1 : parseInt(calWeight) + 0.5;
+      }
+      return calWeight;
     },
+
+    //     calWeight(weight, volume, item) {
+    //     //console.log(weight)
+    //     var grossWeight = Number(weight) * 1
+    //     var calWeight = Number(volume * 1) / 0.006 > Number(weight) * 1 ? Number(volume * 1) / 0.006 : Number(weight) * 1
+    //     var wc = calWeight - parseInt(calWeight)
+    //     if (wc == 0 || wc == 0.5) {
+    //         calWeight = calWeight
+    //     } else {
+    //         calWeight = wc > 0.5 ? (parseInt(calWeight) + 1) : parseInt(calWeight) + 0.5
+    //     }
+
+    //     var weight = ""
+    //     if (item.jfType == "毛重") {
+    //         weight = grossWeight;
+    //     } else {
+    //         weight = calWeight.toFixed(1)
+    //     }
+    //     //debugger;
+    //     return getWeightExact(weight)
+    // },
     /**
      * @param dataArr 后端范围列表
      * @param calWeight 计重
@@ -830,7 +884,6 @@ export default {
       var dataArrCopy = JSON.parse(JSON.stringify(dataArr));
       var weightArr = this.priceObj.weightArr;
       var volArr = this.priceObj.volArr;
-      calWeight = calWeight.toFixed(0);
       dataArrCopy.forEach((item) => {
         let weight = null;
         if (item.jfType == "毛重") {
@@ -850,6 +903,35 @@ export default {
       var isContainsTruck = this.isContainsTruck;
       var packageDiff = row.packageCusDiffMap[this.selectedPackageType];
       var cusDiff = row.packageCusDiffMap[this.selectedCusType];
+
+      var matchFlightPrice = !!matchFlight ? matchFlight.standardPrice * 1 : 0;
+
+      // 有无一口价
+      let matchFlightFixed = row.fixedFeeList.find((item) => {
+        return (
+          (!!item.cus ? item.cus == this.selectedCusType : true) &&
+          (!!item.packageType
+            ? item.packageType == this.selectedPackageType
+            : true) &&
+          item.vol == volType &&
+          item.weight == weightCode
+        );
+      });
+
+      matchFlightPrice =
+        matchFlightPrice +
+        (packageDiff > 0 ? packageDiff : 0) +
+        (cusDiff > 0 ? cusDiff : 0);
+      //此时matchFlightPrice为常规参数结合出来的价格 可能是0
+      if (!!matchFlightFixed) {
+        matchFlightPrice = matchFlightFixed.diff * 1; //如果这个格子有一口价则取一口价
+      }
+      if (!Number.isFinite(matchFlightPrice) || matchFlightPrice == 0) {
+        //此时需要上下追溯到有价格的格子 适合用递归做
+        //追溯逻辑为 1:167 为分割线 向 1:167的方向追溯
+        return this.reversePrice(row, weightCode, volType, weight, calWeight);
+      }
+      //fixedmin价格
       var minFixedPrice = row.fixedFeeList.find((item) => {
         return (
           (!!item.cus ? item.cus == this.selectedCusType : true) &&
@@ -860,6 +942,7 @@ export default {
           item.weight == "+0kg"
         );
       });
+      // 重量对应的 min价格
       var minFlight = row.weightArr.find((item) => {
         return item.code == "+0kg";
       });
@@ -878,21 +961,13 @@ export default {
       var matchTruck = row.truckFeeWeightList.find((item) => {
         return item.code == weightCode;
       });
-      var matchFlightPrice = !!matchFlight ? matchFlight.standardPrice * 1 : 0;
+
       var matchTruckPrice = !!matchTruck
         ? matchTruck.fixedDiff > 0
           ? matchTruck.fixedDiff
           : matchTruck.diff + matchTruck.wageinDiff
         : 0;
-      if (matchFlightPrice == 0) {
-        // 没有匹配的价格 没维护 这一行可以隐藏
-        row.isShow = false;
-        return;
-      }
-      matchFlightPrice =
-        matchFlightPrice +
-        (packageDiff > 0 ? packageDiff : 0) +
-        (cusDiff > 0 ? cusDiff : 0);
+
       var flightTotal = matchFlightPrice * weight * 1;
       var truckTotal = matchTruckPrice * calWeight * 1;
       if (flightTotal >= flightMinPrice && truckTotal >= truckMinPrice) {
@@ -915,6 +990,28 @@ export default {
       row.isShow = true;
     },
 
+    // 取不到价格时移动vol的位置 往 1:167方向移动
+    getMovedVol(volCode) {
+      let baseIndex; //基点索引
+      let curIndex; //当前的索引
+      let arr = this.priceObj.volArr;
+      for (let i = 0; i < arr.length; i++) {
+        let item = arr[i];
+        if (item.isBase) {
+          baseIndex = i;
+          continue;
+        }
+        if (item.code == volCode) {
+          curIndex = i;
+        }
+      }
+      if (curIndex < baseIndex) {
+        return arr[++curIndex].code;
+      }
+      else{
+        return arr[--curIndex].code;
+      }
+    },
     loadTruckInfo(truckFeeid) {
       this.isShowTruckDetail = true;
       let url = this.$store.state.feeWebApi + "truckFee/getList";
@@ -970,8 +1067,8 @@ export default {
       var matchVol = currentRow.volArr.find((item) => {
         return item.code == volCode;
       });
-      if(!!!matchVol)return"--";
-      if(!matchVol.isSetValue)return "--";
+      if (!!!matchVol) return "--";
+      if (!matchVol.isSetValue) return "--";
       var matchWeight = currentRow.weightArr.find((item) => {
         return item.code == weightCode;
       });
@@ -1428,8 +1525,8 @@ export default {
     }
   }
 }
-.routing{
-  & .txt{
+.routing {
+  & .txt {
     display: inline-block;
     width: 30px;
   }
@@ -1471,7 +1568,7 @@ export default {
 /deep/.trRow td {
   max-width: unset !important;
 }
-/deep/.trRow > td:nth-of-type(9) span{
+/deep/.trRow > td:nth-of-type(9) span {
   //备注样式 如果改动列顺序需要同步改
   max-width: 400px !important;
   min-width: 100px !important;

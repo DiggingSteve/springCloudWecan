@@ -634,7 +634,7 @@ class priceFreightEditView extends priceFreightView {
             let map = { ...obj };
             map.cus = this.cusArr[cus].title;
             map.packageType = this.packageTypeArr[p].title;
-            if ((map.diff != '--' && map.diff !== '')) {
+            if ((map.diff != '--')) {
               arr.push(map);
             }
           }
