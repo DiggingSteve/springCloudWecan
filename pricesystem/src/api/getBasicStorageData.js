@@ -538,7 +538,7 @@ function createBasicCardData(arr, type) {
     return {
       code: item.ready01, diff: isBase ? "基点" : '', isDefault: isBase ? true:false, title: item.typename, isAdd: (isBase ) ? true : false//是否在参数中被选中
       , standardPrice: '', canDelete: !isBase, isSetValue: (isBase) ? true : false,
-      isSameAsBase: null, //默认不选一致与否
+      isSameAsBase: isBase?true: null, //默认不选一致与否
       tableSeq:item.ready03//渲染表格的排序
     }
   });
