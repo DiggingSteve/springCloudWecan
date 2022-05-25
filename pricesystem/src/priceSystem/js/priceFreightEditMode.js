@@ -297,9 +297,8 @@ class priceFreightEditView extends priceFreightView {
         item.isDefault = p.isDefault;
         item.diff = p.diff;
         item.isAdd = true;
-        item.isSetValue = p.isSetValue == 1;//将数据库值初始化成Boolean
         item.isSameAsBase = p.isSameAsBase;
-        if (p.isDefault == 1) {
+        if (p.isDefault) {
           item.diff = "基点"
           if (type == diffCode.cus) {
             this.relationMap.cus.hasRelation = true;
@@ -480,8 +479,6 @@ class priceFreightEditView extends priceFreightView {
       if (m.diff == '--') {
         m.diff = 0;
       }
-      m.isAdd = m.isAdd ? 1 : 2;
-      m.isSetValue = m.isSetValue ? 1 : 2;//适应数据库
       return m;
     })
   }
