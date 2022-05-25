@@ -411,9 +411,9 @@
               <tr
                 v-for="(vol, i) in priceObj.volArr"
                 v-if="
-                  !inputModelData.scale ||
+                  (!inputModelData.scale ||
                   inputModelData.scale == vol.code ||
-                  typeStatus == '1'
+                  typeStatus == '1')&&vol.isAdd
                 "
               >
                 <td>{{ vol.code }}</td>

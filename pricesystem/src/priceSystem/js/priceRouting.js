@@ -94,6 +94,9 @@ class priceRouting extends BaseService {
     this.packageTypeArr = JSON.parse(localStorage.getItem("packageDiff"));
     this.volArr.forEach((item) => { item.diff = 0 });
     this.weightArr.forEach((item) => { item.diff = 0 });
+    this.volArr.sort((a,b)=>{
+      return a.tableSeq - b.tableSeq;
+    })
   }
 
 
