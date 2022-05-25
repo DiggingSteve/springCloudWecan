@@ -566,8 +566,7 @@
                       style="height: 30px; width: 85px; cursor: pointer"
                       v-for="(weight, j) in priceObj.weightArr"
                       class="operate-head"
-                      @mouseenter="activeColumn(j)"
-                      @mouseleave="activeColumn(j)"
+                     
                     >
                       <span>{{ weight.title }}</span>
                       <!-- <span
@@ -584,8 +583,7 @@
                     <tr v-if="realVol.isAdd">
                       <td
                         class="operate-head"
-                        @mouseenter="activeRow(i)"
-                        @mouseleave="activeRow(i)"
+                     
                       >
                         <span :class="{ blue: vol.isDefault == 1 }">{{
                           vol.code
