@@ -619,6 +619,7 @@ class priceFreightEditView extends priceFreightView {
   //将一口价取出用于保存 未选择的package cus需要整合过滤 数据库存入太多重复diff 不同key的数据 可以优化
   getFixedPriceFromMap() {
     let arr = [];//结果数组
+    debugger
     for (let i = 0; i < this.cusPackageIndexArr.length; i++) {
       let item = this.cusPackageIndexArr[i];
       let cArr = item.cusIndex instanceof Array ? item.cusIndex : [item.cusIndex];
