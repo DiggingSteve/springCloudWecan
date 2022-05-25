@@ -1054,7 +1054,7 @@
         <template v-for="(item, index) in priceObj.currentRelationEditArr">
           <div
             class="row relation-edit-wrap"
-            v-if="item.isAdd && !item.isBase "
+            v-if="item.isAdd && (!item.isDefault) "
           >
             <div class="item20">
               <div class="title">
