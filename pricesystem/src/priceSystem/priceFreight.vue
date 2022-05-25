@@ -985,7 +985,7 @@
     <el-dialog
       :title="relationEditTitle"
       :visible.sync="priceObj.isShowRelationEdit"
-      :width="'800px'"
+      :width="'900px'"
       v-if="priceObj.isShowRelationEdit"
     >
       <div
