@@ -25,12 +25,12 @@ public class InputCodeDiff {
     }
 
     // 是否基准值 在基准值上累加
-    public  Integer isDefault;
+    public  Boolean isDefault;
 
-    public  Integer isAdd;
+    public  Boolean isAdd;
 
     //是否设置了值
-    public Integer isSetValue;
+    public Boolean isSetValue;
 
     public Boolean isSameAsBase;
 

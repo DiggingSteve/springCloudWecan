@@ -43,20 +43,20 @@ public class FeeCuslevel extends Parent {
     //列表前端默认只显示选中的值
     @Column(
             name = "isDefault",
-            columnDefinition = "int COMMENT '是否默认选中值 1 是 2 否'"
+            columnDefinition = "int COMMENT '是否默认选中值 1 是 0 否'"
     )
-    private Integer isDefault;
+    private Boolean isDefault;
 
     //列表前端默认只显示选中的值
     @Column(
             name = "isAdd",
-            columnDefinition = "int COMMENT '是否被添加 1 是 2 否'"
+            columnDefinition = "int COMMENT '是否被添加 1 是 0 否'"
     )
-    private Integer isAdd;
+    private Boolean isAdd;
 
     @Column(
             name = "isSameAsBase",
-            columnDefinition = "int COMMENT '是否等于基点 1 是 2 否'"
+            columnDefinition = "int COMMENT '是否等于基点 1 是 0 否'"
     )
     public Boolean isSameAsBase;
 

@@ -60,4 +60,11 @@ public class FeeVolRatio extends Parent {
             columnDefinition = "int COMMENT '是否等于基点 1 是 2 否'"
     )
     public Boolean isSameAsBase;
+
+    //列表前端默认只显示选中的值
+    @Column(
+            name = "isAdd",
+            columnDefinition = "int COMMENT '是否被添加 1 是 0 否'"
+    )
+    private Boolean isAdd;
 }
