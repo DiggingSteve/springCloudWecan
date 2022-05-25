@@ -585,7 +585,7 @@
                         class="operate-head"
                      
                       >
-                        <span :class="{ blue: vol.isDefault == 1 }">{{
+                        <span :class="{ blue: vol.isDefault }">{{
                           vol.code
                         }}</span>
                         <!-- <span
@@ -620,7 +620,7 @@
                               )
                             "
                             class="price-input"
-                            :class="{ blue: vol.isDefault == 1 }"
+                            :class="{ blue: vol.isDefault  }"
                             v-model="cellValue"
                             v-show="!isShowFixed"
                           />
@@ -1417,7 +1417,7 @@ export default {
       vol = this.priceObj.volArr.find((f) => {
         return f.code == vol.code;
       });
-      let isVolSetValue = vol.isSetValue;
+      let isVolSetValue = vol.isAdd;
       let volDiff = vol.diff * 1;
       let weightPrice = weight.standardPrice * 1;
       let selectedIndex = this.priceObj.tabDisplayIndex;

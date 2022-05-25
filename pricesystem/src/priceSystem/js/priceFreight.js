@@ -228,7 +228,7 @@ class priceFreightView extends BaseService {
         this._sfg = val;
     }
 
-    mdg = "";
+    _mdg = "";
 
 
     _twocode = "";
@@ -241,10 +241,13 @@ class priceFreightView extends BaseService {
         this.queryMatchTruck();
     }
 
-    get mdg(){
-        
+    get mdg() {
+        return this._mdg;
     }
-
+    set mdg(v) {
+        this._mdg = v;
+        this.queryMatchTruck();
+    }
     tactTwocode = "";
 
     iataMap = {};
@@ -405,24 +408,24 @@ class priceFreightView extends BaseService {
     //是否展示基点勾稽关系维护
     get isShowBasePointEdit() {
         //存在不和基点相同的数据
-        let hasNotSame = this.currentRelationEditArr.find(f => { return (f.isSameAsBase == false) && (f.isDefault ==false) })
+        let hasNotSame = this.currentRelationEditArr.find(f => { return (f.isSameAsBase == false) && (f.isDefault == false) })
         //是否所有已添加参数都设置了和基点的关系
-        let isAllParamSet=this.currentRelationEditArr.find(f=>{return f.isSameAsBase==null &&f.isAdd});
+        let isAllParamSet = this.currentRelationEditArr.find(f => { return f.isSameAsBase == null && f.isAdd });
 
-        
+
 
         return (!!!isAllParamSet) && (!!hasNotSame);
     }
 
     //是否添加参数后没有选择是否和基点一致
     get canConfirmRelation() {
-        let item = this.currentRelationEditArr.find(f => { return f.isAdd && f.isDefault ==false && f.isSameAsBase == null })
+        let item = this.currentRelationEditArr.find(f => { return f.isAdd && f.isDefault == false && f.isSameAsBase == null })
         return !!!item;
     }
 
     //当前基点
     get currentBasePoint() {
-        return this.currentRelationEditArr.find(f => { return f.isDefault  });
+        return this.currentRelationEditArr.find(f => { return f.isDefault });
 
     }
 
@@ -645,31 +648,31 @@ class priceFreightView extends BaseService {
         this.truckAlertArr = [];
         let twocodeArr = this.twoCode.split(',');
         if (twocodeArr.length == 0) return;
-        let task=[];
+        let task = [];
         twocodeArr.forEach((item) => {
-           task.push (this.getMatchTruck(this.zzg, this.mdg, item));
+            task.push(this.getMatchTruck(this.zzg, this.mdg, item));
         });
         let twocodeStr = "";
 
-        Promise.all(task).then(()=>{
+        Promise.all(task).then(() => {
             if (this.truckAlertArr.length > 0) {
                 //提示
-                twocodeStr = this.truckAlertArr.reduce((pre, cur,index) => {
-                    return pre + (index>0?',':'') + cur.twocode;
-                },'')
+                twocodeStr = this.truckAlertArr.reduce((pre, cur, index) => {
+                    return pre + (index > 0 ? ',' : '') + cur.twocode;
+                }, '')
                 let txt = `${this.zzg}至${this.mdg}的航司二字码${twocodeStr}已维护卡车转运费，具体可至"目的港卡车转运费"页面中查看`;
                 this.vueInstance.$alert(txt, '提示', {
                     confirmButtonText: '确定',
                     callback: action => {
-    
+
                     }
                 });
             }
         });
-      
+
     }
 
- async   getMatchTruck(zzg, mdg, twocode) {
+    async getMatchTruck(zzg, mdg, twocode) {
         if (!!!twocode) return;
         var jsonArr = {
             where: {
@@ -678,7 +681,7 @@ class priceFreightView extends BaseService {
         };
         let url = this.vueInstance.$store.state.feeWebApi + "TruckFee/getList";
 
-    return    this.request("get", url, { json: JSON.stringify(jsonArr) })
+        return this.request("get", url, { json: JSON.stringify(jsonArr) })
             .then(({ data }) => {
                 var d = data.resultdata;
                 if (d.length > 0) {

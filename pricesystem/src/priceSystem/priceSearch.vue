@@ -929,7 +929,7 @@ export default {
       if (!Number.isFinite(matchFlightPrice) || matchFlightPrice == 0) {
         //此时需要上下追溯到有价格的格子 适合用递归做
         //追溯逻辑为 1:167 为分割线 向 1:167的方向追溯
-        return this.reversePrice(row, weightCode, volType, weight, calWeight);
+        return this.reversePrice(row, weightCode, this.getMovedVol(volType), weight, calWeight);
       }
       //fixedmin价格
       var minFixedPrice = row.fixedFeeList.find((item) => {
