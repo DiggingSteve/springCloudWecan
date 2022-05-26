@@ -720,7 +720,8 @@
         > -->
         <el-button
           type="primary"
-          style="margin-left: 10px"
+          style="margin-left: 10px;background:#80808047;"
+          :class="{"active-blue":priceObj.canClickNext}"
           v-show="priceObj.isShowNextBtn"
           @click="priceObj.clickNext()"
           >下一步</el-button
@@ -1113,9 +1114,7 @@
           <el-button
             type="primary"
             @click="
-            priceObj.confirmRelation();
-              priceObj.isShowRelationEdit = false;
-            "
+            priceObj.confirmRelation();"
             :class="{ forbidden: priceObj.canConfirmRelation ? false : true }"
             >确认
           </el-button>

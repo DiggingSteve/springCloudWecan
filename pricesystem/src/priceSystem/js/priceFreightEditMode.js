@@ -982,6 +982,7 @@ class priceFreightEditView extends priceFreightView {
       });
     }
     this.confirmPriceTabArr();
+    this.isShowRelationEdit = false;
     this.vueInstance.$forceUpdate();
 
   }
