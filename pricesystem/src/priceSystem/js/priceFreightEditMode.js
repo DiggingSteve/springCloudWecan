@@ -329,9 +329,9 @@ class priceFreightEditView extends priceFreightView {
   }
 
   checkWeightStandardPrice() {
-    this.weightArr.forEach(item => {
+    this.weightArr.forEach((item,index) => {
       let standardPrice = item.standardPrice;
-      if (!!!standardPrice) {
+      if (!!!standardPrice&&index>0) {
         throw new Error("请完善所有重量的价格");
       }
       if (standardPrice !== null && standardPrice !== undefined && standardPrice !== "") {
@@ -397,7 +397,7 @@ class priceFreightEditView extends priceFreightView {
       !!this.twoCode &&
       (this.vueInstance.wecanStandard == this.vueInstance.wecanStandardOpts[0].value || this.gid > 0);
     debugger
-    var isAllWeightSet = !!!this.weightArr.find(f => { return !Number.isFinite(f.standardPrice * 1) || (f.standardPrice * 1 <= 0) });
+    var isAllWeightSet = !!!this.weightArr.find((f,index) => { return (index>0)&& (!Number.isFinite(f.standardPrice * 1) || (f.standardPrice * 1 <= 0) });
     return flag && isAllWeightSet
 
 
