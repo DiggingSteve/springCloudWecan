@@ -331,7 +331,7 @@ class priceFreightEditView extends priceFreightView {
   checkWeightStandardPrice() {
     this.weightArr.forEach((item,index) => {
       let standardPrice = item.standardPrice;
-      if (!!!standardPrice&&index>0) {
+      if (!!!standardPrice&&index>=0) {
         throw new Error("请完善所有重量的价格");
       }
       if (standardPrice !== null && standardPrice !== undefined && standardPrice !== "") {
@@ -396,10 +396,58 @@ class priceFreightEditView extends priceFreightView {
       !!this.mdg &&
       !!this.twoCode &&
       (this.vueInstance.wecanStandard == this.vueInstance.wecanStandardOpts[0].value || this.gid > 0);
-    var isAllWeightSet = !!!this.weightArr.find((f,index) => { return (index>0)&& (!Number.isFinite(f.standardPrice * 1) || (f.standardPrice * 1 <= 0)) });
+    var isAllWeightSet = !!!this.weightArr.find((f,index) => { return (index>=0)&& (!Number.isFinite(f.standardPrice * 1) || (f.standardPrice * 1 <= 0)) });
     return flag && isAllWeightSet
 
 
+  }
+
+  //要保证每行数据填满 则判断该行 vol.isSetValue==true 且关联这个vol code 的 fixedMap 所有diff 为有效值
+  //或者 只是添加了 vol 列 该 vol isSetValue 为 false 则 需要对 所有fixedMap 检测 是否 每个 关联 的对象 diff有效 且 数量是 weightArr的length
+  canClickSave(){
+    
+    let volArr=  this.volArr.filter(f=>{return f.isAdd});//已添加的vol行 
+    
+    let tabArr=this.cusPackageIndexArr;
+    for(let i=0;i<volArr.length;i++){
+      let item=volArr[i];
+      if(item.isSetValue){
+        this.cusPackageIndexArr.forEach(p=>{
+          let map=p.fixedMap;
+          for(let key in map){
+            if(key.startsWith(item.code)){
+              let diff=map[key].diff*1;
+              if(!Number.isFinite(diff)|| diff<=0){
+                throw new Error(`请完善${item.code}对应行的数据`)
+              }
+            }
+          }
+          
+        })
+      }
+      else{
+        //vol isSetValue 为 false时 需要对对应行计数 是否全部填写
+        let count=0;
+        this.cusPackageIndexArr.forEach(p=>{
+          let map=p.fixedMap;
+          for(let key in map){
+            if(key.startsWith(item.code)){
+              let diff=map[key].diff*1;
+              if(!Number.isFinite(diff)|| diff<=0){
+                throw new Error(`请完善${item.code}对应行的数据`);
+              }
+              else{
+                count++;
+              }
+            }
+          }
+          
+        });
+        if(count!=this.weightArr.length){
+          throw new Error(`请完善${item.code}对应行的数据`);
+        }
+      }
+    }
   }
 
   /**
@@ -515,6 +563,7 @@ class priceFreightEditView extends priceFreightView {
     if (this._timeSpan.length == 0) {
       throw new Error("请选择时间期限");
     }
+    this.canClickSave();
 
   }
 

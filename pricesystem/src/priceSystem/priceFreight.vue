@@ -332,7 +332,7 @@
                 <tr>
                   <template v-for="(item, index) in priceObj.weightArr">
                     <td style="padding: 5px 15px;"
-                    :class="{required:index>0}">
+                    :class="{required:index>=0}">
                       <input
                         type="input"
                         class="price-input"
