@@ -299,6 +299,7 @@ class priceFreightEditView extends priceFreightView {
         item.diff = p.diff;
         item.isAdd = true;
         item.isSameAsBase = p.isSameAsBase;
+        item.isSetValue=p.isSetValue;
         if (p.isDefault) {
           item.diff = "基点"
           if (type == diffCode.cus) {
