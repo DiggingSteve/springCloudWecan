@@ -985,6 +985,7 @@ export default {
 // 追溯完正常价格 那么对应的min如果没有维护则还是要继续追溯min
     seekMinPrice(row,volType){
 //fixedmin价格
+debugger
       var minFixedPrice = row.fixedFeeList.find((item) => {
         return (
           (!!item.cus ? item.cus == this.selectedCusType : true) &&
