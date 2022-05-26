@@ -1017,7 +1017,7 @@ debugger
       let arr = this.priceObj.volArr;
       for (let i = 0; i < arr.length; i++) {
         let item = arr[i];
-        if (item.isBase) {
+        if (item.isDefault) {
           baseIndex = i;
           continue;
         }
