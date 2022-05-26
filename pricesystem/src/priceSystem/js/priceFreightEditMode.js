@@ -330,7 +330,7 @@ class priceFreightEditView extends priceFreightView {
   checkWeightStandardPrice() {
     this.weightArr.forEach(item => {
       let standardPrice = item.standardPrice;
-      if(!!!standardPrice){
+      if (!!!standardPrice) {
         throw new Error("请完善所有重量的价格");
       }
       if (standardPrice !== null && standardPrice !== undefined && standardPrice !== "") {
@@ -390,16 +390,16 @@ class priceFreightEditView extends priceFreightView {
   /**
    * 是否激活第一页下一步
    */
-  get canClickNext(){
- var flag=  !!this.sfg&&
-   !!this.mdg  &&
-   !!this.twoCode&&
-   (this.vueInstance.wecanStandard == this.vueInstance.wecanStandardOpts[0].value || this.gid > 0);
+  get canClickNext() {
+    var flag = !!this.sfg &&
+      !!this.mdg &&
+      !!this.twoCode &&
+      (this.vueInstance.wecanStandard == this.vueInstance.wecanStandardOpts[0].value || this.gid > 0);
+debugger
+    var isAllWeightSet = !!!this.weightArr.find(f => { return !Number.isFinite(f.standardPrice) || (f.standardPrice * 1 <= 0) });
+    return flag && isAllWeightSet
 
-   var isAllWeightSet= !!!this.weightArr.find(f=>{return !Number.isFinite(f.standardPrice) || (f.standardPrice*1<=0)});
-   return flag&&isAllWeightSet
-   
- 
+
   }
 
   /**
@@ -972,9 +972,9 @@ class priceFreightEditView extends priceFreightView {
   selectRelationTitle(index) {
     let item = this.currentRelationEditArr[index];
     item.isAdd = !item.isAdd;
-    let isAllSelected=this.currentRelationEditArr.find(f=>{return !f.isAdd});
-    if(isAllSelected==undefined){
-      this.vueInstance.isShowRelationPop=false;
+    let isAllSelected = this.currentRelationEditArr.find(f => { return !f.isAdd });
+    if (isAllSelected == undefined) {
+      this.vueInstance.isShowRelationPop = false;
     }
   }
 
@@ -996,9 +996,9 @@ class priceFreightEditView extends priceFreightView {
   }
 
   clearDiffRelation(item) {
-    if (item.isDefault ) return;
+    if (item.isDefault) return;
     if (item.isSameAsBase) return;
-    item.diff ="";
+    item.diff = "";
     item.isSetValue = false;
   }
 
@@ -1201,7 +1201,7 @@ class priceFreightEditView extends priceFreightView {
     return val.toFixed(2);
   }
 
- 
+
 
 }
 export { priceFreightEditView }
