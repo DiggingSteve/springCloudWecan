@@ -387,7 +387,7 @@
             <tr>
               <td style="border: 0">
                 折算单价:
-                {{  currentRow.exactPrice  }}
+                {{ currentRow.exactPrice }}
               </td>
             </tr>
           </tbody>
@@ -903,12 +903,19 @@ export default {
       var isContainsTruck = this.isContainsTruck;
       var packageDiff = row.packageCusDiffMap[this.selectedPackageType];
       var cusDiff = row.packageCusDiffMap[this.selectedCusType];
-      let volDiff=0;
+      let volDiff = 0;
+      let isVolExist = false;
       var matchFlight = row.weightArr.find((item) => {
         return item.code == weightCode;
       });
-      var matchVol=row.volArr.find(f=>{return f.code==volType});
-      if(!!matchVol)volDiff=Number.isFinite(matchVol.diff*1)?matchVol.diff*1:0;
+      var matchVol = row.volArr.find((f) => {
+        return f.code == volType;
+      });
+
+      if (!!matchVol) {
+        volDiff = Number.isFinite(matchVol.diff * 1) ? matchVol.diff * 1 : 0;
+        isVolExist = true;
+      }
       var weightStandard = !!matchFlight ? matchFlight.standardPrice * 1 : 0;
 
       // 有无一口价
@@ -922,13 +929,15 @@ export default {
           item.weight == weightCode
         );
       });
-
-    let  matchFlightPrice =
-        weightStandard +
-        (packageDiff > 0 ? packageDiff : 0) +
-        (cusDiff > 0 ? cusDiff : 0)+
-        volDiff;
-      //此时matchFlightPrice为常规参数结合出来的价格 可能是0
+      let matchFlightPrice = 0; //常规价格 非一口价 只有在 vol存在时才能计算
+      if (isVolExist) {
+        matchFlightPrice =
+          weightStandard +
+          (packageDiff > 0 ? packageDiff : 0) +
+          (cusDiff > 0 ? cusDiff : 0) +
+          volDiff;
+      }
+      //此时matchFlightPrice为常规参数结合出来的价格 可能是0 一口价覆盖常规价
       if (!!matchFlightFixed) {
         matchFlightPrice = matchFlightFixed.diff * 1; //如果这个格子有一口价则取一口价
       }
@@ -943,8 +952,8 @@ export default {
           calWeight
         );
       }
-      
-      let flightMinPrice=this.seekMinPrice(row,volType);
+
+      let flightMinPrice = this.seekMinPrice(row, volType);
 
       //查卡车min价格
       var truckMinPrice =
@@ -982,10 +991,10 @@ export default {
       );
     },
 
-// 追溯完正常价格 那么对应的min如果没有维护则还是要继续追溯min
-    seekMinPrice(row,volType){
-//fixedmin价格
-debugger
+    // 追溯完正常价格 那么对应的min如果没有维护则还是要继续追溯min
+    seekMinPrice(row, volType) {
+      //fixedmin价格
+
       var minFixedPrice = row.fixedFeeList.find((item) => {
         return (
           (!!item.cus ? item.cus == this.selectedCusType : true) &&
@@ -1000,16 +1009,17 @@ debugger
       var minFlight = row.weightArr.find((item) => {
         return item.code == "+0kg";
       });
-      var flightMinPrice=0;
+      var flightMinPrice = 0;
       if (!!minFixedPrice) flightMinPrice = minFixedPrice.diff * 1;
       else flightMinPrice = !!minFlight ? minFlight.standardPrice : 0;
-      if((!Number.isFinite(flightMinPrice))||flightMinPrice==0&&volType!="1:167"){
-        return this.seekMinPrice(row,this.moveVol(volType));
+      if (
+        !Number.isFinite(flightMinPrice) ||
+        (flightMinPrice == 0 && volType != "1:167")
+      ) {
+        return this.seekMinPrice(row, this.moveVol(volType));
       }
       return flightMinPrice;
-    }
-    ,
-
+    },
     // 取不到价格时移动vol的位置 往 1:167方向移动
     moveVol(volCode) {
       let baseIndex; //基点索引
