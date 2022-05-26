@@ -1000,10 +1000,10 @@ debugger
       var minFlight = row.weightArr.find((item) => {
         return item.code == "+0kg";
       });
-      var flightMinPrice;
+      var flightMinPrice=0;
       if (!!minFixedPrice) flightMinPrice = minFixedPrice.diff * 1;
       else flightMinPrice = !!minFlight ? minFlight.standardPrice : 0;
-      if((!Number.isFinite(flightMinPrice))||flightMinPrice==0){
+      if((!Number.isFinite(flightMinPrice))||flightMinPrice==0&&volType!="1:167"){
         return this.seekMinPrice(row,this.moveVol(volType));
       }
       return flightMinPrice;
