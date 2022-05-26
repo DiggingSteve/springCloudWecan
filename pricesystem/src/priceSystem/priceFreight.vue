@@ -314,7 +314,7 @@
           </div>
         </div>
         <div class="row block">
-          <div style="width: 100%;font-size:18px;" class="blue title" >
+          <div style="width: 100%;font-size:20px;" class="blue title" >
             <span>请填写</span> <span style="color:red">官网公布( C类 )</span><span></span>的1:167散货的运价( CNY )</span>
           </div>
         </div>
@@ -333,6 +333,7 @@
                   <template v-for="(item, index) in priceObj.weightArr">
                     <td style="padding: 5px 15px">
                       <input
+                      style="background:#fffcf0"
                         type="input"
                         class="price-input"
                         v-model.sync="item.standardPrice"
