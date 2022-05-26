@@ -601,10 +601,10 @@
                       <template v-for="(weight, j) in priceObj.weightArr">
                         {{
                           void (isShowFixed = priceObj.isDisplayPriceActive(
-                            createFixedPriceKey(vol, weight)
+                            createFixedPriceKey(realVol, weight)
                           ))
                         }}
-                        {{ void (cellValue = setCellValue(vol, weight)) }}
+                        {{ void (cellValue = setCellValue(realVol, weight)) }}
 
                         <td
                           style="width: 68px; height: 26px; cursor: pointer"
@@ -618,7 +618,7 @@
                               priceObj.activeFixedPrice(
                                 vol,
                                 weight,
-                                setCellValue(vol, weight)
+                                setCellValue(realVol, weight)
                               )
                             "
                             class="price-input"
@@ -635,25 +635,25 @@
                               priceObj.cusPackageIndexArr[
                                 priceObj.tabDisplayIndex
                               ]['fixedMap'][
-                                createFixedPriceKey(vol, weight)
+                                createFixedPriceKey(realVol, weight)
                               ].diff =
                                 priceObj.cusPackageIndexArr[
                                   priceObj.tabDisplayIndex
-                                ]['fixedMap'][createFixedPriceKey(vol, weight)]
+                                ]['fixedMap'][createFixedPriceKey(realVol, weight)]
                                   .diff > 0
                                   ? (
                                       priceObj.cusPackageIndexArr[
                                         priceObj.tabDisplayIndex
                                       ]['fixedMap'][
-                                        createFixedPriceKey(vol, weight)
+                                        createFixedPriceKey(realVol, weight)
                                       ].diff * 1
                                     ).toFixed(2)
-                                  : ''"
+                                  : '';$forceUpdate()"
                             v-focus
                             v-model.sync="
                               priceObj.cusPackageIndexArr[
                                 priceObj.tabDisplayIndex
-                              ]['fixedMap'][createFixedPriceKey(vol, weight)]
+                              ]['fixedMap'][createFixedPriceKey(realVol, weight)]
                                 .diff
                             "
                           />
