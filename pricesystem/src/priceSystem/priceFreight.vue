@@ -331,9 +331,8 @@
                 </tr>
                 <tr>
                   <template v-for="(item, index) in priceObj.weightArr">
-                    <td style="padding: 5px 15px">
+                    <td style="padding: 5px 15px;background:#fffcf0">
                       <input
-                      style="background:#fffcf0"
                         type="input"
                         class="price-input"
                         v-model.sync="item.standardPrice"
@@ -722,7 +721,7 @@
         <el-button
           type="primary"
           style="margin-left: 10px;background:#80808047;"
-          :class="{"active-blue":priceObj.canClickNext}"
+          :class="{'active-blue':priceObj.canClickNext}"
           v-show="priceObj.isShowNextBtn"
           @click="priceObj.clickNext()"
           >下一步</el-button
