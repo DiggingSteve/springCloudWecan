@@ -336,6 +336,7 @@
                       <input
                         type="input"
                         class="price-input"
+                        @blur="item.standardPrice=(item.standardPrice*1)>0?(item.standardPrice*1).toFixed(2):''"
                         v-model.sync="item.standardPrice"
                       />
                     </td>
