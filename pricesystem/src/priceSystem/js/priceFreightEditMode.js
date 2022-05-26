@@ -396,7 +396,6 @@ class priceFreightEditView extends priceFreightView {
       !!this.mdg &&
       !!this.twoCode &&
       (this.vueInstance.wecanStandard == this.vueInstance.wecanStandardOpts[0].value || this.gid > 0);
-    debugger
     var isAllWeightSet = !!!this.weightArr.find((f,index) => { return (index>0)&& (!Number.isFinite(f.standardPrice * 1) || (f.standardPrice * 1 <= 0)) });
     return flag && isAllWeightSet
 

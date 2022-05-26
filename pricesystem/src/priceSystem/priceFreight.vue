@@ -495,7 +495,7 @@
               class="operate-edit"
               @click="priceObj.openRelationDialog('package')"
             >
-              <span class="el-icon-setting"></span><span>编辑</span>
+              <span class="el-icon-setting"></span><span>添加</span>
             </div>
           </div>
         </div>
@@ -514,7 +514,7 @@
               class="operate-edit"
               @click="priceObj.openRelationDialog('vol')"
             >
-              <span class="el-icon-setting"></span><span>编辑</span>
+              <span class="el-icon-setting"></span><span>添加</span>
             </div>
           </div>
         </div>

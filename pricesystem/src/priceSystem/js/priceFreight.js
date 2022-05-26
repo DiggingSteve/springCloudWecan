@@ -25,7 +25,7 @@ const specifiedFlight = "特定航班";
 
 const zzgTitle = { direct: "直达", trans: "中转" };
 
-const relationEditTitle = { cus: "客户参数编辑", packageType: "包装参数编辑", vol: "货型参数编辑" }
+const relationEditTitle = { cus: "客户参数添加", packageType: "包装参数添加", vol: "货型参数添加" }
 
 const diffCode = { vol: "vol", weight: "weight", cus: "cus", package: "package" }
 
