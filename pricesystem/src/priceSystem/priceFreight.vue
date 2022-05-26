@@ -471,7 +471,7 @@
               class="operate-edit"
               @click="priceObj.openRelationDialog('cus')"
             >
-              <span class="el-icon-setting"></span><span>编辑</span>
+              <span class="el-icon-setting"></span><span>添加</span>
             </div>
           </div>
         </div>

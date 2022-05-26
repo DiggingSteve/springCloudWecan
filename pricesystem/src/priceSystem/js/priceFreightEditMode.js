@@ -248,6 +248,7 @@ class priceFreightEditView extends priceFreightView {
     this.vueInstance.wecanStandard = basicInfo.gid > 0 ? this.vueInstance.wecanStandardOpts[1].value : this.vueInstance.wecanStandardOpts[0].value;
     this.loadDiffCode(map);
     this.loadFixedPrice(map);
+    this.vueInstance.$forceUpdate();
   }
 
   loadDiffCode(map) {
@@ -395,8 +396,8 @@ class priceFreightEditView extends priceFreightView {
       !!this.mdg &&
       !!this.twoCode &&
       (this.vueInstance.wecanStandard == this.vueInstance.wecanStandardOpts[0].value || this.gid > 0);
-debugger
-    var isAllWeightSet = !!!this.weightArr.find(f => { return !Number.isFinite(f.standardPrice) || (f.standardPrice * 1 <= 0) });
+    debugger
+    var isAllWeightSet = !!!this.weightArr.find(f => { return !Number.isFinite(f.standardPrice * 1) || (f.standardPrice * 1 <= 0) });
     return flag && isAllWeightSet
 
 
