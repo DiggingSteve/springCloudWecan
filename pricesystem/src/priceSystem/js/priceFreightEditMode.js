@@ -330,12 +330,16 @@ class priceFreightEditView extends priceFreightView {
   checkWeightStandardPrice() {
     this.weightArr.forEach(item => {
       let standardPrice = item.standardPrice;
+      if(!!!standardPrice){
+        throw new Error("请完善所有重量的价格");
+      }
       if (standardPrice !== null && standardPrice !== undefined && standardPrice !== "") {
         if (!Number.isFinite(standardPrice * 1)) {
           throw new Error("请输入正确的重量价格");
         }
       }
     })
+    return true;
   }
 
 
@@ -382,6 +386,17 @@ class priceFreightEditView extends priceFreightView {
     }
 
   }
+
+  /**
+   * 是否激活第一页下一步
+   */
+  get canClickNext(){
+    return this.canPageOneTopageAdd()&&this.checkWeightStandardPrice();
+  }
+
+  /**
+   * 第一页点击下一步
+   */
   clickNext() {
     if (this._currentPageMode == pageMode.pageOne) {
       this.canPageOneTopageAdd();// 判断页面能否跳转 用异常中断操作 会被全局捕获
@@ -949,7 +964,10 @@ class priceFreightEditView extends priceFreightView {
   selectRelationTitle(index) {
     let item = this.currentRelationEditArr[index];
     item.isAdd = !item.isAdd;
-
+    let isAllSelected=this.currentRelationEditArr.find(f=>{return !f.isAdd});
+    if(isAllSelected==undefined){
+      this.vueInstance.isShowRelationPop=false;
+    }
   }
 
 

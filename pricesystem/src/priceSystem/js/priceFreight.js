@@ -112,7 +112,7 @@ class priceFreightView extends BaseService {
     clearDataIndex = -1;
 
     get isAddSomeParam() {
-        return !!this.currentRelationEditArr.find(f => { return f.isAdd && (!f.isDefault)  });
+        return !!this.currentRelationEditArr.find(f => { return f.isAdd && (!f.isDefault) });
     }
 
     /**当前选中的包装类型 */
@@ -408,7 +408,7 @@ class priceFreightView extends BaseService {
     //是否展示基点勾稽关系维护
     get isShowBasePointEdit() {
         //存在不和基点相同的数据
-        let hasNotSame = this.currentRelationEditArr.find(f => { return (f.isSameAsBase == false) &&(f.isAdd) })
+        let hasNotSame = this.currentRelationEditArr.find(f => { return (f.isSameAsBase == false) && (f.isAdd) })
         //是否所有已添加参数都设置了和基点的关系
         let isAllParamSet = this.currentRelationEditArr.find(f => { return (f.isSameAsBase == null) && f.isAdd });
 
@@ -489,14 +489,14 @@ class priceFreightView extends BaseService {
 
     //确认 组合tab以及相关勾稽关系
     confirmPriceTabArr() {
-        
+
         this.cusIndexArr = [];
         this.packageIndexArr = [];
         this.tabDisplayIndex = 0;
         this.loadBasePriceTabArr();
         for (let i = 0; i < this.cusArr.length; i++) {
             var cus = this.cusArr[i];
-            if (cus.isDefault ) continue;
+            if (cus.isDefault) continue;
             if (!cus.isAdd) continue;
             this.cusIndexArr[0] = this.cusIndexArr[0] || [];
 
@@ -511,7 +511,7 @@ class priceFreightView extends BaseService {
         }
         for (let j = 0; j < this.packageTypeArr.length; j++) {
             var p = this.packageTypeArr[j];
-            if (p.isDefault ) continue;
+            if (p.isDefault) continue;
             if (!p.isAdd) continue;
             this.packageIndexArr[0] = this.packageIndexArr[0] || [];
 
@@ -522,19 +522,19 @@ class priceFreightView extends BaseService {
             }
             else {
                 this.packageIndexArr.push(j);
-      
+
             }
         }
 
         for (let k = 0; k < this.volArr.length; k++) {
             var vol = this.volArr[k];
-            if (vol.isDefault ) continue;
+            if (vol.isDefault) continue;
             if (!vol.isAdd) continue;
             if (vol.isSameAsBase) {
                 vol.isSetValue = true;
                 vol.diff = 0;
             }
-            
+
         }
 
         for (let i = 0; i < this.cusIndexArr.length; i++) {
@@ -609,7 +609,7 @@ class priceFreightView extends BaseService {
         if (this.vueInstance.wecanStandard == this.vueInstance.wecanStandardOpts[1].value && this.gid <= 0) {
             throw new Error("请选择客户");
         }
-
+        return true;
 
     }
 

@@ -314,8 +314,8 @@
           </div>
         </div>
         <div class="row block">
-          <div style="width: 100%" class="blue title">
-            <span>请填写官网公布的1:167散货的运价( CNY )</span>
+          <div style="width: 100%" class="blue title" style="font-size:18px;">
+            <span>请填写</span> <span>官网公布( C类 )</span><span></span>的1:167散货的运价( CNY )</span>
           </div>
         </div>
         <div class="row">
@@ -331,7 +331,7 @@
                 </tr>
                 <tr>
                   <template v-for="(item, index) in priceObj.weightArr">
-                    <td style="padding: 5px 15px">
+                    <td style="padding: 5px 15px;background:#fffcf0">
                       <input
                         type="input"
                         class="price-input"
@@ -719,8 +719,8 @@
           >重置一口价</el-button
         > -->
         <el-button
-          type="primary"
-          style="margin-left: 10px"
+          style="margin-left: 10px;background:80808047;"
+          :class="{'active-blue':priceObj.canClickNext}"
           v-show="priceObj.isShowNextBtn"
           @click="priceObj.clickNext()"
           >下一步</el-button
