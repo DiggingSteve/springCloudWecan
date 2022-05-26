@@ -710,7 +710,7 @@
           </div>
         </div>
       </div>
-      <div class="bottom-wrap" style="" v-if="!!priceObj">
+      <div class="bottom-wrap" style="" >
         <!-- <el-button
           v-show="priceObj.isShowConfirmBtn"
           style="margin-left: 10px"

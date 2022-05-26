@@ -391,7 +391,15 @@ class priceFreightEditView extends priceFreightView {
    * 是否激活第一页下一步
    */
   get canClickNext(){
-    return this.canPageOneTopageAdd()&&this.checkWeightStandardPrice();
+ var flag=  !!this.sfg&&
+   !!this.mdg  &&
+   !!this.twoCode&&
+   (this.vueInstance.wecanStandard == this.vueInstance.wecanStandardOpts[0].value || this.gid > 0);
+
+   var isAllWeightSet= !!!this.weightArr.find(f=>{return !Number.isFinite(f.standardPrice) || (f.standardPrice*1<=0)});
+   return flag&&isAllWeightSet
+   
+ 
   }
 
   /**
