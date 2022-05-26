@@ -944,6 +944,7 @@ export default {
         );
       }
       
+      let flightMinPrice=this.seekMinPrice(row,volType);
 
       //查卡车min价格
       var truckMinPrice =
