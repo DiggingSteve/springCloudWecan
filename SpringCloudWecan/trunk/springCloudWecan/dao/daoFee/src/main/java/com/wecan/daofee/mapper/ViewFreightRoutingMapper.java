@@ -24,6 +24,7 @@ public interface ViewFreightRoutingMapper extends BaseMapper<ViewFreightRouting>
             "            fee.area, \n" +
             "            fee.gid, \n" +
             "            fee.remark, \n" +
+            "            case when fee.enddate<now() then 1 else 0 end 'isExpired'   ,"+
             "           # case when truckHs.twocode is  null then '' else truck.ddg end ddg , \n" +
             "           '' as ddg,\n" +
             "            '' as truckTwocode, \n" +
@@ -54,6 +55,7 @@ public interface ViewFreightRoutingMapper extends BaseMapper<ViewFreightRouting>
             "            fee.remark, \n" +
             "            truck.ddg  , \n" +
             "            truck.twocode as truckTwocode, \n" +
+            "            case when fee.enddate<now() then 1 else 0 end 'isExpired'   ,"+
             "            fee.hbh,  \n" +
             "            truck.min as truckMin,  \n" +
             "            truck.fixedMin as truckFixedMin,  \n" +

@@ -4,7 +4,9 @@
  * @time: 2021/8/26 18:12
  */
 package com.wecan.modelview.model.vo.fee.view;
+
 import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -25,7 +27,7 @@ public class ViewFreightRouting {
     private String zzg;
 
     //基港就是运价上的mdg 以及 卡车算运费的基港 终点可能是mdg 可能是ddg
-    public  String mdg;
+    public String mdg;
 
     private String ddg;
 
@@ -42,7 +44,7 @@ public class ViewFreightRouting {
 
     private String remark;
 
-    public  String getRemark(){
+    public String getRemark() {
         return remark.trim();
     }
 
@@ -65,7 +67,8 @@ public class ViewFreightRouting {
      * 标准价格
      */
     private String jfType;
-
+    //是否过期
+    private Integer isExpired;
 
 
 }
