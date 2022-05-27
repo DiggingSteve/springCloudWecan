@@ -941,7 +941,7 @@ export default {
       if (!!matchFlightFixed) {
         matchFlightPrice = matchFlightFixed.diff * 1; //如果这个格子有一口价则取一口价
       }
-      if (!Number.isFinite(matchFlightPrice) || matchFlightPrice == 0) {
+      if (!Number.isFinite(matchFlightPrice) || matchFlightPrice == 0||!isVolExist) {
         //此时需要上下追溯到有价格的格子 适合用递归做
         //追溯逻辑为 1:167 为分割线 向 1:167的方向追溯
         return this.reversePrice(

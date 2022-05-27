@@ -284,6 +284,23 @@ div {
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
+  & .sort-descend{
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #c0c4cc;
+    cursor: pointer;
+    margin-top: 3px;
+  }
+  & .sort-ascend{
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 6px solid #c0c4cc;
+    cursor: pointer;
+  }
   & i {
   }
   & .sort-check {
@@ -291,4 +308,6 @@ div {
     border-top-color: #409eff;
   }
 }
+
+
 </style>
