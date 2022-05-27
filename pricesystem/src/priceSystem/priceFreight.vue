@@ -593,7 +593,7 @@
                   </tr>
                   <template v-for="(vol, i) in priceObj.tableVolArr">
                     {{ void (realVol = getRealVol(vol.code)) }}
-                    <tr v-if="realVol.isAdd">
+                    <tr v-show="realVol.isAdd">
                       <td
                         class="operate-head"
                      

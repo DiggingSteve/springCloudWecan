@@ -71,6 +71,9 @@ public class OutputFreightRouting extends ViewFreightRouting {
 
     public String packageType;
 
+    //精确运价 将前端逻辑搬到后台计算精确运价
+    public String exactPrice;
+
     /**
      * 重量等级价格参数
      * */
