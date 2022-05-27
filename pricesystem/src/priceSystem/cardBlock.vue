@@ -47,21 +47,27 @@
           v-show="hasContent"
           v-bind:class="{ ban: index == indexSelf ? true : false }"
         >
-          <input
-            v-model="item.diff"
-            type="input"
-            v-bind:class="{
-              ban:
-                (isNeedBan && indexSelf < 0) || index == indexSelf
-                  ? true
-                  : false,
-            }"
-            @input="editContent(item)"
-            @focus="handleFocus(index, $event)"
-          />
-          <span class="sortWrap">
-            <i class="el-icon-caret-top" @click="item.isClick=true"></i> <i class="el-icon-caret-bottom" @click=""></i
-          ></span>
+          <div class="item65">
+            <input
+              v-model="item.diff"
+              type="input"
+              style="line-height:30px"
+              v-bind:class="{
+                ban:
+                  (isNeedBan && indexSelf < 0) || index == indexSelf
+                    ? true
+                    : false,
+              }"
+              @input="editContent(item)"
+              @focus="handleFocus(index, $event)"
+            />
+          </div>
+          <div class="item35">
+            <span class="sortWrap" style="line-height:30px">
+              <i class="el-icon-caret-top" @click="item.isClick = true"></i>
+              <i class="el-icon-caret-bottom" @click=""></i
+            ></span>
+          </div>
         </div>
       </div>
     </div>
@@ -217,6 +223,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import url("./css/flex-row.less");
 @lightBlue: #cfdee8;
 @blue: #0f5a8c;
 div {
@@ -292,6 +299,4 @@ div {
     border-top-color: #409eff;
   }
 }
-
-
 </style>
