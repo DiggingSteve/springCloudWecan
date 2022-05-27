@@ -149,9 +149,9 @@
         </div>
       </template>
     </newFormCmpt>
-    <div class="searchForm">
+    <div class="searchForm row">
       <div class="item40">
-         <el-button @click="search()">查询</el-button>
+         <el-button type="primary" @click="search()">查询</el-button>
       </div>
      
       <!-- <el-button @click="isMoreCondition = !isMoreCondition"

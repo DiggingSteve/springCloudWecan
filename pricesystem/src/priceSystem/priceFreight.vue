@@ -625,6 +625,7 @@
                         >
                           <input
                             type="input"
+                            @input=""
                             @click="
                               priceObj.activeFixedPrice(
                                 vol,
@@ -667,6 +668,8 @@
                               ]['fixedMap'][createFixedPriceKey(vol, weight)]
                                 .diff
                             "
+                          :ref="priceObj.createFixedPriceRef('fixed', i, j)"
+                          @keydown="priceObj.move(i, j, $event)"
                           />
                         </td>
                       </template>

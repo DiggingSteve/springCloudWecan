@@ -760,7 +760,7 @@ class priceFreightEditView extends priceFreightView {
     }
     if (i < 0 || j < 0 || i >= this.volArr.length || j >= this.weightArr.length) return;
     var dom = refs[i.toString() + j.toString()];
-    var vol = this.volArr[i];
+    var vol = this.tableVolArr[i];
     var weight = this.weightArr[j];
     if (!!!dom || dom.length == 0) {
 
@@ -770,9 +770,6 @@ class priceFreightEditView extends priceFreightView {
       dom = refs["fixed" + i.toString() + j.toString()][0];
 
       dom.focus();
-      this.priceDisplayMap[
-        this.vueInstance.createFixedPriceKey(vol, weight)
-      ].diff = e.currentTarget.value;
       this.vueInstance.$forceUpdate()
     });
   }
