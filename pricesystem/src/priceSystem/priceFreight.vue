@@ -32,15 +32,21 @@
         </template>
       </newFormCmpt>
       <div class="searchForm row">
-        <div class="item50">
+        <div class="item40">
           <el-button type="primary" @click="search">查询</el-button>
           <el-button type="primary" @click="clickNew()">新增</el-button>
         </div>
 
         <div class="item50 ">
           <div class="el-button-group buttonTabs">
-            <button type="button" class="el-button el-button--default active"><!----><!----><span>有效运价</span></button> 
-            <button type="button" class="el-button el-button--default"><!----><!----><span><span> 无效运价</span></span></button> 
+            <button type="button" class="el-button el-button--default"
+            :class="{active:!isShowExpired}"
+            @click="  isShowExpired = false;search();"
+            ><!----><!----><span>有效运价</span></button> 
+            <button type="button" class="el-button el-button--default"
+             :class="{active:isShowExpired}"
+            @click="  isShowExpired = true;search();"
+            ><!----><!----><span><span> 无效运价</span></span></button> 
             
          </div>
           <!-- <div
