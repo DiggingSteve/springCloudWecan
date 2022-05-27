@@ -63,9 +63,13 @@
             />
           </div>
           <div class="item35">
-            <span class="sortWrap" style="line-height:30px;font-size:20px">
-              <i class="el-icon-caret-top" @click="item.isClick = true"></i>
-              <i class="el-icon-caret-bottom" @click=""></i
+            <span class="sortWrap" style="line-height:30px;font-size:16px">
+              <i class="el-icon-caret-top" 
+              @click="sorrowAdd('add',item)"
+              ></i>
+              <i class="el-icon-caret-bottom" 
+              @click="sorrowAdd('minus',item)"
+              ></i
             ></span>
           </div>
         </div>
@@ -170,6 +174,18 @@ export default {
         });
       }
     },
+    sorrowAdd(type,item){
+      let num=1;
+      if(type=="minus"){
+        num=num*-1;
+      }
+      let cur=item.diff*1;
+      if(!Number.isFinite(cur)){
+        cur=0;
+      }
+      item.diff=cur+num;
+      this.editContent(item);
+    },
     editContent(item) {
       var input = item.diff * 1;
       if (item.diff == "-") return;
@@ -272,10 +288,7 @@ div {
 .el-input__inner {
   border: 0 !important;
 }
-.card:hover {
-  cursor: pointer;
-  border: 1px solid @blue;
-}
+
 .seed-input {
   width: 28px;
   text-align: center;
@@ -292,10 +305,11 @@ div {
   justify-content: center;
 
   & i {
+    color: #eaeaea;
+    & :hover{
+      color: #409eff;
+    }
   }
-  & .sort-check {
-    border-bottom-color: #409eff;
-    border-top-color: #409eff;
-  }
+
 }
 </style>
