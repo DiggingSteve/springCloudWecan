@@ -150,10 +150,27 @@
       </template>
     </newFormCmpt>
     <div class="searchForm">
-      <el-button @click="search()">查询</el-button>
+      <div class="item40">
+         <el-button @click="search()">查询</el-button>
+      </div>
+     
       <!-- <el-button @click="isMoreCondition = !isMoreCondition"
         >更多查询</el-button
       > -->
+        <div class="item50 ">
+          <div class="el-button-group buttonTabs">
+            <button type="button" class="el-button el-button--default"
+            :class="{active:!isShowExpired}"
+            @click="  isShowExpired = false;search();"
+            ><!----><!----><span>有效运价</span></button> 
+            <button type="button" class="el-button el-button--default"
+             :class="{active:isShowExpired}"
+            @click="  isShowExpired = true;search();"
+            ><!----><!----><span><span> 无效运价</span></span></button> 
+            
+         </div>
+       
+        </div>
     </div>
     <div class="row" v-show="isMoreCondition">
       <span style="color: red">填写全部货物数据可查看精确运价</span>
@@ -680,6 +697,7 @@ export default {
       searchData: {},
       tableDataRes: [],
       chineseWhere: [],
+      isShowExpired:false,
       packageTypeData: JSON.parse(localStorage.getItem(diffCodeKey.package)),
       cusData: JSON.parse(localStorage.getItem(diffCodeKey.cus)),
       volDiffData: JSON.parse(localStorage.getItem("volDiff")),
@@ -767,6 +785,7 @@ export default {
       }
       where["area"] = {};
       where["area"]["in"] = this.$store.state.areaState;
+      where["isExpired"] = this.isShowExpired ? 1 : 0; //是否已过期
       var jsonArr = {
         where: {
           ...where,
@@ -1609,6 +1628,29 @@ export default {
   white-space: nowrap !important;
   text-overflow: ellipsis !important;
   display: block;
+}
+.buttonTabs .el-button--default {
+    height: 36px;
+    color: #4d6160;
+    /* background-color: #DFF9F6; */
+    border: 1px solid #dff9f6;
+    /* margin-right: 20px !important; */
+    /* border-radius: 20px; */
+    background: rgba(141, 237, 223, 0.3);
+    font-size: 14px !important;
+}
+.buttonTabs .el-button.active {
+    background: #8deddf;
+    border: 1px solid #8deddf !important;
+    color: #222;
+    font-weight: 600;
+}
+ .buttonTabs > button:nth-child(1) {
+    border-radius: 20px 0 0 20px;
+}
+
+.buttonTabs > button:nth-child(2) {
+    border-radius: 0 20px 20px 0;
 }
 </style>
 <style>
