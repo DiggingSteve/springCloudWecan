@@ -29,7 +29,9 @@
     <div class="card-wrap">
       <div
         v-for="(item, index) in dataArr"
-        v-if="(item.title != 'MIN')&& (item.isSameAsBase==false||item.isDefault)"
+        v-if="
+          item.title != 'MIN' && (item.isSameAsBase == false || item.isDefault)
+        "
         v-show="item.isAdd || item.isSelect"
         class="card"
         v-bind:class="{ active: index == indexSelf ? true : false }"
@@ -37,7 +39,6 @@
         <div
           class="row title"
           v-bind:class="{ active: index == indexSelf ? true : false }"
-          
         >
           <span>{{ item.code }}</span>
         </div>
@@ -58,6 +59,9 @@
             @input="editContent(item)"
             @focus="handleFocus(index, $event)"
           />
+          <span class="sortWrap">
+            <i class="sort-ascend" @click="item.isClick=true"></i> <i class="sort-descend" @click=""></i
+          ></span>
         </div>
       </div>
     </div>
@@ -176,9 +180,7 @@ export default {
       }
     },
   },
-  mounted: function () {
-    
-  },
+  mounted: function () {},
   created: function () {
     this.originalDataArr = [...this.dataArr];
   },
@@ -210,7 +212,6 @@ export default {
         }
       },
     },
-   
   },
 };
 </script>
@@ -277,5 +278,17 @@ div {
 
 .ban {
   cursor: not-allowed !important;
+}
+
+.sortWrap {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  & i {
+  }
+  & .sort-check {
+    border-bottom-color: #409eff;
+    border-top-color: #409eff;
+  }
 }
 </style>
