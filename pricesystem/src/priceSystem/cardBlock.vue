@@ -38,6 +38,7 @@
       >
         <div
           class="row title"
+          style="justify-content:center"
           v-bind:class="{ active: index == indexSelf ? true : false }"
         >
           <span>{{ item.code }}</span>
