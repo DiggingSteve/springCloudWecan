@@ -762,7 +762,7 @@ class priceFreightEditView extends priceFreightView {
     if (i < 0 || j < 0 || i >= this.volArr.length || j >= this.weightArr.length) return;
     var dom = refs[i.toString() + j.toString()];
     var vol = this.tableVolArr[i];
-    var realVol=this.volArr.find(f=>{f.code==vol.code});
+    var realVol=this.volArr.find(f=>{ return f.code==vol.code});
     if(!realVol.isAdd){
      return this.move(i,j,e);
     }
