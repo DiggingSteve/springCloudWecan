@@ -257,6 +257,7 @@ div {
 .content {
   color: @blue;
   padding: 5px;
+  height: 30px;
 }
 .card input {
   text-align: center;
