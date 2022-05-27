@@ -670,7 +670,6 @@
                             "
                           :ref="priceObj.createFixedPriceRef('fixed', i, j)"
                           @keydown="priceObj.move(i, j, $event)"
-                          @keydown.tab.native="";
                           />
                         </td>
                       </template>
