@@ -306,7 +306,7 @@ div {
 
   & i {
     color: #bab8b8;
-    & :hover{
+    &:hover{
       color: #409eff !important;
     }
   }
