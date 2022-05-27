@@ -303,6 +303,7 @@ div {
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
+  cursor: pointer;
 
   & i {
     color: #bab8b8;
