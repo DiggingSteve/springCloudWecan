@@ -1037,6 +1037,8 @@ export default {
       var exactVol = (weight * 1) / (vol * 1);
       let volArr = this.priceObj.volArr;
       let left, right;
+      let firstNum=volArr[0].code.substr(2);
+      if(exactVol<firstNum)return volArr[0].code;
       for (let i = 0; i < volArr.length; i++) {
         left = volArr[i];
         right = volArr[i + 1];
