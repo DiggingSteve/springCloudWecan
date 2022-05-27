@@ -63,7 +63,7 @@
             />
           </div>
           <div class="item35">
-            <span class="sortWrap" style="line-height:30px">
+            <span class="sortWrap" style="line-height:30px;font-size:20px">
               <i class="el-icon-caret-top" @click="item.isClick = true"></i>
               <i class="el-icon-caret-bottom" @click=""></i
             ></span>
@@ -256,7 +256,6 @@ div {
 }
 .content {
   color: @blue;
-  padding: 5px;
   height: 30px;
 }
 .card input {
@@ -265,7 +264,6 @@ div {
   color: @blue;
 }
 .card.active {
-  border: 1px solid @blue;
 }
 .title.active {
   background: @blue;
