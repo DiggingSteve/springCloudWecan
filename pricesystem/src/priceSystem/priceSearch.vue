@@ -387,7 +387,7 @@
             <tr>
               <td style="border: 0">
                 折算单价:
-                {{ currentRow.exactPrice }}
+                {{ (currentRow.exactPrice*1).toFixed(2) }}
               </td>
             </tr>
           </tbody>
