@@ -621,6 +621,9 @@ public class AirFreightFeeService implements IAirFreightFee {
         if(gid>0) {
             feeQuery.eq(FreightFeePending::getGid, gid);
         }
+        else {
+            feeQuery.eq(FreightFeePending::getGid, -1);
+        }
 
         // 所有关联费用
         List<FreightFeePending> feeList = feePendingDao.list(feeQuery);
