@@ -47,7 +47,7 @@
           v-show="hasContent"
           v-bind:class="{ ban: index == indexSelf ? true : false }"
         >
-          <div class="item65">
+          <div class="item65" style="padding-left:26px">
             <input
               v-model="item.diff"
               type="input"
@@ -269,6 +269,7 @@ div {
   background: @lightBlue;
   color: @blue;
   padding: 6px 10px;
+  text-align: center;
 }
 .content {
   color: @blue;
