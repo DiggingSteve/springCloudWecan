@@ -151,26 +151,38 @@
     </newFormCmpt>
     <div class="searchForm row">
       <div class="item40">
-         <el-button type="primary" @click="search()">查询</el-button>
+        <el-button type="primary" @click="search()">查询</el-button>
       </div>
-     
+
       <!-- <el-button @click="isMoreCondition = !isMoreCondition"
         >更多查询</el-button
       > -->
-        <div class="item50 ">
-          <div class="el-button-group buttonTabs">
-            <button type="button" class="el-button el-button--default"
-            :class="{active:!isShowExpired}"
-            @click="  isShowExpired = false;search();"
-            ><!----><!----><span>有效运价</span></button> 
-            <button type="button" class="el-button el-button--default"
-             :class="{active:isShowExpired}"
-            @click="  isShowExpired = true;search();"
-            ><!----><!----><span><span> 无效运价</span></span></button> 
-            
-         </div>
-       
+      <div class="item50">
+        <div class="el-button-group buttonTabs">
+          <button
+            type="button"
+            class="el-button el-button--default"
+            :class="{ active: !isShowExpired }"
+            @click="
+              isShowExpired = false;
+              search();
+            "
+          >
+            <!----><!----><span>有效运价</span>
+          </button>
+          <button
+            type="button"
+            class="el-button el-button--default"
+            :class="{ active: isShowExpired }"
+            @click="
+              isShowExpired = true;
+              search();
+            "
+          >
+            <!----><!----><span><span> 无效运价</span></span>
+          </button>
         </div>
+      </div>
     </div>
     <div class="row" v-show="isMoreCondition">
       <span style="color: red">填写全部货物数据可查看精确运价</span>
@@ -404,7 +416,7 @@
             <tr>
               <td style="border: 0">
                 折算单价:
-                {{ (currentRow.exactPrice*1).toFixed(2) }}
+                {{ (currentRow.exactPrice * 1).toFixed(2) }}
               </td>
             </tr>
           </tbody>
@@ -697,7 +709,7 @@ export default {
       searchData: {},
       tableDataRes: [],
       chineseWhere: [],
-      isShowExpired:false,
+      isShowExpired: false,
       packageTypeData: JSON.parse(localStorage.getItem(diffCodeKey.package)),
       cusData: JSON.parse(localStorage.getItem(diffCodeKey.cus)),
       volDiffData: JSON.parse(localStorage.getItem("volDiff")),
@@ -827,7 +839,7 @@ export default {
       if (!this.isExactSearch) return;
       var vol = this.inputModelData.vol;
       var weight = this.inputModelData.weight;
-      var volType = this.getVolType(vol, weight);
+      let volType = this.getVolTypeByPoint(vol, weight);
       var calWeight = this.calWeight(); //计重
       var grossWeight = weight * 1;
       // 精准查询的时候通过计重或者毛重筛选数据 根据计费方式上的毛重 计重
@@ -901,8 +913,6 @@ export default {
      */
     filterDataByWeight(dataArr, calWeight, grossWeight, volType) {
       var dataArrCopy = JSON.parse(JSON.stringify(dataArr));
-      var weightArr = this.priceObj.weightArr;
-      var volArr = this.priceObj.volArr;
       dataArrCopy.forEach((item) => {
         let weight = null;
         if (item.jfType == "毛重") {
@@ -912,21 +922,31 @@ export default {
         }
         item.calWeight = weight;
         var exactWeight = this.getWeight(weight);
-        this.reversePrice(item, exactWeight, volType, weight, calWeight);
+        this.reversePrice(item, exactWeight, volType, weight);
       });
       return dataArrCopy;
     },
 
     //计算每行的单价是否吃到min 吃到Min就要倒算
-    reversePrice(row, weightCode, volType, weight, calWeight) {
+    //现在精确计算单价 vol 取值从区间变成 点 落在 1:167左边得点 向右查找 之后得点 向左查找
+
+    /**
+     * @param {row} 当前行
+     * @param {weightCode} 计算得出得重量代码
+     * @param {exactVol} 计算得出的 精确货型 后半段 1:133 则 133
+     * @param {weight} 计费重量
+     */
+    reversePrice(row, weightCode, volType, weight) {
       var isContainsTruck = this.isContainsTruck;
       var packageDiff = row.packageCusDiffMap[this.selectedPackageType];
       var cusDiff = row.packageCusDiffMap[this.selectedCusType];
       let volDiff = 0;
       let isVolExist = false;
+      // 查weight 对应的标准价
       var matchFlight = row.weightArr.find((item) => {
         return item.code == weightCode;
       });
+      //查vol点位应该走向哪个货型
       var matchVol = row.volArr.find((f) => {
         return f.code == volType;
       });
@@ -960,19 +980,22 @@ export default {
       if (!!matchFlightFixed) {
         matchFlightPrice = matchFlightFixed.diff * 1; //如果这个格子有一口价则取一口价
       }
-      if (!Number.isFinite(matchFlightPrice) || matchFlightPrice == 0||!isVolExist) {
+      if (
+        !Number.isFinite(matchFlightPrice) ||
+        matchFlightPrice == 0 ||
+        !isVolExist
+      ) {
         //此时需要上下追溯到有价格的格子 适合用递归做
         //追溯逻辑为 1:167 为分割线 向 1:167的方向追溯
         return this.reversePrice(
           row,
           weightCode,
           this.moveVol(volType),
-          weight,
-          calWeight
+          weight
         );
       }
 
-      let flightMinPrice = this.seekMinPrice(row, volType);
+      let flightMinPrice = this.getFlightMinPrice(row, volType);
 
       //查卡车min价格
       var truckMinPrice =
@@ -991,7 +1014,7 @@ export default {
         : 0;
 
       var flightTotal = matchFlightPrice * weight * 1;
-      var truckTotal = matchTruckPrice * calWeight * 1;
+      var truckTotal = matchTruckPrice * weight * 1;
       if (flightTotal >= flightMinPrice && truckTotal >= truckMinPrice) {
         row.exactPrice =
           matchFlightPrice + (isContainsTruck ? matchTruckPrice : 0);
@@ -1005,11 +1028,55 @@ export default {
           : truckTotal
         : 0;
 
-      row.exactPrice = (flightTotal / weight + truckTotal / calWeight).toFixed(
-        2
-      );
+      row.exactPrice = (flightTotal / weight + truckTotal / weight).toFixed(2);
     },
 
+    //根据精确比例查找应该取得货型 以1:167为分割线 左边往右走 右边往左走 除非正好落在 比例上 即 exactVol==100 则 取 1:100
+
+    getVolTypeByPoint(vol, weight) {
+      var exactVol = (weight * 1) / (vol * 1);
+      let volArr = this.priceObj.volArr;
+      let left, right;
+      for (let i = 0; i < volArr.length; i++) {
+        left = volArr[i];
+        right = volArr[i + 1];
+        if (!!!right) return leftCode;
+        let leftCode = left.code;
+        let rightCode = right.code;
+        let leftNum = leftCode.substr(2);
+        let rightNum = rightCode.substr(2);
+        if (exactVol == leftNum) {
+          return leftCode; //相等直接命中
+        }
+        if (leftNum < exactVol && rightNum > exactVol) {
+          if (exactVol < 167) {
+            return rightCode;
+          } else {
+            return leftCode;
+          }
+        }
+      }
+    },
+    getFlightMinPrice(row, volType) {
+      var minFixedPrice = row.fixedFeeList.find((item) => {
+        return (
+          (!!item.cus ? item.cus == this.selectedCusType : true) &&
+          (!!item.packageType
+            ? item.packageType == this.selectedPackageType
+            : true) &&
+          item.vol == volType &&
+          item.weight == "+0kg"
+        );
+      });
+      // 重量对应的 min价格
+      var minFlight = row.weightArr.find((item) => {
+        return item.code == "+0kg";
+      });
+      var flightMinPrice = 0;
+      if (!!minFixedPrice) flightMinPrice = minFixedPrice.diff * 1;
+      else flightMinPrice = !!minFlight ? minFlight.standardPrice : 0;
+      return flightMinPrice;
+    },
     // 追溯完正常价格 那么对应的min如果没有维护则还是要继续追溯min
     seekMinPrice(row, volType) {
       //fixedmin价格
@@ -1302,7 +1369,7 @@ export default {
     filterExactTable() {
       var vol = this.typeStatus == "1" ? this.inputModelData.vol : ""; //1为具体筛选
       var weight = this.typeStatus == "1" ? this.inputModelData.weight : "";
-      var volType = this.getVolType(vol, weight);
+      var volType = this.getVolTypeByPoint(vol, weight);
       if (!!!vol || !!!weight || !!!volType) {
         this.tableDataRes = tableDataCopy;
         this.isExactSearch = false;
@@ -1630,27 +1697,27 @@ export default {
   display: block;
 }
 .buttonTabs .el-button--default {
-    height: 36px;
-    color: #4d6160;
-    /* background-color: #DFF9F6; */
-    border: 1px solid #dff9f6;
-    /* margin-right: 20px !important; */
-    /* border-radius: 20px; */
-    background: rgba(141, 237, 223, 0.3);
-    font-size: 14px !important;
+  height: 36px;
+  color: #4d6160;
+  /* background-color: #DFF9F6; */
+  border: 1px solid #dff9f6;
+  /* margin-right: 20px !important; */
+  /* border-radius: 20px; */
+  background: rgba(141, 237, 223, 0.3);
+  font-size: 14px !important;
 }
 .buttonTabs .el-button.active {
-    background: #8deddf;
-    border: 1px solid #8deddf !important;
-    color: #222;
-    font-weight: 600;
+  background: #8deddf;
+  border: 1px solid #8deddf !important;
+  color: #222;
+  font-weight: 600;
 }
- .buttonTabs > button:nth-child(1) {
-    border-radius: 20px 0 0 20px;
+.buttonTabs > button:nth-child(1) {
+  border-radius: 20px 0 0 20px;
 }
 
 .buttonTabs > button:nth-child(2) {
-    border-radius: 0 20px 20px 0;
+  border-radius: 0 20px 20px 0;
 }
 </style>
 <style>
