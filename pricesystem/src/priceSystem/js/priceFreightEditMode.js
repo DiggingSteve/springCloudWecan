@@ -753,6 +753,7 @@ class priceFreightEditView extends priceFreightView {
     else if (e.keyCode == 39||e.keyCode==9    ) {
       // 右箭头
       j++;
+      e.preventDefault();
     }
     else if (e.keyCode == 40) {
       // 下箭头
@@ -772,7 +773,7 @@ class priceFreightEditView extends priceFreightView {
       dom.focus();
       this.vueInstance.$forceUpdate()
     });
-    e.preventDefault();
+  
   }
 
   getThreeCodeStr(twocodeStr) {
