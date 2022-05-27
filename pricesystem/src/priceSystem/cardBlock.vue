@@ -62,7 +62,7 @@
               @focus="handleFocus(index, $event)"
             />
           </div>
-          <div class="item35">
+          <div class="item35" v-if="!item.isDefault">
             <span class="sortWrap" style="line-height:30px;font-size:16px">
               <i class="el-icon-caret-top" 
               @click="sorrowAdd('add',item)"
@@ -183,7 +183,7 @@ export default {
       if(!Number.isFinite(cur)){
         cur=0;
       }
-      item.diff=cur+num;
+      item.diff=String(cur+num);
       this.editContent(item);
     },
     editContent(item) {
@@ -305,9 +305,9 @@ div {
   justify-content: center;
 
   & i {
-    color: #eaeaea;
+    color: #bab8b8;
     & :hover{
-      color: #409eff;
+      color: #409eff !important;
     }
   }
 
