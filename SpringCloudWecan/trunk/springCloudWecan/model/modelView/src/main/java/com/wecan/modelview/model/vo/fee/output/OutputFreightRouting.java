@@ -38,11 +38,18 @@ public class OutputFreightRouting extends ViewFreightRouting {
         return term;
     }
 
+    private String enddate;
+
     public String getEnddate(){
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return df.format(super.getEndDate());
     }
+    private  String startdate;
 
+    public String getStartdate(){
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return df.format(super.getStartDate());
+    }
     private Integer realgid;
 
     private String wecanStandard;
