@@ -1038,18 +1038,19 @@ export default {
       let volArr = this.priceObj.volArr;
       let left, right;
       let firstNum=volArr[0].code.substr(2);
-      if(exactVol<firstNum)return volArr[0].code;
+      if(exactVol<firstNum)return volArr[0].code;//小于第一个直接返回第一个
       for (let i = 0; i < volArr.length; i++) {
         left = volArr[i];
         right = volArr[i + 1];
-        if (!!!right) return leftCode;
+        if (!!!right) return leftCode;//如果right没了 则说明 已经移动到最后一个 超过了最后一个 
         let leftCode = left.code;
         let rightCode = right.code;
         let leftNum = leftCode.substr(2);
         let rightNum = rightCode.substr(2);
         if (exactVol == leftNum) {
-          return leftCode; //相等直接命中
+          return leftCode; //相等直接命中 作端点直接返回
         }
+        // 落在中间区间 则按照167左右去选取最初得 货型 随后的计算精确价格算法不变 还是需要继续递归查找有值的货型
         if (leftNum < exactVol && rightNum > exactVol) {
           if (exactVol < 167) {
             return rightCode;
