@@ -940,7 +940,7 @@ export default {
       var isContainsTruck = this.isContainsTruck;
       var packageDiff = row.packageCusDiffMap[this.selectedPackageType];
       var cusDiff = row.packageCusDiffMap[this.selectedCusType];
-      if(!!!packageDiff||!!!cusDiff){row.exactPrice =0;return;}
+      if((packageDiff==undefined)||(cusDiff==undefined)){row.exactPrice =null;return;}
       let volDiff = 0;
       let isVolExist = false;
       // 查weight 对应的标准价
