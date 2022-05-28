@@ -416,7 +416,7 @@
             <tr>
               <td style="border: 0">
                 折算单价:
-                {{ (currentRow.exactPrice * 1).toFixed(2) }}
+                {{!!currentRow.exactPrice? (currentRow.exactPrice * 1).toFixed(2):"没有维护该客户类型或托盘运价" }}
               </td>
             </tr>
           </tbody>
@@ -940,6 +940,7 @@ export default {
       var isContainsTruck = this.isContainsTruck;
       var packageDiff = row.packageCusDiffMap[this.selectedPackageType];
       var cusDiff = row.packageCusDiffMap[this.selectedCusType];
+      if(!!!packageDiff||!!!cusDiff){row.exactPrice =0;return;}
       let volDiff = 0;
       let isVolExist = false;
       // 查weight 对应的标准价
@@ -1031,7 +1032,7 @@ export default {
       row.exactPrice = (flightTotal / weight + truckTotal / weight).toFixed(2);
     },
 
-    //根据精确比例查找应该取得货型 以1:167为分割线 左边往右走 右边往左走 除非正好落在 比例上 即 exactVol==100 则 取 1:100
+    //按点位的方式根据精确比例查找应该取得货型 以1:167为分割线 左边往右走 右边往左走 除非正好落在 比例上 即 exactVol==100 则 取 1:100
 
     getVolTypeByPoint(vol, weight) {
       var exactVol = (weight * 1) / (vol * 1);
@@ -1336,6 +1337,7 @@ export default {
           return "周日";
       }
     },
+    //按区间获取该货型
     getVolType(vol, weight) {
       var calWeight = (weight * 1) / (vol * 1); //计算当前比例 小于1:80 按 1:80 算 例:计算得出 150 则 100<= 150 <167 落在 1:100档位
       if (calWeight < 80) return "1:80";
