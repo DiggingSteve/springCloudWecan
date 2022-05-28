@@ -5,7 +5,7 @@
                 <div :level="item.level" :style="{color:getSystemBgColor(item.autname,item.level)}" :id="item.level==1?item.autname:''"
                     :class="`level-${item.level}`" :idNumber="item.id">
                     <div class="titlediv">
-                        <span v-if="item.level>1" style="display:inline-block;width:14px;position: relative; margin-right: 5px;"
+                        <span v-if="item.level>1&&item.children&&item.children.length>0" style="display:inline-block;width:14px;position: relative; margin-right: 5px;"
                             :style="{left: item.children&&item.children.length>0&&item.description?'10px':'0px'}"
                             >
                             <i v-if="item.children&&item.children.length>0"
@@ -15,38 +15,36 @@
                       
                         
                         <!-- 说明及视频 -->
-                        <span style="width: 58px; margin-left: -60px;"
+                        <span style="width: 58px; margin-left: -20px;"
                   
-                            v-if="item.level>1&&item.description"
+                            v-show="item.level>1&&!item.children"
                            >
                            <!-- JSON -->
                             <span  v-if="item.level>1&&item.description&&isJSON(item.description)"
                                  style="display: flex; align-items: center;justify-content: end; height: 40px;">
-                                  <el-popover
-                                placement="bottom-start" 
-                                trigger="hover" 
-                                :disabled="!item.description"
-                                v-if="item.description&&JSON.parse(item.description).book"
-                                 content="操作指南">
-                                  <span v-if="item.level>1" slot="reference" style="display:flex;width:22px"  @click="handleContent(item.description, 1)">
+
+                                 <el-tooltip content="操作指南" placement="bottom-start" effect="light"
+                                    popper-class="common-tooltip"
+                                     v-if="item.description&&JSON.parse(item.description).book">
+                                    <span v-if="item.level>1" style="display:flex;width:22px">
                                     <i class="common-i active-book" v-if="item.description&&JSON.parse(item.description).book"
-                                       
+                                        @click="handleContent(item.description, 1)"
                                         > </i>
                                     </span>
-                            </el-popover>
+                                 </el-tooltip>
 
-                                <el-popover
-                                placement="bottom-start" 
-                                trigger="hover" 
-                                :disabled="!item.description"
-                                v-if="item.description&&JSON.parse(item.description).video"
-                                content="操作视频">
-                                    <span v-if="item.level>1" slot="reference" style="display:flex;width:22px"  @click="handleContent(item.description, 2)">
-                                    <i  class="common-i active-video" v-if="item.description&&JSON.parse(item.description).video"
-                                       
-                                    > </i>
-                                </span>
-                            </el-popover>
+                                 <el-tooltip content="操作视频" placement="bottom-start" effect="light"
+                                     v-if="item.description&&JSON.parse(item.description).video" popper-class="common-tooltip"
+                                     
+                                     >
+                                    <span v-if="item.level>1"  style="display:flex;width:22px" 
+                                         @click="handleContent(item.description, 2)"
+                                           >
+                                        <i  class="common-i active-video" v-if="item.description&&JSON.parse(item.description).video"
+                                            
+                                        > </i>
+                                    </span>
+                                </el-tooltip>   
 
                                 <el-popover placement="bottom-start" trigger="click" :disabled="!item.description" 
                                 v-if="item.description&&isJSON(item.description)&&JSON.parse(item.description).title">
@@ -107,9 +105,10 @@
         <el-dialog
             title=""
             :visible.sync="dialogVisible"
-            width="1000px"
+            width="1250px"
             append-to-body
             :before-close="dialogBeforeClose"
+            top="60px"
            >
            <video-player
                 v-if="contentType == 2"
@@ -121,7 +120,7 @@
              <embed 
              v-if="contentType == 1"
              :src="bookUrl" 
-             style="width:100%; height: 540px;"
+             style="width:100%; height: 680px;"
 
             >
             <!-- <div slot="footer">
@@ -194,8 +193,8 @@ import { videoPlayer } from 'vue-video-player'
         },
         methods: {
             dialogBeforeClose() {
+                this.$refs.videoPlayer && this.$refs.videoPlayer.player.pause() // 暂停
                 this.dialogVisible = false;
-                this.$refs.videoPlayer.player.pause() // 暂停
             },
             isJSON(str) {
                 if (typeof str == 'string') {
@@ -336,7 +335,7 @@ import { videoPlayer } from 'vue-video-player'
 
     .level-4 {
         color: #bfcbd9;
-        padding-left: 40px;
+        padding-left: 20px;
         .level;
     }
 
@@ -372,7 +371,7 @@ import { videoPlayer } from 'vue-video-player'
         display: inline-block;
         width: 16px;
         height:16px;
-        margin-right: 2px; 
+        margin-right: 4px; 
         opacity: 0.7;       
     }
 
@@ -404,5 +403,17 @@ import { videoPlayer } from 'vue-video-player'
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+    }
+</style>
+
+<style lang="less">
+    .common-tooltip {
+        color: #606266 !important;
+        background-color: #fff !important;
+        border-color: #fff !important;
+
+        .popper__arrow {
+            border-bottom-color: #fff !important;
+        }
     }
 </style>
