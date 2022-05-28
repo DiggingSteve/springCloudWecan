@@ -83,7 +83,7 @@ public class FreightRateService implements IFreightRate {
                 .collect(Collectors.toList());
 
         Function<ViewFeeFlyPrice, List<Object>> groupByKey = c ->
-                Arrays.asList(c.getPackageType(),c.getFeeid(),c.getSfg(),c.getMdg(),c.getZzg(),c.getTwocode(),
+                Arrays.asList(c.getFeeid(),c.getSfg(),c.getMdg(),c.getZzg(),c.getTwocode(),
                         c.getStartdate(),c.getEnddate(),c.getWffareaid(),
                         c.getAddman(),c.getAddtime(),c.getGid(),c.getHbh(),c.getDdg());
 
@@ -152,33 +152,53 @@ public class FreightRateService implements IFreightRate {
                 && f.getPackageType()==item.getPackageType()).count();
             if ( dataCount>0)
                 continue;
-            var outputFreightRouting=new OutputFreightRouting();
-            outputFreightRouting.setFeeid( item.getFeeid() );
-            outputFreightRouting.setAddman( item.getAddman() );
-            outputFreightRouting.setSfg( item.getSfg() );
-            outputFreightRouting.setZzg( item.getZzg() );
-            outputFreightRouting.setMdg( item.getMdg() );
-            outputFreightRouting.setDdg( item.getDdg() );
-            outputFreightRouting.setArea( item.getArea() );
-            outputFreightRouting.setTwocode( item.getTwocode() );
-            outputFreightRouting.setTruckTwocode( item.getTruckTwocode() );
-            outputFreightRouting.setStartDate( item.getStartdate() );
-            outputFreightRouting.setEndDate( item.getEnddate() );
-            outputFreightRouting.setRemark( item.getRemark() );
-            outputFreightRouting.setGid( item.getGid() );
-            outputFreightRouting.setTruckMin( item.getTruckMin() );
-            outputFreightRouting.setTruckMinDiff( item.getTruckminDiff() );
-            outputFreightRouting.setTruckFixedMin(item.getTruckFixedMin());
-            outputFreightRouting.setWffAreaid( item.getWffareaid() );
-            outputFreightRouting.setHbh( item.getHbh() );
-            outputFreightRouting.setJfType( item.getJftype() );
-            outputFreightRouting.setTruckFeeid( item.getTruckFeeid() );
-            outputFreightRouting.setPackageType(item.getPackageType());
-            list.add(outputFreightRouting);
+
+            var twArry=item.getTwocode().split(",");
+            if  (twArry.length>1)
+            {
+                int i;
+                for (i = 0; i < twArry.length; i ++) {
+                   var temp=getOutputFreightRouting(item,twArry[i]);
+                    list.add(temp);
+                }
+            }else
+            {
+                OutputFreightRouting outputFreightRouting = getOutputFreightRouting(item,item.getTwocode());
+                list.add(outputFreightRouting);
+            }
+
+
         }
         return list;
     }
-   //获取最小价格
+
+    private OutputFreightRouting getOutputFreightRouting(ViewFeeFlyPrice item,String twocode) {
+        var outputFreightRouting=new OutputFreightRouting();
+        outputFreightRouting.setFeeid( item.getFeeid() );
+        outputFreightRouting.setAddman( item.getAddman() );
+        outputFreightRouting.setSfg( item.getSfg() );
+        outputFreightRouting.setZzg( item.getZzg() );
+        outputFreightRouting.setMdg( item.getMdg() );
+        outputFreightRouting.setDdg( item.getDdg() );
+        outputFreightRouting.setArea( item.getArea() );
+        outputFreightRouting.setTruckTwocode( item.getTruckTwocode() );
+        outputFreightRouting.setStartDate( item.getStartdate() );
+        outputFreightRouting.setEndDate( item.getEnddate() );
+        outputFreightRouting.setRemark( item.getRemark() );
+        outputFreightRouting.setGid( item.getGid() );
+        outputFreightRouting.setTruckMin( item.getTruckMin() );
+        outputFreightRouting.setTruckMinDiff( item.getTruckminDiff() );
+        outputFreightRouting.setTruckFixedMin(item.getTruckFixedMin());
+        outputFreightRouting.setWffAreaid( item.getWffareaid() );
+        outputFreightRouting.setHbh( item.getHbh() );
+        outputFreightRouting.setJfType( item.getJftype() );
+        outputFreightRouting.setTruckFeeid( item.getTruckFeeid() );
+        outputFreightRouting.setPackageType(item.getPackageType());
+        outputFreightRouting.setTwocode( twocode );
+        return outputFreightRouting;
+    }
+
+    //获取最小价格
     private BigDecimal getMinprice(ViewFeeFlyPrice minFee) {
         return minFee.getNewStandardPrice().compareTo(BigDecimal.ZERO) <= 0 ? minFee.getStandardPrice():
         minFee.getNewStandardPrice();
