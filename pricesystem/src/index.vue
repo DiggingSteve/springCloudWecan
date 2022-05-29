@@ -213,7 +213,7 @@
       } else if (this.system == "priceManagement") {
         appname = "唯凯价格管理系统";
       }else if(location.pathname.toLowerCase().includes("pricesystem")){
-        appname = "唯凯费用管理系统";
+        appname = "唯凯价格管理系统";
         this.system = "priceSystem";
       } else {
         if (nav) {
