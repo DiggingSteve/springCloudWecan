@@ -83,7 +83,7 @@ public class FreightRateService implements IFreightRate {
                 .collect(Collectors.toList());
 
         Function<ViewFeeFlyPrice, List<Object>> groupByKey = c ->
-                Arrays.asList(c.getFeeid(),c.getSfg(),c.getMdg(),c.getZzg(),c.getTwocode(),
+                Arrays.asList(c.getPackageType(),c.getFeeid(),c.getSfg(),c.getMdg(),c.getZzg(),c.getTwocode(),
                         c.getStartdate(),c.getEnddate(),c.getWffareaid(),
                         c.getAddman(),c.getAddtime(),c.getGid(),c.getHbh(),c.getDdg());
 
@@ -152,27 +152,14 @@ public class FreightRateService implements IFreightRate {
                 && f.getPackageType()==item.getPackageType()).count();
             if ( dataCount>0)
                 continue;
-
-            var twArry=item.getTwocode().split(",");
-            if  (twArry.length>1)
-            {
-                int i;
-                for (i = 0; i < twArry.length; i ++) {
-                   var temp=getOutputFreightRouting(item,twArry[i]);
-                    list.add(temp);
-                }
-            }else
-            {
-                OutputFreightRouting outputFreightRouting = getOutputFreightRouting(item,item.getTwocode());
-                list.add(outputFreightRouting);
-            }
-
+            OutputFreightRouting outputFreightRouting = getOutputFreightRouting(item);
+            list.add(outputFreightRouting);
 
         }
         return list;
     }
 
-    private OutputFreightRouting getOutputFreightRouting(ViewFeeFlyPrice item,String twocode) {
+    private OutputFreightRouting getOutputFreightRouting(ViewFeeFlyPrice item) {
         var outputFreightRouting=new OutputFreightRouting();
         outputFreightRouting.setFeeid( item.getFeeid() );
         outputFreightRouting.setAddman( item.getAddman() );
@@ -194,7 +181,7 @@ public class FreightRateService implements IFreightRate {
         outputFreightRouting.setJfType( item.getJftype() );
         outputFreightRouting.setTruckFeeid( item.getTruckFeeid() );
         outputFreightRouting.setPackageType(item.getPackageType());
-        outputFreightRouting.setTwocode( twocode );
+        outputFreightRouting.setTwocode( item.getTwocode() );
         return outputFreightRouting;
     }
 
