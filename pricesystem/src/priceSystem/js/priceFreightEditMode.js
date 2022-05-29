@@ -299,7 +299,7 @@ class priceFreightEditView extends priceFreightView {
         item.diff = p.diff;
         item.isAdd = true;
         item.isSameAsBase = p.isSameAsBase;
-        item.isSetValue=p.isSetValue;
+        item.isSetValue = p.isSetValue;
         if (p.isDefault) {
           item.diff = "基点"
           if (type == diffCode.cus) {
@@ -330,9 +330,9 @@ class priceFreightEditView extends priceFreightView {
   }
 
   checkWeightStandardPrice() {
-    this.weightArr.forEach((item,index) => {
+    this.weightArr.forEach((item, index) => {
       let standardPrice = item.standardPrice;
-      if (!!!standardPrice&&index>=0) {
+      if (!!!standardPrice && index >= 0) {
         throw new Error("请完善所有重量的价格");
       }
       if (standardPrice !== null && standardPrice !== undefined && standardPrice !== "") {
@@ -397,7 +397,7 @@ class priceFreightEditView extends priceFreightView {
       !!this.mdg &&
       !!this.twoCode &&
       (this.vueInstance.wecanStandard == this.vueInstance.wecanStandardOpts[0].value || this.gid > 0);
-    var isAllWeightSet = !!!this.weightArr.find((f,index) => { return (index>=0)&& (!Number.isFinite(f.standardPrice * 1) || (f.standardPrice * 1 <= 0)) });
+    var isAllWeightSet = !!!this.weightArr.find((f, index) => { return (index >= 0) && (!Number.isFinite(f.standardPrice * 1) || (f.standardPrice * 1 <= 0)) });
     return flag && isAllWeightSet
 
 
@@ -405,46 +405,46 @@ class priceFreightEditView extends priceFreightView {
 
   //要保证每行数据填满 则判断该行 vol.isSetValue==true 且关联这个vol code 的 fixedMap 所有diff 为有效值
   //或者 只是添加了 vol 列 该 vol isSetValue 为 false 则 需要对 所有fixedMap 检测 是否 每个 关联 的对象 diff有效 且 数量是 weightArr的length
-  canClickSave(){
-    
-    let volArr=  this.volArr.filter(f=>{return f.isAdd});//已添加的vol行 
-    
-    let tabArr=this.cusPackageIndexArr;
-    for(let i=0;i<volArr.length;i++){
-      let item=volArr[i];
-      if(item.isSetValue){
-        this.cusPackageIndexArr.forEach(p=>{
-          let map=p.fixedMap;
-          for(let key in map){
-            if(key.startsWith(item.code)){
-              let diff=map[key].diff*1;
-              if(!Number.isFinite(diff)|| diff<=0){
+  canClickSave() {
+
+    let volArr = this.volArr.filter(f => { return f.isAdd });//已添加的vol行 
+
+    let tabArr = this.cusPackageIndexArr;
+    for (let i = 0; i < volArr.length; i++) {
+      let item = volArr[i];
+      if (item.isSetValue) {
+        this.cusPackageIndexArr.forEach(p => {
+          let map = p.fixedMap;
+          for (let key in map) {
+            if (key.startsWith(item.code)) {
+              let diff = map[key].diff * 1;
+              if (!Number.isFinite(diff) || diff <= 0) {
                 throw new Error(`请完善${item.code}对应行的数据`)
               }
             }
           }
-          
+
         })
       }
-      else{
+      else {
         //vol isSetValue 为 false时 需要对对应行计数 是否全部填写
-        let count=0;
-        this.cusPackageIndexArr.forEach(p=>{
-          let map=p.fixedMap;
-          for(let key in map){
-            if(key.startsWith(item.code)){
-              let diff=map[key].diff*1;
-              if(!Number.isFinite(diff)|| diff<=0){
+        let count = 0;
+        this.cusPackageIndexArr.forEach(p => {
+          let map = p.fixedMap;
+          for (let key in map) {
+            if (key.startsWith(item.code)) {
+              let diff = map[key].diff * 1;
+              if (!Number.isFinite(diff) || diff <= 0) {
                 throw new Error(`请完善${item.code}对应行的数据`);
               }
-              else{
+              else {
                 count++;
               }
             }
           }
-          
+
         });
-        if(count!=this.weightArr.length){
+        if (count != this.weightArr.length) {
           throw new Error(`请完善${item.code}对应行的数据`);
         }
       }
@@ -750,7 +750,7 @@ class priceFreightEditView extends priceFreightView {
       // 上箭头
       i--;
     }
-    else if (e.keyCode == 39||e.keyCode==9    ) {
+    else if (e.keyCode == 39 || e.keyCode == 9) {
       // 右箭头
       j++;
       e.preventDefault();
@@ -762,9 +762,9 @@ class priceFreightEditView extends priceFreightView {
     if (i < 0 || j < 0 || i >= this.volArr.length || j >= this.weightArr.length) return;
     var dom = refs[i.toString() + j.toString()];
     var vol = this.tableVolArr[i];
-    var realVol=this.volArr.find(f=>{ return f.code==vol.code});
-    if(!realVol.isAdd){
-     return this.move(i,j,e);
+    var realVol = this.volArr.find(f => { return f.code == vol.code });
+    if (!realVol.isAdd) {
+      return this.move(i, j, e);
     }
     var weight = this.weightArr[j];
     if (!!!dom || dom.length == 0) {
@@ -777,7 +777,32 @@ class priceFreightEditView extends priceFreightView {
       dom.focus();
       this.vueInstance.$forceUpdate()
     });
-  
+
+  }
+
+
+  moveWeight(i, event) {
+    var e = event;
+    var refs = this.vueInstance.$refs;
+    if (e.keyCode == 37) {
+      i--;
+      // 左箭头
+    }
+    else if (e.keyCode == 39) {
+      // 右箭头
+      i++;
+    }
+
+    if (i < 0 || i >= this.weightArr.length) return;//移动到头了
+
+
+    this.vueInstance.$nextTick(() => {
+      dom = refs[weightTd_ + i.toString()][0];
+
+      dom.focus();
+      this.vueInstance.$forceUpdate()
+    });
+
   }
 
   getThreeCodeStr(twocodeStr) {

@@ -54,6 +54,9 @@ class priceFreightView extends BaseService {
         return head + i.toString() + j.toString();
     }
 
+    createWiightRef(i){
+        return "weightTd_"+i.toString();
+    }
 
     /**二维数组 用于记录一口价 */
     priceDisplayArr = [];
