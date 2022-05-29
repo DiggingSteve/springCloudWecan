@@ -34,7 +34,7 @@
       <param>
         <option name="enabled" value="true" />
         <option name="name" value="config-profile" />
-        <option name="value" value="prod" />
+        <option name="value" value="dev" />
       </param>
       <param>
         <option name="enabled" value="true" />
