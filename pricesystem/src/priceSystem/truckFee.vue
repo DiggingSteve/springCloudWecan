@@ -663,7 +663,7 @@ import excelOut from "../components/templates/excelOut";
 
 import fileRead from "./fileRead.vue";
 import { pagemode, TruckFee } from "./js/truckFee";
-const wageinoutEnum = { aein: 1, aeout: 2 };
+const wageinoutEnum = { aewin: 1, aewout: 2 };
 export default {
   name: "truckFee",
 
