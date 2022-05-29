@@ -797,7 +797,7 @@ class priceFreightEditView extends priceFreightView {
 
 
     this.vueInstance.$nextTick(() => {
-      dom = refs[weightTd_ + i.toString()][0];
+      dom = refs["weightTd_" + i.toString()][0];
 
       dom.focus();
       this.vueInstance.$forceUpdate()
