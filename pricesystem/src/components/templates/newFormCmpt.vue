@@ -5385,6 +5385,7 @@ h2 {
     width: 300px;
     min-width: 300px;
     margin-bottom: 12px;
+    height: 30px;
     display: flex;
     align-items: center;
     border: 1px solid #c0c9d0;
