@@ -219,7 +219,9 @@ public class AirFreightFeeService implements IAirFreightFee {
     @Override
     @Transactional
     public void deleteFee(Long feeid) {
-        feeDao.removeById(feeid);
+        feePendingDao.removeById(feeid);
+        var wrap=new LambdaQueryWrapper<FreightFee>().eq(FreightFee::getFeeidPending,feeid);
+        feeDao.remove(wrap);
     }
 
     @Override
