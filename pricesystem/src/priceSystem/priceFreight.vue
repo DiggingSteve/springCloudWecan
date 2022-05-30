@@ -1003,6 +1003,7 @@
       v-if="priceObj.isShowRelationEdit"
       :close-on-click-modal="false"
       :show-close="false"
+      :close-on-press-escape="false"
     >
       <div
         class="row relation-edit-wrap"
