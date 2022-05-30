@@ -1001,7 +1001,7 @@
       :visible.sync="priceObj.isShowRelationEdit"
       :width="'900px'"
       v-if="priceObj.isShowRelationEdit"
-      :before-close="priceObj.confirmRelation()"
+      :before-close="priceObj.confirmRelation"
     >
       <div
         class="row relation-edit-wrap"
