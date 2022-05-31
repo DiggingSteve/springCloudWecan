@@ -4549,14 +4549,11 @@ export default {
  
        else if (tempname == "truckFee.vue") {
         result = [[
-        
-         
           "jg",
+          "ddg",
           "twocode",
           "addman",
-        
-          "ddg",
-           "adddate"
+          "adddate"
         ],[]];
       }
        else if (tempname=='priceSearch.vue'){
