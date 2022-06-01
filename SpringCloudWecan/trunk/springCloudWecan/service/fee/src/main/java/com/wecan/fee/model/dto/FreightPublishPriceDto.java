@@ -21,7 +21,7 @@ public class FreightPublishPriceDto {
     public String remark;
     public BigDecimal price;
     public  BigDecimal change;
-
+    public LocalDateTime endDate;
     public  String hbh;
 
     public List<FeeAirFlight> flightList;

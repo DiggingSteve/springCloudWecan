@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -83,9 +84,9 @@ public class FreightRateService implements IFreightRate {
                 .collect(Collectors.toList());
 
         Function<ViewFeeFlyPrice, List<Object>> groupByKey = c ->
-                Arrays.asList(c.getPackageType(),c.getFeeid(),c.getSfg(),c.getMdg(),c.getZzg(),c.getTwocode(),
-                        c.getStartdate(),c.getEnddate(),c.getWffareaid(),
-                        c.getAddman(),c.getAddtime(),c.getGid(),c.getHbh(),c.getDdg());
+                Arrays.asList(c.getPackageType(),c.getSfg(),c.getMdg(),c.getZzg(),c.getTwocode(),
+                        c.getDdg()
+                        );//c.getStartdate(),c.getEnddate(),
 
         while (dt.isAfter(lowDt)){
             var hp=new FpHeader();
@@ -104,7 +105,7 @@ public class FreightRateService implements IFreightRate {
                //getMinprice(minFee);
                 //查询详情
                 Map<Object, List<ViewFeeFlyPrice>> gp = currList.stream().collect(Collectors.groupingBy(groupByKey));
-                var outList = getOutputFreightRouting(gp, result.bodyList);
+                var outList = getOutputFreightRouting(gp, result.bodyList,lowDt);
                 if (outList.size() > 0) {
                     airFee.getRoutingData(outList);
                     result.bodyList.addAll(outList);
@@ -138,18 +139,54 @@ public class FreightRateService implements IFreightRate {
     }*/
 
     private  List<OutputFreightRouting>  getOutputFreightRouting(Map<Object,List<ViewFeeFlyPrice>> origlist,
-                                                                 List<OutputFreightRouting> bodyList){
+                                                                 List<OutputFreightRouting> bodyList,LocalDateTime showdt){
         List<OutputFreightRouting> list = new ArrayList<>( );
         for(Map.Entry<Object, List<ViewFeeFlyPrice>> c  :origlist.entrySet())
         {
             var glist =c.getValue();
             if (glist.size()==0)
                 continue;
-            //var item=glist.get(0);
-            //价格便宜的那个
-            var item=glist.stream().min(Comparator.comparing(f->f.getNewStandardPrice())).get();
-            var dataCount= bodyList.stream().filter(f->f.getFeeid()==item.getFeeid()
-                && f.getPackageType()==item.getPackageType()).count();
+            //德训 客户等级 官网公布
+            var gidMIn=glist.stream().min(Comparator.comparing(f->f.getGid())).get();
+            var gidMax=glist.stream().max(Comparator.comparing(f->f.getGid())).get();
+            //var gidMIn1=glist.stream().min(Comparator.comparing(f->f.getCusLevel())).get();
+            //var gidMax1=glist.stream().max(Comparator.comparing(f->f.getCusLevel())).get();
+
+            var item1=new ViewFeeFlyPrice();
+            //-1,1719,相同取级别最高
+            //筛选出应该显示哪个
+            if(gidMIn.getGid()== gidMax.getGid())
+            {
+                item1=glist.stream().min(Comparator.comparing(f->f.getCusLevel())).get();
+            }
+            else {
+                item1 = glist.stream().max(Comparator.comparing(f -> f.getGid())).get();
+
+            }
+            var item=item1;
+
+            //不是当前显示的添加不显示日期时间
+            //修改相同线路的其他数据
+            var s= bodyList.stream().filter(cd->cd.getFeeid().longValue()!=item.getFeeid().longValue()
+                    && cd.getPackageType().equals(item.getPackageType()) && cd.getSfg().equals(item.getSfg())
+                    && cd.getMdg().equals(item.getMdg()) && cd.getZzg().equals(item.getZzg() )
+                    && cd.getDdg().equals(item.getDdg())
+                    && cd.getTwocode().equals( item.getTwocode())  ).collect(Collectors.toList());
+            for (OutputFreightRouting otp:s ) {
+                if(otp.notshowtime ==null)
+                {
+                    otp.notshowtime =new ArrayList<>();
+                }
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                var t = df.format(showdt) ;
+                if(!otp.notshowtime.contains(t) && otp.getEndDate().isAfter(showdt))
+                    otp.notshowtime.add(t);
+            }
+            //返回的数据存在就不添加
+            var dataCount= bodyList.stream().filter(f->f.getFeeid().equals(item.getFeeid())
+                && f.getPackageType().equals(item.getPackageType()) && f.getMdg().equals(item.getMdg())
+            && f.getZzg().equals(item.getZzg() ) && f.getDdg().equals(item.getDdg())
+            && f.getTwocode().equals(item.getTwocode())).count();
             if ( dataCount>0)
                 continue;
             OutputFreightRouting outputFreightRouting = getOutputFreightRouting(item);
@@ -184,6 +221,8 @@ public class FreightRateService implements IFreightRate {
         outputFreightRouting.setTwocode( item.getTwocode() );
         return outputFreightRouting;
     }
+
+
 
     //获取最小价格
     private BigDecimal getMinprice(ViewFeeFlyPrice minFee) {
@@ -277,6 +316,7 @@ public class FreightRateService implements IFreightRate {
         fpp.addman=currp.getAddman();
         fpp.area=currp.getArea();
         fpp.hbh=currp.getHbh();
+        fpp.endDate=currp.getEnddate();
         fpp.flightList= getFlightByFeeid(currp.getFeeid());
         return fpp;
     }

@@ -96,4 +96,6 @@ public class OutputFreightRouting extends ViewFreightRouting {
 
 
 
+    public List<String> notshowtime;
+
 }
