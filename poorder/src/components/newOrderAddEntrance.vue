@@ -680,6 +680,28 @@ export default {
           default: "2",
           hidden: false
         },
+        hastzcx: {
+          title: "有无特种超限货",
+          idStyle: { width: "100%" },
+          type: 3,
+          options: [
+            {
+              label: "无",
+              value: "2"
+            },
+            {
+              label: "有",
+              value: "1"
+            }
+          ],
+          default: "2",
+          hidden: false
+          // elEvent: {
+          //   eventName: 'change',
+          //   eventFunc: this.isHas,
+          //   params:['hastzcx','occupyRestSpace','tzcxhpiece']
+          // },
+        },
         hasjmyq: {
           title: "有无精密仪器",
           idStyle: { width: "100%" },
@@ -1437,7 +1459,7 @@ export default {
           hasjmyq:"", //有误精密仪器
           englishpm:"", //英文品名
           sizeremark:"", //尺寸备注
-
+          hastzcx: "",//有无特种超限货
           //总直单数据结束
 
           system: this.inputModelData.system,
@@ -1870,9 +1892,8 @@ export default {
             sumPrice = 0;
             this.$message.error(`请填写正确的分单信息预报件数`);
             throw new Error(`请填写正确的分单信息预报件数`);
-          } else if (sumWeight != Number(this.initInfo.jfweight)) {
+          } else if (sumWeight < Number(this.initInfo.jfweight)) {
             status = false;
-            alert(sumWeight);
             sumWeight = 0;
             this.$message.error(`请填写正确的分单计费重量`);
             throw new Error(`请填写正确的分单计费重量`);
@@ -1887,36 +1908,37 @@ export default {
         //货物的件数/重量之和等于分单的件数/重量
         //货物信息  未勾选进港操作——进唯凯仓是货物信息必填
         //  if(Object.values(this.newService).filter(i=>i.servicecode=='AB0420'&&!i.model).length){
+         const cargoStatus = this.inputModelData.hawbList.every((item, index) => item.newService["AB0420"].model == true);
+         if(!cargoStatus) {
+            var cargoNumber = 0; //货物件数
+            var cargoWeight = 0; //货物重量
 
-        var cargoNumber = 0; //货物件数
-        var cargoWeight = 0; //货物重量
+            this.inputModelData.hawbList.forEach(item => {
+              item.cargoInfoList.forEach(obj => {
+                cargoNumber += Number(obj.piece);
+                cargoWeight += Number(obj.weight);
+              });
+            });
+            console.log(cargoWeight);
+            console.log(cargoNumber);
+            // alert(`总货物件数： ${cargoNumber} ------- 总单的件数 ${this.initInfo.ybpiece} `)
+            // alert(`总货物重量： ${cargoWeight} -------- 总单的重量${this.initInfo.jfweight}`)
+            if (Number(this.initInfo.ybpiece) != cargoNumber) {
+              status = false;
+              cargoNumber = 0;
+              this.$message.error(`请填写正确的货物信息件数`);
+              //  throw new Error(`请填写正确的货物信息件数`);
+            } else if (cargoWeight != Number(this.initInfo.jfweight)) {
+              status = false;
 
-        this.inputModelData.hawbList.forEach(item => {
-          item.cargoInfoList.forEach(obj => {
-            cargoNumber += Number(obj.piece);
-            cargoWeight += Number(obj.weight);
-          });
-        });
-        console.log(cargoWeight);
-        console.log(cargoNumber);
-        // alert(`总货物件数： ${cargoNumber} ------- 总单的件数 ${this.initInfo.ybpiece} `)
-        // alert(`总货物重量： ${cargoWeight} -------- 总单的重量${this.initInfo.jfweight}`)
-        if (Number(this.initInfo.ybpiece) != cargoNumber) {
-          status = false;
-          cargoNumber = 0;
-          this.$message.error(`请填写正确的货物信息件数`);
-          //  throw new Error(`请填写正确的货物信息件数`);
-        } else if (cargoWeight != Number(this.initInfo.jfweight)) {
-          status = false;
-
-          cargoWeight = 0;
-          this.$message.error(`请填写正确的货物信息重量`);
-          //  throw new Error(`请填写正确的货物重量`);
-        } else {
-          status = true;
-        }
-      }
-
+              cargoWeight = 0;
+              this.$message.error(`请填写正确的货物信息重量`);
+              //  throw new Error(`请填写正确的货物重量`);
+            } else {
+              status = true;
+            }
+          }
+         }
       if (status) {
         
         let mawbInfo = { ...this.initInfo };
@@ -2159,7 +2181,7 @@ export default {
       });
     },
     setOpetionInputViewData(){
-      const addOptionList = ['fid','gid','hwplace','tradeterm','jsfs','yjStoredatetype','hasdjh','hasjmyq','englishpm','sizeremark']
+      const addOptionList = ['fid','gid','hwplace','tradeterm','jsfs','yjStoredatetype','hascdjh','hasjmyq','englishpm','sizeremark', 'hastzcx','hasdjh']
       addOptionList.forEach(options => {
         if(this.inputModelData.orderdom == '直单'  && this.inputModelData.opersystem == '进口' && this.inputModelData.area == '上海' ) {
           this.inputViewData[options].hidden = false
@@ -2272,7 +2294,6 @@ export default {
     },
     "initInfo.ysfs": {
       handler(val) {
-        
         console.log(val)
         if (this.newService["AB0420"]) {
           if (val != "外仓货") {
@@ -2281,6 +2302,7 @@ export default {
             this.newService["AB0420"]["model"] = false;
           }
         }
+        console.log(this.newService)
       },
       immediate: true
     }
@@ -2295,6 +2317,7 @@ export default {
     //   },
     //   deep:true
     // }
+
   },
 
   mounted() {},

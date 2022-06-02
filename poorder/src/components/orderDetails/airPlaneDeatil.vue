@@ -52,6 +52,16 @@
 
   <!-- 运费应收应付自货 -->
   <div style="position:relative">
+
+    <!-- 唯凯托书 -->
+     <el-button 
+        v-show="showTuoshu"
+        style="position:absolute;right:8px;top:10px;z-index:99"
+        type="primary" 
+        @click="tuoshuDialog=true"
+        >唯凯托书
+    </el-button>
+
   <!-- <el-button style="position:absolute;right:8px;top:8px;z-index:99" @click="dialogFormVisible=true">服务编辑</el-button> -->
   <el-tabs type="border-card" style="margin-top:20px;transform:translate(0,0);position:relative" v-model="activeMod" class="servicePort" >
 
@@ -63,16 +73,41 @@
 
                           
 <div class="input-item width100" style="margin-left: 40px;margin-bottom:15px;" v-if="inputModelData.guid">
-    <div class="input-title">总运单号：{{inputModelData.mawb}}</div>
+    <div class="input-title">总运单号：<span style="display: inline-block;min-width:250px;">{{inputModelData.mawb}}</span></div>
+
+    <!-- 配置总运单 && 解除总运单 -->
+     <!-- <slot name="operation"></slot> -->
+     <div style="margin: 0 10px;" v-if="showButton">
+       <el-button 
+          btnnum="340" 
+          @click="getMawbConfig"
+          :disabled="inputModelData.mawb?true:false"
+          >配置总运单</el-button>
+        <el-button 
+            btnnum="350" 
+            @click="relieveMawbConfig"
+        >解除总运单</el-button>
+     </div>
+
+     
     <div class="input-content">
        <!--  <el-input v-model="inputModelData.mawb" style="width:100px;" disabled></el-input> -->
        <!--  <el-button  @click="configMawb" >配置总运单</el-button>
         <el-button  @click="unConfigMawb" :disabled="inputModelData.mawb?false:true">解除总运单</el-button> -->
         <span style="margin-left:60px;margin-right:20px;" v-if="inputModelData.mawb&&inputModelData.system=='空出'">航空公司：{{inputModelData.airCompany}}</span>
         <span style="margin-right:20px" v-if="Number(this.inputModelData.childguid)<0">运单供应商：{{inputModelData.gysname}}</span>
-        <span style="margin-right:20px" v-if="Number(this.inputModelData.childguid)<0">总运单所属：{{inputModelData.mawbss}}</span>
-        <span style="margin-left: 20px;">是否安检前：{{inputModelData.serviceList.filter(i=>i.servicecode=='AA0230')[0]['isdel']=='1'?'是':'否'}}</span>
+        <span style="margin-right:20px" v-if="Number(this.inputModelData.childguid)<0" v-show="!showButton">总运单所属：{{inputModelData.mawbss}}</span>
+        <span style="margin-left: 20px;" v-show="!showButton">是否安检前：{{inputModelData.serviceList.filter(i=>i.servicecode=='AA0230')[0]['isdel']=='1'?'是':'否'}}</span>
     </div>
+</div>
+
+<!-- 总运单所属 && 是否安检前 -->
+<div class="input-item width100" style="margin-left: 40px;margin-bottom:15px;" v-if="inputModelData.guid && showButton">
+  <div class="input-content">
+    <span style="margin-right:20px" v-if="Number(this.inputModelData.childguid)<0">总运单所属：{{inputModelData.mawbss}}</span>
+    <span style="margin-left: 20px;">是否安检前：{{inputModelData.serviceList.filter(i=>i.servicecode=='AA0230')[0]['isdel']=='1'?'是':'否'}}</span>
+
+  </div>
 </div>
                                  
 
@@ -1220,6 +1255,60 @@ center>
             </div>
 </el-dialog>
 
+ <!-- 唯凯托书 -->
+    <el-dialog :visible.sync="tuoshuDialog" width="1300px" top="4%" v-if="tuoshuDialog"
+        :close-on-press-escape="false" append-to-body center>
+        <entrustBill :mawbinfo="getInfoBook()"></entrustBill>
+    </el-dialog>
+
+  <!-- 配置总运单 -->
+  <el-dialog 
+    title="配置总单" 
+    :visible.sync="dialogMawbConfig" 
+    v-if="dialogMawbConfig" 
+    append-to-body
+    :close-on-click-modal="false" width="1200px" @close="mawbConfigDialogClose" custom-class="mawbDialog">
+    <mawbConfigNew 
+      :rowData="inputModelData" 
+      pagetype="2" 
+      ref="mawbConfig" 
+      :visible.sync="dialogMawbConfig"
+    ></mawbConfigNew>
+        
+  </el-dialog>
+
+  <el-dialog 
+    :visible.sync="mawbConfigConfim" 
+    width="380px" 
+    append-to-body 
+    :close-on-click-modal="false"
+    top="15%" 
+    center>
+      <el-button 
+        btnnum="500" 
+        type="primary" 
+        plain 
+        @click="showZuofei=false;mawbConfigFunc(2,1)"
+      >可用</el-button>
+      <el-button 
+        btnnum="520" 
+        type="primary" 
+        plain 
+        @click="showZuofei=true;"
+      >作废</el-button>
+        
+      <div 
+        v-if="showZuofei" 
+        style="margin-top:10px;height:80px;">
+          <span>作废备注</span>
+          <span>
+           <el-input type="textarea" v-model="deprecateremark" style="width:80%;vertical-align:middle"></el-input>
+          </span>
+          <el-button type="primary" style="float:right;margin-top:5px;" @click="mawbConfigFunc(2,5)">确认</el-button>
+      </div>  
+                
+
+  </el-dialog>
 
 </div>
 
@@ -1237,12 +1326,24 @@ center>
     mawbConfigMixin
   } from '../mixins/mawbConfigMixin.js'
 import sizeInfo from '@/components/orderDetails/sizeInfo'
+
+import entrustBill from "@/components/orderDetails/entrustBill"; //唯凯托书
+
+/*配置总运单*/
+import mawbConfigNew from '@/components/templates/mawbConfigNew'
+
+  import {
+        getServiceView,
+        serviceSplit
+    } from '../mixins/service'
+
   export default {
     mixins: [mawbConfigMixin()],
     components: {
-     allWageIn,hawbTabs,myCommonTable,serviceList, sizeInfo,newAssignForm
+     allWageIn,hawbTabs,myCommonTable,serviceList, sizeInfo,newAssignForm, entrustBill, 
+     mawbConfigNew,
    },
-   mixins:[setBhiconColorMixin],
+   mixins:[setBhiconColorMixin, getServiceView(2), serviceSplit(2),],
    name: 'airPlaneDeatil',
    props:{
       monitor: {
@@ -1281,6 +1382,11 @@ import sizeInfo from '@/components/orderDetails/sizeInfo'
     shipaceInfoData: {
       type: Object,
       default: () => {},
+    },
+
+    showButton: {
+      type: Boolean,
+      default: true,
     }
 
   },
@@ -1956,6 +2062,23 @@ curObjectKyYs:{
       dmfwfGid:'',//地面服务费GID
       dmfwfBk:{},//备份服务费
       domZZ:null,
+
+      tuoshuDialog: false, // 唯凯托书显示 
+
+      pricefieldArr: [
+              "inwageallinprice",
+              "outwageallinprice",
+              "outwageallinprice_trans",
+              "inwageallinprice_trans",
+              "inwagecostprice",
+              "inwageallinprice_record"
+      ], //单证确认详细不覆盖本页面的字段
+
+      dialogMawbConfig: false, // 总单配置弹窗
+      mawbConfigConfim: false, // 取消总单配置
+
+      showZuofei:false,//显示作废表单
+      deprecateremark:'',//作废备注
     }
 
   },
@@ -1963,6 +2086,163 @@ curObjectKyYs:{
 
 
   methods: {
+    // 配置总运单
+    getMawbConfig() {
+          //获取总单配置表格数据
+          this.dialogMawbConfig = true;
+          this.inputModelData.wtkh=getxmdata("wtkh").filter(i=>i.id == this.inputModelData.fid)[0]['usr_name']
+    },
+
+    // 关闭总运单
+     mawbConfigDialogClose() {
+        if (!this.inputModelData.mawb) {
+          this.inputModelData.mawbss = ''
+          this.inputModelData.gysname = ''
+        }
+      },          
+
+    // 解除总运单
+    relieveMawbConfig() {
+        //点击解除总运单
+        if (!this.inputModelData.mawb) {
+            this.$message.error("请先配置总运单号");
+            return;
+        }
+        this.mawbConfigConfim = true;
+    },
+    
+    // 配置总运单
+     mawbConfigFunc(type, status) {
+            //配置总运单
+            //type 1配置总运单 2解除总运单
+            var mawb = "";
+            var objGysss=''
+            var url = "";
+
+            if (type == 1) {
+                url = "api/ExHpoAxplineSureMawb";
+                //mawb = this.dialogMawb;
+                mawb = this.$refs.mawbConfig.dialogMawb;
+                objGysss=this.$refs.mawbConfig.objGysss;
+                if(!objGysss.iszddl||!objGysss.zddlcode){
+                    return this.$message.error('请选择制单代码并填写制单代理代码！') 
+                }
+                // if (!this.objGysss.iszddl || !this.objGysss.zddlcode) {
+                //     return this.$message.error('请选择制单代码并填写制单代理代码！')
+                // }
+            } else {
+                url = "api/ExHpoAxplineUnSureMawb";
+                mawb = this.inputModelData.mawb;
+            }
+            if (!mawb) {
+                this.$message.error("请填写总运单号");
+                return;
+            }
+            var json = {
+                mawb: mawb,
+                gysname: objGysss && objGysss.gysname,
+                mawbss: objGysss && objGysss.mawbss,
+                mawbgid: objGysss && objGysss.gysid,
+                iszddl: objGysss && objGysss.iszddl,
+                zddlcode: objGysss && objGysss.zddlcode,
+                guid: this.inputModelData.guid,
+                area: this.area,
+                hwxz: this.inputModelData.hwxz,
+                gid: this.inputModelData.gid,
+                sfg: this.inputModelData.sfg
+            };
+            if (type == 1) {
+                json.system = this.inputModelData.system;
+                json.boguid = this.inputModelData.boguid;
+                json.czlx = this.inputModelData.czlx;
+                json.mdg = this.inputModelData.mdg;
+            }
+            if (type == 2) {
+                json.status = status;
+                  if(status=='5'){
+                  json.deprecateremark=this.deprecateremark
+                }
+            }
+            this.$axios({
+                method: "put",
+                url: this.$store.state.webApi + url,
+                data: json,
+                loading: true,
+                tip: false
+            }).then(results => {
+                //console.log("配置总运单")
+                //console.log(results.data)
+                if (results.data.resultstatus == 0) {
+
+                    this.$message.success(results.data.resultmessage);
+
+                    if (type == 1) {
+                        this.inputModelData.mawb=mawb
+                        this.inputModelData.iszddl=objGysss&&objGysss.iszddl
+                        this.inputModelData.zddlcode=objGysss&&objGysss.zddlcode
+                        this.inputModelData.gysname=objGysss&&objGysss.gysname
+                        this.inputModelData.mawbss=objGysss&&objGysss.mawbss
+                        this.inputModelData.mawbgid = objGysss&&objGysss.gysid; // 解决配置总运单 => 无mawbgid
+                        this.getMawbGys(mawb);
+                        this.dialogMawbConfig = false;
+                    }
+                    if (type == 2) {
+                        this.inputModelData.mawb = "";
+                        this.inputModelData.gysname = "";
+                        this.inputModelData.mawbss = "";
+                        this.inputModelData.mawbgid = "";
+                        this.mawbConfigConfim = false;
+                        this.inputModelData.self_real_bp_freight_out = 10;
+                        this.inputModelData.cus_real_bp_freight_out = 0;
+                        this.inputModelData.self_real_bp_trans_out = 10;
+                        this.inputModelData.cus_real_bp_trans_out = 0;
+                        this.getMawbCost(3); //解除总运单后删除带出的运费杂费
+
+                        if(status=='5'){
+                          this.showZuofei=false 
+                          this.deprecateremark=''
+                        } 
+                    }
+                } else {
+                    this.$message.error(results.data.resultmessage);
+                }
+            });
+        },
+    
+    getInfoBook() {
+            //获取总单表单信息
+
+            var mawbInfo = JSON.parse(JSON.stringify(this.inputModelData));
+            mawbInfo = this.dealList(mawbInfo)
+            
+            mawbInfo.zdpiece = this.inputModelData.realpiece;
+            mawbInfo.czlx = this.inputModelData.czlx;
+
+            mawbInfo.smallpiece = Number(mawbInfo.smallpiece) || 0
+            mawbInfo.bgweight = Number(mawbInfo.bgweight) || 0
+            mawbInfo.bgpiece = Number(mawbInfo.bgpiece) || 0
+            mawbInfo.yqqcts = Number(mawbInfo.yqqcts) || 0
+
+            this.pricefieldArr.forEach(i => {
+                mawbInfo[i] = mawbInfo[i] ? Number(mawbInfo[i]) : 666666;
+            });
+
+
+            if (!(this.inputModelData.opersystem == "进口")) {//进口需要保留
+                delete mawbInfo.qfsj;
+                delete mawbInfo.hbh;
+                // delete mawbInfo.hbrq;
+            }
+            // console.log(JSON.stringify(mawbInfo));
+            if (mawbInfo.hwlx && mawbInfo.hwlx.indexOf('锂电池') < 0) {
+                mawbInfo.batterymodel = ''
+            }
+
+            delete mawbInfo.isimperfect
+
+            return mawbInfo;
+        },
+
     // ***********公共其他方法************
     //返回
     closeDialog() {
@@ -6212,6 +6492,11 @@ costData = costData.map(x => ({
   },
 
   computed:{
+    // 是否显示唯凯托书
+    showTuoshu() {
+      return !this.inputModelData.mawb || this.inputModelData.mawbss=='非我司运单'
+    },
+
     // note: 签单信息禁用
     getSignDisabled() {
       let status = false;
@@ -7505,4 +7790,32 @@ accountweightoutZz(val){
   width:90px!important;
 }
 }
+
+// 配置总运单
+/deep/.mawbDialog{
+    border-radius: 8px;
+        .el-dialog__header{
+           text-align:center;
+           font-weight:bold;
+        }
+        .spanTitle{
+            display:inline-block;
+            width:400px;
+            .titleColor{
+                color:red;
+            }  
+        }
+
+    }
+
+    .airPlaneDeatil {
+        margin-top: -20px;
+        /deep/.left-item {
+            width: 470px  !important;
+            left: 50px;
+        }
+        /deep/.content-pay {
+            width: 1300px !important;
+        }
+    }
 </style>

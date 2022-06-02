@@ -397,7 +397,7 @@
                     <td class=""></td>
                     <td class="">中转港</td>
                     <td class=""></td>
-                    <td class="">基港</td>
+                    <td class="">目的港</td>
                     <td class="">航司二字码</td>
                     <td class="">航班号</td>
                     <td class="">服务描述</td>
@@ -550,7 +550,7 @@
           <div class="item10 operate-title">货型参数</div>
           <div class="item75" style="display: flex">
             <template v-for="item in priceObj.volArr">
-              <div class="operate-tag nohover" style="cursor: not-allowed">
+              <div class="operate-tag nohover" style="cursor: not-allowed" v-show="item.isAdd">
                 <span>{{ item.title }}</span>
               </div>
             </template>
@@ -656,7 +656,9 @@
                       </span> -->
                     </td>
                   </tr>
-                  <tr v-for="(vol, i) in priceObj.tableVolArr">
+                 <template v-for="(vol, i) in priceObj.tableVolArr">
+                     {{ void (realVol = getRealVol(vol.code)) }}
+                      <tr v-if="realVol.isAdd">
                     <td
                       class="operate-head"
                       @mouseenter="activeRow(i)"
@@ -721,7 +723,6 @@
                             ].diff*1).toFixed(2) : '';
                             priceObj.autoFillFixedPrice(j,i);
                           "
-                          v-focus
                           v-model.sync="
                             priceObj.cusPackageIndexArr[
                               priceObj.tabDisplayIndex
@@ -730,7 +731,8 @@
                         />
                       </td>
                     </template>
-                  </tr>
+                    </tr>
+                  </template>
                 </tbody>
               </table>
             </div>
@@ -1427,6 +1429,13 @@ export default {
     transferBox,
   },
   methods: {
+      //取实际 vol
+    getRealVol(code) {
+      return this.priceObj.volArr.find((f) => {
+        return f.code == code;
+      });
+    },
+
     /**
      * @desc 确认驳回
      * @param {type} number 1：驳回 2：确认

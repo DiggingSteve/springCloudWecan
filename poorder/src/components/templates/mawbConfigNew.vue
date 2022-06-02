@@ -39,9 +39,25 @@
                     pagetype="1">
                 </newFormCmpt>
                  
-                  <el-button type="primary" style="margin-top:20px;" @click="mawbSearch">查询</el-button>
-                  <el-button type="primary" style="margin-top:20px;" @click="mawbDialog=true">维护</el-button>
-                  <el-button size="mini" type="primary" @click="confirmMawb">确认</el-button>
+                    <div style="display:flex; ">
+                        <div>
+                            <el-button type="primary" style="margin-top:20px;" @click="mawbSearch">查询</el-button>
+                            <el-button type="primary" style="margin-top:20px;" @click="mawbDialog=true">维护</el-button>
+                            <el-button size="mini" type="primary" @click="confirmMawb">确认</el-button>
+                        </div>
+
+                        <div style="margin-left:615px;">
+                             <el-button 
+                                v-show="!mng"
+                                style="margin-top:20px;"
+                                type="primary" 
+                                @click="tuoshuDialog=true"
+                                >唯凯托书
+                            </el-button>
+                        </div>
+                    </div>
+
+                 
                   <p v-if="mawbConfigtableData.length" style="color:red;margin-bottom:-14px;margin-top:15px;">*建议使用最早维护的运单</p>
                 <commonTable :head="mawbConfigHeadNew" :table-data="mawbConfigtableData" style="margin-top:20px;height:450px;overflow-x:hidden" isRadioSelect @current-change="checkRadio" v-if="mawbConfigtableData.length">
                             
@@ -71,6 +87,12 @@
        <mawbAdd :visible.sync="mawbDialog" :mng="mng?'唯凯本站':buttonGroup2.sixth?'非唯凯':'唯凯外站'" type="1"></mawbAdd>
     </el-dialog>
 
+    <!-- 唯凯托书 -->
+    <el-dialog :visible.sync="tuoshuDialog" width="1300px" top="4%" v-if="tuoshuDialog"
+        :close-on-press-escape="false" append-to-body center>
+        <entrustBill :mawbinfo="getInfoBook()"></entrustBill>
+    </el-dialog>
+
 </div>
 </template>
 
@@ -79,11 +101,20 @@ import mawbAdd from './mawbAdd'
 import {
     mawbConfigMixin
 } from '@/components/mixins/mawbConfigMixin.js'
+
+import entrustBill from "@/components/orderDetails/entrustBill"; //唯凯托书
+
+  import {
+        getServiceView,
+        serviceSplit
+    } from '../mixins/service'
+
 export default {
     name: "mawbConfigNew",
-    mixins: [ mawbConfigMixin()],
+    mixins: [ mawbConfigMixin(), getServiceView(2), serviceSplit(2), ],
     components: {
-        mawbAdd
+        mawbAdd,
+        entrustBill,
     },
     props:{
     rowData:{},
@@ -130,6 +161,17 @@ export default {
             mng:true,//激活按钮
             buttonGroup:{first:true,second:false,third:false,forth:false},
             buttonGroup2:{fifth:true,sixth:false},
+
+            tuoshuDialog: false, // 唯凯托书显示 
+
+            pricefieldArr: [
+                    "inwageallinprice",
+                    "outwageallinprice",
+                    "outwageallinprice_trans",
+                    "inwageallinprice_trans",
+                    "inwagecostprice",
+                    "inwageallinprice_record"
+            ], //单证确认详细不覆盖本页面的字段
         };
     },
 
@@ -292,7 +334,41 @@ export default {
               });      
             })
 
-        }
+        },
+
+         getInfoBook() {
+            //获取总单表单信息
+
+            var mawbInfo = JSON.parse(JSON.stringify(this.rowData));
+            mawbInfo = this.dealList(mawbInfo)
+            
+            mawbInfo.zdpiece = this.rowData.realpiece;
+            mawbInfo.czlx = this.rowData.czlx;
+
+            mawbInfo.smallpiece = Number(mawbInfo.smallpiece) || 0
+            mawbInfo.bgweight = Number(mawbInfo.bgweight) || 0
+            mawbInfo.bgpiece = Number(mawbInfo.bgpiece) || 0
+            mawbInfo.yqqcts = Number(mawbInfo.yqqcts) || 0
+
+            this.pricefieldArr.forEach(i => {
+                mawbInfo[i] = mawbInfo[i] ? Number(mawbInfo[i]) : 666666;
+            });
+
+
+            if (!(this.rowData.opersystem == "进口")) {//进口需要保留
+                delete mawbInfo.qfsj;
+                delete mawbInfo.hbh;
+                // delete mawbInfo.hbrq;
+            }
+            // console.log(JSON.stringify(mawbInfo));
+            if (mawbInfo.hwlx && mawbInfo.hwlx.indexOf('锂电池') < 0) {
+                mawbInfo.batterymodel = ''
+            }
+
+            delete mawbInfo.isimperfect
+
+            return mawbInfo;
+        },
 
 
  
@@ -309,6 +385,8 @@ export default {
           //     this.rowData.yqhbh=this.mawbInputData.hbh
           // }  
           this.$emit("update:visible",false)
+        } else {
+            this.$emit("update:visible",false)
         }
       },
       mng(val){

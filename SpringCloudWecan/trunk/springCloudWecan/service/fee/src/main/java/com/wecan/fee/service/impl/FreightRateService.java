@@ -165,23 +165,7 @@ public class FreightRateService implements IFreightRate {
             }
             var item=item1;
 
-            //不是当前显示的添加不显示日期时间
-            //修改相同线路的其他数据
-            var s= bodyList.stream().filter(cd->cd.getFeeid().longValue()!=item.getFeeid().longValue()
-                    && cd.getPackageType().equals(item.getPackageType()) && cd.getSfg().equals(item.getSfg())
-                    && cd.getMdg().equals(item.getMdg()) && cd.getZzg().equals(item.getZzg() )
-                    && cd.getDdg().equals(item.getDdg())
-                    && cd.getTwocode().equals( item.getTwocode())  ).collect(Collectors.toList());
-            for (OutputFreightRouting otp:s ) {
-                if(otp.notshowtime ==null)
-                {
-                    otp.notshowtime =new ArrayList<>();
-                }
-                DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                var t = df.format(showdt) ;
-                if(!otp.notshowtime.contains(t) && otp.getEndDate().isAfter(showdt))
-                    otp.notshowtime.add(t);
-            }
+            updateOtherSameData(bodyList, showdt, item);
             //返回的数据存在就不添加
             var dataCount= bodyList.stream().filter(f->f.getFeeid().equals(item.getFeeid())
                 && f.getPackageType().equals(item.getPackageType()) && f.getMdg().equals(item.getMdg())
@@ -194,6 +178,26 @@ public class FreightRateService implements IFreightRate {
 
         }
         return list;
+    }
+
+    private void updateOtherSameData(List<OutputFreightRouting> bodyList, LocalDateTime showdt, ViewFeeFlyPrice item) {
+        //不是当前显示的添加不显示日期时间
+        //修改相同线路的其他数据
+        var s= bodyList.stream().filter(cd->cd.getFeeid().longValue()!= item.getFeeid().longValue()
+                && cd.getPackageType().equals(item.getPackageType()) && cd.getSfg().equals(item.getSfg())
+                && cd.getMdg().equals(item.getMdg()) && cd.getZzg().equals(item.getZzg() )
+                && cd.getDdg().equals(item.getDdg())
+                && cd.getTwocode().equals( item.getTwocode())  ).collect(Collectors.toList());
+        for (OutputFreightRouting otp:s ) {
+            if(otp.notshowtime ==null)
+            {
+                otp.notshowtime =new ArrayList<>();
+            }
+            DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            var t = df.format(showdt) ;
+            if(!otp.notshowtime.contains(t) && otp.getEndDate().isAfter(showdt))
+                otp.notshowtime.add(t);
+        }
     }
 
     private OutputFreightRouting getOutputFreightRouting(ViewFeeFlyPrice item) {

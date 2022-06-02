@@ -801,7 +801,7 @@
                         fieldtype: 3
                     },
                      jg: {
-                        title: "基港",
+                        title: "目的港",
                         type: 1,
                         fieldtype: 3,
                     },

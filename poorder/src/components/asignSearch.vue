@@ -100,12 +100,12 @@
         </p>
         <!-- <p  @click="outPc(2)"><i class="el-icon-upload2"></i>返舱</p> -->
         <!-- <p :class="[(getStatusNum('单证状态',rowData.dzstatus)>=300||rowData.mawb)?'disabled':'']" @click="installMawb"><i class="el-icon-folder-checked"></i>配置总运单</p> -->
-        <p :class="[((rowData.mawb)||(getStatusNum('单证状态',rowData.dzstatus)>=300&&rowData.commbillmodifystatus!='2'))||monitor==2?'disabled':'']" @click="installMawb">
+        <!-- <p :class="[((rowData.mawb)||(getStatusNum('单证状态',rowData.dzstatus)>=300&&rowData.commbillmodifystatus!='2'))||monitor==2?'disabled':'']" @click="installMawb">
             <i class="el-icon-folder-checked"></i>配置总运单
         </p>
         <p :class="[((rowData.commbillmodifystatus!='2'&&(getStatusNum('单证状态',rowData.dzstatus)>=300||!rowData.mawb)))||monitor==2?'disabled':'']" @click="unstallMawb">
             <i class="el-icon-folder-delete"></i>解除总运单
-        </p>
+        </p> -->
         <p @click="xnlhShow" :class="[(getStatusNum('配舱状态',rowData.pcstatus)!=200)||monitor==2?'disabled':'']">
             <i class="el-icon-arrow-down"></i>虚拟拉货
         </p>
@@ -114,7 +114,7 @@
         </p>
         <!--  <p :class="[getStatusNum('配舱状态',rowData.pcstatus)!=400?'disabled':'']"><i class="el-icon-document-checked"></i>交接后返舱</p> -->
         <!--  <p :class="[getStatusNum('配舱状态',rowData.pcstatus)==400?'disabled':'']"><i class="el-icon-document-checked"></i>添加服务</p> -->
-        <p @click="airDetail" :class="[!rowData.mawb||!rowData.hbh||!rowData.hbrq||rowData.czlx=='代操作'||rowData.czlx=='唯凯代操作'?'disabled':'']">
+        <p @click="airDetail" :class="[!rowData.hbrq||rowData.czlx=='代操作'||rowData.czlx=='唯凯代操作'?'disabled':'']">
             <i class="el-icon-document-checked"></i>航线签单
         </p>
 
@@ -1237,8 +1237,6 @@ export default {
         //航线签单详细
         airDetail() {
             if (
-                !this.rowData.mawb ||
-                !this.rowData.hbh ||
                 !this.rowData.hbrq ||
                 this.rowData.czlx == "代操作" ||
                 this.rowData.czlx == "唯凯代操作"

@@ -2,12 +2,12 @@
 <div id="print1" style="pointer-events:all">
 
 
-   <div class="content">
+   <div class="content" id="printBill">
      <!-- {{saveNumberList}} -->
      <!-- {{formdata}} -->
      <div class="topimage" style="border-bottom:1px solid #e8e8e8;text-align:center;position:relative">
          <img :src="weituoUrl" style="margin:12px;">
-         <span style="position:absolute;top:20px;left:750px;font-weight:600">({{mawbinfo.area}})</span>
+         <span style="position:absolute;top:20px;left:765px;font-weight:600">({{mawbinfo.area}})</span>
      </div>
      <div class="topCon">
         <div class="left">
@@ -19,11 +19,15 @@
                           <div class="itemTitle">托运人姓名与地址</div>
                           <div>Shipper's Name and Address</div>
                </div>
-              <div class="rowright" >
+              <div class="rowright is-show-input">
                           <!-- <el-input placeholder="托运人查询"></el-input>
                            -->
                          <!-- <recsedField :search="jsonArrShr"  :type="0" :dom="1"  :model="shrModel" @rsdata="rsdata" hideBtn></recsedField> -->
-        <recsedField :search="mawbRSinfo[0].jsonArr" :hawbInfo="mawbRSinfo" :type="0" :dom="1"  :model="mawbRSinfo[0].model" @rsdata="fhrdata" hideBtn></recsedField>
+        <recsedField :search="mawbRSinfo[0].jsonArr" :hawbInfo="mawbRSinfo" :type="0" :dom="1"  :model="mawbRSinfo[0].model" @rsdata="fhrdata" hideBtn
+        :area="mawbinfo.area"
+        :show="true"
+        class="input-bill-class"
+        ></recsedField>
 
                </div>
 
@@ -41,9 +45,13 @@
                           <div class="itemTitle">收货人姓名及地址</div>
                           <div>Consignee's Name and Address</div>
                </div>
-              <div class="rowright" >
+              <div class="rowright  is-show-input" >
 
-<recsedField :search="mawbRSinfo[1].jsonArr" :hawbInfo="mawbRSinfo" :type='1' :dom="1" :model="mawbRSinfo[1].model" @rsdata="shrdata" hideBtn></recsedField>
+<recsedField :search="mawbRSinfo[1].jsonArr" :hawbInfo="mawbRSinfo" :type='1' :dom="1" :model="mawbRSinfo[1].model" @rsdata="shrdata" hideBtn
+:area="mawbinfo.area"
+:show="true"
+ class="input-bill-class"
+></recsedField>
 
                </div>
 
@@ -62,7 +70,7 @@
                           <div class="itemTitle">另请通知</div>
                           <div>Also Notify</div>
                </div>
-              <div class="rowright" style="position:relative">
+              <div class="rowright  is-show-input" style="position:relative">
                          <el-input placeholder="通知查询" v-verify="'uppercase'" class="tongzhi"></el-input>
                          <i class="el-input__icon el-icon-search" style="position:absolute;top:0px;left:18px;color:#C0C4CC;font-size:14px"></i>
 
@@ -95,17 +103,35 @@
              </div>
          </div>
 
-             <div class="leftItem" style="padding:10px 15px;;">
-              <div >要求运输路线REOUESTED  ROUTING </div>
-             <div class="row" style="margin-top:10px;">
-                   <el-input v-model="formdata.hbh" style="margin-right:12px;"></el-input>
-                    <el-date-picker
-            v-model="formdata.hbrq"
-            value-format="yyyy-MM-dd"
-            type="date"
-            placeholder="选择日期">
-          </el-date-picker>
-             </div>
+             <div class="leftItem">
+               <div class="row">
+                  <div class="rowleft" >
+                      <div style="color:#333">
+                         要求运输路线 REQUESTED ROUTING
+                      </div>
+                      <div style="text-align:center;padding-top:5px">
+                          <el-input v-model="formdata.hbh" style="margin-right:12px;"></el-input>
+                      </div>
+
+                    
+                   </div>
+
+                   <div class="rowleft"  style="border-left:1px solid #e8e8e8">
+                     <div  style="color:#333">
+                       要求航班日期 REQUESTED FLIGHT DATE
+                     </div>
+
+                     <div style="padding-top:5px">
+                       <el-date-picker
+                        v-model="formdata.hbrq"
+                        value-format="yyyy-MM-dd"
+                        type="date"
+                        placeholder="选择日期">
+                      </el-date-picker>
+                     </div>
+                     
+                   </div>
+               </div>
            </div>
 
 
@@ -117,16 +143,16 @@
                   <span>NO.OF PIECESRCP</span>
                 </div>
                 <div class="winfo" >
-                     <span>毛重</span>
+                     <span>毛重(KG)</span>
                      <span>GROSS WEIGHT</span>
                 </div>
                 <div class="winfo" >
-                     <span>运价类别</span>
-                     <span>RATE CLASS</span>
+                    <span>体积（CBM）</span>
+                     <span>VOL</span>
                 </div>
                 <div class="winfo" >
-                     <span>体积（CBM）</span>
-                     <span>VOL</span>
+                    <span>运价类别</span>
+                     <span>RATE CLASS</span>
                 </div>
              </div>
            </div>
@@ -135,8 +161,8 @@
              <div class="row">
                  <div class="winfo"><el-input class="emphasize" v-model="formdata.piece"></el-input></div>
                 <div class="winfo"><el-input class="emphasize" v-model="formdata.weight"></el-input></div>
-                <div class="winfo"><el-input class="emphasize" v-model="formdata.rateclass"></el-input></div>
                 <div class="winfo"><el-input class="emphasize" v-model="formdata.volume"></el-input></div>
+                <div class="winfo"><el-input class="emphasize" v-model="formdata.rateclass"  v-verify="'uppercase'"></el-input></div>
              </div>
            </div>
 
@@ -180,10 +206,40 @@
                 <div class="hinfo"><el-input :value="mawbinfo.paymode=='CC'?formdata.ratetotal:''"></el-input></div>
                 <div class="hinfo"><el-input :value="mawbinfo.paymode=='PP'?formdata.othertotal:''"></el-input></div>
                 <div class="hinfo"><el-input :value="mawbinfo.paymode=='CC'?formdata.othertotal:''"></el-input></div> -->
-                <div class="hinfo"><el-input v-model="formdata.freightpp"></el-input></div>
+                <!-- 老版本 -->
+                <!-- <div class="hinfo"><el-input v-model="formdata.freightpp"></el-input></div>
                 <div class="hinfo"><el-input v-model="formdata.freightcc"></el-input></div>
                 <div class="hinfo"><el-input v-model="formdata.otherchargepp"></el-input></div>
-                <div class="hinfo"><el-input v-model="formdata.otherchargecc"></el-input></div>
+                <div class="hinfo"><el-input v-model="formdata.otherchargecc"></el-input></div> -->
+
+                <div class="hinfo">
+                 <el-radio-group v-model="formdata.freightpp">
+                    <el-radio :label="1">有</el-radio>
+                    <el-radio :label="2">无</el-radio>
+                 </el-radio-group>
+                </div>
+
+                <div class="hinfo">
+                 <el-radio-group v-model="formdata.freightcc">
+                    <el-radio :label="1">有</el-radio>
+                    <el-radio :label="2">无</el-radio>
+                 </el-radio-group>
+                </div>
+
+                <div class="hinfo">
+                 <el-radio-group v-model="formdata.otherchargepp">
+                    <el-radio :label="1">有</el-radio>
+                    <el-radio :label="2">无</el-radio>
+                  </el-radio-group>
+                </div>
+
+                
+                <div class="hinfo">
+                   <el-radio-group v-model="formdata.otherchargecc">
+                    <el-radio :label="1">有</el-radio>
+                    <el-radio :label="2">无</el-radio>
+                  </el-radio-group>
+                </div>
 
              </div>
            </div>
@@ -246,14 +302,15 @@ AND AGREES TO THE CONDTIONS OF CARRIAGE OF THE CARRIER.</p>
 </div>
 
 <div class="rightItem" style="padding:7px 15px;">
-    <el-input type="textarea" :rows='2' v-model='formdata.pm'></el-input>
-  <el-input type="textarea" :rows='7' style="margin-top:6px" v-model="formdata.quantity"></el-input>
+  <el-input type='textarea' :rows="9" v-model="pmQuantity" placeholder="请输入品名及数量(换行隔开)" @blur="getpmQuantity"></el-input>
+    <!-- <el-input type="textarea" :rows='2' v-model='formdata.pm'></el-input>
+  <el-input type="textarea" :rows='7' style="margin-top:6px" v-model="formdata.quantity"></el-input> -->
 </div>
 
 <div class="rightItem" >
   <p>
     <span>处理情况及备注</span>
-     <span>HANDLING INFORMATION AND REM AKYS</span>
+     <span>HANDLING INFORMATION AND REMARKS</span>
   </p>
   <el-input type="textarea" :rows="2" style="margin:12px 0px" v-model="formdata.remark"></el-input>
   <p>经办人：</p>
@@ -265,17 +322,28 @@ AND AGREES TO THE CONDTIONS OF CARRIAGE OF THE CARRIER.</p>
      </div>
 
 
-<div class="row" style="margin:10px">
+<!-- <div class="row" style="margin:10px;">
        <div style="text-align:right">
        <el-button @click="saveReferenceBook(2)" style="pointer-events:auto">保存</el-button>
+       <el-button @click="saveImg" style="pointer-events:auto">发送</el-button>
+       <el-button @click="printFunc" style="pointer-events:auto">打印</el-button>
+      </div>
+
+</div> -->
+
+  <a :href="emailAddress" style="display: none;" id="billEmial"></a>
+
+   </div>
+
+   
+<div class="row" style="margin:10px;">
+       <div style="text-align:right">
+       <!-- <el-button @click="saveReferenceBook(2)" style="pointer-events:auto">保存</el-button> -->
+       <el-button @click="saveImg" style="pointer-events:auto">发送</el-button>
        <el-button @click="printFunc" style="pointer-events:auto">打印</el-button>
       </div>
 
 </div>
-
-
-
-   </div>
    </div>
 </template>
 
@@ -283,6 +351,7 @@ AND AGREES TO THE CONDTIONS OF CARRIAGE OF THE CARRIER.</p>
 import recsedField from '../templates/recsedField'
 import {getPdf, getMomentDate,computedWeight,formatDate} from '../../api/localStorage.js'
 import {getLodop} from '../../api/LodopFuncs.js'
+import html2canvas from 'html2canvas';
 
 export default {
   components: {
@@ -304,6 +373,8 @@ export default {
     data(){
 
       return {
+            bookImg: '', //保存的托书图片
+            pmQuantity:  '',
             mawbRSinfo: [
               {"title":"发货人","companytitle_fhr_mawb":"","address_fhr_mawb":"","companycode_fhr_mawb":"","state_fhr_mawb":"","city_fhr_mawb":"","postcode_fhr_mawb":"","lxr_fhr_mawb":"","phone_fhr_mawb":"","fax_fhr_mawb":"","email_fhr_mawb":"","zdfhrId":"",jsonArr:{type:'1',mdg:this.mawbinfo.sfg,gid:this.mawbinfo.gid,codetype:1},model:""},
               {"title":"收货人","companytitle_shr_mawb":"","address_shr_mawb":"","companycode_shr_mawb":"","state_shr_mawb":"","city_shr_mawb":"","postcode_shr_mawb":"","lxr_shr_mawb":"","phone_shr_mawb":"","fax_shr_mawb":"","email_shr_mawb":"","zdshrId":"",jsonArr:{type:'1',mdg:this.mawbinfo.mdg,gid:this.mawbinfo.gid,codetype:2},model:""},
@@ -315,7 +386,7 @@ export default {
                sfg:this.mawbinfo.sfg,
                mdg:this.mawbinfo.mdg,
                hbh:this.mawbinfo.hbh,
-               hbrq:this.mawbinfo.hbrq,
+               hbrq: this.mawbinfo.hbrq,
                piece:this.mawbinfo.realpiece,
                weight:this.mawbinfo.realweight,
               volume:this.mawbinfo.realvolume,
@@ -336,11 +407,39 @@ export default {
               addman:localStorage.usrname,
               remark:''
              },
-             weituoUrl:"./boStatic/images/weituoshu/weituo.png"
+             weituoUrl:"./boStatic/images/weituoshu/weituo.png",
+             emailAddress: '', // 发送地址及参数
 
       }
     }
-    ,methods:{
+    ,
+    methods:{
+      // 获取委托站点三字代码
+      getArea(data) {
+         let areadata = JSON.parse(localStorage.groupType).filter(i => i.groupid == '101')
+
+         for(let i = 0; i < areadata.length; i++) {
+           let item = areadata[i]
+            let [area, threeCode ] = item.typename.split("丨");
+            if (area == data) {
+              return threeCode
+            }
+         }
+
+      },
+
+      getpmQuantity(val) {
+      if (val.target) {
+            let data = val.target.value.split('\n');
+            if (data[0]) {
+              this.formdata.pm = data[0];
+            }
+
+            if (data[1]){
+              this.formdata.quantity = data[1];
+            }
+          }
+      },
 
       setFreightCha(){
        /*                 if(this.mawbinfo.paymode=='PP'){
@@ -356,23 +455,105 @@ export default {
             } */
 
       },
+      saveImg() {
+        const self = this;
+         function convertCanvasToImage(canvas) {
+            var image = new Image();
+            let src =  canvas.toDataURL("image/png")
+            image.src = src;
+            // document.body.appendChild(image);
+            // return  image;
+            return src
+         }
+         this.$store.state.showloading = true;
+         document.querySelectorAll('.is-show-input').forEach(item => item.style.display = 'none')
+
+        html2canvas(document.querySelector("#printBill")).then(function(canvas) {
+           document.querySelectorAll('.is-show-input').forEach(item => item.style.display = 'block')
+          //  document.body.appendChild(canvas);
+           self.bookImg = convertCanvasToImage(canvas);
+           self.saveReferenceBook(2)
+        });
+      },
+
         saveReferenceBook(type){
+          let loading = type ? true: false;
+          let { fid, gid, aircompany, area} = this.mawbinfo;
           var json={json:JSON.parse(JSON.stringify(this.formdata)),area:this.mawbinfo.area}
           var method=type==1?'post':'put'
           json.hpoguid=this.mawbinfo.guid
-          json.json.adddate=this.formdata.adddate||'1900-01-01'
+          json.json.adddate=this.formdata.adddate||'1900-01-01';
+          json.json.area = area;
+          json.json.fid = fid;
+          json.json.gid = gid;
+          json.json.aircompany = aircompany;
+          if (json.json.hbrq.indexOf('NaN') != -1) {
+            json.json.hbrq = ''
+          }
+          const self = this;
           if(type==2){
             json.json.sid=this.mawbinfo.guid
+             json.json.imgbase64 = this.bookImg;
           }
-            this.$axios({method:method,url:this.$store.state.webApi+"api/ExHpoAxplineBooking",data:json,loading:false,tip:false}).then(results=>{
+            this.$axios({method:method,url:this.$store.state.webApi+"api/ExHpoAxplineBooking",data:json,loading,tip:false}).then(results=>{
               console.log(results.data)
               console.log(JSON.stringify(results.data))
               if(results.data.resultstatus==0){
                     if(type==1){
                      this.formdata=results.data.resultdic.booking
                      this.formdata.adddate=formatDate(this.formdata.adddate,'yyyy-MM-dd')
+                    this.formdata.hbrq=formatDate(this.  formdata.hbrq,'yyyy-MM-dd')
+                    // if (self.mawbinfo.ybvolumeremark) {
+                    //   this.formdata.quantity = self.mawbinfo.ybvolumeremark;
+                    // }
+                     this.formdata.quantity = self.mawbinfo.ybvolumeremark;
+
+
+                    // if ( self.mawbinfo.hbrq ) {
+                    //  this.formdata.hbrq = self.mawbinfo.hbrq;
+                    // }
+                     this.formdata.hbrq = self.mawbinfo.hbrq;
+
+                    // if (self.mawbinfo.englishpm) {
+                    //    this.formdata.pm = self.mawbinfo.englishpm;
+                    // }
+                    this.formdata.pm = self.mawbinfo.englishpm;
+                    
+                    if ( self.mawbinfo.ybstoreList &&  self.mawbinfo.ybstoreList.length) {
+                      self.mawbinfo.ybstoreList.pop()
+                      this.formdata.customernumber =  self.mawbinfo.ybstoreList.map(item => item.khjcno).join()
+                    }
+                   
+                    if (!this.formdata.shipper) {
+                       if (this.formdata.sfg) {
+                      this.formdata.shipper = `WFF${this.getArea(this.mawbinfo.area)}`
+                      } else {
+                        this.formdata.shipper = `WFF`
+                      }
+                    }
+                   
+                    if ( !this.formdata.consignee) {
+                       if (this.formdata.mdg) {
+                       this.formdata.consignee = `WFF${this.formdata.mdg}`
+                      } else {
+                        this.formdata.consignee = `WFF`;
+                      }
+                    }
+
+                   
+
+
                     }else{
-                      this.$message(results.data.resultmessage)
+                      // 发送邮件 => 弹出email
+                      // 处理邮件地址及参数
+                       this.$message(results.data.resultmessage)
+                      if (type == 2) {
+                          let {mailto = '', mailsubject = '', mailcontent = ''} = results.data.resultdic || {}
+                        this.emailAddress = `mailto:${mailto}?subject=${mailsubject}&body=${mailcontent}`;
+                        this.$nextTick(() => {
+                          $('#billEmial')[0].click();
+                        })
+                      }
                     }
               }else{
 
@@ -461,6 +642,17 @@ export default {
                  }
 
                },
+
+              getCheckData(type) {
+                if (type == '1') {
+                  return '√';
+                } else if (type == '2') {
+                  return '×';
+                } else {
+                  return ''
+                }
+              },
+
               getAreaPrice(){
                     var mawb=this.mawbinfo.mawb
                     var sfg=this.mawbinfo.sfg
@@ -502,7 +694,7 @@ export default {
               lodop.ADD_PRINT_TEXT(340,30,330,95,json.consignee  );
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
-              lodop.ADD_PRINT_TEXT(478,30,330,70,'' );
+              lodop.ADD_PRINT_TEXT(478,30,330,70,json.notify );
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
               // lodop.ADD_PRINT_TEXT(505,416,280,26,'json.adddate' );
@@ -511,7 +703,7 @@ export default {
               lodop.ADD_PRINT_TEXT(505,416,120,26,json.adddate||'');
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
-              lodop.ADD_PRINT_TEXT(608,525,196,26,'' );
+              lodop.ADD_PRINT_TEXT(608,525,196,26, json.customernumber );
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
               lodop.ADD_PRINT_TEXT(719,374,347,60,json.pm );
@@ -527,46 +719,49 @@ export default {
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
               lodop.ADD_PRINT_TEXT(576,90,50,22,json.sfg );
-              lodop.SET_PRINT_STYLEA(0,"Bold",1)
+              // lodop.SET_PRINT_STYLEA(0,"Bold",1)
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
               lodop.ADD_PRINT_TEXT(579,258,50,22,json.mdg );
-              lodop.SET_PRINT_STYLEA(0,"Bold",1)
+              // lodop.SET_PRINT_STYLEA(0,"Bold",1)
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
               lodop.ADD_PRINT_TEXT(621,30,330,35,json.hbh+'/'+formatDate(json.hbrq,'yyyy-MM-dd') );
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
               lodop.ADD_PRINT_TEXT(714,30,72,102,json.piece);
-                 lodop.SET_PRINT_STYLEA(0,"Bold",1)
+                //  lodop.SET_PRINT_STYLEA(0,"Bold",1)
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
               lodop.ADD_PRINT_TEXT(714,118,72,102,json.weight );
-                 lodop.SET_PRINT_STYLEA(0,"Bold",1)
+                //  lodop.SET_PRINT_STYLEA(0,"Bold",1)
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
-              lodop.ADD_PRINT_TEXT(714,200,72,102,json.rateclass);
-              lodop.SET_PRINT_STYLEA(0,"Bold",1)
+              lodop.ADD_PRINT_TEXT(714,200,72,102,json.volume);
+              // lodop.SET_PRINT_STYLEA(0,"Bold",1)
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
-              lodop.ADD_PRINT_TEXT(714,287,72,102,json.volume );
-             lodop.SET_PRINT_STYLEA(0,"Bold",1)
+              lodop.ADD_PRINT_TEXT(714,287,72,102,json.rateclass);
+            //  lodop.SET_PRINT_STYLEA(0,"Bold",1)
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
 
-              lodop.ADD_PRINT_TEXT(905,30,77,20,json.freightpp||'' );
+              lodop.ADD_PRINT_TEXT(905,30,77,20, this.getCheckData(json.freightpp)||'' );
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
-              lodop.ADD_PRINT_TEXT(905,118,77,20,json.freightcc||'' );
+              lodop.ADD_PRINT_TEXT(905,118,77,20,this.getCheckData(json.freightcc)||'' );
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
-              lodop.ADD_PRINT_TEXT(905,200,77,20,json.otherchargepp||'');
+              lodop.ADD_PRINT_TEXT(905,200,77,20,this.getCheckData(json.otherchargepp)||'');
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
-              lodop.ADD_PRINT_TEXT(905,287,77,20,json.otherchargecc||'' );
+              lodop.ADD_PRINT_TEXT(905,287,77,20,this.getCheckData(json.otherchargecc)||'' );
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
               lodop.ADD_PRINT_TEXT(970,94,240,24,json.pono);
+              lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
+
+               lodop.ADD_PRINT_TEXT(940,94,240,24, this.mawbinfo.gysname||'');
               lodop.SET_PRINT_STYLEA(0,"ReadOnly",0);
 
               lodop.ADD_PRINT_TEXT(998,94,240,24,json.freightfee||'');
@@ -601,6 +796,42 @@ export default {
                   this.getRate()  //费率
            },{immediate:true}
          )
+
+         // 监听品名，数量
+         this.$watch(
+           function () {
+             return this.formdata.pm + this.formdata.quantity
+           },
+           function (newVal, oldVal) {
+             let data = ''
+             if  ( this.formdata.pm) {
+               data =  this.formdata.pm;
+             }
+
+             if  ( this.formdata.quantity) {
+               data = data + '\n' + this.formdata.quantity
+             }
+             this.pmQuantity = data;
+           }
+         )
+
+        //  this.$watch(
+        //    function () {
+        //      return this.pmQuantity;
+        //    },
+        //    function (newVal, oldVal) {
+        //      if (newVal &&  newVal != oldVal) {
+        //        let data = newVal.split('/n');
+        //        if (data[0]) {
+        //           this.formdata.pm = data[0];
+        //        }
+
+        //        if (data[1]){
+        //           this.formdata.quantity = data[1];
+        //        }
+        //      }
+        //    }
+        //  )
          setTimeout(() => {
             this.saveReferenceBook(1)
          }, 600);
@@ -637,19 +868,76 @@ export default {
       'mawbinfo.paymode'(val){
          //  this.setFreightCha()
       },
+
+      // 预付 到付 反正就是 1 2 1 2 你前端得处理成勾选  而且 一组里只有一个1
+      'formdata.freightpp': {
+        handler(val) {
+          if (val == '1') {
+            this.$set( this.formdata, 'freightcc', '')
+          }
+
+          if (val == '2') {
+            this.$set( this.formdata,  'freightcc', '')
+          }
+        }
+       
+      },
+
+       'formdata.freightcc': {
+        handler(val) {
+          if (val == '1') {
+            this.$set( this.formdata, 'freightpp', '')
+          }
+
+          if (val == '2') {
+            this.$set( this.formdata,  'freightpp', '')
+          }
+        }
+       
+      },
+
+       'formdata.otherchargepp': {
+        handler(val) {
+          if (val == '1') {
+            this.$set( this.formdata, 'otherchargecc', '')
+          }
+
+          if (val == '2') {
+            this.$set( this.formdata,  'otherchargecc', '')
+          }
+        }
+      },
+
+       'formdata.otherchargecc': {
+        handler(val) {
+          if (val == '1') {
+            this.$set( this.formdata, 'otherchargepp', '')
+          }
+
+          if (val == '2') {
+            this.$set( this.formdata,  'otherchargepp', '')
+          }
+        }
+       
+      },
+
+      
+      
       saveNumberList:{
         handler(val){
             var longsall=0
             var widthsall=0
             var heightsall=0
-
-            this.saveNumberList.forEach(item=>{
+            if (val) {
+                this.saveNumberList.forEach(item=>{
                item.storevolumeList.forEach(k=>{
                    longsall+=k.longs
                    widthsall+=k.widths
                    heightsall+=k.heights
                })
-            })
+             })
+            }
+          
             this.formdata.quantity=longsall+'*'+widthsall+'*'+heightsall+'*'+this.mawbinfo.realpiece
         },immediate:true,deep:true
       }
@@ -780,6 +1068,12 @@ color:#333;
 }
 .right{
   flex: 1;
+}
+
+.input-bill-class {
+  /deep/.el-input__inner{
+    border: none;
+  }
 }
 @media print {
     #print1 {

@@ -15,7 +15,7 @@ public class FeeController {
 
     @RequestMapping("/test")
     public String test() {
-        return "跨域";
+        return "1";
     }
 
     @RequestMapping("testCache")

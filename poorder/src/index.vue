@@ -168,8 +168,8 @@ export default {
     //设置当前默认的系统；编译价格管理系统时候设置下面的
     let buildSystem = sessionStorage.system || "bo"; //bo系统
     //let buildSystem="priceManagement";// priceManagement 价格管理系统
-    if (location.pathname.toLowerCase().includes("pricemanagement")) {
-      buildSystem = "priceManagement";
+    if (location.pathname.toLowerCase().includes("pricesystem")) {
+      buildSystem = "priceSystem";
     }
 
     if (location.pathname.toLowerCase().includes("wffcustomoutsidenew")) {
@@ -344,7 +344,7 @@ export default {
     if (location.pathname.toLowerCase().includes("wffmanagement")) {
       appname = "management";
       this.system = "wffmanagement";
-    } else if (this.system == "priceManagement") {
+    } else if (this.system == "priceSystem") {
       appname = "唯凯价格管理系统";
     } else {
       if (nav) {
@@ -1310,12 +1310,10 @@ export default {
         title = "报关订单管理系统";
       } else if (this.system == "wffmanagement") {
         title = "审批管理系统";
-      } else if (this.system == "priceManagement") {
+      } 
+      else if(this.system == "priceSystem"){
         title = "唯凯价格管理系统";
       }
-      // else if(this.system == "priceSystem"){
-      //   title = "唯凯运价管理系统";
-      // }
       else if (this.system == "outside") {
         title = "唯凯外网管理系统";
       }

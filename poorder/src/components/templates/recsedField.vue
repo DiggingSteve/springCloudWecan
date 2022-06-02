@@ -4,7 +4,7 @@
 
 <div style="position:relative;display:inline-block">
 <!-- 委托项目 -->
-  <el-input v-model="tableDataName2"  @focus="hawbShuJu" @input="showDetail=true"  @keyup.native="filter2" @click.native="showDetail2"  style="width:270px;" @blur="clearNowValue" :placeholder="type=='1'?'收货人查询':'发货人查询'">
+  <el-input v-model="tableDataName2"  @focus="hawbShuJu" @input="handleInput"  @keyup.native="filter2" @click.native="showDetail2"  style="width:270px;" @blur="clearNowValue" :placeholder="type=='1'?'收货人查询':'发货人查询'">
 <i slot="prefix" class="el-input__icon el-icon-search" style="margin-top:-5px;"></i>
   </el-input>
 
@@ -61,7 +61,8 @@ import { Notification } from 'element-ui';
            hideBtn:{
              type:Boolean,
              default:false
-           }
+           },
+           show: Boolean
          }
         ,data () {
             return {
@@ -79,6 +80,12 @@ import { Notification } from 'element-ui';
         },
 
 			methods: {
+        handleInput() {
+          if (!this.show) {
+            this.showDetail=true
+          }
+        },
+
         //是去焦点没有数据清空
         clearNowValue(){
            if(this.tableDataN2.length==0){
@@ -247,6 +254,12 @@ this.showDetail=false
 		, hawbShuJu(type){
    //alert(type)
       var that=this;
+       setTimeout(() => {
+           if(that.show) {
+          that.showDetail = true;
+       } 
+        },200)
+
       that.search.area=this.area||this.$store.state.areaState
      // alert('1')
      // console.log(JSON.stringify(that.search))
