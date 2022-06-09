@@ -167,7 +167,6 @@ export default {
   data() {
     //设置当前默认的系统；编译价格管理系统时候设置下面的
     let buildSystem = sessionStorage.system || "bo"; //bo系统
-    //let buildSystem="priceManagement";// priceManagement 价格管理系统
     if (location.pathname.toLowerCase().includes("pricesystem")) {
       buildSystem = "priceSystem";
     }
