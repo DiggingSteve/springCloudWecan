@@ -5,6 +5,7 @@
     {{modelData.customprice}}
     {{opertype}} -->
         <!-- {{opertype}} -->
+        <!-- {{monitor}} -->
         <!-- {{modelData}} -->
         <!-- {{pagetype}}
         111 -->
@@ -18,6 +19,7 @@
             <div class="searchForm">
                 <el-button @click="search">查询</el-button>
                 <!-- <el-button @click="reset">重置</el-button> -->
+               <el-button type="primary" @click="orderDialogstatus = !orderDialogstatus">订单新增</el-button>
             </div>
         </div>
         <!-- {{ziTableData}} -->
@@ -194,7 +196,7 @@
 
         </tableCompt>
 
-        <cancelOper :orderCancel.sync="orderCancel" v-if="orderCancel" dom=2
+        <cancelOper :orderCancel.sync="orderCancel" v-if="orderCancel" dom=2 
             :inputModelData="tableDataRes[listBackIndex]" @success="newCancelOrderFunc" :czMark="czMark"></cancelOper>
 
         <!-- 配置总运单弹框 -->
@@ -415,6 +417,7 @@
                     :boguid="boguid" @update="delIndex" :area="area" :orderdom="orderdom" v-if="pagetype==7">
                 </mawbaddput>
                 <new-order-add :boguid="boguid" pagetype=2 :visible.sync="dialogShow" v-else  frompage=2></new-order-add> -->
+                <!--从订单编号进入 订单新增 -->
                 <new-order-add :boguid="boguid" pagetype=2 :visible.sync="dialogShow" frompage=2></new-order-add>
 
             </el-dialog>
@@ -602,6 +605,13 @@
 
         </el-dialog>
 
+        <transition enter-active-class="animate__animated animate__zoomInDown"
+        leave-active-class="animate__animated animate__zoomOutRight">
+        <el-dialog title="订单新增" center :visible.sync="orderDialogstatus"  class="dialogPage"
+            :close-on-click-modal="false" :close-on-press-escape="false" width="100%" top="0px" :modal="false" @close="closeOrderDialog">
+        <newOrderAdd  v-if="orderDialogstatus"></newOrderAdd>
+        </el-dialog>
+        </transition>
 
 
         <!-- 分配 -->
@@ -669,6 +679,7 @@
     import fenpei from "./orderDetails/fenpei";
     import sizeInfo from '@/components/orderDetails/sizeInfo'
     import mawbConfigNew from "./templates/mawbConfigNew";
+    import newOrderAdd from "@/components/newOrderAdd.vue"
     import {
         searCondition,
         getChangeValue,
@@ -694,6 +705,7 @@
             return {
                 name: "listConfirm.vue",
                 pageshow: true,
+                orderDialogstatus: false,
                 showTotal: {
                     all: true,
                     ybjzt: true,
@@ -926,6 +938,9 @@
         },
 
         methods: {
+            closeOrderDialog(){
+                this.orderDialogstatus = false
+            },
             setBackModel() {
                 this.backModel = { hbh: '', hbrq: '', mawb: '', title: '', rejectreason: '', inwageallinprice: '', self_real_bp_freight_in: '', cus_real_bp_freight_in: '', inwageallinprice_trans: '', self_real_bp_trans_in: '', cus_real_bp_trans_in: '' }
             },
@@ -989,7 +1004,7 @@
                 if (this.pagetype == 7) {
                     this.searchData.area = "上海"
                 }
-
+                
                 var jsonArr2 = {
                     where: this.searchData,
                     order: "adddate desc"
@@ -1092,6 +1107,7 @@
             },
             // 上榜确认
             async listConfirm(data, index, callback) {
+                console.log(data,index, callback)
                 if (data.iscomboine != '1') {
                     if (!data.isinwageallin || data.isinwageallin == '--' || !data.currencyin || data.creditisbackstatus == '待通过'||data.creditisbackstatus == '已驳回') {
                         if (data.profitmode == '本站') {
@@ -1193,42 +1209,69 @@
                             })
 
                         }
+                        if(data.area == '上海' && data.system == '空出') {
+                                this.$axios({
+                                    "method": "put",
+                                    url: this.$store.state.webApi + 'api/ExHpoAxplineSureBill',
+                                    data: {
+                                        list: list,
+                                        hbh: $.trim(data.yqhbh),
+                                        hbrq: data.yqhbrq,
+                                        mawb: data.mawb,
+                                        area: data.area,
+                                        operguid: data.guid,
+                                        sfg: data.sfg,
+                                        profitmode: data.profitmode
+                                    },
+                                    loading: true,
+                                    noarea: '1'
+                                })
+                                    .then(results => {
+                                        if(this.pagetype=='4'||this.pagetype=='5'){
+                                        this.saveVisible = !this.saveVisible;
+                                        }else{
+                                        callback&&callback()
+                                        }
+                                        if (results.data.resultstatus == 0) {
+                                            
+                                            this.$message.success(results.data.resultmessage)
+                                            this.tableDataRes.splice(index, 1);
+                                            this.$refs.table.ziTableIndex = '-1';
+                                            this.showBackDialog = false;
+                                        } else {
+                                            this.$message.error(results.data.resultmessage)
+                                        }
+                                    })
+                                    .catch(error => {
 
-                        this.$axios({
-                            "method": "put",
-                            url: this.$store.state.webApi + 'api/ExHpoAxplineSureBill',
-                            data: {
-                                list: list,
-                                hbh: $.trim(data.yqhbh),
-                                hbrq: data.yqhbrq,
-                                mawb: data.mawb,
-                                area: data.area,
-                                operguid: data.guid,
-                                sfg: data.sfg,
-                                profitmode: data.profitmode
-                            },
-                            loading: true,
-                            noarea: '1'
-                        })
-                            .then(results => {
-                                if(this.pagetype=='4'||this.pagetype=='5'){
-                                   this.saveVisible = !this.saveVisible;
-                                }else{
-                                   callback&&callback()
-                                }
+                                    })
+                        } else {
+                            let guid = String(this.tableDataRes[index].boguid);
+                            if (
+                                this.tableDataRes[index].islocal == 1 &&
+                                this.tableDataRes[index].isreject == 1
+                            ) {
+                                this.$message.error("不能受理！");
+                                return;
+                            }
+                            this.$axios({
+                                method: "put",
+                                url: this.$store.state.webApi + "api/ExAxplineAcceptance",
+                                data: { boguid: guid, status: "100" },
+                                loading: true
+                            }).then(results => {
                                 if (results.data.resultstatus == 0) {
-                                    
-                                    this.$message.success(results.data.resultmessage)
+                                    this.$message.success("更新成功");
                                     this.tableDataRes.splice(index, 1);
-                                    this.$refs.table.ziTableIndex = '-1';
+                                    //this.search()
                                     this.showBackDialog = false;
+                                    this.saveVisible = !this.saveVisible;
                                 } else {
-                                    this.$message.error(results.data.resultmessage)
+                                    this.$message.error(results.data.resultmessage);
                                 }
-                            })
-                            .catch(error => {
+                            });
+                        }
 
-                            })
                     })
                 // .catch(() => {
                 //     this.$message({
@@ -1748,7 +1791,43 @@
 
                     } else {
                         this.opertype = 5
-                        this.orderCancel = true;
+                        if(row.area == '上海' && row.system == '空出') {
+                            this.orderCancel = true;
+                        } else {
+                           let guid = String(this.tableDataRes[index].boguid);
+                            var routedelreason = {
+                                reasontype: "外站驳回",
+                                delbillreason: this.abandonReason,
+                                delbillman: localStorage.usrname,
+                                delbilldate: formatDate(new Date(), "yyyy-MM-dd hh:mm"),
+                                area: this.area,
+                                hbh: this.tableDataRes[index].yqhbh,
+                                hbrq: this.tableDataRes[index].yqhbrq,
+                            }
+                            this.$axios({
+                                method: "put",
+                                url: this.$store.state.webApi + "api/ExAxplineAcceptance",
+                                data: {
+                                    boguid: guid,
+                                    status: "200",
+                                    routedelreason: JSON.stringify(routedelreason)
+                                },
+                                loading: true
+                            }).then(results => {
+                                ////console.log(results.data)
+                                if (results.data.resultstatus == 0) {
+                                    this.$message.success("更新成功");
+                                    this.tableDataRes.splice(index, 1);
+                                    this.cancelVisible = false;
+                                    this.putIndex = -1;
+                                    this.abandonReason = "";
+                                    //this.search()
+                                } else {
+                                    this.$message.error(results.data.resultmessage);
+                                }
+                                    });
+                        }
+                        
                         this.listBackIndex = index;
                         this.orderCancelForm = { rollbackreason: '', rollbacktype: '', boguid: '', sid: '' };
                         this.czMark = row.pono.indexOf('-') != '-1' ? '1' : '2'

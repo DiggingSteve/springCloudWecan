@@ -157,7 +157,9 @@ axios.interceptors.request.use(function (config) {
           newconfig.where.servicecodelist = store.state.serviceState
         }
       }
+      
       if (store.state.systemCheck && !config.nosystem&&sessionStorage.system!='outside') {
+        console.log(store.state.systemCheck)
         if (curRoute == 'customsContactSend') {
           if (store.state.systemCheck != '国内服务') {
             newconfig.where.system = {
@@ -170,8 +172,9 @@ axios.interceptors.request.use(function (config) {
           }
         }
       }
-      //console.log(router.currentRoute.params)
+      
       if (router.currentRoute.params && router.currentRoute.params.id && !config.nosystem&&sessionStorage.system!='outside') {
+        console.log(router.currentRoute.params)
         let othername = store.state.navDataById[router.currentRoute.params.id].othername
         if (othername && othername.includes('操作')) {
           newconfig.where.system = {
@@ -251,6 +254,8 @@ axios.interceptors.request.use(function (config) {
           arr=arr.concat(['wagerejectstatusin'])
         }else if(curRoute=='frmCustomJob'){
           arr=arr.concat(['id','sid','backstatus','creditcontent','creditisbackstatus','isdel','isinwageallin','lockstatus','locktitle','locktype','remark','usr_code','approvalstatus'])
+        }else if(curRoute=='orderSearchAi'){
+          arr = arr.concat(['shipaceid','hawbpiece','hawbweight','hawbjfweight','ybpiece','ybweight','jfweight'])
         }
 
         if (showAllField.indexOf(curRoute) == '-1') {

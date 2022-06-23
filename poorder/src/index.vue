@@ -1405,9 +1405,6 @@ export default {
 .bologo {
   background: url("./../boStatic/images/kclogo.png") no-repeat;
 }
-// .priceSystemlogo{
-//   background: url("./../boStatic/images/priceSystemlogo.png") no-repeat;
-// }
 
 .lylogo {
   background: url("./../boStatic/images/lylogo.png") no-repeat;

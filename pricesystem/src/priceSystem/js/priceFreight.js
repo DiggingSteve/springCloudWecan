@@ -25,9 +25,9 @@ const specifiedFlight = "特定航班";
 
 const zzgTitle = { direct: "直达", trans: "中转" };
 
-const relationEditTitle = { cus: "客户参数添加", packageType: "包装参数添加", vol: "货型参数添加" }
+const relationEditTitle = { cus: "客户参数添加", packageType: "包装参数添加", vol: "货型参数添加", cargo: "货物参数添加" }
 
-const diffCode = { vol: "vol", weight: "weight", cus: "cus", package: "package" }
+const diffCode = { vol: "vol", weight: "weight", cus: "cus", package: "package", cargo: "cargo" }
 
 
 
@@ -40,12 +40,18 @@ class priceFreightView extends BaseService {
 
     //存储参数框数据
     packageTypeArr = []
+
     weightArr = []
+
     volArr = []
+
+    //货物类型参数
+    cargoArr = []
 
     tableVolArr = [];
 
     cusArr = []
+
     approvalArr = [];
 
 
@@ -54,8 +60,8 @@ class priceFreightView extends BaseService {
         return head + i.toString() + j.toString();
     }
 
-    createWiightRef(i){
-        return "weightTd_"+i.toString();
+    createWiightRef(i) {
+        return "weightTd_" + i.toString();
     }
 
     /**二维数组 用于记录一口价 */
@@ -71,7 +77,8 @@ class priceFreightView extends BaseService {
     relationMap = {
         cus: { title: diffCode.cus, hasRelation: false, baseIndex: 0 },
         packageType: { title: diffCode.package, hasRelation: false, baseIndex: 0 },
-        vol: { title: diffCode.vol, hasRelation: false, baseIndex: 0 }
+        vol: { title: diffCode.vol, hasRelation: false, baseIndex: 0 },
+        cargo: { title: diffCode.cargo, hasRelation: false, baseIndex: 0 }
     };
 
     priceTabArr = [];//运价切换tab整合数组
@@ -454,9 +461,11 @@ class priceFreightView extends BaseService {
         this.weightArr = JSON.parse(localStorage.getItem(diffCodeKey.weight));
         this.volArr = JSON.parse(localStorage.getItem(diffCodeKey.vol));
         this.cusArr = JSON.parse(localStorage.getItem(diffCodeKey.cus));
+        this.cargoArr = JSON.parse(localStorage.getItem(diffCodeKey.cargo));
         this.relationMap.cus.baseIndex = this.cusArr.findIndex(f => { return f.isDefault == 1 });
         this.relationMap.packageType.baseIndex = this.packageTypeArr.findIndex(f => { return f.isDefault == 1 });
         this.relationMap.vol.baseIndex = this.volArr.findIndex(f => { return f.isDefault == 1 });
+        this.relationMap.cargo.baseIndex = this.cargoArr.findIndex(f => { return f.isDefault == 1 });
 
         this.tableVolArr = JSON.parse(localStorage.getItem(diffCodeKey.vol)).sort((a, b) => {
             return a.tableSeq - b.tableSeq;
@@ -469,7 +478,11 @@ class priceFreightView extends BaseService {
     // 和基点相同的index为一组 不同的拆散 然后 packageType 和 cus 之间笛卡尔积 为排列组合总数
     cusIndexArr = []
 
+    // 包装类型索引数组
     packageIndexArr = []
+
+    //货物类型索引数组
+    cargoIndexArr=[];
 
     cusPackageIndexArr = [];
 
@@ -480,12 +493,17 @@ class priceFreightView extends BaseService {
 
         var packageIndex = this.packageTypeArr.findIndex(f => { return f.isDefault });
 
+        var cargoIndex=this.cargoArr.findIndex(f=>{return f.isDefault});
+
         this.cusIndexArr[0] = [];
         this.cusIndexArr[0].push(cusIndex);
 
 
         this.packageIndexArr[0] = [];
         this.packageIndexArr[0].push(packageIndex);
+
+        this.cargoIndexArr[0]=[];
+        this.cargoIndexArr[0].push(cargoIndex);
 
     }
 
@@ -495,40 +513,12 @@ class priceFreightView extends BaseService {
 
         this.cusIndexArr = [];
         this.packageIndexArr = [];
+        this.cargoIndexArr=[];
         this.tabDisplayIndex = 0;
         this.loadBasePriceTabArr();
-        for (let i = 0; i < this.cusArr.length; i++) {
-            var cus = this.cusArr[i];
-            if (cus.isDefault) continue;
-            if (!cus.isAdd) continue;
-            this.cusIndexArr[0] = this.cusIndexArr[0] || [];
-
-            if (cus.isSameAsBase) {
-                this.cusIndexArr[0].push(i);
-                cus.isSetValue = true;
-                cus.diff = 0;
-            }
-            else {
-                this.cusIndexArr.push(i);
-            }
-        }
-        for (let j = 0; j < this.packageTypeArr.length; j++) {
-            var p = this.packageTypeArr[j];
-            if (p.isDefault) continue;
-            if (!p.isAdd) continue;
-            this.packageIndexArr[0] = this.packageIndexArr[0] || [];
-
-            if (p.isSameAsBase) {
-                this.packageIndexArr[0].push(j);
-                p.isSetValue = true;
-                p.diff = 0;
-            }
-            else {
-                this.packageIndexArr.push(j);
-
-            }
-        }
-
+        this.confirmSameAsBase(this.cusArr, this.cusIndexArr);
+        this.confirmSameAsBase(this.packageTypeArr, this.packageIndexArr);
+        this.confirmSameAsBase(this.cargoArr, this.cargoIndexArr);
         for (let k = 0; k < this.volArr.length; k++) {
             var vol = this.volArr[k];
             if (vol.isDefault) continue;
@@ -546,31 +536,41 @@ class priceFreightView extends BaseService {
             for (let j = 0; j < this.packageIndexArr.length; j++) {
                 let pIndex = this.packageIndexArr[j];
                 let pTitle = pIndex instanceof Array ? this.getTitle(this.packageTypeArr, pIndex) : this.packageTypeArr[pIndex].title
-                var matchObj = this.cusPackageIndexArr.find(f => { return (f.cusTitle == cusTitle) && (f.pTitle == pTitle) });
-                let cDiff = this.getDiff(this.cusArr, cusIndex);
-                let pDiff = this.getDiff(this.packageTypeArr, pIndex);
-                var obj = {
-                    cusIndex: cusIndex,
-                    pIndex: pIndex,
-                    cusTitle: cusTitle,
-                    pTitle: pTitle,
-                    cDiff: cDiff, //记录对应勾稽参数差值
-                    pDiff: pDiff,
-                    fixedMap: {},//记录一口价 此一口价key无需加上cus package
-                    isRemain: true
-                } // 组合tab对象
-                if (!!!matchObj) {
-                    this.cusPackageIndexArr.push(obj);
+                for(let k=0;k<this.cargoIndexArr.length;k++){
+                    let cargoIndex=this.cargoIndexArr[k];
+                    let cargoTitle=cargoIndex instanceof Array?this.getTitle(this.cargoArr,cargoIndex):this.cargoArr[cargoIndex].title;
+                    var matchObj = this.cusPackageIndexArr.find(f => { return (f.cusTitle == cusTitle) && (f.pTitle == pTitle)&&(f.cargoTitle==cargoTitle) });
+                    let cDiff = this.getDiff(this.cusArr, cusIndex);
+                    let pDiff = this.getDiff(this.packageTypeArr, pIndex);
+                    let cargoDiff=this.getDiff(this.cargoArr,cargoIndex)
+                    var obj = {
+                        cusIndex: cusIndex,
+                        pIndex: pIndex,
+                        cusTitle: cusTitle,
+                        pTitle: pTitle,
+                        cargoDiff:cargoDiff,
+                        cargoTitle:cargoTitle,
+                        cDiff: cDiff, //记录对应勾稽参数差值
+                        pDiff: pDiff,
+                        fixedMap: {},//记录一口价 此一口价key无需加上cus package
+                        isRemain: true
+                    } // 组合tab对象
+                    if (!!!matchObj) {
+                        this.cusPackageIndexArr.push(obj);
+                    }
+                    else {
+                        matchObj.cusIndex = cusIndex;
+                        matchObj.pIndex = pIndex;
+                        matchObj.cusTitle = cusTitle;
+                        matchObj.pTitle = pTitle;
+                        matchObj.cargoIndex=cargoIndex;
+                        matchObj.cargoTitle=cargoTitle;
+                        matchObj.cDiff = cDiff;
+                        matchObj.pDiff = pDiff;
+                        matchObj.isRemain = true;
+                    }
                 }
-                else {
-                    matchObj.cusIndex = cusIndex;
-                    matchObj.pIndex = pIndex;
-                    matchObj.cusTitle = cusTitle;
-                    matchObj.pTitle = pTitle;
-                    matchObj.cDiff = cDiff;
-                    matchObj.pDiff = pDiff;
-                    matchObj.isRemain = true;
-                }
+              
             }
         }
         this.cusPackageIndexArr = this.cusPackageIndexArr.filter(f => { return f.isRemain });
@@ -578,6 +578,29 @@ class priceFreightView extends BaseService {
             item.isRemain = false;
         })
         this.vueInstance.$forceUpdate();
+    }
+
+    /**
+     * 确认是否和基点一致
+     * @param {参数数组} arr 
+     * @param {组合索引数组 } indexArr 
+     */
+    confirmSameAsBase(arr, indexArr) {
+        for (let i = 0; i < arr.length; i++) {
+            var item = arr[i];
+            if (item.isDefault) continue;
+            if (!item.isAdd) continue;
+            indexArr[0] = indexArr[0] || [];
+
+            if (item.isSameAsBase) {
+                indexArr[0].push(i);
+                item.isSetValue = true;
+                item.diff = 0;
+            }
+            else {
+                indexArr.push(i);
+            }
+        }
     }
 
     getDiff(arr, indexOrArr) {

@@ -16,10 +16,11 @@
       <!-- {{orderCancelForm}} -->
 
       <el-form>
+        <!-- @@ 进口更改 -->
         <el-form-item label="操作类型：">
           <el-radio v-model="opertype" label="1" :disabled="czMark==1">撤单</el-radio>
-          <el-radio v-model="opertype" label="2" :disabled="dom!=2||czMark==2">航线驳回</el-radio>
-          <el-radio v-model="opertype" label="3" :disabled="dom!=3||inputModelData.opersystem=='国内服务'">退关</el-radio>
+          <el-radio v-model="opertype" label="2" :disabled="dom!=2||czMark==2||inputModelData.opersystem=='进口'">航线驳回</el-radio>
+          <el-radio v-model="opertype" label="3" :disabled="dom!=3||inputModelData.opersystem!='出口'">退关</el-radio>
         </el-form-item>
       </el-form>
 
@@ -28,10 +29,10 @@
       <div v-if="opertype==1">
 
             <h4 style="color:red;margin:8px 0px">订单已撤单,该订单彻底不做了。</h4>
-
+            <!-- @@ 进口更改 -->
           <div  style="margin:15px 0;">
           <el-steps :active="stepsActive" >
-            <el-step :title="(!ishx?'航线确认运费(已完成)':'客服确认杂费(已完成)')" :description="(!ishx?'航线确认有无运费':'客服确认有无杂费')" v-if="isCostConfirm"></el-step>
+            <el-step :title="(!ishx?'航线确认运费(已完成)':'客服确认杂费(已完成)')" :description="(!ishx?'航线确认有无运费':'客服确认有无杂费')" v-if="isCostConfirm&&inputModelData.opersystem=='出口'"></el-step>
 
             <el-step :title="wagedom+'撤单(进行中)'" :description="wagedom+'发起撤单，说明撤单原因并确认有无'+(ishx?'运费':'杂费')"></el-step>
             <!-- <el-step title="航线撤单" description="航线发起撤单，说明撤单原因并确认有无杂费"></el-step> -->
@@ -68,6 +69,21 @@
             <el-radio v-model="orderCancelForm.status" label="1">可用</el-radio>
             <!-- <el-radio v-model="orderCancelForm.status" label="4">不可用</el-radio> -->
             <el-radio v-model="orderCancelForm.status" label="5">作废</el-radio>
+          </el-form-item>
+          <el-form-item label="处理结果：" v-if="inputModelData.system=='空进'&&(orderCancelForm.canceltype=='客户弃货'||orderCancelForm.canceltype=='海关退货')">
+            <el-radio v-model="orderCancelForm.handleRs" label="1" style="margin-left:20px;">未处理</el-radio>
+            <el-radio v-model="orderCancelForm.handleRs" label="2">已处理</el-radio>
+          </el-form-item>
+          <el-form-item label="处理时间：" v-if="inputModelData.system=='空进'&&(orderCancelForm.canceltype=='客户弃货'||orderCancelForm.canceltype=='海关退货')">
+             <el-date-picker
+              v-model="orderCancelForm.handelDate"
+              type="date"
+              placeholder="选择日期"
+              :class="[orderCancelForm.handleRs=='2'?'input-required':'']"
+              :format="'yyyy-MM-dd'"
+              :value-format="'yyyy-MM-dd'"
+              >
+            </el-date-picker>
           </el-form-item>
           <el-form-item label="作废备注：" v-if="orderCancelForm.status=='5'">
             <el-input type="textarea" v-model="orderCancelForm.remark"  style="width:78%"></el-input>
@@ -215,6 +231,8 @@ export default {
         rollbacktype: "",
         canceling:'',
         remark:'',
+        handleRs:'',//进口处理结果
+        handelDate:'',//进口处理时间
       },
       hasCanceled:false,
       activeName:'',
@@ -330,7 +348,7 @@ export default {
         );
  */
       let json = JSON.parse(JSON.stringify(this.orderCancelForm));
-
+      
       if (!json.canceltype) {
         return this.$message.error("请选择撤单原因！");
       }
@@ -343,6 +361,10 @@ export default {
       }
       if (json.iswage == 1 && this.costdata.length == 0) {
         return this.$message.error("请输入至少一条费用！");
+      }
+      //@@ 进口更改
+      if(json.handleRs=='2'&&!json.handelDate){
+        return this.$message.error("请选择处理时间");
       }
       json.wage = json.iswage == 1 ? this.costdata : [];
       let canceling=this.ishx ? 2 : 1;
@@ -362,7 +384,9 @@ export default {
         iswage: json.iswage,
         ifshowRes: this.inputModelData.mawb && this.hasMaincamp,
         canceling: canceling,
-        area: this.inputModelData.area || ''
+        area: this.inputModelData.area || '',
+        handleRs:json.handleRs,
+        handelDate:json.handelDate
       }
       // if(!(this.inputModelData.mawb && !this.inputModelData.opersystem != '国内服务' && (this.inputModelData.czlx == '自货' || this.inputModelData.czlx == '唯凯配舱' ? this.hasMaincamp : true) && this.inputModelData.system == '空出')){
       //     obj.status=-1
@@ -493,7 +517,7 @@ export default {
         this.isCostConfirm=costConfirm.filter(i=>i.confirmstatus==700).length==costConfirm.length || costConfirm.length==0;//判断系统费用有无确认
 
       if(this.isCostConfirm){
-        this.stepsActive=2
+        this.stepsActive=this.inputModelData.system!='空进'?2:1
       }
 
         if (this.costdata.filter(i=>i.wagedom==this.wagedom).length>0) {

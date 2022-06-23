@@ -485,6 +485,7 @@ class priceFreightEditView extends priceFreightView {
       volRatioArr: this.convertDiffArr(this.volArr).filter(f => { return f.isAdd }),
       cusLevelArr: this.convertDiffArr(this.cusArr.filter(f => { return f.isAdd })),
       packageTypeArr: this.convertDiffArr(this.packageTypeArr.filter(f => { return f.isAdd })),
+      cargoArr:this.convertDiffArr(this.cargoArr.filter(f=>{return f.isAdd})),
       aircomArr: airComArr,
       remark: this.remark,
       jfType: this.jfType,
@@ -526,6 +527,7 @@ class priceFreightEditView extends priceFreightView {
       volRatioArr: this.convertDiffArr(this.volArr).filter(f => { return f.isAdd }),
       cusLevelArr: this.convertDiffArr(this.cusArr.filter(f => { return f.isAdd })),
       packageTypeArr: this.convertDiffArr(this.packageTypeArr.filter(f => { return f.isAdd })),
+      cargoArr:this.convertDiffArr(this.cargoArr.filter(f=>{return f.isAdd})),
       aircomArr: airComArr,
       remark: this.remark,
       jfType: this.jfType,
@@ -696,20 +698,24 @@ class priceFreightEditView extends priceFreightView {
       let item = this.cusPackageIndexArr[i];
       let cArr = item.cusIndex instanceof Array ? item.cusIndex : [item.cusIndex];
       let pArr = item.pIndex instanceof Array ? item.pIndex : [item.pIndex];
+      let cargoArr=item.cargoIndex instanceof Array? item.cargoIndex:[item.cargoIndex];
       cArr.forEach((cus) => {
-
-        pArr.forEach((p) => {
-          for (let key in item.fixedMap) {
-            let obj = item.fixedMap[key];
-            let map = { ...obj };
-            map.cus = this.cusArr[cus].title;
-            map.packageType = this.packageTypeArr[p].title;
-            if ((map.diff != '--')) {
-              arr.push(map);
+        cargoArr.forEach((cargo)=>{
+          pArr.forEach((p) => {
+            for (let key in item.fixedMap) {
+              let obj = item.fixedMap[key];
+              let map = { ...obj };
+              map.cus = this.cusArr[cus].title;
+              map.packageType = this.packageTypeArr[p].title;
+              map.cargoType=this.cargoArr[cargo].title;
+              if ((map.diff != '--')) {
+                arr.push(map);
+              }
             }
-          }
-
+  
+          })
         })
+    
       })
     }
 
@@ -1025,6 +1031,11 @@ class priceFreightEditView extends priceFreightView {
       this.vueInstance.relationEditTitle = relationEditTitle.vol;
       this.currentRelationEditArr = this.volArr;
       this.currentRelationMap = this.relationMap.vol;
+    }
+    else if (title == this.relationMap.cargo.title) {
+      this.vueInstance.relationEditTitle = relationEditTitle.cargo;
+      this.currentRelationEditArr = this.cargoArr;
+      this.currentRelationMap = this.relationMap.cargo;
     }
 
     this.isShowRelationEdit = true;

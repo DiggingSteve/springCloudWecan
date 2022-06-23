@@ -1,6 +1,6 @@
 <template>
 
-           <div v-show="!['AB0420','AB0520','AB0620'].includes(servicecode)">
+           <div v-show="!['AB0420','AB0620'].includes(servicecode)">
                     <el-alert
                     :title='title'
                     :type="$store.state.rwxdArr.includes(servicecode)?'warning':'info'"
@@ -47,7 +47,7 @@
         computed:{
               title(){
                let par={
-                 AA0510:'联运部',
+                 AA0510:'联运出口部',
                  AG0115:'空出鉴定组',
                  AG0120:'材料部',
                  AG0125:'空出鉴定组',
@@ -57,6 +57,7 @@
                  AA0840:'仓储部',
                  AA0850:'仓储部',
                  AG0110:'行政部',
+                 AB0520:'联运进口部'
               }
               if(this.$store.state.rwxdArr.includes(this.servicecode)){
                  return "该服务可下达到操作部门,如需下达,请将信息填写完整后并点击下达按钮给"+par[this.servicecode]+"。"

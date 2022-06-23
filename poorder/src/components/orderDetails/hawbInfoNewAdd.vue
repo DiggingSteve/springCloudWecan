@@ -4,10 +4,11 @@
     <!-- <commonTabs :list="tabsList" :showExpanionBtn="false" :checkedIndex.sync="tabChecked" :showTooltip="false"
       titlefield="title">
   </commonTabs> -->
-
-      <div class="fdinformation">
-
-        <div v-show="tabChecked==0" class="detail hawbinfo" style="padding-bottom:10px;margin-top: 0px;">
+      <div class="fdinformation">         
+          <new-form-cmpt v-if="mawbdetail.opersystem == '进口'   " :view-data="orderViewData" :model-data="hawbdata" @changeRelData="mawbdetail.hawbList[computedTabIndex].customerRelList = $event">
+          </new-form-cmpt>
+         
+        <div v-show="tabChecked==0 && mawbdetail.opersystem == '出口' " class="detail hawbinfo" style="padding-bottom:10px;margin-top: 0px;">
           <p class="detailTitle">分单基本信息</p>
           <new-form-cmpt :view-data="hawbViewData" :model-data="hawbdata">
             <template slot="khjcno">
@@ -49,7 +50,7 @@
           </div>
         </div>
 
-        <div class="detail" v-show="tabChecked==1" style="padding-bottom:10px;margin-top: 0px;">
+        <div class="detail" v-show="tabChecked==1 && mawbdetail.opersystem == '出口'" style="padding-bottom:10px;margin-top: 0px;">
           <p class="detailTitle">分单收发货人</p>
           <el-collapse-transition>
             <div>
@@ -81,8 +82,9 @@
     },
     props: {
       hawbdata: Object,
-      mawbdetail: Object
+      mawbdetail: Object,
     },
+    inject: ['reactiveTabIndex'],
     data() {
       return {
         tabsList: [
@@ -204,6 +206,311 @@
             }
           },
         },
+        orderViewData:{
+          fid: {
+              title: "委托客户",
+              type: 11,
+              required: true,
+              itemStyle: {
+                width: "460px"
+              },
+              contentStyle: {
+                display: "flex"
+              },
+              linkage: "gid",
+              pagetype: 1,
+            },
+            gid: {
+              title: "项目",
+              type: 10,
+              required: true,
+              itemStyle: {
+                width: "840px"
+              },
+              contentStyle: {
+                display: "flex"
+              },
+              disabled: false,
+              showCustomerRel: true,
+              isnewadd: true,
+            },
+          hawb:{
+            title:'分运单号',
+            required:true,
+            type:1,
+            hidden:false,
+            occupyRestSpace: true,
+            verify:"uppercase"
+          },
+          ybpiece:{
+            required: true,
+            verify: "integer",
+            alertTitle: '分单件数',
+            title:'分单件数',
+            type:1,
+            hidden:false,
+            elEvent: {
+              eventName: 'change',
+              eventFunc: this.isOver,
+              params:['ybpiece','hawb_ybpiece']
+            },
+          },
+          ybweight: {
+              title: "预报重量",
+              type: 1,
+              required: true,
+              verify: "fixedTwo",
+              alertTitle: '分单重量',
+              hidden:false,
+          },
+          jfweight: {
+              title: "计费重量",
+              type: 1,
+              required: true,
+              verify: "fixedTwo",
+              hidden:false,
+              occupyRestSpace: true,
+              elEvent: {
+                eventName: 'change',
+                eventFunc: this.isOverJfweight,
+                params:['jfweight','hawb_jfweight']
+            },
+          },
+          sfg:{
+            title: "始发港",
+            type: 20,
+            pagetype: 6,
+            required: true,
+            hidden:false,
+          },
+          mdg:{
+            title: "到达港",
+            type: 20,
+            pagetype: 6,
+            required: true,
+            hidden:false,
+            occupyRestSpace: true,
+          },
+
+          // hawb_smallpiece:{
+          //     title: "小件数",
+          //     type: 1,
+          //     verify: "integer",
+          //     occupyRestSpace: true,
+          //     hidden:false,
+          // },
+          exForm1: {
+              idStyle: {
+                width: "100%",
+                marginBottom: "-14px"
+              },
+              itemStyle: {
+                width: "100%"
+              },
+              titleStyle: {
+                display: "none"
+              },
+              hidden:false,
+            },
+            hwplace:{
+              title:'收货人所在地',
+              type:3,
+              occupyRestSpace: true,
+              groupid:212,
+              default:'1',
+              hidden:false,
+            },
+            tradeterm: {
+              title: "贸易方式",
+              type: 16,
+              idStyle: {
+                width: "100%"
+              },
+              itemStyle: {
+                width: "100%"
+              },
+              options: [{
+                title: "Freight  Prepaid",
+                detailS: [
+
+                ]
+              },
+              {
+                title: "Freight  Collect",
+                detailS: [
+
+                ]
+              }
+              ],
+              hidden:false,
+            },
+            jsfs:{
+              title:'结算方式',
+              type:3,
+              occupyRestSpace: true,
+              //groupid:215,
+              options:[
+                {label:'月结',value:'2'},
+                {label:'现结',value:'1'}
+              ],
+              //default:'2',
+              hidden:false,
+              disabled:false,
+            },
+            yjStoredatetype:{
+              title:'计费方式',
+              type:3,
+              occupyRestSpace: true,
+              itemStyle:{width:'100%'},
+              options:[
+              {
+               label:'以实际最早进仓日期为计费方式',
+               value:'1'
+              },
+              {
+              label:'以最晚实际进仓日期为计费方式',
+              value:'2'
+              }],
+              default:'1',
+              hidden:false,
+            },
+
+            hasdjh:{
+              title:'有无大件货',
+              type:3,
+              idStyle:{width:'100%'},
+              options:[
+              {
+                label:'无',
+                value:'2'
+              },
+              {
+                label:'有',
+                value:'1'
+              }
+              ],
+              default:'2',
+              hidden:false,
+              // elEvent: {
+              //   eventName: 'change',
+              //   eventFunc: this.isHas,
+              //   params:['hasdjh','occupyRestSpace','djhpiece']
+              // },
+            },
+            // djhpiece:{
+            //   title:'大件货',
+            //   type:1,
+            //   occupyRestSpace:true,
+            //   verify: "integer",
+            //   hidden:false,
+            // },
+            hascdjh:{
+              title:'有无超限货',
+              idStyle:{width:'100%'},
+              type:3,
+              options:[
+              {
+                label:'无',
+                value:'2'
+              },  
+              {
+                label:'有',
+                value:'1'
+              }
+             ],
+              default:'2',
+              hidden:false,
+              // elEvent: {
+              //   eventName: 'change',
+              //   eventFunc: this.isHas,
+              //   params:['hascdjh','occupyRestSpace','cdjhpiece']
+              // },
+            },
+            // cdjhpiece:{
+            //   title:'超限货',
+            //   type:1,
+            //   occupyRestSpace:true,
+            //   verify: "integer",
+            //   hidden:false,
+            // },
+            hastzcx:{
+              title:'有无特种超限货',
+              idStyle:{width:'100%'},
+              type:3,
+              options:[
+              {
+                label:'无',
+                value:'2'
+              },  
+              {
+                label:'有',
+                value:'1'
+              }
+              ],
+              default:'2',
+              hidden:false,
+              // elEvent: {
+              //   eventName: 'change',
+              //   eventFunc: this.isHas,
+              //   params:['hastzcx','occupyRestSpace','tzcxhpiece']
+              // },
+            },
+            // tzcxhpiece:{
+            //   title:'特种超限',
+            //   type:1,
+            //   occupyRestSpace:true,
+            //   verify: "integer",
+            //   hidden:false,
+            // },
+            hasjmyq:{
+              title:'有无精密仪器',
+              idStyle:{width:'100%'},
+              type:3,
+              options:[
+              {
+                label:'无',
+                value:'2'
+              },  
+              {
+                label:'有',
+                value:'1'
+              }],
+              default:'2',
+              hidden:false,
+              // elEvent: {
+              //   eventName: 'change',
+              //   eventFunc: this.isHas,
+              //   params:['hasjmyq','occupyRestSpace','isjmyq']
+              // },
+            },
+            // isjmyq:{
+            //   title:'精密仪器',
+            //   type:1,
+            //   occupyRestSpace:true,
+            //   verify: "integer",
+            //   hidden:false,
+            // },
+            englishpm: {
+              title: "英文品名",
+              type: 17,
+              verify: "uppercase",
+              itemStyle: {
+                width: "560px"
+              },
+              required:true,
+              hidden:false,
+            },
+            sizeremark:{
+              title: "尺寸备注",
+              type: 17,
+              itemStyle: {
+                width: "560px"
+              },
+              //required:true,
+              hidden:false,
+            }
+
+          },
         jcnoTableHead: [
           { title: "进仓编号", field: "khjcno" },
           { title: "件数", field: "piece" },
@@ -261,7 +568,6 @@
       // }, { deep: true, immediate: true })
 
     },
-
     watch: {
 
     },
@@ -302,9 +608,15 @@
       useList() {
         // console.log(this.hawbdata.khjcno && this.hawbdata.khjcno.split(","))
         return this.mawbdetail.ybstoreList.filter(i => i.khjcno && i.piece && i.weight && i.volume && (!i.status || this.hawbdata.khjcno && this.hawbdata.khjcno.split(",").includes(i.khjcno)))
+      },
+      computedTabIndex(){
+        return this.reactiveTabIndex()
       }
 
 
+    },
+    mounted(){
+      // console.log(this.obj)
     }
 
   }

@@ -153,8 +153,14 @@
     <div class="page-show-c">
       <span class="spanSlide" :class="[setPageshow?'slideOff':'slideOn']" @click="setPageshow=!setPageshow"
         :title="[setPageshow?'隐藏条件':'更多条件']"></span>
+      <el-button type="warning"  style="float: right;margin-top:15px;margin-right:12px;" v-if="showYjButton" @click="freightF">运价查询
+      </el-button>
+
       <el-button type="danger" @click="$emit('reset',true)" style="float: right;margin-top:15px;margin-right:12px;">重置
       </el-button>
+
+      
+
     </div>
 
     <el-dialog :visible.sync="templateConfig.visible"
@@ -261,7 +267,10 @@
         default: ""
       },
       area: String,//地域
-      system: String,//系统
+      system: {
+        type:String,
+        default:'空出',
+      },//系统
       viewData: {//配置选项
         type: Object,
         default: () => {
@@ -290,6 +299,13 @@
       pageshow: {//展开与收起
         type: Boolean,
         default: true
+      }
+    },
+    inject:{
+      freight:{
+        default:()=>{
+          return {show:false}
+        }
       }
     },
     data() {
@@ -439,6 +455,12 @@
           jcpchno:{
             title: "运单外借批次号",
             type: 1,
+            whereStr: "like",
+            fieldtype: 1
+          },
+          jcno:{
+            title:'进仓序号',
+            type:1,
             whereStr: "like",
             fieldtype: 1
           },
@@ -661,29 +683,33 @@
             type: 5,
             dom: "配舱状态",
             whereStr: "in",
-            fieldtype: 3
+            fieldtype: 3,
+            system:this.system,
           },
           hwstatus: {
             title: "货物状态",
             type: 5,
             dom: "货物状态",
             whereStr: "in",
-            fieldtype: 3
+            fieldtype: 3,
+            system:this.system,
           },
           dzstatus: {
             title: "单证状态",
             type: 5,
             dom: "单证状态",
-            system: "空出",
+            //system: "空出",
             whereStr: "in",
-            fieldtype: 3
+            fieldtype: 3,
+            system:this.system,
           },
           bgstatus: {
             title: "报关状态",
             type: 5,
             dom: "报关状态",
             whereStr: "in",
-            fieldtype: 3
+            fieldtype: 3,
+            system:this.system,
           },
           customstatus: {
             title: "海关联系单状态",
@@ -1007,6 +1033,16 @@
           },
 
           // 单位港口货物查询 fieldtype: 4
+          isCompleteHawb: {
+            title: "是否分单补全",
+            type: 4,
+            whereStr: "in",
+            fieldtype: 4,
+            options: [
+              { label: "是", value: "1" },
+              { label: "否", value: "2" }
+            ]
+          },
           system: {
             title: "所属系统",
             type: 5,
@@ -1046,6 +1082,16 @@
               {label: '无异常', value: '1'},
               {label: '已驳回', value: '2'},
               {label: '再申请', value: '3'}
+            ]
+          },
+          isdel:{
+            title:"是否作废",
+            type: 5, 
+            fieldtype: 3,
+            whereStr: 'in', 
+            options: [
+              {label: '否', value: '1'},
+              {label: '是', value: '2'}
             ]
           },
           hbh: { title: "航班号", type: 1, whereStr: "like", fieldtype: 4 },
@@ -1486,6 +1532,13 @@
             whereStr: "like",
             fieldtype: 4,
           },
+          yfstdin: {
+            title: "基港运价标准",
+            type: 5,
+            whereStr: "in",
+            groupid: 167,
+            fieldtype: 4,
+          },
           // 岗位查询 fieldtype: 5
           examineman_sett: { title: "审核人", type: 1, fieldtype: 5 },
           addman: { title: "创建人", type: 1, fieldtype: 5 },
@@ -1566,7 +1619,11 @@
         userSerColor: defaultUserColor //背景颜色
       };
     },
+
     created() {
+      // 空进航班日期改为到港日期
+      this.allViewData.hbrq.title=this.$store.state.navDataById[this.$router.currentRoute.params.id].othername&&this.$store.state.navDataById[this.$router.currentRoute.params.id].othername.includes('空进')?'到港日期':'航班日期'
+
       if (
         this.name == "customerSearch.vue" ||
         this.name == "costConfirmationkf.vue"
@@ -1599,6 +1656,10 @@
       this.setSearchColor();
     },
     computed: {
+      showYjButton(){//是否显示运价
+        var list=["customerSearch.vue","asignSearch.vue","asignSpaceSearch.vue","airLineSearch.vue","orderSearch.vue"]
+        return list.includes(this.name)&&this.$attrs.monitor!='2'
+      },
       userColorData() {//用户颜色模板设置
         return this.$store.state.tableTmpAll.find(
           i => i.type === 200 && i.name === localStorage.usrname
@@ -1649,6 +1710,10 @@
       }
     },
     methods: {
+      freightF(){
+        console.log( this.freight.show)
+        this.freight.show=true
+      },
       setWageTitle(dom) {//设置不同页面的费用选项标题
         this.allViewData.confirmstatus.title = dom + "费用状态";
         this.allViewData.confirmstatus_in.title = dom + "应收状态";
@@ -1764,7 +1829,7 @@
           ];
         } else if (zdType.includes(tempname)) {
           fields = [
-            ["accountcomgid", "paymentcomgid", "pzno", "pzdate", "wageinout","pztype","isverifiy"],
+            ["accountcomgid", "paymentcomgid", "pzno", "pzdate", "wageinout","pztype","isverifiy","isdel"],
             ["pzdom", "pono", "shipperno", "mawb", "hbrq", "addman", "adddate"]
           ];
         } else if (outsideType.includes(tempname)) {
@@ -1837,8 +1902,17 @@
           fields[1].push(...["ybkhjcno"]);
         }
 
+
+        if(tempname=="orderSearchAi.vue"){
+           fields[0].push(...["isCompleteHawb"]);
+        }
+
         if (tempname == "customerSearch.vue" ) {
-          fields[1].push(...["releasestatus", 'pdfinishstatus', 'pdfinishdate', 'pdfinishman']);
+
+          //fields[0].push(...['yfstdin'])
+          //fields[1].push(...["releasestatus", 'pdfinishstatus', 'pdfinishdate', 'pdfinishman']);
+          //fields[0].push(...['yfstdin'])
+          fields[1].push(...["yfstdin","releasestatus", 'pdfinishstatus', 'pdfinishdate', 'pdfinishman']);
         }
 
        
@@ -2250,6 +2324,10 @@
            fields[0]=['mawb','jobno','approvalstatus','approvaldate','approvalman']
            fields[1]=['fid','gid','real_hbrq','system','czlx','addman']
         }
+        if(tempname=='inHouseMonitor.vue'){
+          fields[0]=['mawb','jcno','hawb','hwstatus','addman','jcdate','adddate']
+          fields[1]=['fid','gid','hwlx']
+        }
 
         let navInfo = this.$store.state.navDataById[this.$route.params.id] || '';//获取路由信息 ，如{ "text": 5321166, "autname": "本站待受理", "temp": "cabinUnconfirmed", "othername": "订单层", "ready01": 5321267 }
         if (navInfo && navInfo.othername == '订单层') {//订单层不显示订单编号
@@ -2362,8 +2440,8 @@
                   }
                 } else if (item.groupid == 105) {
                   this.$set(item.options, index, {
-                    value: groupData[j][item.bindValue || "typename"],
-                    label: groupData[j][item.bindLabel || "ready01"]
+                    value: groupData[j][item.bindValue || "ready01"],
+                    label: groupData[j][item.bindLabel || "typename"]
                   });
                 } else {
                   // this.$set(item.options,index,{ 'value': groupData[j].ready01, 'label': groupData[j].typename })

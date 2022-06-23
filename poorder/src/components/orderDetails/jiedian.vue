@@ -17,7 +17,7 @@
                 </div>
 
 
-          <div class="item" v-for="(item,index) in nodeNameArr" :key="item.guid" v-if="item.nodedom==nodedom">
+          <div class="item" v-for="(item,index) in nodeNameArr" :key="item.guid+index" v-if="item.nodedom==nodedom">
           <i class="el-icon-success" :style="{color:item.nodedate?'#5DAF34':'#ccc'}"></i>
           <div>
             <p>
@@ -87,7 +87,7 @@ export default {
    ,methods:{
 
      getJiedianInfoFunc(){
-             this.$axios({method:'get',url:this.$store.state.webApi+"api/ExAiraxpNode",params:{guid:this.mawbinfo.guid,boguid:this.mawbinfo.boguid,area:this.mawbinfo.area,system:'系统'},loading:false,tip:false}).then(results=>{
+             this.$axios({method:'get',url:this.$store.state.webApi+"api/ExAiraxpNode",params:{guid:this.mawbinfo.guid,boguid:this.mawbinfo.boguid,area:this.mawbinfo.area,system:this.mawbinfo.system},loading:false,tip:false}).then(results=>{
               console.log("节点信息")
               console.log(JSON.stringify(results.data))
               this.nodeNameArr=results.data

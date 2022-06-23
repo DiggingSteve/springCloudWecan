@@ -89,7 +89,9 @@
 
     <!-- 唯凯托书 -->
     <el-dialog :visible.sync="tuoshuDialog" width="1300px" top="4%" v-if="tuoshuDialog"
-        :close-on-press-escape="false" append-to-body center>
+        :close-on-press-escape="false" append-to-body center
+        :close-on-click-modal="false"
+        >
         <entrustBill :mawbinfo="getInfoBook()"></entrustBill>
     </el-dialog>
 
@@ -355,11 +357,11 @@ export default {
             });
 
 
-            if (!(this.rowData.opersystem == "进口")) {//进口需要保留
-                delete mawbInfo.qfsj;
-                delete mawbInfo.hbh;
+            // if (!(this.rowData.opersystem == "进口")) {//进口需要保留
+            //     delete mawbInfo.qfsj;
+            //     delete mawbInfo.hbh;
                 // delete mawbInfo.hbrq;
-            }
+            // }
             // console.log(JSON.stringify(mawbInfo));
             if (mawbInfo.hwlx && mawbInfo.hwlx.indexOf('锂电池') < 0) {
                 mawbInfo.batterymodel = ''

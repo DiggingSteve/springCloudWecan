@@ -110,9 +110,16 @@ export default {
           });
 
            this.hwlxOptions=hwlxOptions
+           this.hawbViewData[1].hidden = !val||this.inputModelData.system=='空进'
       },immediate:true
 
     },
+     "inputModelData.system":{
+        handler(val){
+           this.hawbViewData[1].hidden = val=='空进'
+        },
+        immediate:true
+      },
     "inputModelData.hwlx":{
       handler(val){
 

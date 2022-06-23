@@ -5,7 +5,9 @@
     <!-- {{inputModelData.serviceList}} -->
     <!-- {{inputModelData.ybstoreList}} -->
     <!-- {{getInitData()}} -->
-    <!-- {{inputModelData}} -->
+    <!-- <h1> {{frompage}} </h1> -->
+    <!-- {{inputModelData}} --> 
+    <!-- {{inputModelData.customerRelList}} -->
      <!-- {{inputModelData.opersystem}}
     {{this.inputModelData.opersystemdom}} 
     {{inputModelData.gid}} -->
@@ -17,6 +19,7 @@
     <!-- {{basicinfoRequired}}
     {{inputModelData.orderdomOut}} -->
     <!-- {{pagestep}} -->
+ 
 
     <!-- <el-button @click="assignH()" type="primary" >分配</el-button> -->
     <!-- <el-button @click="saveWaitFp(2)" type="primary">确定分配</el-button> -->
@@ -76,10 +79,12 @@
          <!-- v-if="inputModelData.opersystem == '进口'" 234-->
          <!-- 进口111 -->
 
-        <!-- <newOrderAddEntrance
-        v-show="inputModelData.opersystem == '进口' && version == 2"
+        <newOrderAddEntrance
+        v-show="inputModelData.opersystem == '进口' && version == 2 && inputModelData.orderdom != ''"
+        :areaStateCode="areaStateCode"
         :inputModelData="inputModelData"
-        ></newOrderAddEntrance> -->
+        :frompage="frompage"
+        ></newOrderAddEntrance>
         
         <!-- 当选择国内服务时，显示的基本信息-->
         <!-- <div class="detail" v-if="inputModelData.opersystem=='国内'&&tempConfigShow">
@@ -291,10 +296,10 @@
               <!-- <el-button :disabled="saveBtnDisabled" @click="saveWaitFunc" type="primary">保存并分配</el-button> -->
               <!-- gnShow||(!gnShow&&inputModelData.opersystem!='进口') -->
               
-              <el-button :disabled="saveBtnDisabled" @click="assignH" type="primary" v-if="gnShow||(!gnShow&&inputModelData.system!='国内服务')">保存并分配
+              <el-button :disabled="saveBtnDisabled" @click="assignH" type="primary" v-if="(gnShow||(!gnShow&&inputModelData.system!='国内服务')) && frompage != 2">保存并分配
               </el-button>
-              <el-button :disabled="saveBtnDisabled" @click="saveWaitFp(3)" type="primary" v-if="gnShow||(!gnShow&&inputModelData.system!='国内服务')">保存并完成</el-button>
-              <el-button :disabled="saveBtnDisabled" @click="saveMawbInfo" type="primary">
+              <el-button :disabled="saveBtnDisabled" @click="saveWaitFp(3)" type="primary" v-if="(gnShow||(!gnShow&&inputModelData.system!='国内服务')) && frompage != 2">保存并完成</el-button>
+              <el-button :disabled="saveBtnDisabled" @click="saveMawbInfo" type="primary" v-if="frompage != 2">
                 {{areaStateCode}}操作</el-button>
               <!-- <el-button @click="pagestep=1" v-if="inputModelData.system!='国内' ">返回 </el-button> -->
 
@@ -379,7 +384,7 @@
                   </div>
                   <configMawb :inputModelData="inputModelData" v-if="pagetype==2"></configMawb>
                 </template> -->
-                    <hwxzComptNew slot="exForm1" showGuageString :gooodsOutgauge="gooodsOutgauge"
+                    <hwxzComptNew slot="exForm1" showGuageString :gooodsOutgauge="gooodsOutgauge" :version="version"
                       :inputModelData="inputModelData">
                     </hwxzComptNew>
                     <template slot="mawbAe">
@@ -405,10 +410,11 @@
 
               <!-- 唯凯托书 -->
             <el-dialog :visible.sync="tuoshuDialog" width="1300px" top="4%" v-if="tuoshuDialog"
-                :close-on-press-escape="false" append-to-body center>
+                :close-on-press-escape="false"
+                :close-on-click-modal="false"
+                 append-to-body center>
                 <entrustBill :mawbinfo="getInfoBook()"></entrustBill>
             </el-dialog>
-
 
           <!-- 运价信息 -->
           <div id="fareInputViewData" v-show="isBookingInformation">
@@ -465,7 +471,7 @@
   
 
           <commonTabs :list="goodsinfoTabs" style="margin-top: 12px;"
-          v-show="inputModelData.opersystemdom != '其它' && version == 1"
+          v-show="inputModelData.opersystemdom != '其它' && version == 1 "
             :showExpanionBtn="false" :checkedIndex.sync="goodsinfoTabsChecked" :showTooltip="false" titlefield="title">
             <div class="detail" id="goodsinfoView" style="margin-top: 0;">
               <div class="detail-title" @click="getDetailTitle(goodsinfoTabs[goodsinfoTabsChecked].title)" >
@@ -708,12 +714,12 @@
                   <el-button 
                     type="danger"
                     @click="resetInitData"
-                    v-if="inputModelData.opersystem == '进口' || inputModelData.opersystem == '出口'"
+                    v-if=" inputModelData.opersystem == '出口' "
                     >
                     重置
                   </el-button>
                    <!-- v-show="inputModelData.opersystem != '进口' -->
-                 <el-button @click="confirmSave" v-if="inputModelData.opersystem == '进口'  || inputModelData.opersystem == '出口'" type="primary" >
+                 <el-button @click="confirmSave" v-if=" inputModelData.opersystem == '出口' " type="primary" >
                 确认订舱</el-button>
               </section>  
              
@@ -727,7 +733,7 @@
           </div>
 
           <div class="pointDiv" v-if="pagetype==1  && inputModelData.opersystem != '进口' && inputModelData.opersystemdom != '其它'">
-            <span v-for="(item,index) in pointArr" v-show="item.show" :class="{pointChecked:pointIndex==index}">
+            <span v-for="(item,index) in pointArr"  :class="{pointChecked:pointIndex==index}" :key="index">
               <i></i>
               <a :href="item.href" @click="pointIndex=index">{{item.title}}</a></span>
           </div>
@@ -818,7 +824,7 @@
           <!-- &&(!inputModelData.outsidedom&&inputModelData.orderguid=='-1') -->
           <!-- <el-button @click="putMawbInfo" type="primary" v-if="frompage!=2||inputModelData.outsidedom=='AMAZON'">
             保存</el-button> -->
-            <el-button @click="putMawbInfo" type="primary" v-if="!(inputModelData.status==1&&inputModelData.outsidedom=='OUTSIDE')">
+            <el-button @click="putMawbInfo" type="primary" v-if="!(inputModelData.status==1&&inputModelData.outsidedom=='OUTSIDE') && (inputModelData.opersystem != '进口' && inputModelData.opersystem != '国内')">
             保存</el-button>
           <el-button @click="$emit('update:visible',false)">返回</el-button>
         </div>
@@ -1039,7 +1045,7 @@
   import { orderAddMixin } from '@/components/mixins/newOrderAdd'
   import serviceListOutside from "@/outsideDom/orderDetails/serviceListOutside"
   import customerRel from '@/components/templates/customerRel'
-  //import newOrderAddEntrance from '@/components/newOrderAddEntrance.vue'
+  import newOrderAddEntrance from '@/components/newOrderAddEntrance.vue'
   import entrustBill from "@/components/orderDetails/entrustBill"; //唯凯托书
 
   import {
@@ -1095,6 +1101,7 @@
     props: {
       isMawbImport: Boolean, // 是否是批量导入的页面
       importMawbData: Object,//导入数据
+
       importActiveName: String,
       guid: [String, Number],
       boguid: [String, Number],
@@ -1112,9 +1119,10 @@
     mixins: [getServiceView(1), serviceSplit(1), orderAddMixin()],
 
     components: {
-      serviceList,  houseNumberAdd, revSedMawb, revSedHawb, serviceItemSmall, hawbTabsNew, hawbAdd, fenpei, tempConfig, myServicePane, mawbImport, makingBill, storeCompSize, takeGoodsAdd, takeGoodsAddMdg, declareAtcustomsAdd, enterWarehouseBogn, configMawb, revSed, serviceListOutside, customerRel,
+      serviceList, newOrderAddEntrance,  houseNumberAdd, revSedMawb, revSedHawb, serviceItemSmall, hawbTabsNew, hawbAdd, fenpei, tempConfig, myServicePane, mawbImport, makingBill, storeCompSize, takeGoodsAdd, takeGoodsAddMdg, declareAtcustomsAdd, enterWarehouseBogn, configMawb, revSed, serviceListOutside, customerRel,
       entrustBill,
     },
+
 
     data() {
       return this.getInitData()
@@ -1140,11 +1148,11 @@
           });
 
 
-          if (!(this.inputModelData.opersystem == "进口")) {//进口需要保留
-              delete mawbInfo.qfsj;
-              delete mawbInfo.hbh;
+          // if (!(this.inputModelData.opersystem == "进口")) {//进口需要保留
+          //     delete mawbInfo.qfsj;
+          //     delete mawbInfo.hbh;
               // delete mawbInfo.hbrq;
-          }
+          // }
           // console.log(JSON.stringify(mawbInfo));
           if (mawbInfo.hwlx && mawbInfo.hwlx.indexOf('锂电池') < 0) {
               mawbInfo.batterymodel = ''
@@ -1166,6 +1174,7 @@
         // if(this.inputModelData.opersystem !== '国内'){
             if ((id == "opersystemdom" || id == 'opersystem') && e.target.value) {
                   let system = id == "opersystemdom" ? (e.target.value.charAt(0) + this.inputModelData.opersystem.charAt(0)) : (this.inputModelData.opersystemdom.charAt(0) + e.target.value.charAt(0));
+                  console.log(system)
                  if(system.indexOf('国') !== 1) {
                        if (this.disabledSystemOption.includes(system)) {
                         e.preventDefault();  //阻止选中
@@ -1221,7 +1230,7 @@
         return {
           name: "newOrderAdd.vue",
           outPagestep: 1,
-          version: 1, //默认第一版本 
+          version: 2, //默认第一版本 
           gnShow:true,//国内服务信用被控显示
           pagestep: 1,
           baseInfoInputViewData:{
@@ -1245,7 +1254,7 @@
                 { label: '空运', value: "空运" },
                 { label: '海运', value: "海运" },
                 { label: '陆运', value: "陆运" },
-                { label: '铁运', value: "铁运" },
+                // { label: '铁运', value: "铁运" },
                 { label: '其它', value: "其它" }
               ],
               idStyle: { width: '100%' },
@@ -1267,7 +1276,7 @@
               required: true
             },
             area: {
-              title: '委托唯凯站点',
+              title:'委托唯凯站点',
               type: 37,
               required: true,
               multiple: false,
@@ -2607,8 +2616,8 @@
           pointArr: [
             { title: '订舱信息', href: "#goodsinfoView", show: true },
             { title: '运价信息', href: "#fareInputViewData", show: false },
-            { title: '服务项目', href: "#serviceDetail", show: false },
-            // { title: '分单信息', href: "#supplementView", show: false },
+            { title: '货物信息', href: "#houseNumberAdd", show: false },
+            { title: '服务项目', href: "#serviceDetail", show: false }
           ],
           pointIndex: 0,
           mawbguid: '',
@@ -4142,6 +4151,47 @@
 
     watch: {
 
+    // 'inputModelData.area':{
+    //   handler(val){
+      
+    //     if( val == '上海' && this.inputModelData.opersystem == '进口'){
+    //       this.version = 2
+    //       this.inputModelData.czlx = ""
+    //       this.basicinfoView.czlx.hidden = true  
+          
+    //       this.basicinfoView.orderdom.hidden = false
+    //     } else  {
+    //       this.version = 1
+        
+    //     }
+    //   },
+    //   deep:true
+    // },
+    'inputModelData.hawbList':{
+      handler(val){
+        if(val.length > 0) {
+          val.forEach((item,index) => {
+            if(this.inputModelData.system == '空进' &&  this.inputModelData.hawbList[index].newService['OB0020']) {
+             this.inputModelData.hawbList[index].newService['OB0020'].model = true
+             this.inputModelData.hawbList[index].newService['OB0020'].disabled = true
+
+            }
+            
+          })
+        }
+      },
+      deep:true
+    },
+    version(val){
+      // if(val == 1) {
+      //   this.basicinfoView.fid.hidden = false
+      //   this.basicinfoView.gid.hidden = false
+      // } else
+       if(val == 2 && this.inputModelData.opersystem == '进口') {
+        this.basicinfoView.fid.hidden = true
+        this.basicinfoView.gid.hidden = true
+      }
+    },
       "inputModelData.weight": {
         handler(val) {
           this.inputModelData.jfweight =
@@ -4156,21 +4206,34 @@
         handler(val){
       this.basicinfoView.fid.required = true;
       this.basicinfoView.gid.required = true;
+      this.inputModelData.hawbList = []
       const data = JSON.parse(localStorage.groupType).filter(i=>i.groupid=='53')
       const obj = data.filter(k => k.typename == this.inputModelData.area)
           if(val == '进口'){
-            if(this.version == 1) {
-              this.goodsinfoTabs = [
-                { title: '订舱信息（必填）' },
-                { title: '补充信息（选填）' },
-                { title: '总单收发货人信息（选填）' },
-                { title: '分单信息（选填）' },
-              ]
-              this.inputModelData.mdg = obj[0].ready06
-              this.inputModelData.sfg = ""
-                this.basicinfoView.fid.hidden = false
-                this.basicinfoView.gid.hidden = false
-            } else if(this.version ==2) {
+            this.inputModelData.czlx = ""
+            this.basicinfoView.ordertype.disabled = true
+            this.inputModelData.ordertype = 1
+            this.version = 2
+            this.inputModelData.orderdom = "总单"
+            // if(this.inputModelData.area == '上海') {
+            //   this.version = 2
+            // }else {
+            //   this.version = 1
+            // }
+            // if(this.version == 1) {
+            //   this.goodsinfoTabs = [
+            //     { title: '订舱信息（必填）' },
+            //     { title: '补充信息（选填）' },
+            //     { title: '总单收发货人信息（选填）' },
+            //     { title: '分单信息（选填）' },
+            //   ]
+            //   this.inputModelData.mdg = obj[0].ready06
+            //   this.inputModelData.sfg = ""
+            //     this.basicinfoView.fid.hidden = false
+            //     this.basicinfoView.gid.hidden = false
+            // } else 
+            
+            if(this.version ==2) {
                 this.basicinfoView.area.title = "唯凯销售站点"
                 // this.basicinfoView.ordertype.hidden = false
                 // this.basicinfoView.orderdomOut.hidden = false
@@ -4180,9 +4243,18 @@
                 this.basicinfoView.czlx.hidden = true
                 this.basicinfoView.ordertype.hidden = false  
                 this.basicinfoView.orderdom.hidden = false
+            } else {
+                this.basicinfoView.fid.hidden = false
+                this.basicinfoView.gid.hidden = false
             }
 
+
+
           } else if(val == '出口') {
+            this.version = 1
+            this.basicinfoView.area.title = "委托唯凯站点"
+            this.basicinfoView.ordertype.disabled = false
+            this.inputModelData.orderdom = ""
             this.goodsinfoTabs = [
               { title: '服务项目（选填）' },
               { title: '补充信息（选填） '},
@@ -4190,6 +4262,7 @@
               { title: '分单信息（选填）' },
             ]
               this.inputModelData.mdg = ""
+              
               this.inputModelData.sfg = obj[0].ready06
               console.log(this.goodsinfoTabs)
                 this.basicinfoView.fid.hidden = false
@@ -4198,10 +4271,14 @@
                 this.basicinfoView.ordertype.hidden = true 
                 this.basicinfoView.orderdom.hidden = true
           } else if(val == "国内") {
+              this.version = 1
+              this.basicinfoView.area.title = "委托唯凯站点"
+              this.basicinfoView.ordertype.disabled = false
               this.homeInformation.fid.hidden = true
               this.homeInformation.gid.hidden = true 
               this.basicinfoView.fid.hidden = false
               this.basicinfoView.gid.hidden = false
+              this.inputModelData.orderdom = ""
               const codeList = Object.keys(this.newService)
               codeList.forEach(code => {
                 if(this.newService[code].port == '国内操作服务'){
@@ -4210,7 +4287,7 @@
               })
               console.log(this.newService)
             }
-
+          
         },
         immediate: true
       },
@@ -4374,6 +4451,7 @@
               //   this.basicinfoView.gid.hidden = true
                 this.basicinfoView.creditlevel.hidden = true
                 this.basicinfoView.ordertype.hidden = false
+                this.basicinfoView.ispay_pre.hidden = true
               //   this.basicinfoView.czlx.hidden = true
               }else {
                 arr.forEach(i => {
@@ -4619,7 +4697,13 @@
                     // });
                   }
                 });
-
+                
+                 Object.keys(this.inputModelData).forEach(key=>{
+                  if(key.includes('_mawb')){
+                    console.log(key)
+                    this.inputModelData[key]=''
+                  }
+                })
 
 
               } else {
@@ -4627,7 +4711,7 @@
               }
             }
           );
-          //@@@@@@此处重复监听 gid测试
+          //@@@@@@此处重复监听 gid
           this.$watch(
             () => {
               return this.inputModelData.gid
@@ -4683,8 +4767,10 @@
                 this.inputModelData.englishpm =
                   this.inputModelData.englishpm || "CONSOLIDATION CARGO AS PER ATTACHED MANIFEST";
               }
-
-              this.inputModelData.ordertype = ''
+              if(this.inputModelData.opersystem != '进口') {
+                this.inputModelData.ordertype = ''
+              }
+              
               if (val != '总单') {
                 this.tabsList = [{ title: '补充信息' }]
                 this.tabsChecked = 0;
@@ -4695,7 +4781,10 @@
               }
               // note: 分运单号
               this.goodsinfoView.hawb.hidden = val != '分单'
-              this.basicinfoView.ordertype.disabled = val != '总单'
+              if(this.inputModelData.opersystem != '进口') {
+                this.basicinfoView.ordertype.disabled = val != '总单'
+              } 
+              
 
              
             }
@@ -5287,12 +5376,16 @@
   }
 
   .pointDiv {
-    position: sticky;
-    bottom: 60px;
-    display: grid;
-    float: right;
-    width: 110px;
-    transform: translateX(116px);
+    // position: sticky;
+    // bottom: 41px;
+    // display: grid;
+    // float: right;
+    // width: 110px;
+    // transform: translateX(109px);
+     position: fixed;
+     bottom:136px;
+     right:55px;
+     width: 110px;
 
     i {
       display: inline-block;

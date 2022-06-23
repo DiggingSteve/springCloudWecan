@@ -729,6 +729,359 @@ export const getServiceView = function (mixpagetype) {
           //   required: true,
           // },
         },
+        //空进总单表单信息 @@进口更改
+        basicInformationAi:{
+            orderdom: {
+              title: '订单类型：',
+              type: 3,
+              options: [//@@@进口改动
+                {label:'总分单(货代委托)',value:'总单'},
+                {label:'总直单(货代委托)',value:'直单'}
+              ],
+              idStyle: { width: '100%' },
+              itemStyle: { width: '100%' },
+              hidden: false,
+              required: true
+            },
+            mawb:{
+              title:'总运单号：',
+              idStyle: { width: '100%' },
+              itemStyle: { width: '380px' },
+              type:1,
+              disabled:true
+            },
+            fid: {
+              title: "委托客户：",
+              type: 11,
+              required: true,
+              itemStyle: {
+                width: "560px"
+              },
+              contentStyle: {
+                display: "flex"
+              },
+              linkage: "gid",
+              pagetype: isaddpage ? 8 : 1,
+              disabled: true
+            },
+            gid: {
+              title: "项目：",
+              type: 10,
+              required: true,
+              itemStyle: {
+                width: "560px"
+              },
+              contentStyle: {
+                display: "flex"
+              },
+              disabled: true,
+              showCustomerRel: isaddpage
+            },
+            sfg: {
+              title: "始发港：",
+              type: 20,
+              pagetype: 6,
+              required:true
+            },
+            mdg: {
+              title: "到达港：",
+              type: 20,
+              pagetype: 6,
+              required:true,
+              occupyRestSpace: true
+            },
+            ybpiece: {
+              title: "预报件数：",
+              type: 1,
+              required: true,
+              verify: "integer",
+            },
+            ybweight: {
+              title: "预报重量：",
+              type: 1,
+              lass: "width289",
+              required: true,
+              verify: "fixedTwo"
+            },
+            jfweight: {
+              title: "计费重量：",
+              type: 1,
+              verify: "fixedTwo"
+            },
+            // smallpiece:{
+            //   title:'小件数：',
+            //   type: 1,
+            //   verify: "integer",
+            //   occupyRestSpace: true
+            // },
+            realpiece:{
+              title:'实际件数：',
+              type: 18,
+            },
+            realweight:{
+              title:'实际重量：',
+              type: 18,
+            },
+            hbh:{
+              title:'航班号：',
+              type:1,
+              required:true
+            },
+            hbrq:{
+              title:'到港日期：',
+              type: 6,
+              required:true
+            },
+            jjd:{
+              title:'货物来源：',
+              type: 3,
+              idStyle: {
+                width: "100%"
+              },
+              itemStyle: {
+                width: "100%"
+              },
+              options:[]
+            },
+            ysfs:{
+              title:'入境方式：',
+              type: 3,
+              idStyle: {
+                width: "100%"
+              },
+              itemStyle: {
+                width: "100%"
+              },
+              groupid: 64,
+              bindValue:'typename',
+              bindLabel:'typename'
+            }
+
+        },
+        //空进分单表单信息 @@进口更改
+        basicInformationAiHawb:{
+             hawb:{
+               title:'分运单号：',
+               type: 1,
+               required:true,
+               idStyle: {
+                width: "100%"
+                },
+               verify:"uppercase"
+             },
+             sfg: {
+              title: "始发港：",
+              type: 20,
+              pagetype: 6,
+              required:true
+            },
+            mdg: {
+              title: "到达港：",
+              type: 20,
+              pagetype: 6,
+              required:true,
+              occupyRestSpace: true
+            },
+            ybpiece: {
+              title: "预报件数：",
+              type: 1,
+              required: true,
+              verify: "integer",
+            },
+            ybweight: {
+              title: "预报重量：",
+              type: 1,
+              lass: "width289",
+              required: true,
+              verify: "fixedTwo"
+            },
+            // smallpiece:{
+            //   title:'小件数：',
+            //   type: 1,
+            //   verify: "integer",
+            //   occupyRestSpace: true
+            // },
+            realpiece:{
+              title:'实际件数：',
+              type: 18,
+            },
+            realweight:{
+              title:'实际重量：',
+              type: 18,
+            },
+            jfweight: {
+              title: "计费重量：",
+              type: 1,
+              verify: "fixedTwo"
+            },
+            exForm1: {
+              idStyle: {
+                width: "100%",
+                marginBottom: "-14px"
+              },
+              itemStyle: {
+                width: "100%"
+              },
+              titleStyle: {
+                display: "none"
+              },
+              hidden:false,
+            },
+            hwplace:{
+              title:'收货人所在地：',
+              type:3,
+              occupyRestSpace: true,
+              groupid:212,
+              hidden:false,
+            },
+            tradeterm: {
+              title: "贸易方式：",
+              type: 16,
+              idStyle: {
+                width: "100%"
+              },
+              itemStyle: {
+                width: "100%"
+              },
+              options: [{
+                title: "Freight  Prepaid",
+                detailS: [
+
+                ]
+              },
+              {
+                title: "Freight  Collect",
+                detailS: [
+
+                ]
+              }
+              ],
+              hidden:false,
+            },
+            jsfs:{
+              title:'结算方式：',
+              type:3,
+              occupyRestSpace: true,
+              options:[
+                {label:'月结',value:'2'},
+                {label:'现结',value:'1'}
+              ],
+              hidden:false,
+              disabled:false,
+            },
+            yjStoredatetype:{
+              title:'计费方式：',
+              type:3,
+              occupyRestSpace: true,
+              itemStyle:{width:'100%'},
+              options:[
+              {
+               label:'以实际最早进仓日期为计费方式',
+               value:'1'
+              },
+              {
+              label:'以最晚实际进仓日期为计费方式',
+              value:'2'
+              }],
+              hidden:false,
+            },
+            hasdjh:{
+              title:'有无大件货：',
+              type:3,
+              idStyle:{width:'100%'},
+              options:[
+              {
+                label:'无',
+                value:'2'
+              },
+              {
+                label:'有',
+                value:'1'
+              }
+              ],
+              hidden:false,
+            },
+            hascdjh:{
+              title:'有无超限货：',
+              idStyle:{width:'100%'},
+              type:3,
+              options:[
+              {
+                label:'无',
+                value:'2'
+              },
+              {
+                label:'有',
+                value:'1'
+              }
+              ],
+              hidden:false,
+            },
+            hastzcx:{
+              title:'有无特种超限货：',
+              idStyle:{width:'100%'},
+              titleStyle:{width:'120px',marginLeft:'-10px'},
+              type:3,
+              options:[
+              {
+                label:'无',
+                value:'2'
+              },
+              {
+                label:'有',
+                value:'1'
+              }
+             ],
+              hidden:false,
+            },
+            hasjmyq:{
+              title:'有无精密仪器：',
+              idStyle:{width:'100%'},
+              type:3,
+              options:[
+              {
+                label:'无',
+                value:'2'
+              },  
+              {
+                label:'有',
+                value:'1'
+              }
+              ],
+              hidden:false,
+            },
+            exForm2:{
+              idStyle: {
+                width: "100%",
+              },
+              itemStyle: {
+                width: "100%"
+              },
+              titleStyle: {
+                display: "none"
+              },
+              hidden:false,
+            },
+            englishpm: {
+              title: "英文品名：",
+              type: 17,
+              verify: "uppercase",
+              itemStyle: {
+                width: "560px"
+              },
+              required:true,
+              hidden:false,
+            },
+            sizeremark:{
+              title:'尺寸备注',
+              type: 17,
+              itemStyle: {
+                width: "560px"
+              },
+              //required:true,
+              hidden:false,
+            }
+        },
         //应收表单
         fareInputViewData: {
           currency: {
@@ -2171,6 +2524,41 @@ export const serviceSplit = function (mixpagetype) {
             }
           },
           AG0135ViewData: {
+            servicecontent_stick: {
+              title: "服务内容：",
+              type: 17,
+              idStyle: {
+                width: "560px"
+              },
+              itemStyle: {
+                width: "100%"
+              },
+              required: true,
+              hidden: !isczpage
+            },
+            yqdate_stick: {
+              title: "要求完成时间：",
+              type: 12,
+              idStyle: {
+                width: "560px"
+              },
+              required: true,
+              hidden: !isczpage
+            },
+            ...ysServiceContent,
+            goodsmark_stick: {
+              title: "唛头：",
+              type: 17,
+              idStyle: {
+                width: "560px"
+              },
+              itemStyle: {
+                width: "560px"
+              }
+            }
+          },
+          //@@ 进口更改
+          AG0138ViewData: {
             servicecontent_stick: {
               title: "服务内容：",
               type: 17,

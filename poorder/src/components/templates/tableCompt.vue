@@ -90,7 +90,7 @@
         <table v-infinite-scroll="load" :infinite-scroll-disabled="isPaging" :infinite-scroll-immediate="false"
           :infinite-scroll-distance="150">
           <tr class="trRow thfont">
-            <th :colspan="dataTable[0]&&dataTable[0].filter(i=>i.field!='merge').length" class="hebingTrFixed"></th>
+            <th :colspan="dataTable[0]&&dataTable[0].filter(i=>i.field!='merge').length" class="hebingTrFixed" v-if="dataTable[0].length"></th>
             <th v-for="(relation,index) in dataTable[1]"
               :class="[relation.field,relation.title.indexOf('(')!=-1&&!relation.nosplit?'ifzh':'']"
               :key="relation.field+index" :width="{width:getWidth(relation.field)}">
@@ -134,14 +134,14 @@
             <tr class="trRow" @contextmenu.prevent="rightFun($event,'2',row)">
               <!--     :style="{'background':name=='costConfirmation.vue'&&row['hwstatus']=='自送外场'?'black!important':''}" -->
 
-              <td :colspan="dataTable[0]&&dataTable[0].filter(i=>i.field!='merge').length"></td>
+              <td :colspan="dataTable[0]&&dataTable[0].filter(i=>i.field!='merge').length" v-if="dataTable[0].length"></td>
 
               <td v-for="item2 in dataTable[1]" :style="item2.style">
                 <!-- 状态样式设置 -->
 
 
                 <template
-                  v-if="item2.field.indexOf('status')!=-1&&!['dzstatus','usr_status','usr_status_cw','creditisbackstatus','billstatus_in','billstatus_out','confirmstatus_wageout','confirmstatus_wagein','mawbconfirmstatus','hawbconfirmstatus','approverstatus','pdfinishstatus','hwstatus'].includes(item2.field)&&name!='mawbManageNew.vue'">
+                  v-if="item2.field.indexOf('status')!=-1&&!['dzstatus','usr_status','usr_status_cw','creditisbackstatus','billstatus_in','billstatus_out','confirmstatus_wageout','confirmstatus_wagein','mawbconfirmstatus','hawbconfirmstatus','approverstatus','pdfinishstatus'].includes(item2.field)&&name!='mawbManageNew.vue'">
                   <span v-if="hasStatusColorStyle(item2.field)" :style="getStatusColorStyle(row, item2.field)">{{
                     row[item2.field] }}</span>
                   <span
@@ -366,7 +366,7 @@
       <div id="headFixed" :style="styleObj" v-if="headFixedShow" v-show="headFixedBlock">
         <table>
           <tr class="trRow thfont">
-            <th :colspan="dataTable[0]&&dataTable[0].filter(i=>i.field!='merge').length" class="hebingTrFixed"></th>
+            <th :colspan="dataTable[0]&&dataTable[0].filter(i=>i.field!='merge').length" class="hebingTrFixed" v-if="dataTable[0].length"></th>
             <th v-for="(relation,index) in dataTable[1]"
               :class="[relation.field+'Fixed',relation.title.indexOf('(')!=-1&&!relation.nosplit?'ifzh':'']"
               :key="index">
@@ -388,7 +388,7 @@
       <div id="leftSideFixed" :style="styleObj2" v-if="dataTable[0].length>0">
         <table>
           <tr class="trRow thfont hebingTrFixed" :style="styleObj"
-            style="position:absolute;z-index:1002;background:#fff">
+            style="position:absolute;z-index:1002;background:#fff" >
             <th v-for="(relation,index) in dataTable[0]"
               :class="[relation.field+'Fixed',relation.title.indexOf('(')!=-1&&!relation.nosplit?'ifzh':'']"
               :key="index">
@@ -1294,6 +1294,7 @@
 
           if (box[0] && BoxFixed[0]) {
             let w = box[0].clientWidth;
+
             let BoxFixedWidth = BoxFixed[0].clientWidth;
             //           let  h=box[0].clientHeight
             //           let className=box[0].className
@@ -1302,6 +1303,7 @@
               //宽度相同时不做修改
               return;
             }
+            
             for (var i in BoxFixed) {
               if (typeof BoxFixed[i] == "object") {
                 BoxFixed[i].style["min-width"] = w + 1 + "px";
@@ -1612,8 +1614,8 @@
         } else {
           let name = this.name.split(".")[0];
           let data = this.$store.state.tablePageTmp[name];
-          // //console.log(name)
-          // //console.log(data)
+         //console.log(name)
+         //console.log(data)
           if (data) {
             return data;
           } else {

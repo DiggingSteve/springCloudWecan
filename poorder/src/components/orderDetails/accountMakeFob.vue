@@ -1054,8 +1054,8 @@ for(var i=0;i<bankInfo_normal.length;i++){
 print(){
 
 
-  if(!this.orderInformation){
-    var method=""
+if(!this.orderInformation){
+var method=""
 if(this.pzid){
  method="put"
  var data={czman:localStorage.getItem('usrname'),settgid:this.accountData.accountcomgid,area:this.area,wageinout:this.wageinout,pzdom:'账单',system:this.system,paymentgid:this.accountData.paymentgid}

@@ -110,7 +110,7 @@
 </el-upload>
 </div> -->
     <div v-else>
-      <h3 style="margin:10px 0;">{{mawb}}照片数量({{imgList.length}})</h3>
+      <h3 style="margin:10px 0;">{{mawb}}<span v-if="hawb">,{{hawb}}</span>照片数量({{imgList.length}})</h3>
       <!-- {{threeLevelModular}} -->
       <!-- {{imgList}} -->
       <!-- {{modularName}}
@@ -421,7 +421,8 @@
       this.pagetype = this.getRequest.pagetype || 1
       this.system = this.getRequest.system || "bo"
       this.boguid = this.getRequest.boguid || ""
-      this.orderSystem=this.getRequest.orderSystem||"空出"
+      this.orderSystem=this.getRequest.orderSystem
+      this.hawb=this.getRequest.hawb
       if (this.pagetype != 2) {
         this.getChepai();
       }
@@ -606,7 +607,7 @@
         this.$axios({
           method: "get",
           url: this.$store.state.imageWebApi + "api/RankImg",
-          params: { nodeName: "",system:this.InputModelsystem||this.orderSystem },
+          params: { nodeName: "",system:this.orderSystem?decodeURIComponent(this.orderSystem):this.InputModelsystem},
           loading: true,
           tip: false
         }).then(res => {
@@ -641,16 +642,16 @@
           };
           // $('.ie7Hei').css({visibility: 'hidden'})
         } else {
-          if(this.cwid){//出口
+          if(this.cwid){
             data = {
               jobno: this.jobno,
               mawb: this.mawb,
               cwid: this.cwid
             };
-          }else{//进口
+          }else{//入库货物监控页面
             data = {
-              jobno: '',
-              mawb: this.mawb,
+              hawb: this.hawb,
+              mawb: this.mawb
             };
           }
           
@@ -883,7 +884,7 @@
         return obj
       },
       images() {//当前显示的图片
-        if (this.threeLevelModular[this.modularName]&&(this.InputModelsystem!='空进'||this.orderSystem!='空进')) {
+        if (this.threeLevelModular[this.modularName]&&((this.InputModelsystem!='空进'&&!this.orderSystem)||(this.orderSystem&&decodeURIComponent(this.orderSystem)!='空进'))) {
           let item = this.threeLevelModular[this.modularName][this.levelThreeIndex]
           if (item) {
             return this.imgList.filter(i => i.source == this.modularName && i[item.filter] == item[item.filter]).map(i => {
@@ -891,7 +892,7 @@
             })
           }
 
-        }else if(this.InputModelsystem=='空进'||this.orderSystem=='空进'){//进口 @@进口更改
+        }else if(this.InputModelsystem=='空进'||decodeURIComponent(this.orderSystem)=='空进'){//进口 @@进口更改
           return this.imgList.filter(i => i.source == this.modularName).map(i => {
               return { src: i.fileaddress, id: i.id }
           })
@@ -1255,5 +1256,15 @@
     font-size: 16px;
     cursor: pointer;
     margin: 0 6px;
+  }
+  /deep/.el-button--primary{
+    background: #0f5a8c;
+    border: none;
+    color: #fff;
+    &:hover{
+    background: #0d4c77;
+    border: none;
+    color: #fff;
+    }
   }
 </style>

@@ -3,7 +3,7 @@
   	<newFormCmpt  :view-data.sync="newView" :model-data.sync="inputModelData">
 
   	</newFormCmpt>
-  	<div class="input-required require" v-if="wageinout=='1'&&inputModelData.ysjffs=='板外'||wageinout=='2'&&inputModelData.yfjffs=='板外'||type=='中转费'">
+  	<div :class="['input-required','require',(paneDisable?'paneDisabled':'')]" v-if="wageinout=='1'&&inputModelData.ysjffs=='板外'||wageinout=='2'&&inputModelData.yfjffs=='板外'||type=='中转费'">
   		<span class="fuhao">(</span> <el-select v-model="jsList.first" placeholder="请选择">
 		    <el-option
 		      v-for="item in jsList.list"
@@ -66,7 +66,8 @@ export default {
   	viewData:Object,//表单
   	type:String,//运费，中转费
 	wageinout:String,//应收，应付
-    activeTab:String,//激活点入
+	activeTab:String,//激活点入
+	paneDisable:Boolean
   },
   data () {
     return {
@@ -143,7 +144,6 @@ export default {
     	i.num=Number(value).toFixed(0)
        })
 	   this.handleGs()
-	
 	},2000)
 
 	setTimeout(()=>{

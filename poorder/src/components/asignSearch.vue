@@ -100,12 +100,12 @@
         </p>
         <!-- <p  @click="outPc(2)"><i class="el-icon-upload2"></i>返舱</p> -->
         <!-- <p :class="[(getStatusNum('单证状态',rowData.dzstatus)>=300||rowData.mawb)?'disabled':'']" @click="installMawb"><i class="el-icon-folder-checked"></i>配置总运单</p> -->
-        <!-- <p :class="[((rowData.mawb)||(getStatusNum('单证状态',rowData.dzstatus)>=300&&rowData.commbillmodifystatus!='2'))||monitor==2?'disabled':'']" @click="installMawb">
+        <p :class="[((rowData.mawb)||(getStatusNum('单证状态',rowData.dzstatus)>=300&&rowData.commbillmodifystatus!='2'))||monitor==2?'disabled':'']" @click="installMawb">
             <i class="el-icon-folder-checked"></i>配置总运单
         </p>
         <p :class="[((rowData.commbillmodifystatus!='2'&&(getStatusNum('单证状态',rowData.dzstatus)>=300||!rowData.mawb)))||monitor==2?'disabled':'']" @click="unstallMawb">
             <i class="el-icon-folder-delete"></i>解除总运单
-        </p> -->
+        </p>
         <p @click="xnlhShow" :class="[(getStatusNum('配舱状态',rowData.pcstatus)!=200)||monitor==2?'disabled':'']">
             <i class="el-icon-arrow-down"></i>虚拟拉货
         </p>

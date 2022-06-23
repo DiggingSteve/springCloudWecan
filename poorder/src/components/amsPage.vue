@@ -40,7 +40,7 @@
           v-if="amsType==1"
         >批量忽略</el-button>
 
-         <el-button
+         <!-- <el-button
           :disabled="!guidlist"
           @click="sendAmsFunc(2,null,1,10,true)"
           v-if="amsType==2"
@@ -50,7 +50,7 @@
           :disabled="!guidlist"
           @click="sendAmsFunc(2,null,2,10,true)"
           v-if="amsType==2"
-        >生成报文(分单)</el-button>
+        >生成报文(分单)</el-button> -->
 
         <el-button
           :disabled="!guidlist"
@@ -643,8 +643,20 @@ export default {
     
     },
     sendAmsOth(data,type,dom){
-let json={guid:data.guid,czman:localStorage.usrname,signatory:makePy(data.addman)[0],flage:type,sendtype:dom||1}
-      this.$axios({
+      let json={guid:data.guid,czman:localStorage.usrname,signatory:makePy(data.addman)[0],flage:type,sendtype:dom||1}
+
+      if(data.isexportform=="TANG"){
+        this.$prompt('请输入分运单票数','',{
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /^[0-9]\d*$/,
+        inputErrorMessage: '输入正确分运单票数',
+        closeOnClickModal:false,
+        customClass:'sendAms',
+      })
+      .then((value)=>{
+        json.hawbcount=value.value
+        this.$axios({
         method: "get",
         url: this.$store.state.webApi + "api/ExHpoAxplineAmsSendCcsp",
         params: json,
@@ -652,12 +664,36 @@ let json={guid:data.guid,czman:localStorage.usrname,signatory:makePy(data.addman
         loading: false,
         tip: false
       }).then(results => {
-                if(results.data.resultstatus==0){
-                    this.$message.success(results.data.resultmessage);
-                }else{
-                    this.$message.error(results.data.resultmessage);
-                }
+          if(results.data.resultstatus==0){
+              this.$message.success(results.data.resultmessage);
+          }else{
+              this.$message.error(results.data.resultmessage);
+          }
       })
+      })
+      .catch(()=>{
+        this.$message({
+            type: 'info',
+            message: '取消操作'
+          });       
+      })
+      }else{
+        this.$axios({
+          method: "get",
+          url: this.$store.state.webApi + "api/ExHpoAxplineAmsSendCcsp",
+          params: json,
+          noarea: true,
+          loading: false,
+          tip: false
+        }).then(results => {
+            if(results.data.resultstatus==0){
+                this.$message.success(results.data.resultmessage);
+            }else{
+                this.$message.error(results.data.resultmessage);
+            }
+        })
+      }
+      
     },
     sendIgnore(data,type){//状态异常处理
                       let json={guidlist:data.sid,czman:localStorage.usrname,isamsmake:type}

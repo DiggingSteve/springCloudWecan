@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :class="{disabled:(!$store.state.rwxdArr.includes(servicecode)&&area==conditionalAreaForBuild)}">
+    <div :class="{disabled:(!$store.state.rwxdArr.includes(servicecode)&&area==conditionalAreaForBuild&&mawbinfo.opersystem!='进口')}">
       <myAlert :servicecode="servicecode"></myAlert>
 
       <!-- {{tableData}} -->
@@ -707,7 +707,7 @@ export default {
   computed: {
     serviceAsignarea(){//服务分配站点，如果和订单地区一致，是本站,返回true；可编辑
       let  arr=this.mawbinfo.serviceList.filter(i=>i.servicecode==this.servicecode);
-      return arr.length?(arr[0].assignarea==this.mawbinfo.area):false
+      return arr.length?((arr[0].assignarea==this.mawbinfo.area)||this.mawbinfo.opersystem=='进口'):false //@@ 进口更改
     },
     tableHead() {
       if (this.servicecode == "AG0110") {
@@ -939,8 +939,8 @@ export default {
           }
         ];
       }
-
-      if (this.servicecode == "AG0135") {
+      //@@ 进口更改
+      if (this.servicecode == "AG0135"||this.servicecode=="AG0138") {
         return [
           { title: "操作", field: "operate" },
           { title: "状态", field: "status" },

@@ -1258,6 +1258,9 @@ const getChangeValue = function (newdata, system, routerName, setdisablefunc) {
     if (showField('deprecatedate')) {
       item.deprecatedate = formatDate(item.deprecatedate, 'yyyy-MM-dd hh:mm') || '--'
     }
+    if (showField('ckdate')) {
+      item.ckdate = formatDate(item.ckdate, 'yyyy-MM-dd hh:mm') || '--'
+    }
 
     
 
@@ -1350,6 +1353,14 @@ const getChangeValue = function (newdata, system, routerName, setdisablefunc) {
       item.hawbjzt = item.hawbzdpiece + '/' + Number(item.hawbzdweight).toFixed(2)
     }
 
+    if(showField('hawbjzj')){
+      item.hawbjzj = item.hawbpiece + '/' + Number(item.hawbweight).toFixed(2)+'/'+Number(item.hawbjfweight).toFixed(2)
+    }
+
+    if(showField('mawbjzj')){
+      item.mawbjzj = item.ybpiece + '/' + Number(item.ybweight).toFixed(2)+'/'+Number(item.jfweight).toFixed(2)
+    }
+
     if (showField('trackstatus')) {
       item.trackstatusNumber = item.trackstatus
       let status = ""
@@ -1393,18 +1404,19 @@ const getChangeValue = function (newdata, system, routerName, setdisablefunc) {
     //console.log(currentRoute)
     if ((item.status || item.status == '0')&&currentRoute!='mawbManageNew') {
       item.statusNumber = item.status
-      var status = ""
-      for (let m in statusData) {
-        if (statusData[m].dom == "订单状态" && system == statusData[m].system) {
-          if (item.status == statusData[m].nodeindex) {
-            status = statusData[m].nodename
-          } else if (item.status == 0 || item.status == -1) {
-            status = '--'
-          }
+      var status = statusData.filter(i=>i.dom=='订单状态'&&item.status==i.nodeindex)[0]['nodename']
 
-        }
-      }
-      item.status = status
+      // for (let m in statusData) {
+      //   if (statusData[m].dom == "订单状态" && system == statusData[m].system) {
+      //     if (item.status == statusData[m].nodeindex) {
+      //       status = statusData[m].nodename
+      //     } else if (item.status == 0 || item.status == -1) {
+      //       status = '--'
+      //     }
+
+      //   }
+      // }
+      item.status = status?status:'--'
     }
 
     // if (item.trackstatus || item.trackstatus=='0') {
@@ -1465,7 +1477,7 @@ const getChangeValue = function (newdata, system, routerName, setdisablefunc) {
           // } else if (item.hwstatus == 290) {
           //   hwstatus = '货未到'
           // }
-          if (item.hwstatus < 400) {
+          if (item.hwstatus < 200) {
             hwstatus = '未配货'
           } else {
             if (item.hwstatus == statusData[m].nodeindex) {
@@ -1731,6 +1743,12 @@ const configData = function (type) {
       wagedom: '装卸',
       itemsname: '装卸费'
     },
+    AG0138:{
+      title: '标签重制',
+      label: '标签重制',
+      wagedom: '标签重制',
+      itemsname: '标签重制费'
+    }
 
   }
   if (type == 1) {
@@ -1910,6 +1928,7 @@ function StringNum(num,fixed){
    return Number(returnNum).toFixed(String(fixed)?fixed:2)
 }
 
+
 export {
   setStorage,
   getStorage,
@@ -1948,5 +1967,5 @@ export {
   JudgeBubblesFunc,
   getGysname,
   moneyFormat,
-  StringNum
+  StringNum,
 }

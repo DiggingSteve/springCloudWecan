@@ -1,8 +1,11 @@
 <template>
   <div class="status-color-config">
     <h3 class="title">
-      显示字段
-      <!-- <span v-if="activeStatusColorTemp.name" class="temp-name">（当前模板：{{ activeStatusColorTemp.name }}）</span> -->
+      显示字段：
+      <el-radio-group v-model="selectSystem" fill="#0f5a8c" class="selectSystem">
+      <el-radio-button label="空出"></el-radio-button>
+      <el-radio-button label="空进"></el-radio-button>
+      </el-radio-group>
     </h3>
     <!-- {{viewData}} -->
     <!-- {{defaultStatusColorTemp}} -->
@@ -15,7 +18,7 @@
         </div>
       </div>
       <div class="options-c" v-if="activeStatusKey">
-        <div class="option" v-for="(option, index) of viewData[activeStatusKey].options" :key="option.value">
+        <div class="option" v-for="(option, index) of viewData[activeStatusKey].options.filter(i=>(i.system==selectSystem)||(selectSystem=='空进'&&i.system=='空出'&&viewData[activeStatusKey].title=='订单状态')||(!i.system))" :key="option.value">
           <span class="number">{{ String(index+1).padStart(2, '0') }}</span>
           <span class="label" :style="{color: option.color || ''}" :val="option.value">{{ option.label }}</span>
           <el-color-picker v-model="option.color" size="mini" :predefine="predefineColors"></el-color-picker>
@@ -43,6 +46,9 @@
 <script>
   // type: 150
   export default {
+    props:{
+
+    },
     data() {
       return {
         tempType: 150,
@@ -70,7 +76,8 @@
         ],
 
         showSaveTemp: false,
-        inputTempName: ''
+        inputTempName: '',
+        selectSystem:'空出',//模板选中系统
       }
     },
     computed: {
@@ -96,7 +103,58 @@
     watch: {
       activeStatusColorTemp(temp) {
         this.updateStatusOptionColor()
-      }
+      },
+      // selectSystem:{
+      //   handler(val){
+      //       let statusData = JSON.parse(localStorage.getItem('statusData'))
+      //       let groupData = JSON.parse(localStorage.getItem("groupType"));
+            
+      //       for (let item of Object.values(this.viewData)) {
+      //         if(item.title!='配单完成状态'){
+      //           this.$set(item, 'options', [])
+      //           if (item.dom) {
+      //             let system=val
+      //             if (item.options.length === 0) {
+      //               for (let statusItem of statusData) {
+      //                 if (item.dom === statusItem.dom && system === statusItem.system) {
+      //                   item.options.push({
+      //                     label: statusItem.nodename,
+      //                     nodeindex: statusItem.nodeindex,
+      //                     color: '',
+      //                     hidden:false
+      //                   })
+      //                 }else if(item.dom === statusItem.dom&& system != statusItem.system){
+      //                   item.options.push({
+      //                     label: statusItem.nodename,
+      //                     nodeindex: statusItem.nodeindex,
+      //                     color: '',
+      //                     hidden:true
+      //                   })
+      //                 }
+      //               }
+      //             }
+      //           }
+      //           if (item.groupid) {
+      //             let index = 0;
+      //             for (let j in groupData) {
+      //               if (item.groupid == groupData[j].groupid) {
+      //                 this.$set(item.options, index, {
+      //                   nodeindex: groupData[j][item.bindValue || "ready01"],
+      //                   label: groupData[j][item.bindLabel || "typename"],
+      //                   color: ''
+      //                 });
+      //                 index += 1;
+      //               }
+      //             }
+      //           }
+      //       }  
+
+      //     }
+      //     this.updateStatusOptionColor()
+      //   },
+      //   immediate:true
+
+      // }
     },
     created() {
       let statusData = JSON.parse(localStorage.getItem('statusData'))
@@ -108,15 +166,16 @@
         this.$set(item, 'options', item.options || [])
 
         if (item.dom) {
-          let system = item.system || '空出'
-
+          //let system = item.system || '空出'
+          //let system=this.selectSystem
           if (item.options.length === 0) {
             for (let statusItem of statusData) {
-              if (item.dom === statusItem.dom && system === statusItem.system) {
+              if (item.dom === statusItem.dom ) {
                 item.options.push({
                   label: statusItem.nodename,
                   nodeindex: statusItem.nodeindex,
-                  color: ''
+                  color: '',
+                  system:statusItem.system
                 })
               }
             }
@@ -129,7 +188,7 @@
               this.$set(item.options, index, {
                 nodeindex: groupData[j][item.bindValue || "ready01"],
                 label: groupData[j][item.bindLabel || "typename"],
-                color: ''
+                color: '',
               });
               index += 1;
             }
@@ -360,6 +419,8 @@
     defaultTemp: {
       status: {
         '1': '#f56c6c',
+        '30':'#f56c6c',
+        '70': '#f56c6c',
         '100': '#5bb01d',
         '110': '#5bb01d',
         '150': '#5bb01d',
@@ -381,11 +442,17 @@
         '300': '#5bb01d',
         '350': '#5bb01d',
         '400': '#5bb01d',
+        '500': '#5bb01d',
+        '550': '#5bb01d',
         '700': '#5bb01d',
         '600': '#5bb01d',
+        '650': '#5bb01d',
+        '740': '#5bb01d',
         '750': '#5bb01d',
+        '760': '#5bb01d',
         '800': '#5bb01d',
-        '1100': '#5bb01d'
+        '1100': '#5bb01d',
+        '1200': '#5bb01d'
       },
       pcstatus: {
         '1': '#f56c6c',
@@ -399,6 +466,7 @@
         '100': '#f56c6c',
         '300': '#f56c6c',
         '400': '#5bb01d',
+        '450': '#5bb01d',
         '500': '#5bb01d',
         '600': '#5bb01d',
         '700': '#5bb01d',
@@ -410,12 +478,14 @@
         '100': '#5bb01d',
         '150': '#5bb01d',
         '180': '#5bb01d',
+        '190': '#5bb01d',
         '200': '#5bb01d',
         '300': '#5bb01d',
         '500': '#5bb01d',
         '400': '#5bb01d',
         '600': '#5bb01d',
-        '900': '#5bb01d'
+        '900': '#5bb01d',
+        '1000': '#5bb01d'
       },
       customstatus: {
         '1': '#f56c6c',
@@ -437,6 +507,13 @@
   .status-color-config {
     .title {
       margin-bottom: 10px;
+      .selectSystem{
+      /deep/.el-radio-button__inner{
+        height:28px;
+        padding:6px;
+        width:60px;
+      }
+      }
     }
 
     .field-container {

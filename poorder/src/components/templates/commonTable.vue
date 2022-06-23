@@ -9,7 +9,7 @@
       >
         <el-checkbox v-model="multiSelect"></el-checkbox>
       </div>
-      <table style="width:100%;text-align:center;box-sizing:border-box">
+      <table :style="tableStyle">
         <!-- 表头 -->
         <tr v-show="showHead" :style="transform">
           <th v-if="isMultiSelect" class="MultiSelectCheckbox">
@@ -67,8 +67,8 @@
             </template>
           </th>
         </tr>
-
-        <tr v-if="tableData.length === 0 && emptyText">
+        
+        <tr v-if="tableData && tableData.length === 0 && emptyText">
           <td colspan="100">{{ emptyText }}</td>
         </tr>
 
@@ -372,6 +372,16 @@ export default {
       //表格行tr 是否可以拖动
       type: Boolean,
       default: false
+    },
+    tableStyle:{
+      type:Object,
+      default(){
+        return {
+          width:'100%',
+          textAlign:'center',
+          boxSizing:'border-box'
+        }
+      }
     }
   },
   data() {
@@ -544,6 +554,12 @@ export default {
       };
     }
   },
+  mounted(){
+    console.log(this.head)
+    console.log(this.tableIndex)
+    console.log(this.tableNData)
+
+  },
 
   computed: {
     transform() {
@@ -638,7 +654,7 @@ export default {
       },
       immediate: true
     }
-  }
+  },
 };
 </script>
 

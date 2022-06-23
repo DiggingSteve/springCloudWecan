@@ -546,7 +546,7 @@
                         this.sfgcoloadms[1]['title'] = '费用总价'
                         this.sfgcoloadms[2]['model'] = '1'
                         this.sfgcoloadms.forEach((i, index) => {
-                            if (index >= 2) {
+                            if (index >= 2&&(this.system!='空进'||this.system=='空进'&&index!=3)) {
                                 i.hidden = false
                             }
                         })
@@ -568,7 +568,7 @@
                 }
 
 
-                if (this.realsfgwkfw.map(i => { return i.servicecode }).indexOf("OA0010") != -1) {
+                if (this.realsfgwkfw.map(i => { return i.servicecode }).indexOf("OA0010") != -1&&this.system!='空进') {
                     if (this.sfgfpms.indexOf('利润分配模式') == -1) {
                         this.sfgfpms.push('利润分配模式')
                     }
@@ -1116,21 +1116,25 @@
                         if (groupData[i].groupid == '101' && !groupData[i].typename.includes('大客户部') && !groupData[i].typename.includes('市场部') && !groupData[i].typename.includes('项目管理部')) {
 
                             if (this.$store.state.areaState.indexOf(groupData[i].typename.split('丨')[0]) == -1) {
-                                // console.log(groupData[i])
-                                if (this.opersystem != '进口') {
-                                    returnDate.push(groupData[i])
-                                    if (ready04.indexOf(groupData[i].ready04) == -1) {
-                                        ready04.push(groupData[i].ready04)
-                                    }
-                                } else {
-                                    if (groupData[i].typename.split('丨')[0] != this.conditionalAreaForBuild) {
-                                        returnDate.push(groupData[i])
-                                        if (ready04.indexOf(groupData[i].ready04) == -1) {
-                                            ready04.push(groupData[i].ready04)
-                                        }
-                                    }
-
+                                // 进口限制去除
+                                returnDate.push(groupData[i])
+                                if (ready04.indexOf(groupData[i].ready04) == -1) {
+                                    ready04.push(groupData[i].ready04)
                                 }
+                                // if (this.opersystem != '进口') {
+                                //     returnDate.push(groupData[i])
+                                //     if (ready04.indexOf(groupData[i].ready04) == -1) {
+                                //         ready04.push(groupData[i].ready04)
+                                //     }
+                                // } else {
+                                //     if (groupData[i].typename.split('丨')[0] != this.conditionalAreaForBuild||) {
+                                //         returnDate.push(groupData[i])
+                                //         if (ready04.indexOf(groupData[i].ready04) == -1) {
+                                //             ready04.push(groupData[i].ready04)
+                                //         }
+                                //     }
+
+                                // }
                             }
 
                         }
@@ -1144,7 +1148,6 @@
                     returnDate2.forEach((item, index) => {
                         returnDate.forEach((item2, index2) => {
                             if (item.label == item2.ready04) {
-
 
                                 item.options.push({ 'label': item2.typename, 'value': item2.typename })
 
@@ -1183,11 +1186,11 @@
                             this.sfgcoloadms[1]['title'] = '运费单价'
                             this.sfgcoloadms[2]['model'] = '1'
                             this.sfgcoloadms.forEach((i, index) => {
-                                if (index >= 2) {
+                                if (index >= 2&&(this.system!='空进'||this.system=='空进'&&index!=3&&index!=6)) {
                                     i.hidden = false
                                 }
                             })
-                            if (this.sfgfpms.indexOf('利润分配模式') == -1) {
+                            if (this.sfgfpms.indexOf('利润分配模式') == -1&&this.system!='空进') {
                                 this.sfgfpms.push('利润分配模式')
                             }
                         } else {
@@ -1258,10 +1261,11 @@
             sfgcoloadms: {
                 handler(val) {
                     if (this.realsfgwkfw.map(i => { return i.servicecode }).indexOf("OA0010") != -1) {
-                        if (val[2].model == '1' || val[2].model == '3') {
+                        if ((val[2].model == '1' || val[2].model == '3')&&this.system!='空进') {
                             val[3].hidden = false
                         } else {
                             val[3].hidden = true
+                            val[2].width=50
                         }
                     }
                 },

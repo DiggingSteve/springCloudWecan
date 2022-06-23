@@ -20,7 +20,7 @@
                            >
                            <!-- JSON -->
                             <span  v-if="item.level>1&&item.description&&isJSON(item.description)"
-                                 style="display: flex; align-items: center;justify-content: end; height: 40px;">
+                                 style="display: flex; align-items: center;justify-content: end; justify-content: flex-end;height: 40px;">
 
                                  <el-tooltip content="操作指南" placement="bottom-start" effect="light"
                                     popper-class="common-tooltip"
@@ -58,7 +58,7 @@
                          
                             <!-- STRING -->
                              <span  v-if="item.level>1&&item.description&&!isJSON(item.description)"
-                                 style="display: flex; align-items: center;justify-content: end; height: 40px;">
+                                 style="display: flex; align-items: center;justify-content: end; justify-content: flex-end;height: 40px;">
                                 <el-popover placement="bottom-start" trigger="click" :disabled="!item.description"
                                     v-if="item.description&&!isJSON(item.description)">
                                     <div v-html="item.description" style="max-width:280px;line-height:18px;font-size:12px;">
@@ -205,7 +205,7 @@ import { videoPlayer } from 'vue-video-player'
                             return false;
                         }
                     } catch(e) {
-                        console.log('error：'+str+'!!!'+e);
+                        // console.log('error：'+str+'!!!'+e);
                         return false;
                     }
                 }

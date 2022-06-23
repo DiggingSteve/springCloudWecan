@@ -111,9 +111,23 @@
            <input placeholder="请输入登录密码解锁" @keyup.enter="relogin" type="password" v-model="rePassword">
            <i class="el-icon-arrow-right" style="font-size:16px;color:#333;cursor:pointer;" @click="relogin"></i>
         </div>
-        
-        
       </el-dialog>
+      
+      <el-dialog
+      title="运价查询"
+      :visible.sync="showFreight.show"
+      v-if="showFreight.show"
+      width="90%"
+      top="2%"
+      :close-on-press-escape="false"
+      :modal="true"
+      append-to-body
+      @close="showFreight.show=false"
+      center
+    >
+      <iframe src="http://www.wecanintl.com/freightprice?isbo=true"  frameborder="0" width="100%" height="900"></iframe>
+    </el-dialog>
+
     </div>
 </template>
 
@@ -124,12 +138,14 @@ import airPlanDetail from "./components/orderDetails/airPlaneDeatil";
 import { getOrderInfo } from "@/api/order.js";
 export default {
   name: "app",
-
+  
   data() {
     return {
       rePassword:'',
+      showFreight:{show:false}
     };
   },
+  
   components: {
     costMaking,
     airPlanDetail
@@ -321,7 +337,11 @@ export default {
     this.initWebsoket();
 
   },
-  provide: {},
+  provide(){
+   return {
+     freight:this.showFreight
+   }
+  },
   created() {
     setHtmlHead(this.projectIsWecan);
   },
@@ -361,12 +381,14 @@ export default {
         
       }
     },
+
     logname(){
       return localStorage.usrname
     }
   },
 
   watch: {
+    
     // '$store.state.openedWindows':{
     //    handler(val){
     //      console.log(val[0]['document']['title'])

@@ -340,6 +340,19 @@ export const cassifyObj = {
       propsStr:`realPage=orderTakingOverDate`
     }
   },
+  newOrderSearch: {
+    routername: 'newOrderSearch',
+    first:{
+      title: "订单待受理",
+      componentname: 'acceptPage',
+      propsStr:`realPage=cabinUnconfirmed`,
+      nomonitor: true
+    },
+    second:{
+      title: "订单待处理",
+      componentname: 'businessUquery'
+    }
+  },
   costConfirmationkf: {
     routername: 'kfCostCassify',
     first: {
@@ -636,6 +649,35 @@ export const cassifyObj = {
       title: '已受理',
       propsStr:`realname=listConfirm`
     }
+  },
+  costCashWage:{//现结费用制作
+    routername: 'costCashWageClassify',
+    first:{
+      title:'待制作',
+      nomonitor:true,
+      propsStr:`markTip=2`
+    },
+    second:{
+      title:'已制作',
+      nomonitor:true,
+      propsStr:`markTip=3`
+    }
+  },
+  reconCashWage:{//现结费用开具
+    routername:'reconCashWageClassify',
+    first:{
+      title:'待开具',
+      componentname: "reconMngFirFob",
+      nomonitor:true,
+      propsStr:`markTip=1`
+    },
+    second:{
+      title:'已开具',
+      componentname: "credentialMngSec",
+      nomonitor:true,
+      propsStr:`markTip=4`
+    }
+
   }
 
 

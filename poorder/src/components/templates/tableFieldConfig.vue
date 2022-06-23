@@ -110,6 +110,7 @@
               <div class="sort-title-c">
                 <h3 :class="['sort-title',{active: activeLib == '3'}]" @click="activeLib = '3';highlightFieldIndex = ''">订单层</h3>
                 <h3 :class="['sort-title',{active: activeLib == '1'}]" @click="activeLib = '1';highlightFieldIndex = ''">出口业务层</h3>
+                <h3 :class="['sort-title',{active: activeLib == '4'}]" @click="activeLib = '4';highlightFieldIndex = ''">进口业务层</h3>
                 <h3 :class="['sort-title',{active: activeLib == '2'}]" @click="activeLib = '2';highlightFieldIndex = ''">国内业务层</h3>
                 <div :class="['field-search-select-c', { 'hidden': !showFieldSearchSelect }]">
                   <el-select class="search-select" v-model="fieldSearchIndex" clearable filterable :filter-method="fieldSearchFunc" placeholder="请输入进行搜索">
@@ -282,6 +283,13 @@ export default {
         {title: '材料', type: 18},
         {title: '大件装卸', type: 19}
       ],
+      fieldTypeArr4:[
+        {title:'订单类', type: 3},
+        {title: '单号类', type: 1},
+        {title: '操作类', type: 4},
+        {title: '状态类', type: 5},
+        {title: '日期类', type: 6},
+      ],//进口业务层
 
       sortFieldBackgroundArr: [
         ['#93b9ee', '#7b9ece'],
@@ -801,6 +809,57 @@ export default {
         wageall_out: { title: '应付费用', fieldtype: 2 },
         unfinishwageall_checkbillrmb: { title: '剩余对账金额', fieldtype: 2 },
        // outwageallinprice: { title: '应付单价', fieldtype: 2 },
+      },
+
+      allTableTmpField4:{//进口业务
+      //订单类 3
+      currentPiece:{title:'当前/总入库/预报件数',fieldtype:3},//allpiece,goodspiece,hawbybpiece
+      jcdate:{title:'入库日期',fieldtype:3},
+      storagedays:{title:'库存天数(天)',fieldtype:3},
+      wagestartdate:{title:'费用起算日',fieldtype:3},
+      hwlx:{title:'货物类型',fieldtype:3},
+      jid:{title:'货物来源',fieldtype:3},
+      isabnormal:{title:'有无异常',fieldtype:3},
+      isphoto:{title:'有无照片',fieldtype:3},
+      fid:{title:'委托客户',fieldtype:3},
+      gid:{title:'项目',fieldtype:3},
+      storeid:{title:'入库仓库',fieldtype:3},
+      reason:{title:'原因',fieldtype:3},
+      sfg:{title:'始发港',fieldtype:3},
+      hbh:{title:'航班号',fieldtype:3},
+      mawbjzj:{title:'总单件重计',fieldtype:3},//ybpiece,ybweight,
+      hawbjzj:{title:'分单件重计',fieldtype:3},//hawbpiece,hawbweight,hawbjfweight
+      ysfs:{title:'入境方式',fieldtype:3},
+      kwh:{title:'库位号',fieldtype:3},
+      jsfs:{title:'结算方式',fieldtype:3},
+      hwxz:{title:'货物性质',fieldtype:3},
+      isbreakpiece:{title:'是否破损',fieldtype:3},
+      otherpiece:{title:'有无报告',fieldtype:3},
+      isabadon:{title:'是否弃货',fieldtype:3},
+      isabadonresule:{title:'弃货处理结果',fieldtype:3},
+      mdg:{title:'目的港',fieldtype:3},
+      //单号类 1
+      mawb:{title:'总运单号',fieldtype:1},
+      hawb:{title:'分运单号',fieldtype:1},
+      jcno:{title:'进仓序号',fieldtype:1},
+      pono:{title:'订单编号',fieldtype:1},
+      //操作类 4
+      addman:{title:'创建人',fieldtype:4},
+      modifyman:{title:'修改人',fieldtype:4},
+      salesname:{title:'销售负责人',fieldtype:4},
+      addman:{title:'创建人',fieldtype:4},
+      customername:{title:'客服负责人',fieldtype:4},
+      modifyman:{title:'修改人',fieldtype:4},
+      //状态类 5
+      status:{title:'订单状态',fieldtype:5},
+      dzstatus:{title:'单证状态',fieldtype:5},
+      hwstatus:{title:'货物状态',fieldtype:5},
+      //日期类 6
+      yqhbrq:{title:'到港日期',fieldtype:6},
+      adddate:{title:'创建日期',fieldtype:6},
+      modifydate:{title:'修改日期',fieldtype:6},
+      hbrq:{title:'到港日期',fieldtype:6},
+      ckdate:{title:'出库日期',fieldtype:6},
       }
     }
   },
@@ -809,7 +868,8 @@ export default {
       return {
         '1': '出口业务层',
         '2': '国内业务层',
-        '3': '订单层'
+        '3': '订单层',
+        '4': '进口业务层'
       }
     },
     // 需要显示出来的固定字段
@@ -830,6 +890,8 @@ export default {
         num = '1'
       } else if (this.activeLib === '2') {
         num = '2'
+      }else if(this.activeLib==='4'){
+        num='4'
       }
       return this['fieldTypeArr' + num]
     },
@@ -840,6 +902,8 @@ export default {
         return this.allTableTmpField2['fieldtype' + this.curFieldType.type]
       } else if (this.activeLib === '3') {
         return this.allTableTmpField3
+      } else if(this.activeLib==='4'){
+        return this.allTableTmpField4
       }
     },
     curFieldType () {

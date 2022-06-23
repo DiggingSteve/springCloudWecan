@@ -73,7 +73,7 @@
             default:'普货'
           },
           hwlx: {
-            "title": "货物类型", idStyle: { width: '100%' }, itemStyle: { width: '100%' }
+            "title": "货物类型", idStyle: { width: '100%' }, itemStyle: { width: '100%' },hidden:this.inputModelData.system=='空进',
           },
           batterymodel: {
             "title": "锂电池型号", idStyle: { width: '100%' }, itemStyle: { width: '100%' }
@@ -84,19 +84,19 @@
       }
     },
     created() {
-      this.$nextTick(() => {
-        this.$watch(() => {
-          return this.inputModelData.hwlx + this.gooodsOutgauge
-        }, () => {
-          this.hwlxOptions.forEach(i => {
-            if (this.inputModelData.hwlx) {
-              i.hidden = i.typename.includes('24小时') ? (this.gooodsOutgauge ? !this.inputModelData.hwlx.includes(i.typename.substr(4)) : true) : false
-            } else {
-              i.hidden = i.typename.includes('24小时')
-            }
-          })
-        }, { immediate: true })
-      })
+      // this.$nextTick(() => {
+      //   this.$watch(() => {
+      //     return this.inputModelData.hwlx + this.gooodsOutgauge
+      //   }, () => {
+      //     this.hwlxOptions.forEach(i => {
+      //       if (this.inputModelData.hwlx) {
+      //         i.hidden = i.typename.includes('24小时') ? (this.gooodsOutgauge ? !this.inputModelData.hwlx.includes(i.typename.substr(4)) : true) : false
+      //       } else {
+      //         i.hidden = i.typename.includes('24小时')
+      //       }
+      //     })
+      //   }, { immediate: true })
+      // })
     },
 
     watch: {
@@ -127,11 +127,12 @@
                   hwlxOptions.push({
                     typename: m.typename,
                     entypename: m.entypename,
-                    hidden: m.typename.includes('24小时'),
-                    disabled: m.typename.includes('24小时')
+                    //hidden: m.typename.includes('24小时'),
+                    //disabled: m.typename.includes('24小时')
                   })
                 }
               })
+             
               if (this.pagetype == 1) {
                 // this.inputModelData.hwlx = hwlxOptions[0].typename
               } else {
@@ -139,12 +140,19 @@
               }
             }
           });
-
+            //console.log(val)
+            //console.log(this.inputModelData.system)
           this.hwlxOptions = hwlxOptions
-          this.hawbViewData.hwlx.hidden = !val
+          this.hawbViewData.hwlx.hidden = !val||this.inputModelData.system=='空进'
           
         }, immediate: true
 
+      },
+      "inputModelData.system":{
+        handler(val){
+           this.hawbViewData.hwlx.hidden = val=='空进'
+        },
+        immediate:true
       },
       "inputModelData.hwlx": {
         handler(val) {

@@ -66,7 +66,7 @@
       :wagetype="1"
       :putIndex="modCostIndex"
     >
-      <!-- (1)合并订单主订单不显示这一行，主订单应付能显示(2)外地综合查询能显示(3)上海要有costDom或者国内服务订单【costDom:客服】 -->
+      <!-- (1)合并订单主订单不显示这一行，主订单应付能显示(2)外地、进口综合查询能显示(3)上海要有costDom或者国内服务订单【costDom:客服】 -->
 
       <template
         slot="firstTd"
@@ -78,7 +78,7 @@
             (allmaindata.groupid < 0 && pagetype == 1) ||
             (pagetype != 1 &&
               (costDom ||
-                (!costDom && allmaindata.area != conditionalAreaForBuild)))
+                (!costDom && (allmaindata.area != conditionalAreaForBuild||allmaindata.system=='空进'))))
         "
       >
         <td style="text-align:left;padding-left:8px;">
@@ -107,7 +107,7 @@
           <i
             class="add-wage-icon"
             v-if="
-              !wageguid.length && modCostIndex == '-1' && !Cshow && !isshwage
+              !wageguid.length && modCostIndex == '-1' && !Cshow && (!isshwage||allmaindata.system=='空进')
             "
             title=" 新增确认"
             :class="{ disabled: disabledAdd(wageinout) }"
@@ -185,13 +185,16 @@
             v-if="
               projectIsWecan &&
                 (isshwage || bohuiOperUsed(wageinout)) &&
-                !wageguid.length
+                !wageguid.length&&allmaindata.system!='空进'
             "
             @click="addConfirmWage($event, wageinout, 700, 1)"
           ></i>
         </td>
         <td v-if="!Cshow">
           <input type="checkbox" v-model="curentObject.isfree" />
+        </td>
+        <td v-if="allmaindata.system=='空进'">
+          <input type="checkbox" v-model="curentObject.iscash" />
         </td>
         <td>
           --
@@ -307,7 +310,7 @@
           ></el-input>
         </td>
       </template>
-      <!-- 显示条件:1.isshare<0,费用guid不为0  2.只有合并子订单显示或者合并订单应付  3.综合查询上海订单进入不显示  4.国内综合查询点入显示costDom:客服-->
+      <!-- 显示条件:1.isshare<0,费用guid不为0  2.只有合并子订单显示或者合并订单应付  3.空出综合查询上海订单进入不显示  4.国内综合查询点入显示costDom:客服-->
 
       <template
         slot="operate"
@@ -317,7 +320,7 @@
             (childPonoChecked > 0 ||
               (childPonoChecked == 0 && wageinout == 2))) ||
             allmaindata.groupid < 0) &&
-            ((!costDom && allmaindata.area != conditionalAreaForBuild) ||
+            ((!costDom && (allmaindata.area != conditionalAreaForBuild||allmaindata.system=='空进')) ||
               pagetype == 1 ||
               costDom) &&
             !(props.data.row.isshare > 0 && props.data.row.guid == 0)
@@ -420,7 +423,6 @@
                             -->
               <i
                 class="el-icon-setting"
-                v-show="!isshwage"
                 :class="[
                   disabledEdit(wageinout, props.data.row) ? 'disabled' : ''
                 ]"
@@ -428,7 +430,7 @@
                 v-if="
                   (!wageguid.length ||
                     wageguid.indexOf(props.data.row.guid) == '-1') &&
-                    !isshwage
+                    (!isshwage||allmaindata.system=='空进')
                 "
                 @click="modCost($event, props.data.index, wageinout)"
               ></i>
@@ -444,7 +446,7 @@
                 v-if="
                   (!wageguid.length ||
                     wageguid.indexOf(props.data.row.guid) == '-1') &&
-                    !isshwage
+                    (!isshwage||allmaindata.system=='空进')
                 "
                 @click="delCost(props.data.index, $event, wageinout)"
               ></i>
@@ -972,7 +974,8 @@ export default {
     },
     profitmode: String, //分配模式
     initiator: [String, Number], //驳回发起者
-    pagetype: [String, Number]
+    pagetype: [String, Number],
+    markTip:'',//是否是现结
   },
   data() {
     return {
@@ -987,6 +990,13 @@ export default {
           formatType: 2,
           format: item => (item == 1 ? "否" : "是"),
           hidden: this.Cshow
+        },
+        {
+          field:"iscash",
+          title: "是否现结",
+          formatType: 2,
+          format: item => (item == 1 ? "是" : "否"),
+          hidden: this.allmaindata.system!='空进',
         },
         { field: "confirmman", title: "确认人" },
         {
@@ -1052,7 +1062,8 @@ export default {
         price: "",
         currency: "人民币",
         otherno: "--",
-        gid: ""
+        gid: "",
+        iscash:this.markTip?true:false
       },
       activeSettname: "", //选中的结算对象
 
@@ -1230,6 +1241,9 @@ export default {
       templateData.isfree =
         templateData.isfree === "1" || !templateData.isfree ? "1" : "2";
 
+      templateData.iscash =
+        templateData.iscash === "1" || templateData.iscash ? "1" : "2";  
+
       var api = isbohuiOper
         ? this.isFromFob == "Fob2"
           ? "api/ExCostCheckFobInsertReject"
@@ -1353,6 +1367,7 @@ export default {
         )[index]
       };
       this.curentObject.isfree = this.curentObject.isfree == 1 ? false : true;
+      this.curentObject.iscash = this.curentObject.iscash == 1 ? true : false;
     },
     //批量确认、取消确认
     costConfirmPl(el, wageinout, status) {
@@ -1461,6 +1476,7 @@ export default {
         i.status = -1;
         i.rollbackreason = this.rollbackreason;
         i.isfree = i.isfree == "是" || i.isfree == 2 ? 2 : 1;
+        i.iscash = i.iscash == "是" || i.iscash == 1 ? 1 : 2;
         i.wagedom = this.resetJieshuanWagedom(i, this.allmaindata);
         delete i.confirmstatus;
       });
@@ -1527,6 +1543,7 @@ export default {
         delete item.background;
         delete item.guid;
         item.isfree = item.isfree == 1 || item.isfree == false ? 1 : 2;
+        item.iscash = item.iscash == 1 || item.iscash == true ? 1 : 2;
         item.area = this.allmaindata.area;
         if (status === "700") {
           item.confirmstatus = status;
@@ -2085,9 +2102,16 @@ export default {
     },
     zdLeastWageall() {
       if (this.curentObject.num && this.curentObject.price) {
-        return (
+        if(this.curentObject.iscash=='1'){
+          return (
+          Math.ceil(Number(this.curentObject.num) * Number(this.curentObject.price)
+          )).toFixed(2);
+        }else{
+          return (
           Number(this.curentObject.num) * Number(this.curentObject.price)
-        ).toFixed(2);
+          ).toFixed(2);
+        }
+        
       }
     },
     zdWageAll() {

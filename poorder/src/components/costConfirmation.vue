@@ -33,7 +33,7 @@
             @close="uncostMaking" :close-on-press-escape=false class="dialogPage" :modal="false" center>
             <!-- 销售站BOAE2009020003PVG(HGH)是35，操作站 BOAE2010130004PVG-OSD 30； -->
             <costmaking :mawbguid="mawbguid" :initiator="tableDataRes[selectedTableIndex].childguid>0?35:30"
-                @unvisible="uncostMaking" :showSuggestWage="!projectIsWecan" :boguid="boguid" ref="costDialog">
+                @unvisible="uncostMaking" :showSuggestWage="!projectIsWecan||system=='空进'" :boguid="boguid"  ref="costDialog">
             </costmaking>
             <!-- <span slot="footer">
 
@@ -158,7 +158,8 @@
                 area: '',
                 wageRejectin: false,
                 wageRejectout: false,
-                initiator: ''
+                initiator: '',
+                system:'空出',//订单系统 PS:进口订单费用确认页面点入需查询建议费用、出口不查
             }
         },
         watch: {
@@ -320,6 +321,7 @@
                     this.selectedTableIndex = indexData
                     this.mawbguid = this.tableDataRes[indexData].guid
                     this.boguid = this.tableDataRes[indexData].boguid
+                    this.system = this.tableDataRes[indexData].system
                     this.costMaking = true
                 }
 
@@ -353,6 +355,8 @@
                     endtype: 3
                 }
             }
+
+             this.inputViewData.hbrq.title=this.$store.state.navDataById[this.$router.currentRoute.params.id].othername&&this.$store.state.navDataById[this.$router.currentRoute.params.id].othername.includes('空进')?'到港日期':'航班日期'
         },
         mounted() {
         console.log(this.mng)

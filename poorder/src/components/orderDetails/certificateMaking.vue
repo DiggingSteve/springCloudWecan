@@ -10,6 +10,15 @@
       <el-radio v-model="certificateType" label="2">账单 D/N</el-radio>
     </p>
   </div>
+
+  <div class="certificateType" v-if="certificateType=='1'">
+    <p>
+      <span>开票方式：</span>
+      <el-radio v-model="invoiceType" label="1">离线开票</el-radio>
+      <el-radio v-model="invoiceType" label="2">直连纸质发票</el-radio>
+      <el-radio v-model="invoiceType" label="3">直连电子发票</el-radio>
+    </p>
+  </div>
   
   <div class="detail">
     <div class="detail-title">
@@ -118,7 +127,7 @@
   :visible.sync="showInvoice"
   v-if="showInvoice" append-to-body>
 
-  <invoicemake :information="information" :wageinout="wageinout" @UnVisibleInvoice="invoiceClose" :system="system" :selectTableIndex="selectTableIndex" :area="area"></invoicemake>
+  <invoicemake :information="information" :wageinout="wageinout" @UnVisibleInvoice="invoiceClose" :system="system" :selectTableIndex="selectTableIndex" :area="area" :invoiceType="invoiceType"></invoicemake>
 
   </el-dialog>
 
@@ -153,7 +162,7 @@ export default {
   },
   data () {
     return {
-order:'',
+      order:'',
       //dzdh:"",
       certificateType: this.wageinout == '1' ?  '1' : '2',
       ExcludingTax:0,
@@ -216,6 +225,7 @@ order:'',
        sjcAllData:[],//查询初始数据
        dzRecorderListData:[],//已对账记录List查询
        backupAllData:[],//查询初始数据备份
+       invoiceType:'1',//开票方式
     }
   },
   methods: {
@@ -697,7 +707,7 @@ costIn(){
   //   return false
   // }else{
     this.showImport=true
-    var costInData={accountcomename:this.sjcAllData[0].accountcomename,accountcomgid:this.sjcAllData[0].accountcomgid,jobnolistdata:[],jobnolist:[]}
+    var costInData={accountcomname:this.sjcAllData[0].accountcomname,accountcomgid:this.sjcAllData[0].accountcomgid,jobnolistdata:[],jobnolist:[],accountcomename:this.sjcAllData[0].accountcomename}
 
             var orderList=this.orderValue
             //console.log(orderList)

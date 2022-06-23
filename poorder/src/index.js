@@ -43,7 +43,6 @@ import {
 
 import Print from './components/plugins/print'
 
-
 Vue.use(Print) // 注册
 // 按键F2
 Vue.config.keyCodes.f2 = 113

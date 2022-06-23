@@ -10,6 +10,7 @@
         :pagetype="1"
         :chinese-where.sync="chineseWhere"
         @reset="reset"
+        :system="markTip=='4'?'空进':'空出'"
       ></newSearchComp>
 
       <div class="searchForm">
@@ -24,13 +25,13 @@
       :showTotal="showTotal"
       :chinese-where.sync="chineseWhere"
     >
-      <template slot="deljobno" slot-scope="props">
+      <!-- <template slot="deljobno" slot-scope="props">
         <i
           class="el-icon-delete"
           @click="delPZ(props.data.index,props.data.row.pzdom)"
           title="删除凭证号"
         ></i>
-      </template>
+      </template> -->
       <template slot="showjobno" slot-scope="props">
         <i class="el-icon-document" @click="showJobno(props.data.index)" title="显示工作号"></i>
       </template>
@@ -87,7 +88,7 @@
     <!-- 发票制作 -->
     <el-dialog
       width="100%"
-      title="已开凭证"
+      :title="markTip=='4'?'现结费用已开具':'已开凭证'"
       top="4%"
       center
       @close="showImport=false"
@@ -197,7 +198,8 @@ export default {
     monitor:{
      type:[Number,String],
      default:1
-    }
+    },
+    markTip:[Number,String]
  
   },
   data() {
@@ -266,7 +268,7 @@ export default {
           ],
           pagetype: 5
         },
-        hbrq: { title: "航班日期", type: 15, defaultVal: false}
+        hbrq: { title: this.markTip?"到港日期":"航班日期", type: 15, defaultVal: false}
 
       },
       inputModelData: {
@@ -292,15 +294,18 @@ export default {
       //var jsonArr=searCondition(this.inputViewData)
       this.tableDataRes = [];
 
+      var api=this.markTip||this.monitor=='2'?'api/ExAiraxpPzFinishOverseas3':'api/ExAiraxpPzFinishCollect'
+
       if(this.monitor=='2'){
        this.searchData.overseasacc={'in':'10'}
       }
-
+      if(this.markTip=='4'){
+        this.searchData.overseasacc = {'in':'30'}
+      }
       var jsonArr2 = {
         where: this.searchData,
         order: "adddate asc"
       };
-
       var json = { json: JSON.stringify(jsonArr2) };
       json.area = this.$store.state.areaState;
       //   if(json.area.split(',').length>1){
@@ -309,7 +314,7 @@ export default {
       // }
       //json.system=this.system
       json.system = "";
-      var api=this.monitor=='2'?'api/ExAiraxpPzFinishOverseas3':'api/ExAiraxpPzFinishCollect'
+
       this.$axios({
         method: "get",
         url: this.$store.state.webApi + api,
@@ -328,7 +333,7 @@ export default {
           }
           results.data = getChangeValue(
             results.data,
-            "空出",
+            this.markTip=='4'?'空进':'空出',
             "credentialMngSec"
           );
           // 处理日期和件重体

@@ -76,7 +76,7 @@
                     title="编辑此条进仓编号数据" style="margin-right:4px"></i>
                   <!-- <i class="el-icon-delete" @click="piliangDel(props.data.row.id)" title="删除" v-if="checkedDocDom.autoupload!=1"></i> -->
                   <i class="el-icon-download" title="下载" @click="piliangDownload(props.data.row.id)"></i>
-                  <i @click="previewFileaddress=props.data.row.fileaddress;previewVisible=true"
+                  <i @click="handleVisible(props.data.row)"
                     :icondisabled="!props.data.row.canPreview" class="el-icon-view" title="预览"></i>
                 </template>
               </commonTable>
@@ -166,6 +166,38 @@
 
     <el-dialog v-if="previewVisible&&previewFileaddress" title="文档预览" center :visible.sync="previewVisible" width="80%"
       top="2%" append-to-body>
+      <el-popover
+        placement="right"
+        width="500"
+        trigger="click">
+        <div  class="info-content">
+          <el-row :gutter="10" >
+            <el-col :span="24">
+              <span>收件人：</span>
+              <span>{{emailJson.mailto}}</span>
+            </el-col>
+            <el-col :span="24">
+              <span>抄送人：</span>
+              <span>{{emailJson.mailtolist}}</span>
+            </el-col>
+            <el-col :span="24">
+              <span>邮件主题：</span>
+              <span>{{emailJson.mailsubject}}</span>
+            </el-col>
+            <el-col :span="24">
+              <span>发送时间：</span>
+              <span>{{emailJson.maildate}}</span>
+            </el-col>
+            <el-col :span="24">
+              <span>发送人：</span>
+              <span>{{emailJson.mailsender}}</span>
+            </el-col>
+          </el-row>
+          </div>
+          <i class="el-icon-info" slot="reference" 
+          v-if="!!emailJson"
+          style="font-size: 22px;position: absolute;left: 30px;top: 25px;"></i>
+      </el-popover>
       <embed :src="previewFileaddress" style="width:100%"
         :style="{height:(previewFileaddress.includes('pdf')||previewFileaddress.includes('txt'))?'800px':'100%'}">
     </el-dialog>
@@ -402,9 +434,46 @@
         sendMail: 'javascript:void(0)',//outlook地址
         isInited: false,//是否已经初始化，用于使initFunc方法只执行一次
         bgNumber:'',//配单预览报关单号
+        emailJson: '',
       };
     },
     methods: {
+
+      /**
+       * @desc 是否是json格式
+       */
+      isJSON(str) {
+        if (typeof str == 'string') {
+            try {
+                var obj=JSON.parse(str);
+                if(typeof obj == 'object' && obj ){
+                    return true;
+                }else{
+                    return false;
+                }
+            } catch(e) {
+                // console.log('error：'+str+'!!!'+e);
+                return false;
+            }
+          } else{
+            return false;
+          }
+      },
+
+
+      // 显示照片
+      handleVisible(item) {
+        this.previewFileaddress = item.fileaddress;
+        // mailjson是json格式就显示文档信息
+        if (this.isJSON(item.mailjson)) {
+          this.emailJson = JSON.parse(item.mailjson)
+        } else {
+          this.emailJson = '';
+        }
+        this.previewVisible = true;
+
+      },
+
       initFunc() {
         if (this.isInited) return;
         this.getJiedianInfo().then(() => {
@@ -431,7 +500,9 @@
                   this.docupData.typename = this.docviewData.typename.options[0].value
                 }
                 if (this.servicecode) {
+                  console.log(this.docviewData.typename)
                   let arr = this.docviewData.typename.options.filter(i => i.servicecode == this.servicecode);
+
                   if (arr.length == 1) {
                     this.docupData.typename = arr[0].value
                   }
@@ -1501,6 +1572,22 @@
       margin-left: 10px;
       cursor: pointer;
       white-space: nowrap;
+    }
+  }
+
+  .info-content {
+    /deep/.el-col  {
+      display: flex;
+      span{
+        display: inline-block;
+        min-height: 20px;
+        line-height: 22px;
+      }
+      span:first-child {
+        text-align: right;
+        width: 80px;
+        
+      }
     }
   }
 </style>

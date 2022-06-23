@@ -5,7 +5,7 @@
     <div>
       <div class="detail" style="margin-top: 0;">
         <div class="detail-title">
-          总单信息 
+          总单信息  
           <!-- {{Object.values(newService).filter(i=>i.servicecode=='AB0420'&&!i.model)}} -->
           <!-- {{Object.values(newService)}} -->
         </div>
@@ -38,7 +38,7 @@
           </newFormCmpt> 
         </div> -->
       </div>
-      <div v-if="inputModelData.orderdom == '直单' && inputModelData.area == '上海' && inputModelData.opersystem == '进口' ">
+      <div v-if="inputModelData.orderdom == '直单'  && inputModelData.opersystem == '进口' ">
         <!-- 总单服务项目 -->
         <div class="detail">
           <div class="detail-title" @click="showService = !showService">
@@ -48,7 +48,7 @@
             <tempConfig
               name="mawbAddNew.vue"
               style="position:absolute;top:1px;right:0px;"
-              :system="initInfo.system"
+              :system="inputModelData.system"
               :type="80"
               :jsondata.sync="serviceList"
               v-if="tempConfigShow"
@@ -60,7 +60,7 @@
               :newService.sync="newService"
               :opersystem="initInfo.opersystem"
               :orderdom="initInfo.orderdom"
-              :system="initInfo.system"
+              :system="inputModelData.system"
               :czlx="initInfo.czlx"
             >
             </serviceList>
@@ -210,7 +210,7 @@
           </newFormCmpt>  -->
           <div>
             <hawbAdd
-              :mawbdetail="inputModelData"
+              :mawbdetail="initInfo"
               :initInfo="initInfo"
               ref="hawbtab"
               :showContent="true"
@@ -301,9 +301,9 @@
     </div>
 
     <div style="float:right" v-if="pagetype == '1'">
-      <el-button type="danger" @click="$parent.initDataFunc">重置</el-button>
-      <el-button type="primary" @click="saveConfirm(false)">保存</el-button>
-      <el-button type="primary" @click="saveConfirm(true)"
+      <el-button type="danger" @click="$parent.initDataFunc" v-if="frompage != 2">重置</el-button>
+      <el-button type="primary" @click="saveConfirm(false)" v-if="frompage != 2">保存</el-button>
+      <el-button type="primary" @click="saveConfirm(true)" v-if="frompage != 2"
         >保存并新增</el-button
       >
     </div>
@@ -334,7 +334,7 @@
         <el-button style="margin-right: 30px;" type="primary" @click="saveInfo">
           {{ areaStateCode }}操作</el-button
         >
-        <el-button type="primary" @click="assignShow = true"
+        <el-button type="primary" @click="assignShow = true" disabled
           >分配至外站
         </el-button>
       </div>
@@ -381,6 +381,9 @@ export default {
   props: {
     inputModelData: {
       type: Object
+    },
+    frompage:{
+      type: [String, Number]
     },
     areaStateCode: {
       type: String,
@@ -457,12 +460,13 @@ export default {
           title: "总运单号",
           type: 1,
           required: true,
-          verify: "mawb",
-          occupyRestSpace: true
-          // elEvent:{
-          //   eventName:'blur',
-          //   eventFunc:this.reSearch,
-          // },
+          // verify: 'mawb', 
+          occupyRestSpace: true,
+          elEvent:{
+            eventName:'change',
+            // eventFunc:this.reSearch,
+            eventFunc: this.isNotVerify
+          },
         },
         ybpiece: {
           title: "预报件数",
@@ -1372,6 +1376,13 @@ export default {
   },
 
   methods: {
+    //初始化订单类型为总分单的总单信息数据
+    initTotalSingleData(){
+      const arr = ['mawb','piece','ybpiece','ybweight','jfweight','sfg','hbh','arriverq','jjd','ysfs']
+      arr.forEach(i=> {
+        this.initInfo[i] = ""
+      })
+    },
     initInfoData() {
       //初始数据ug
       if (this.pagetype == "1") {
@@ -1549,7 +1560,7 @@ export default {
             }
           ], 
           customerRelList: this.inputModelData.customerRelList,
-          hawbList: [{}], 
+          hawbList: [], 
           jjd: "-1", //货物来源
           ysfs: "普通进口货", //入境方式
           hawb_jsfs: "2", //结算方式
@@ -1656,6 +1667,42 @@ export default {
         return mawbInfo;
       }
     },
+    isNotVerify(){
+      console.log(this.initInfo['mawb'])
+      let val = this.initInfo['mawb']
+      if(this.inputModelData.opersystem == '进口' && this.inputModelData.opersystemdom == '空运'){
+
+            if (!this.initInfo['mawb'].includes('-') && this.initInfo['mawb'].length >= 11) {
+              val = this.initInfo['mawb'].substr(0, 3) + '-' + this.initInfo['mawb'].substr(3, 8)
+            }
+            if (this.initInfo['mawb'].includes('-') && this.initInfo['mawb'].length > 12) {
+              val = this.initInfo['mawb'].substr(0, 12)
+            }
+            if (val.replace('-', '').length == 11 && (val.replace('-', '').substr(3, 7) % 7 != val.substr(11, 1))) {
+              layer.alert('运单格式不正确！');
+              
+            }
+            if(this.isLetter(val)){
+              val = ""
+              layer.alert('运单格式不正确！');
+            }
+
+
+            console.log(this.initInfo['mawb'])
+            this.initInfo['mawb'] = val
+           
+      } 
+    },
+    // 是否包含字母
+    isLetter(str) {
+    for (var i in str) {
+        var asc = str.charCodeAt(i);
+        if ((asc >= 65 && asc <= 90 || asc >= 97 && asc <= 122)) {
+            return true;
+        }
+    }
+    return false;
+},  
     isOver(mawbpiece, hawbpiece) {
       //件数超量  总单件数、分单件数
       //新增只需
@@ -1879,7 +1926,7 @@ export default {
         try {
           var sumPrice = 0;
           var sumWeight = 0;
-          this.inputModelData.hawbList.forEach(item => {
+          this.initInfo.hawbList.forEach(item => {
             console.log(item);
             sumPrice += Number(item.ybpiece);
             sumWeight += Number(item.jfweight);
@@ -1908,12 +1955,12 @@ export default {
         //货物的件数/重量之和等于分单的件数/重量
         //货物信息  未勾选进港操作——进唯凯仓是货物信息必填
         //  if(Object.values(this.newService).filter(i=>i.servicecode=='AB0420'&&!i.model).length){
-         const cargoStatus = this.inputModelData.hawbList.every((item, index) => item.newService["AB0420"].model == true);
+         const cargoStatus = this.initInfo.hawbList.every((item, index) => item.newService["AB0420"].model == true);
          if(!cargoStatus) {
             var cargoNumber = 0; //货物件数
             var cargoWeight = 0; //货物重量
 
-            this.inputModelData.hawbList.forEach(item => {
+            this.initInfo.hawbList.forEach(item => {
               item.cargoInfoList.forEach(obj => {
                 cargoNumber += Number(obj.piece);
                 cargoWeight += Number(obj.weight);
@@ -1942,6 +1989,7 @@ export default {
       if (status) {
         
         let mawbInfo = { ...this.initInfo };
+        console.log("====================")
         console.log(mawbInfo)
         mawbInfo.serviceList=this.serviceList
         let publicField = [
@@ -1984,18 +2032,18 @@ export default {
         if (this.inputModelData.orderdom == "总单") {
           // 提示分单时注意:
           //1. 先将分单服务项目为 进唯凯仓库 的 货物数据清空
-          this.inputModelData.hawbList.forEach((item, index) => {
+          this.initInfo.hawbList.forEach((item, index) => {
             if (item.newService["AB0420"].model == true) {
-              this.inputModelData.hawbList[index].cargoInfoList.splice(0);
+              this.initInfo.hawbList[index].cargoInfoList.splice(0);
             }
           });
           //2. 先将serviceList 为空，然后  通过分单的 newService 来给 serviceList 赋值
 
-          this.inputModelData.hawbList.forEach((obj, index) => {
-            this.inputModelData.hawbList[index].serviceList = [];
-            for (let i in this.inputModelData.hawbList[index].newService) {
-              let item = this.inputModelData.hawbList[index].newService[i];
-              this.inputModelData.hawbList[index].serviceList.push({
+          this.initInfo.hawbList.forEach((obj, index) => {
+            this.initInfo.hawbList[index].serviceList = [];
+            for (let i in this.initInfo.hawbList[index].newService) {
+              let item = this.initInfo.hawbList[index].newService[i];
+              this.initInfo.hawbList[index].serviceList.push({
                 servicecode: item.servicecode,
                 oprequest: item.oprequest,
                 isdel: item.model ? 1 : 2,
@@ -2006,7 +2054,9 @@ export default {
             }
           });
           //3. 挂载数据
-          mawbInfo.hawbList = this.inputModelData.hawbList;
+          mawbInfo.hawbList = this.initInfo.hawbList;
+          console.log(this.inputModelData.hawbList)
+          console.log("===========33333333333=========")
         }
 
         return mawbInfo;
@@ -2030,7 +2080,7 @@ export default {
         let mawbInfo = this.confirmAdd();
         mawbInfo.nodecode = "AO5010";
         console.log(mawbInfo);
-        console.log(this.inputModelData.hawbList);
+        // console.log(this.inputModelData.hawbList);
         //return
         this.$axios({
           method: "post",
@@ -2040,19 +2090,22 @@ export default {
           tip: false
         }).then(results => {
           if (results.data.resultstatus == 0) {
-            this.initInfo = {};
+ 
+            this.saveVisible = false 
             // this.$parent.initDataFunc();
+            this.initInfo.hawbList = []
+            this.initTotalSingleData()
+          //  this.$refs.hawbtab.initProject()
+            const reg = new RegExp(",")
             this.$confirm(
-              "订单编号为" +
-                results.data.resultno +
-                ";<br>" +
-                results.data.resultmessage +
-                "。",
-              "提示",
+              "订单编号为:" +
+                results.data.resultno.replace(reg,"") +
+                "<br>" +
+                results.data.resultmessage,
               {
                 distinguishCancelAndClose: true,
                 dangerouslyUseHTMLString: true,
-                showCancelButton: true,
+                showCancelButton: false,
                 closeOnClickModal: false,
                 showClose: false,
                 confirmButtonText: "确定"
@@ -2113,7 +2166,7 @@ export default {
         let mawbInfo = this.confirmAdd();
         console.log(mawbInfo);
         console.log(this.inputModelData.hawbList);
-
+        
         //return;
         mawbInfo.nodecode = "AO5025";
         this.$axios({
@@ -2183,7 +2236,7 @@ export default {
     setOpetionInputViewData(){
       const addOptionList = ['fid','gid','hwplace','tradeterm','jsfs','yjStoredatetype','hascdjh','hasjmyq','englishpm','sizeremark', 'hastzcx','hasdjh']
       addOptionList.forEach(options => {
-        if(this.inputModelData.orderdom == '直单'  && this.inputModelData.opersystem == '进口' && this.inputModelData.area == '上海' ) {
+        if(this.inputModelData.orderdom == '直单'  && this.inputModelData.opersystem == '进口'  ) {
           this.inputViewData[options].hidden = false
           this.inputViewData[options].required = true
         } else {
@@ -2195,6 +2248,13 @@ export default {
   },
 
   watch: {
+    // orderDialogstatus(val){
+    //     if(val == false) {
+    //       this.$parent.initDataFunc();   
+    //       this.initInfo = {};
+    //     }
+    //   },
+    
     "inputModelData.orderdom": {
       //切换订单类型
       handler(val) {
@@ -2225,11 +2285,20 @@ export default {
       },
       immediate: true
     },
+    "inputModelData.opersystemdom": {
+      handler(val) {
+        if(this.inputModelData.opersystem == "进口") {
+          this.initInfo['mawb'] = ""
+        }
+      },
+      immediate: true,
+      deep:true
+    },
+
     "inputModelData.opersystem": {
       handler(val){
         this.setOpetionInputViewData()
       },
-      immediate: true,
       deep:true
 
     },

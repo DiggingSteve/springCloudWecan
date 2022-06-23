@@ -2978,7 +2978,7 @@
                         return this.viewData[i] && this.viewData[i].default + this.modelData[i]
                     },
                     function (newval) {
-                        if (this.viewData[i].default && !this.modelData[i]) {
+                        if (this.viewData[i]&&this.viewData[i].default && !this.modelData[i]) {
                             this.$set(this.modelData, i, this.viewData[i].default);
                         }
                     }, {
@@ -4022,8 +4022,8 @@
                                     }
                                 } else if (item.groupid == 105) {
                                     this.$set(item.options, index, {
-                                        value: groupData[j][item.bindValue || "typename"],
-                                        label: groupData[j][item.bindLabel || "ready01"]
+                                        value: groupData[j][item.bindValue || "ready01"],
+                                        label: groupData[j][item.bindLabel || "typename"]
                                     });
                                 } else {
                                     // this.$set(item.options,index,{ 'value': groupData[j].ready01, 'label': groupData[j].typename })

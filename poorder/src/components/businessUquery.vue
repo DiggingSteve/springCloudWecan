@@ -10,7 +10,9 @@
       <div class="searchForm">
         <el-button @click="search">查询</el-button>
         <!-- <el-button @click="reset">重置</el-button> -->
-        <el-button @click="openMergeDialog" v-if="$store.state.ifMergeHawb">订单合并</el-button>
+        <!-- <el-button @click="openMergeDialog" v-if="$store.state.ifMergeHawb">订单合并</el-button> -->
+
+        <el-button type="primary" @click="orderDialogstatus =  !orderDialogstatus">订单新增</el-button>
 
         <!-- <el-button @click="fenpeiDialog">订单分配</el-button>
         <el-button @click="operationSave">本站操作</el-button>-->
@@ -35,11 +37,18 @@
             style="color:orange;margin-left:14px" @click="fenpeiDialog(props.data.row)"></i>
           <i class="el-icon-error" title="撤单" style="color:red"
             @click="orderCancel=true,selectTableIndex=props.data.index"></i>
-          <i class="el-icon-zhuanhuan" title="转为一主一分" style="color:green;margin-left:12px"
-            :icondisabled="props.data.row.orderdom!='分单'" @click="changeOrderdom(props.data.row.guid)"></i>
+          <!-- <i class="el-icon-zhuanhuan" title="转为一主一分" style="color:green;margin-left:12px"
+            :icondisabled="props.data.row.orderdom!='分单'" @click="changeOrderdom(props.data.row.guid)"></i> -->
         </span>
       </template>
     </tableCompt>
+
+
+      <el-dialog title="订单新增" center :visible.sync="orderDialogstatus"  class="dialogPage"
+        :close-on-click-modal="false" :close-on-press-escape="false" width="100%" top="0px" :modal="false" @close="closeOrderDialog">
+       <newOrderAdd  v-if="orderDialogstatus"></newOrderAdd>
+      </el-dialog>
+
 
     <!-- 分配 -->
     <el-dialog :visible.sync="assignShow" class="dialogPage" :close-on-click-modal="false" v-if="assignShow" width="96%"
@@ -68,6 +77,7 @@
 
 <script>
   import { mergeFunc, openZimessage, searchCmptMixins } from "@/components/mixins/topPageMixin";
+  import newOrderAdd from "@/components/newOrderAdd.vue"
 
   import fenpei from "./orderDetails/fenpei";
   import {
@@ -81,7 +91,8 @@
     name: "businessUquery",
     mixins: [mergeFunc, openZimessage, searchCmptMixins],
     components: {
-      fenpei
+      fenpei,
+      newOrderAdd
     },
 
     data() {
@@ -92,6 +103,7 @@
         assignShow: false, //分配弹框显示隐藏
         orderCancel: false, //撤单弹窗
         system: "",
+        orderDialogstatus: false,
         inputViewData: {
           dzstatus: {
             title: "单证状态",
@@ -108,6 +120,7 @@
             system: "空出",
             whereStr: "in",
             // hidden: true
+            disabled:true
           },
           hbrq: {
             title: "航班日期",
@@ -117,7 +130,7 @@
           },
         },
         inputModelData: {
-          status: "AO5025"
+          status:'AO5020,AO5025'
         },
         orderCancelForm: {
           //撤单表单
@@ -133,6 +146,9 @@
     },
 
     methods: {
+      closeOrderDialog(){
+        this.orderDialogstatus = false
+      },
       delFenPIndex(data) {
         this.assignShow = false;
         if (data.nodel == "2") {
@@ -160,13 +176,15 @@
         //     onUploadProgress: progressEvent => //console.log(progressEvent.loaded)
         // }
         //var jsonArr=searCondition(this.inputViewData)
-        this.searchData.routedelreason = "";
-        this.searchData.dzstatus = this.searchData.dzstatus || { unequal: 900 };
-        this.searchData.creditisbackstatus = { not: "4,5" };
+        // this.searchData.routedelreason = "";
+        // this.searchData.dzstatus = this.searchData.dzstatus || { unequal: 900 };
+        // this.searchData.creditisbackstatus = { not: "4,5" };
         // this.searchData.islocal = "2";
-        this.searchData.canceling = 0;
+        // this.searchData.canceling = 0;
         this.tableDataRes = [];
         this.ziTableData = [];
+        console.log(this.searchData)
+        console.log(this.inputModelData )
         var jsonArr2 = {
           where: this.searchData,
           order: "hbrq asc,adddate asc"
@@ -175,7 +193,7 @@
 
         this.$axios({
           method: "get",
-          url: this.$store.state.webApi + "api/ExHpoboAxpline",
+          url: this.$store.state.webApi + "api/ExHpoboAxplineOrderPend",
           params: json,
           loading: true,
           tip: true
@@ -343,7 +361,6 @@
           })
           .catch(() => { });
       },
-
       cancelOrderFunc() {
         //type 1 撤单 2 配货完成 3取消配货
         var url = "";
@@ -421,10 +438,12 @@
       }
     },
     created: function () {
+    
       //this.search()
       //filterGroupid(this.inputViewData)
     },
     mounted() {
+      
       // setTimeout(()=>{
       //   this.search()
       // },500)

@@ -443,20 +443,23 @@
     },
     created() {
      
-
-      if (this.immediate) {
-        this.$watch(() => {
-          return this.gid
-        }, (val) => {
-          if (val && this.fid && this.checkedRelData == null && this.relList.length == 0) {
-            setTimeout(() => {
-              this.customerRelDialogVisible = true
-            }, 500)
-          } else {
-            this.checkedRelData = null
-          }
-        })
-      }
+      // if (this.immediate) {
+      //   this.$watch(() => {
+      //     return this.gid
+      //   }, (val) => {
+      //     debugger
+      //     console.log(this.relList)
+          
+      //     // if (val && this.fid && this.checkedRelData == null && this.relList.length == 0) 
+      //     if (val && this.fid && this.checkedRelData == null) {
+      //       setTimeout(() => {
+      //         this.customerRelDialogVisible = true
+      //       }, 500)
+      //     } else {
+      //       this.checkedRelData = null
+      //     }
+      //   })
+      // }
       if(this.isoutside){
         this.activeLxrss=1
       }
@@ -577,6 +580,7 @@
         ]
         //console.log(this.checkedRelData)
         //alert('2')
+        console.log(data)
         if (this.checkedRelData) {
           this.$emit('changeRelData', data)
         }

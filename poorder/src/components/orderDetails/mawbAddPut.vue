@@ -12,7 +12,7 @@
             <div v-fixtop style="background:#fff">
                 <infoList :inputModelData="inputModelData" ref="refInfoList" :jiediandata.sync="jiediandata" :ifopendetail="false"
                     v-if="inputModelData.guid" name="详细" :showMawbSearch="inputModelData.groupid<0"
-                    @success="getNewMawbinfo" :pagetype="pagetype" :positionDocUpload="positionDocUpload">
+                    @success="getNewMawbinfo" :pagetype="pagetype" :positionDocUpload="positionDocUpload" :hawbTableDataAi="hawbTableDataAi">
                     <!-- <template slot="betgroup2"> -->
                     <!-- <el-button type="success" btnnum="30" v-if="btnJurisdic(30)" @click="assignXsPlation" pagetype="3">分配信息</el-button> -->
                     <!-- <el-button type="success" btnnum="40" v-if="btnJurisdic(40)" @click="assignXsPlation" pagetype="2">分配信息</el-button> -->
@@ -27,11 +27,11 @@
                         <div class="servicePort" >
                         </div>
                     </div> -->
-                    <div v-for="(item,index) in  firstLevelTab" v-if="inputModelData.guid&&newService">
+                <div v-for="(item,index) in  firstLevelTab" v-if="inputModelData.guid&&newService">
                        <div @click="changeIndex(index,true);tabclick({name:'tab1-first'},1)"  class="servicetitle"  :class="{'is-active':activeName=='tab1-first'&&index==firstLevelIndex}"  v-show="!(ifOperSysHome&&item=='出港操作')"><p>{{item}}</p><p style="font-size:12px">(基本信息)</p></div>
                         <div class="servicePort">
                             <!-- item=='出港操作'&&  4月份开始只有出港操作才显示 8月份发现问题现取消此条件-->
-                            <div class="el-tabs__item is-top" v-for="tabitem in cgportTtabs" v-if="!ifOperSysHome" v-show="(item=='出港操作'||item=='进港服务'&&inputModelData.opersystem=='进口')&&showCgportTab(tabitem.tabcode)" :class="{'is-active':activeName==tabitem.tabcode}"
+                            <div class="el-tabs__item is-top" v-for="tabitem in cgportTtabs" v-if="!ifOperSysHome" v-show="(item=='出港操作'||item=='进港操作'&&inputModelData.opersystem=='进口')&&showCgportTab(tabitem.tabcode)" :class="{'is-active':activeName==tabitem.tabcode}"
                                 @click="changeIndex(index);tabclick({name:tabitem.tabcode},1)">
                                 <myTabBadge   type="2"   :color="tabitem.nobgcolor?'badgeGrey':setTabBadgeType(tabitem.tabcode)" :noareacode="tabitem.noareacode" :label="getTitle(tabitem.label)" >
                                 </myTabBadge>
@@ -43,15 +43,15 @@
                         </div>
                 </div>
 
-                    <div class="forstLevel" style="display: none;">
-                        <el-button-group size="small" class="buttonTabs">
-                            <el-button v-for="(item,index) in firstLevelTab" :key="index" style="height: 32px;"
-                                :style="{border:index==firstLevelIndex?'1px solid #0F649B':''}"
-                                :type="index==firstLevelIndex?'primary':''" @click="changeIndex(index)">
-                                {{ifOperSysHome&&item=='出港操作'?"基本信息":item}}
-                            </el-button>
-                        </el-button-group>
-                    </div>
+                <div class="forstLevel" style="display: none;">
+                    <el-button-group size="small" class="buttonTabs">
+                        <el-button v-for="(item,index) in firstLevelTab" :key="index" style="height: 32px;"
+                            :style="{border:index==firstLevelIndex?'1px solid #0F649B':''}"
+                            :type="index==firstLevelIndex?'primary':''" @click="changeIndex(index)">
+                            {{ifOperSysHome&&item=='出港操作'?"基本信息":item}}
+                        </el-button>
+                    </el-button-group>
+                </div>
 
 
 
@@ -114,7 +114,11 @@
                             v-if="btnJurisdic(121)">{{this.ifServiceAllBind?'已绑定':'手动绑定'}}</el-button>
 
                         <el-button btnnum="130" @click="orderCancel=true" type="primary" style="background:#FA1A1A"
-                            v-if="btnJurisdic(130)">撤单/驳回/退关</el-button>
+                            v-if="btnJurisdic(130)">
+                            <span v-if="!ifOperSysImport">撤单/驳回/退关</span>
+                            <span v-else>撤单/弃货</span>
+                        </el-button>
+
 
                         <el-button btnnum="131" @click="mergeDialog=true" type="primary" style="background:#FA1A1A"
                             v-if="btnJurisdic(131)">编辑合并</el-button>
@@ -212,7 +216,6 @@
 
                 <div class="servicePort addputServicePort">
                     <el-tabs type="border-card" ref="serviceTabs" @tab-click="tabclick($event,1)" v-model="activeName">
-
                         <el-tab-pane name="tab1-first">
                             <!-- <span slot="label" class="badgeLabel"  v-show="activeName=='tab1-first'"
                                 style="line-height:44px;padding:0px 20px">{{inputModelData.orderdom=='分单'?'分单信息':"基本信息"}}</span> -->
@@ -232,8 +235,9 @@
                                     </newFormCmpt>
                                 </div>
                             </div>
+                            <!-- //@@进口更改 -->
                             <div :class="{paneDisabled:allDisabled()||(inputModelData.dzstatus>=300&&inputModelData.commbillmodifystatus!=2)}"
-                                v-if="!ifOperSysHome&&ifThird.includes('tab1-first')">
+                                v-if="!ifOperSysHome&&ifThird.includes('tab1-first')&&!ifOperSysImport">
                                 <div class="detail basic-information">
                                     <div class="detail-title">
                                         <p>基本信息</p>
@@ -312,16 +316,19 @@
 
                                 <div class="detail basic-information"
                                     v-if="inputModelData.orderdom!='分单'&&area!=conditionalAreaForBuild">
-                                    <div class="detail-title">
-                                        <p>总单收发货人信息</p>
+                                    <div class="detail basic-information">
+                                        <div class="detail-title">
+                                            <p>总单收发货人信息</p>
+                                        </div>
+                                        <div class="detail-c" style="max-width:1300px">
+                                            <revSedMawb :dzinfo="inputModelData" ref="makeBillRevSed"></revSedMawb>
+                                            <revSed :dzinfo="inputModelData">
+                                                <el-input slot="textCode" type="textarea" rows="1" placeholder="信用代码" v-model="inputModelData.taxcode_tzr_mawb"
+                                                    v-verify="'creditCode'"></el-input>
+                                            </revSed>
+                                        </div>
                                     </div>
-                                    <div class="detail-c" style="max-width:1300px">
-                                        <revSedMawb :dzinfo="inputModelData" ref="makeBillRevSed"></revSedMawb>
-                                        <revSed :dzinfo="inputModelData">
-                                            <el-input slot="textCode" type="textarea" rows="1" placeholder="信用代码" v-model="inputModelData.taxcode_tzr_mawb"
-                                                v-verify="'creditCode'"></el-input>
-                                        </revSed>
-                                    </div>
+                                    
                                 </div>
 
                                 <div class="detail basic-information"
@@ -335,6 +342,85 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- //@@进口更改 -->
+                            <div :class="{paneDisabled:allDisabled()||(inputModelData.dzstatus>=650&&inputModelData.commbillmodifystatus!=2)}"
+                                v-if="!ifOperSysHome&&ifThird.includes('tab1-first')&&ifOperSysImport">
+                                 <!-- <commonTabs :list="infoTableFirst" style="margin-top: 12px;" :showExpanionBtn="false" :checkedIndex.sync="goodsinfoTabsChecked" :showTooltip="false" titlefield="title"> -->
+
+                                    <div class="detail basic-information">
+                                        <div class="detail-title">
+                                            <p>总单信息</p>
+                                        </div>
+                                        <div class="detail-c" style="max-width:1300px" v-show="goodsinfoTabsChecked==0">
+                                            <newFormCmpt :view-data.sync="inputModelData.orderdom=='总单'?basicInformationAi:allViewData"
+                                                    :model-data.sync="inputModelData" :pagetype="2" @wtdataP="wtdataP"
+                                                    :area="area">
+                                                <hwxzCompt slot="exForm1"  :inputModelData="hawbTableDataAi[0]"></hwxzCompt>
+                                                 <template slot="exForm2">
+                                                     <div id="exForm2" style="width:100%;">
+                                                        <div class="input-item allwidth" style="display:flex;align-items: center">
+                                                            <div class="input-title" style="width:110px;text-align:right">货物信息：</div>
+                                                            <div class="input-content" style="height:32px;border:1px solid #C0C4CC;border-radius:4px;background:#f0f0f0;text-indent:0.5em;line-height:28px;width:fit-content;">
+                                                                <span v-for="i in hwycField" :key="i.field" style="font-size:13px;">
+                                                                    {{i.title}}
+                                                                <span style="width:60px;text-indent:1.5em;display:inline-block">
+                                                                    {{inputModelData[i.field]}}
+                                                                </span>        
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                     </div>
+                                                </template>     
+                                            </newFormCmpt>
+                                        </div>
+
+                                        <div class="detail-title" v-show="infoTableFirst.length==2" style="margin-top:">
+                                            <p>分单信息</p>
+                                        </div>
+                                        <div class="detail-c" v-show="infoTableFirst.length==2">
+                                            <newFormCmpt :system="inputModelData.system" :view-data.sync="basicInformationAiHawb"
+                                                    :model-data.sync="hawbTableDataAi[0]" :pagetype="2"
+                                                    :area="inputModelData.area">
+                                                <hwxzCompt slot="exForm1"  :inputModelData="hawbTableDataAi[0]"></hwxzCompt>
+                                                 <template slot="exForm2">
+                                                     <div id="exForm2" style="width:100%;">
+                                                        <div class="input-item allwidth" style="display:flex;align-items: center">
+                                                            <div class="input-title" style="width:110px;text-align:right">货物信息：</div>
+                                                            <div class="input-content" style="height:32px;border:1px solid #C0C4CC;border-radius:4px;background:#f0f0f0;text-indent:0.5em;line-height:28px;width:fit-content;" v-if="hawbTableDataAi[0]">
+                                                                <span v-for="i in hwycField" :key="i.field" style="font-size:13px;">
+                                                                    {{i.title}}
+                                                                    <span style="width:60px;text-indent:1.5em;display:inline-block">
+                                                                        {{hawbTableDataAi[0][i.field]||0}}
+                                                                    </span>
+                                                                    <!-- <input type="text" style="width:60px;background:transparent;height:28px;text-indent:1.5em"  class="hwycInput" v-model="hawbTableDataAi[0][i.field]" disabled> -->
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                     </div>
+                                                </template>  
+                                            </newFormCmpt> 
+                                        </div>    
+                                    </div>
+                                    <!-- 分单收发货人 -->
+                                    <div class="detail" v-if="infoTableFirst.length==2||(goodsinfoTabsChecked=='0'&&inputModelData.orderdom=='直单')">
+                                        <div class="detail-title">
+                                            <span v-if="infoTableFirst.length==2">分单收发货人</span>
+                                            <span v-else>总单收发货人</span>
+                                        </div>
+                                        <div class="detail-c" v-if="infoTableFirst.length==2">
+                                            <revSedHawb :dzinfo="inputModelData" ref='makeBillRevSedHawb'></revSedHawb>
+                                        </div>
+                                        <div class="detail-c" v-else-if="infoTableFirst.length==1&&inputModelData.orderdom=='直单'">
+                                             <revSedMawb :dzinfo="inputModelData" ref="makeBillRevSed"></revSedMawb>
+                                            <revSed :dzinfo="inputModelData" ref="tzrRev">
+                                                <el-input slot="textCode" type="textarea" rows="1" placeholder="信用代码"
+                                                v-model="inputModelData.taxcode_tzr_mawb" v-verify="'creditCode'"></el-input>
+                                            </revSed>  
+                                        </div>
+                                    </div>
+                                     
+                                 <!-- </commonTabs>     -->
+                            </div>            
                         </el-tab-pane>
 
                         <template v-if="!ifOperSysHome">
@@ -372,25 +458,42 @@
                                                             v-if="btnJurisdic(340)">配置总运单</el-button>
                                                         <el-button btnnum="350" @click="relieveMawbConfig"
                                                             v-if="btnJurisdic(350)">解除总运单</el-button>
-                                                        <span style="margin-left:60px" v-if="inputModelData.mawb&&inputModelData.system=='空出'">
+                                                        <span style="margin-left:220px" v-if="inputModelData.mawb&&inputModelData.system=='空出'">
                                                             航空公司：{{inputModelData.airCompanyName}}
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <new-form-cmpt :view-data.sync="zdBasicInfoSave"
-                                                    :model-data.sync="inputModelData" :pagetype="2" style="width:50%;display:inline-block"></new-form-cmpt>
-                                                <div style="display:inline-block;margin-left:-92px;">
-                                                    <span style="margin-right:20px"
-                                                    v-if="inputModelData.gysname&&this.inputModelData.isshipace==1">运单供应商：{{inputModelData.gysname&&inputModelData.gysname.indexOf('-')!=-1?inputModelData.gysname.split('-')[1]:inputModelData.gysname}}</span>
-                                                    <!-- ordertype!='3' -->
-                                                <span
-                                                    v-if="inputModelData.mawb&&inputModelData.mawbss&&this.inputModelData.isshipace==1">总运单所属：{{inputModelData.mawbss}}</span>
-                                                </div>    
-                                                
-                                            </div>
-                                        </div>
 
-                                        <div class="detail" :class="{paneDisabled: inputModelData.area == '上海' && inputModelData.czlx == '自货'}">
+                                                <el-row>
+
+                                                    <el-col :span="6">
+                                                        <span
+                                                        style="margin-left: 25px;"
+                                                        v-if="inputModelData.mawb&&inputModelData.mawbss&&this.inputModelData.isshipace==1">总运单所属：{{inputModelData.mawbss}}</span>
+
+                                                    </el-col>
+
+                                                    <el-col :span="7">
+                                                        <span style="margin-right:20px"
+                                                        v-if="inputModelData.gysname&&this.inputModelData.isshipace==1">运单供应商：{{inputModelData.gysname&&inputModelData.gysname.indexOf('-')!=-1?inputModelData.gysname.split('-')[1]:inputModelData.gysname}}</span>
+                                                        <!-- ordertype!='3' -->
+                                                    </el-col>
+
+                                                    <el-col :span="11">
+                                                        <new-form-cmpt :view-data.sync="zdBasicInfoSave"
+                                                            :model-data.sync="inputModelData" :pagetype="2" 
+                                                            style="display:inline-block;margin-left:-21px;">
+                                                        </new-form-cmpt>
+                                                    </el-col>
+
+                                                </el-row>
+
+                                            </div>
+
+
+                                        </div>
+                                        <!-- :class="{paneDisabled: inputModelData.area == '上海' && inputModelData.czlx == '自货'}" -->
+                                        <div class="detail">
                                             <div class="detail-title" >
                                                 <!-- <p>签单&制单信息</p> -->
                                                 <myServiceTitlePane code="OA0010" style="width:100%;display:flex"
@@ -699,8 +802,14 @@
                                                     :oldhpoid="iscomboineChildren?inputModelData.guid:''"
                                                     :boguid="boguid" ref="peihuo" :statusArr="statusArr"
                                                     :ifSellSite="ordertype==3" @success="getMawbdetail"
-                                                    @getHawbNum="getHawbNum">
+                                                    @getHawbNum="getHawbNum" :serviceSelArr="serviceSelArr"
+                                                    :ifOperSysImport="ifOperSysImport"
+                                                    >
                                                 </peihuo>
+
+                                                <!-- <commonTable v-else :head="phczHead" :table-data="phczData">
+                                                       
+                                                </commonTable> -->
                                             </div>
                                         </div>
                                     </el-collapse-transition>
@@ -951,6 +1060,149 @@
                                             v-if="inputModelData.outsidedom=='GTN'"></iframe>
                                     </div>
                                 </div>
+                            </el-tab-pane>
+                            <!-- @@ 进口改动 -->
+                            <el-tab-pane label="抽单操作" name="tabl-choudan" v-if="showCgportTab('tabl-choudan')">
+                                  <myTabBadge :color="setTabBadgeType('tabl-choudan')" :label="getTitle('抽单操作')"
+                                    v-show="showServiceTab('tabl-choudan')" slot="label"  tabcode="tabl-choudan"  >
+                                  </myTabBadge>
+                                   <div class="detail">
+                                       <div class="detail-title">
+                                           <p>
+                                               抽单操作
+                                               <span v-html="getTabsTooltip('客户抽单')" style="margin-right: auto"></span>
+                                                <template>
+                                                <!-- v-if="btnJurisdic(270)" 
+                                                @click="cancelOrderFunc(2)" -->
+                                                <el-button 
+                                                    btnnum="270" 
+                                                    class="finishBtn" 
+                                                    type="primary"
+                                                    v-if="btnJurisdic(500)" 
+                                                    @click="importOperate(1)"
+                                                >
+                                                    抽单完成
+                                                </el-button>
+
+                                                <el-button 
+                                                    btnnum="280" 
+                                                    class="finishBtn" 
+                                                    type="danger"
+                                                    v-if="btnJurisdic(501)" 
+                                                    @click="importOperate(2)">
+                                                    取消抽单
+                                                </el-button>
+                                            </template>
+                                           </p>
+                                       </div>
+                                       <div class="detail-c">
+                                           <div id="checkdate" style="width:100%;">
+                                                <div class="input-item allwidth" style="display:flex;align-items: center">
+                                                    <div class="input-title" style="width:110px;text-align:right">抽单日期：</div>
+                                                    <div class="input-content">
+                                                        <el-date-picker v-model="inputModelData.checkdate" type="date"
+                                                        value-format="yyyy-MM-dd"
+                                                        placeholder="选择日期" 
+                                                        ></el-date-picker>
+                                                    </div>
+                                                    <div class="input-title" style="width:110px;text-align:right">联系方式：</div>
+                                                    <div class="input-content">
+                                                       <el-input v-model="inputModelData.cdcontact"></el-input>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                       </div>
+
+                                   </div>
+                            </el-tab-pane>
+                            <el-tab-pane label="放货操作" name="tabl-fanghuo" v-if="showCgportTab('tabl-fanghuo')">
+                                  <myTabBadge :color="setTabBadgeType('tabl-fanghuo')" :label="getTitle('放货操作')"
+                                    v-show="showServiceTab('tabl-fanghuo')" slot="label"  tabcode="tabl-fanghuo"  >
+                                  </myTabBadge>
+                                   <div class="detail">
+                                       <div class="detail-title">
+                                           <p>
+                                               放货操作
+                                               <span v-html="getTabsTooltip('可放行')" style="margin-right: auto"></span>
+                                                <template>
+                                                <!-- v-if="btnJurisdic(270)" 
+                                                @click="cancelOrderFunc(2)" -->
+                                                <el-button 
+                                                    btnnum="270" 
+                                                    class="finishBtn" 
+                                                    type="primary"
+                                                    v-if="btnJurisdic(510)" 
+                                                    @click="importOperate(3)"
+                                                >
+                                                    放货完成
+                                                </el-button>
+
+                                                <el-button 
+                                                    btnnum="280" 
+                                                    class="finishBtn" 
+                                                    type="danger"
+                                                    v-if="btnJurisdic(511)" 
+                                                    @click="importOperate(4)">
+                                                    取消放货
+                                                </el-button>
+                                            </template>
+                                           </p>
+                                       </div>
+                                       <div class="detail-c" style="display:flex">
+                                           <div id="yqckdate" style="width:468px;">
+                                                <div class="input-item" style="display:flex;align-items: center">
+                                                    <div class="input-title" style="width:130px;text-align:right">要求出库日期：</div>
+                                                    <div class="input-content input-required">
+                                                        <el-date-picker v-model="inputModelData.yqckdate" type="date"
+                                                        value-format="yyyy-MM-dd"
+                                                        placeholder="选择日期" 
+                                                        ></el-date-picker>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="thname" style="width:568px;">
+                                                <div class="input-item" style="display:flex;align-items: center">
+                                                    <div class="input-title" style="width:110px;text-align:right">提货单位：</div>
+                                                    <div class="input-content">
+                                                        <el-autocomplete v-model="thname" style="width:300px" clearable
+                                                             placeholder="请输入内容" :fetch-suggestions="querySearchAsync" :trigger-on-focus="false"
+                                                        @select="handleSelect">
+                                                        </el-autocomplete>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                       </div>
+
+                                   </div>
+                            </el-tab-pane>
+                            <el-tab-pane :label="newService.AG0138.title" name="AG0138" v-if="newService.AG0138&&ifOperSysImport">
+                               <myTabBadge :color="setTabBadgeType('AG0138')" :label="newService.AG0138.title" slot="label"
+                                v-show="serviceSelArr.includes('AG0138')&&showServiceTab('AG0138')"  tabcode="AG0138" ></myTabBadge>
+                                <div class="detail"
+                                :class="{paneDisabled:allDisabled('AG0138')||servicesDisabled('AG0138')}">
+                                    <div class="detail-title">
+                                        <div class="finishInfo">
+                                            <myServiceTitlePane code="AG0138"></myServiceTitlePane>
+                                            <div :class="{paneDisabled:getServiceGuid('AG0138','childpgid')>0}">
+                                                <myServiceFinishBtn btnnum="452" v-if="btnJurisdic(600,'AG0138')"
+                                                    code="AG0138"></myServiceFinishBtn>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="detail-c" :class="{disabled:isServiceFinish('AG0138')}">
+                                    <increaseServiceSplit :ordertype="ordertype" :mawbinfo="inputModelData"
+                                        :orderFinish="orderFinish" :saveNumberList="saveNumberList"
+                                        v-if="ifThird.includes('AG0138')" servicecode="AG0138"
+                                        :mawbguid="inputModelData.guid" :area="area"
+                                        :hasData.sync="ysSmallService.AG0138" :boguid="boguid"
+                                        @success="getServiceNodeData" ref="AG0138">
+                                    </increaseServiceSplit>
+                                    <div v-if="ifThird.includes('AG0138')">
+                                     <myServiceCostTable code="AG0138"></myServiceCostTable>
+                                    </div>
+                                </div>
+
+                                </div>    
                             </el-tab-pane>
                         </template>
                         <!-- </el-tabs>
@@ -2137,8 +2389,7 @@
                         </el-tab-pane>
 
                         <el-tab-pane :label="newService.AB0620.title" v-if="newService.AB0620" name="AB0620">
-                            <myTabBadge :color="setTabBadgeType('AB0620')" tabcode="AB0620" :label="newService.AB0620.title"
-                                v-show="serviceSelArr.includes('AB0620')&&showServiceTab('AB0620')" slot="label">
+                            <myTabBadge :color="setTabBadgeType('AB0620')" tabcode="AB0620" :label="newService.AB0620.title" v-show="serviceSelArr.includes('AB0620')&&showServiceTab('AB0620')" slot="label">
                             </myTabBadge>
                             <div class="detail"
                                 :class="{paneDisabled:allDisabled('AB0620')||servicesDisabled('AB0620')}">
@@ -2163,7 +2414,8 @@
                                 </div>
                                 <div class="detail-c"
                                     :class="{disabled:isServiceFinish('AB0620')||(pagetype==3&&!ifOperSysHome)}">
-                                    <template v-if="!ifOperSysHome&&ifThird.includes('AB0620')">
+                                    <!-- @@ 进口更改 -->
+                                    <template v-if="!ifOperSysHome&&ifThird.includes('AB0620')&&!ifOperSysImport">
                                         <declareAtcustoms ref="bgCmptMdg" :mawbguid="mawbguid"
                                             :serviceguid="getServiceGuid('AB0620')" servicecode="AB0620"
                                             :hawblist="hawbTableData" :jiediandata="jiediandata"
@@ -2171,6 +2423,26 @@
                                             @edit-node-success="edit_node_success(2)"
                                             :orderpgid="getServiceGuid('AB0620','orderpgid')"
                                             :childpgid="getServiceGuid('AB0620','childpgid')"></declareAtcustoms>
+                                    </template>
+                                     <!-- @@ 进口更改 -->
+                                    <template v-if="ifThird.includes('AB0620')&&ifOperSysImport">
+                                        <declareAtcustoms ref="bgCmpt" :mawbguid="mawbguid" :hawblist="hawbTableData"
+                                        :serviceguid="getServiceGuid('AB0620')" servicecode="AB0620"
+                                        :jiediandata="jiediandata" :mawbinfo="inputModelData" @getJsxmData="getJsxmData"
+                                        @edit-node-success="edit_node_success(1)"
+                                        :orderpgid="getServiceGuid('AB0620','orderpgid')"
+                                        :childpgid="getServiceGuid('AB0620','childpgid')"
+                                        v-if="!ifOperSysHome&&ifThird.includes('AB0620')">
+                                            <peihuo :saveNumberList.sync="saveNumberList" :hawblist="hawbTableData"
+                                                :serviceguid="getServiceGuid('AB0620')" :phfinished="phFinish"
+                                                :mawbinfo="inputModelData" :guid="mawbguid" :boguid="boguid"
+                                                :statusArr="statusArr" :sjGoodsTableData="sjTableData"
+                                                :ifSellSite="ordertype==3" @success="getMawbdetail" @getHawbNum="getHawbNum"
+                                                mark="peidan" 
+                                                :pdfinishstatus="inputModelData.serviceList.filter(i=>i.servicecode=='AB0620'&&i.status=='500').length>0"
+                                                :khjcnoListArray="allkhjcnoData" servicecode="AB0620">
+                                            </peihuo>
+                                        </declareAtcustoms>
                                     </template>
 
                                     <template v-if="ifOperSysHome&&ifThird.includes('AB0620')">
@@ -2193,6 +2465,7 @@
                                 <myServiceCostTable code="AB0620"></myServiceCostTable>
                             </div>
                         </el-tab-pane>
+
                     </el-tabs>
                 </div>
             </div>
@@ -2216,7 +2489,7 @@
 
             <el-dialog title="配置总单" :visible.sync="dialogMawbConfig" v-if="dialogMawbConfig" append-to-body
                 :close-on-click-modal="false" width="1200px" @close="mawbConfigDialogClose" custom-class="mawbDialog">
-                <mawbConfigNew :rowData="inputModelData" pagetype="2" ref="mawbConfig" :visible.sync="dialogMawbConfig"></mawbConfigNew>
+                <mawbConfigNew :rowData="inputModelData" pagetype="2" ref="mawbConfig" :visible.sync="dialogMawbConfig" ></mawbConfigNew>
                 <!-- {{objGysss}} -->
 <!--                 <div class="detail">
                     <div style="position:relative;top:-16px;">
@@ -2449,7 +2722,7 @@
                     @success="wageSuccess" :boguid="boguid" :pagetype="2" :inputModelData="inputModelData"
                     :costDom="pagetype=='14'?'客服':pagetype=='15'?'航线':''"
                     :initiator="pagetype=='14'?'10':pagetype=='15'?'20':''"
-                    :showSuggestWage="(pagetype == '14'||!projectIsWecan) ? true : false"></costMaking>
+                    :showSuggestWage="(pagetype == '14'||!projectIsWecan||inputModelData.system=='空进') ? true : false"></costMaking>
             </el-dialog>
 
             <!-- 
@@ -2734,6 +3007,7 @@
     import manifastPirnt from "@/components/orderDetails/manifastPirnt"
 
     import airPlaneDeatil from '@/components/orderDetails/airPlaneDeatil'
+    import newOrderAddAi from '@/components/newOrderAddAi'
 
     //childguid>0代表已分配
     //  100  已受理
@@ -3036,7 +3310,8 @@
         getChangeRate,
         configData,
         getWtxmname,
-        getWtkhname
+        getWtkhname,
+        getMomentDate
     } from "../../api/localStorage.js";
 
     import {
@@ -3099,6 +3374,7 @@
             pactlPut,
             mawbConfigNew,
             airPlaneDeatil,
+            newOrderAddAi,//@@进口更改
         },
         props: {
             orderdom: {
@@ -3647,7 +3923,10 @@
                 sjTableHead: [],//陪档实际尺寸表格 ,
                 sjTableData: [],
                 lxdDialogShow:false,//海关联系单弹窗
-                hasServiceContent:['AA0410', 'AA0510', 'AA0610', 'AG0145', 'AG0150', 'AA0110', 'AA0120','AA0130','AA0140', 'AA0150', 'AA0160', 'AA0310', 'AA0320', 'AA0230', 'AA0240', 'AG0110', 'AG0115', "AG0120", "AG0140", "AA0810", "AA0830", "AA0840", "AA0850", "AG0125", "AG0130", "AG0135", "AB0420", "AB0520", "AB0620"], //存在服务内容的
+
+                hasServiceContent:['AA0410', 'AA0510', 'AA0610', 'AG0145', 'AG0150', 'AA0110', 'AA0120','AA0130','AA0140', 'AA0150', 'AA0160', 'AA0310', 'AA0320', 'AA0230', 'AA0240', 'AG0110', 'AG0115', "AG0120","AG0138","AG0140", "AA0810", "AA0830", "AA0840", "AA0850", "AG0125", "AG0130", "AG0135", "AB0420", "AB0520", "AB0620"], //存在服务内容的  //@@进口更改 AG0138
+
+
                 cgportTtabs:[
                     {label:'航线操作',tabcode:'tab1-third',show:true },
                     {label:'配货操作',tabcode:'tab1-second',show:true},
@@ -3657,13 +3936,42 @@
                     // {label: '单证确认',tabcode: 'tab1-sixth',show: true},
                     {label: '分配信息',tabcode: 'tab1-seventh',show: true, nobgcolor: true, noareacode: true},
                     { label: 'Amazon信息', tabcode: 'tab1-eighth', show: true ,nobgcolor:true,noareacode:true},
-                    { label: '单证制作', tabcode: 'tab1-dzmake', show: true },                 
+                    { label: '单证制作', tabcode: 'tab1-dzmake', show: true },  
+                    //进口更改 抽单操作、放货操作   
+                    {label:'抽单操作',tabcode:'tabl-choudan',show:true},
+                    {label:'放货操作',tabcode:'tabl-fanghuo',show:true},            
                 ],
                 dzmaketabindex:0,
                 isPaper: false, // 是否单证制作
 
                 airModelData: {},
                 airmonitor: 1,
+                //进口需要参数数据 @@进口更改
+                infoTableFirst:[{title:'总单信息'},{title:'分单信息'}],
+                goodsinfoTabsChecked: 0,
+                hawbTableDataAi:[],//进口分单信息
+                allViewData:{},//进口直单所有数据
+                hwycField:[{title:'大件货',field:'djhpiece'},{title:'超限货',field:'cdjhpiece'},{title:'特种超限货',field:'tzcxhpiece'},{title:'精密仪器',field:'jmyqpiece'},{title:'破损',field:'breakpiece'},{title:'潮湿',field:'moistpiece'},{title:'变形',field:'deformPiece'},{title:'泛红',field:'redpiece'},{title:'板位破损',field:'bwbreakpiece'},{title:'破损无报告',field:'otherpiece'}],
+                restaurants:[],
+                thname:'',
+                // phczHead:[  
+                //     { title: "状态", field: "statusPz", formatType: 4, format: row => row.statusPz?'已配置':'未配置'},
+                //     { title: "客户进仓编号", field: "khjcno",style:{'pointer-events':'all'}  },
+                //     { title: "入库件/重/体", field: "sjjzt" ,formatType: 4, format: row => `${row.piece||'--'}/${row.weight||'--'}/${row.volume||'--'}`},
+                //     { title: "客户确认件/重/体", formatType: 4,format: row => `${row.customCommitPiece||'--'}/${row.customCommitWeight||'--'}/${row.customCommitVolume||'--'}`},
+                //     {
+                //     title: "入库日期",
+                //     field: "jcdate",
+                //     formatType: 1,
+                //     format: "yyyy-MM-dd"
+                //     },
+                //     { title: "入库仓库", field: "storeName" },
+                //     { title: "货物异常", field: "abnormal" ,formatType: 4, format: row => `破损:${row.breakPiece||0},变形:${row.feformPiece||0},潮湿:${row.moistPiece||0}`},
+                //     { title: "唛头", field: "goodsMark" },
+                //     { title: "货物备注", field: "goodsremark" }
+                // ],
+                // phczData:[],
+                // phczAllData:[],
             };
         },
 
@@ -3674,7 +3982,7 @@
             this.$nextTick(() => {
                 this.dialogFormVisible = false;
             });
-
+            
             this.getMawbdetail().then(res => {
                 // console.log(123)
                 // if (this.isBognTesk) {
@@ -3686,13 +3994,20 @@
                 this.getServiceNodeData();
               
                 this.getJiedianInfoFunc()
-              
+                if(this.inputModelData.system=='空进'){
+                  this.basicInformationAi.gid.disabled=this.inputModelData.dzstatus>=650||this.inputModelData.creditisbackstatus==4
+                  this.basicInformationAi.fid.disabled=this.inputModelData.dzstatus>=650||this.inputModelData.creditisbackstatus==4
+                }
+                
                 if ((this.ifOperSysHome && this.serviceSelArr.length > 0) || !this.ifOperSysHome) {
                     this.getMawbCost();
                 }
    
                 this.watchYsService();
-
+                
+                // if(this.ifOperSysImport){//@@ 进口更改
+                //     this.getHouseWareData()
+                // }
                 // this.getQfsj(1);
                 this.$watch(
                     function () {
@@ -4012,6 +4327,29 @@
                         }
                     }
                 );
+                // this.$watch(
+                // () => {
+                //     return this.statusArr + this.phczAllData;
+                // },
+                // () => {
+                //     if(this.ifOperSysImport){
+                //     let newArr = this.phczAllData.map(el => {
+                //     el.status = this.statusArr.includes(el.khjcno);
+                //     // note: 监听货物信息 => 预计入库时间 => yjstoredate === null || yjstoredate === 1900 => yjstoredate = ''
+                //     if (
+                //         el.yjstoredate === undefined ||
+                //         el.yjstoredate === null ||
+                //         el.yjstoredate.includes('1900')
+                //         ) {
+                //         el.yjstoredate = ''
+                //         }
+                //     return el;
+                //     });
+                //     this.saveNumberList=newArr
+                //     }
+                // },
+                // { deep: true, immediate: true }
+                // );
 
             }); //获取总单详细
         },
@@ -4077,8 +4415,13 @@
             },
             getTitle(name) {
                 let areaList = JSON.parse(localStorage.groupType).filter(i => i.groupid == 53)
-
-                let area = this.inputModelData.serviceList.filter(i => name!='单证制作'?i.servicecode == 'OA0010':i.servicecode == 'AA0110').length&&this.inputModelData.serviceList.filter(i => name!='单证制作'?i.servicecode == 'OA0010':i.servicecode == 'AA0110')[0]['assignarea']
+                let area=''
+                // @@ 进口更改
+                if((name=='配货操作'||name=='抽单操作'||name=='放货操作')&&this.ifOperSysImport){
+                  area = this.inputModelData.serviceList.filter(i => name!='放货操作'?i.servicecode == 'OB0020':i.servicecode == 'AB0420').length&&this.inputModelData.serviceList.filter(i => name!='放货操作'?i.servicecode == 'OB0020':i.servicecode == 'AB0420')[0]['assignarea']
+                }else{
+                  area = this.inputModelData.serviceList.filter(i => name!='单证制作'?i.servicecode == 'OA0010':i.servicecode == 'AA0110').length&&this.inputModelData.serviceList.filter(i => name!='单证制作'?i.servicecode == 'OA0010':i.servicecode == 'AA0110')[0]['assignarea']
+                }
                 let threeCode = area ? areaList.filter(i => i.typename == area)[0]['ready06'] : '本站'
                 //console.log(`${name}(${threeCode})`)
                 // return `${name=='单证确认'?'收发货人确认':name},${threeCode}`
@@ -4144,7 +4487,7 @@
                         guid: this.inputModelData.guid,
                         boguid: this.inputModelData.boguid,
                         area: this.inputModelData.area,
-                        system: '系统'
+                        system: '空进'
                     },
                     loading: false,
                     tip: false
@@ -4412,6 +4755,7 @@
                     }
                 });
             },
+            //@@进口更改显示Tab  tab1-tenth、tab1-fifth、tab1-dzmake
             showCgportTab(code) {    //统一维护以下服务的显示条件     
               let flag=true;
 
@@ -4426,7 +4770,7 @@
                 // note: 签单申请
                 if (code == 'tab1-tenth') {
                     //  flag =this.inputModelData.opersystem != '进口'&&this.inputModelData.czlx != '代操作' && this.inputModelData.area == this.conditionalAreaForBuild && this.pagetype != 21
-                    flag = this.pagetype != 21;
+                    flag = this.pagetype != 21&&this.inputModelData.opersystem != '进口';
                    
                 }
 
@@ -4437,7 +4781,7 @@
                 }
 
                 if (code == 'tab1-fifth') {
-                     let forthStatus = this.area != this.conditionalAreaForBuild && !(this.inputModelData.iscomboine == 1 && this.ordertype == 3)
+                     let forthStatus = this.area != this.conditionalAreaForBuild && !(this.inputModelData.iscomboine == 1 && this.ordertype == 3)&&this.inputModelData.opersystem != '进口'
 
                     flag = (this.inputModelData.opersystem != '进口'&&((this.area == this.conditionalAreaForBuild) || !this.projectIsWecan && this.zhuYinIsdel) && this.pagetype != 21) || forthStatus;
                 }
@@ -4454,8 +4798,18 @@
                 }
 
                  if (code == 'tab1-dzmake') {             
-                    flag = this.serviceSelArr.includes('AA0110') || this.serviceSelArr.includes('AA0120')
+                    flag = (this.serviceSelArr.includes('AA0110') || this.serviceSelArr.includes('AA0120'))&&this.inputModelData.opersystem != '进口'
                 }
+
+                if(code=='tabl-choudan'){
+                    flag = this.inputModelData.opersystem=='进口'
+                }
+
+                if(code=='tabl-fanghuo'){
+                    flag = this.inputModelData.opersystem=='进口'
+                }
+
+                
 
                 
             
@@ -4513,6 +4867,15 @@
                  if (code == 'tab1-dzmake') {
                     return (this.serviceSelArr.includes('AA0110')?this.getServiceGuid('AA0110', "status")==500:true) && (this.serviceSelArr.includes('AA0120')?this.getServiceGuid('AA0120', "status") == 500:true) ? 'badgeGreen' : 'badgeRed'
                 }
+
+                if(code=='tabl-choudan'){
+                    return this.inputModelData.dzstatus>=500?'badgeGreen' : 'badgeRed'
+                }
+                if(code=='tabl-fanghuo'){
+                    return this.inputModelData.dzstatus>=650?'badgeGreen' : 'badgeRed'
+                }
+
+                
 
                 let status = this.getServiceGuid(code, "status");
                 let className = "badgeRed";
@@ -4891,7 +5254,8 @@
                 this.$refs.serviceTemp && this.$refs.serviceTemp.initFunc(serviceList);
                 if (this.inputModelData.serviceList) {
                     setTimeout(() => {
-                        this.firstLevelTab = this.inputModelData.opersystem == '进口' ? ["进港服务"] : ["出港操作"];
+                        //@进口改动  进港服务=>进港操作
+                        this.firstLevelTab = this.inputModelData.opersystem == '进口' ? ["进港操作"] : ["出港操作"];
                         this.inputModelData.serviceList.forEach(i => {
                             if (i.isdel == 1 && i.servicecode != 'OA0010') {
                                 let port = this.newService[i.servicecode] && this.newService[i.servicecode].port
@@ -5032,6 +5396,9 @@
                 this.dialogPcd = false; //派车单弹窗
                 this.pcdUrl = ""; //派车单
                 this.kongchuCost = {}; //航线费用
+                this.hawbTableDataAi=[]//进口分单数据
+                //this.phczData = []//进口配货数据 @@进口更改
+                //this.phczAllData=[]//进口全部尺寸数据 @@进口更改
                 this.getMawbdetail(); //获取总单详细
                 this.getHawbNum();
                 this.getServiceNodeData();
@@ -5069,8 +5436,9 @@
 
                 } else {
                     // PS 配货操作不用判断撤单完成
+
                     return (this.orderFinish ||
-                        flag || this.inputModelData.dzstatus >= 350) && this.inputModelData.commbillmodifystatus != 2
+                        flag || (this.inputModelData.dzstatus >= 350&&this.inputModelData.system=='空出')||(this.inputModelData.dzstatus >= 650&&this.inputModelData.system=='空进')) && this.inputModelData.commbillmodifystatus != 2
                     // return (this.orderFinish ||
                     //     this.cdFinish ||
                     //     flag || this.inputModelData.dzstatus >= 350) && this.inputModelData.commbillmodifystatus != 2
@@ -5207,7 +5575,7 @@
 
                  if (num == 115) {
                     // ifshow =  this.inputModelData.dzstatus < 700 && this.inputModelData.customstatus <= 1&& !this.bgFinish.finish;
-                    ifshow =  this.inputModelData.dzstatus < 700 && !this.bgFinish.finish
+                    ifshow =  this.inputModelData.dzstatus < 700 && !this.bgFinish.finish&&this.inputModelData.system=='空出'
                 }
                
 
@@ -5437,7 +5805,8 @@
                         448,
                         449,
                         450,
-                        451
+                        451,
+                        600,//进口标签重置 @@进口更改
                     ].includes(num)
                 ) {
                     ifshow =
@@ -5466,6 +5835,22 @@
 
                 if (num == 360) {
                     ifshow = this.increaseServiceData.length != 0 && this.pagetype != 3;
+                }
+                //@@进口更改
+                if(num==500){//抽单完成  
+                    ifshow=this.inputModelData.dzstatus<500
+                }
+
+                if(num==501){//取消抽单  
+                    ifshow=this.inputModelData.dzstatus>=500
+                }
+
+                if(num==510){//放货完成 
+                    ifshow=this.inputModelData.dzstatus<650
+                }
+
+                if(num==511){//取消放货  
+                    ifshow=this.inputModelData.dzstatus>=650
                 }
 
                 return ifshow;
@@ -6695,9 +7080,10 @@
                             return i.servicecode != "YS0010";
                         }
                     });
-                    if(this.inputModelData.mawb&&this.inputModelData.system=='空出')
+                    if(data.mawb&&data.system=='空出')
                     data.airCompanyName=JSON.parse(localStorage.airinfo).filter(i=>i.ThreeCode==data.mawb.split('-')[0])[0]['CName']
                     this.serviceListBackups = [...data.serviceList];
+                    this.thname=data.thname//@@ 进口更改
                     // if(data.orderdom&&data.orderdom!='分单'&&(data.orderdom!=this.orderdom)){//如果详细里面改了orderdom,就和外面列表打开时不同了
                     //   this.$emit('orderdom',data.orderdom)
                     // }
@@ -6707,11 +7093,15 @@
                         this.$nextTick(()=>{
                          this.basicInformation.bgweight.disabled=true
                         })
-                       
                     }
                     console.log(data.wtkhname)
                     console.log(data.wtxmname)
                     console.log(data.gid)
+                    if(data.orderdom=='直单'&&data.system=="空进"){
+                        ['yjStoredatetype','hwplace','hasdjh','hascdjh','hastzcx','hasjmyq','jsfs'].forEach(i=>{
+                            data[i]=String(data[i])
+                        })
+                    }
                     if (data.opersystem == "国内服务") {
                         data.hbrq = formatDate(data.hbrq, "yyyy-MM-dd");
                         let dateArr = [
@@ -6795,14 +7185,20 @@
                         data.bgweight = Number(data.bgweight) || ''
                         data.bgpiece = Number(data.bgpiece) || ''
                         data.yqqcts = Number(data.yqqcts) || ''
-                        
+
                         this.pricefieldArr.forEach(i => {
                             data[i] = !data[i] || data[i] == 666666 ? "" : String(data[i]);
                         });
-
+ 
                         data.yqhbrq = formatDate(data.yqhbrq, "yyyy-MM-dd hh:mm");
                         data.deliverydate = formatDate(data.deliverydate, "yyyy-MM-dd hh:mm");
-
+                        //@@ 进口更改
+                        data.arriverq=formatDate(data.arriverq, "yyyy-MM-dd hh:mm");
+                        data.checkdate=formatDate(data.checkdate, "yyyy-MM-dd")||getMomentDate();
+                        data.yqckdate=formatDate(data.yqckdate, "yyyy-MM-dd");
+                        ['jsfs','yjStoredatetype','hwplace','hasdjh','hascdjh','hastzcx','hasjmyq'].forEach(i=>{
+                            this.inputModelData[i]=String(this.inputModelData[i])
+                        })
                         if (data.orderdom == "直单") {
                             if(data.bgweight&&data.bgweight!=0){
                               data.zdweight=data.zdweight&&data.zdweight!=0?data.zdweight:data.bgweight&&Number(data.bgweight).toFixed(2)
@@ -6812,7 +7208,6 @@
                              data.zdvolume =
                                 data.zdvolume ||
                                 (data.realvolume && Number(data.realvolume).toFixed(2));
-
                         }
                         if (data.opersystem == "进口") {
                             data.qfsj = formatDate(data.qfsj, "yyyy-MM-dd hh:mm");
@@ -6820,7 +7215,8 @@
                         }
 
                         this.inputModelData = data;
-
+                        
+                        
                         if (data.opersystem == "出口") {
                             this.shipaceInfoData = data.shipaceInfo;
                             this.shipaceInfoData.loadingmodel =
@@ -6915,6 +7311,55 @@
                     }
                     console.log(this.inputModelData.gid)
                     console.log(this.inputModelData)
+                    // 进口直单转总单分单数据赋值
+                    if(this.inputModelData.system=='空进'&&this.inputModelData.orderdom=='直单'){
+                        this.hawbTableDataAi=[]
+                        let {tradeterm,hwlx,hwxz,batterymodel,jsfs,yjStoredatetype,hwplace,englishpm,hasdjh,hascdjh,hastzcx,hasjmyq,djhpiece,cdjhpiece,tzcxhpiece,jmyqpiece,breakpiece,moistpiece,deformPiece,redpiece,bwbreakpiece,otherpiece,realpiece,realweight}=this.inputModelData
+                        this.hawbTableDataAi.push({
+                           hawb:'',
+                           sfg:'',
+                           mdg:'',
+                           ybpiece:'',
+                           ybweight:'',
+                           smallpiece:'',
+                           jfweight:'',
+                           code_fhr_hawb:'',
+                           companytitle_fhr_hawb:'',
+                           city_fhr_hawb:'',
+                           address_fhr_hawb:'',
+                           postcode_fhr_hawb:'',
+                           companycode_fhr_hawb:'',
+                           state_fhr_hawb:'',
+                           lxr_fhr_hawb:'',
+                           phone_fhr_hawb:'',
+                           email_fhr_hawb:'',
+                           fax_fhr_hawb:'',
+                           taxcode_shr_hawb:'',
+                           code_shr_hawb:'',
+                           companytitle_shr_hawb:'',
+                           city_shr_hawb:'',
+                           address_shr_hawb:"",
+                           postcode_shr_hawb:'',
+                           companycode_shr_hawb:'',
+                           companycode_shr_hawb:"",
+                           state_shr_hawb:"",
+                           lxr_shr_hawb:"",
+                           phone_shr_hawb:"",
+                           email_shr_hawb:"",
+                           fax_shr_hawb:"",
+                           taxcode_fhr_hawb:"",
+                           realpiece,
+                           realweight,
+                           tradeterm,
+                           hwlx,
+                           hwxz,
+                           batterymodel,
+                           jsfs,
+                           yjStoredatetype,
+                           hwplace,
+                           englishpm,hasdjh,hascdjh,hastzcx,hasjmyq,djhpiece,cdjhpiece,tzcxhpiece,jmyqpiece,breakpiece,moistpiece,deformPiece,redpiece,bwbreakpiece,otherpiece
+                       })
+                    }
                 });
                 console.log(this.inputModelData.gid)
                 return this.inputModelData
@@ -7026,6 +7471,9 @@
                         this.basicInformation.mawb.idStyle = {
                             width: "560px"
                         };
+                        // @@进口修改
+                        // this.basicInformationAiHawb.jsfs.disabled=getxmdata('wtkhData').filter(i => i.id == this.inputModelData.fid)[0]['creditlevel']=='A'
+                        console.log(getxmdata('wtkhData').filter(i => i.id == this.inputModelData.fid)[0]['creditlevel'])
                     } else {
                         if (this.serviceSelArr.includes("AA0410") || this.serviceSelArr.includes("AG0145")) {
                             this.basicInformation.yjstorename.required = true;
@@ -7809,9 +8257,7 @@
                 await this.$axios({
                     method: "get",
                     url: this.$store.state.webApi + "api/ExAxpline",
-                    params: {
-                        hpoidHawbGroup: guid
-                    },
+                    params:{hpoidHawbGroup: guid},
                     loading: false,
                     tip: false
                 }).then(results => {
@@ -8014,7 +8460,7 @@
                     }
                 } else {
                     mawbInfo = this.getInfo();
-
+                    
                     if (
                         this.inputModelData.opersystem == "出口" &&
                         this.inputModelData.opersystemdom == "空运"
@@ -8251,6 +8697,21 @@
                     }
                     if (mawbInfo.iscomboine == 1 && (!mawbInfo.yqhbh || !mawbInfo.yqhbrq)) {
                         return this.$message.error('请填写要求航班号和要求航班日期！')
+                    }
+
+                    if(this.ifOperSysImport){
+                      mawbInfo.hawbList=this.hawbTableDataAi
+                      if(mawbInfo.orderdom=='总单'){
+                          mawbInfo.hwlx=mawbInfo.hawbList[0]['hwlx']
+                          mawbInfo.batterymodel=mawbInfo.hawbList[0]['batterymodel']
+                          mawbInfo.jsfs=mawbInfo.hawbList[0]['jsfs']
+                          for(var i in Object.keys(this.basicInformationAiHawb)){
+                             var field=Object.keys(this.basicInformationAiHawb)[i]
+                             if(this.basicInformationAiHawb[field]['required']&&!this.hawbTableDataAi[0][field]){
+                                 return this.$message.error(`分运单${this.basicInformationAiHawb[field]['title']}必填`)
+                             }
+                          }
+                      }
                     }
 
                     // console.log(JSON.stringify(mawbInfo))
@@ -8861,6 +9322,7 @@
                     
 
                     let nodelist = [];
+                    // @@进口更改
                     this.saveNumberList.forEach(i => {
                         nodelist.push({
                             nodeman: localStorage.usrname,
@@ -8930,6 +9392,145 @@
                 this.cancelOrderFuncApi(json, url, type);
                 //}
             },
+            //@@ 进口更改  
+            importOperate(type){ //type 1、2:抽单 3、4:放货 
+           
+              let url=''
+              let data={hpoid:this.inputModelData.guid,boguid:this.inputModelData.boguid}
+              let {checkdate,yqckdate,thgid,thname,cdcontact}={...this.inputModelData}
+
+              if(type=='1'||type=='2'){
+                  if(!this.inputModelData.checkdate){
+                    return this.$message.error('请填写抽单日期')
+                  }else{
+                    data.checkdate=checkdate
+                    data.cdcontact=cdcontact
+                    if(type=='1'){
+                        url='api/ExHpoAxpline/ExImpCustcdOnChecked'
+                    }else{
+                        url='api/ExHpoAxpline/ExImpCustcdOnCheckedUnCancel'
+                    }
+                  }
+              }
+
+              if(type=='3'||type=='4'){
+                //   (!this.inputModelData.thname&&!this.thname)||
+                  if(!this.inputModelData.yqckdate){
+                    return this.$message.error('请填写出库日期或提货单位')
+                  }else{
+                   data.yqckdate=yqckdate
+                   if(!this.inputModelData.thgid){
+                        data.thgid='-1'
+                    }else{
+                        data.thgid=thgid
+                    }
+                    data.thname=this.thname
+                    if(type=='3'){
+                        url='api/ExHpoAxpline/ExImpReleaseGoods'
+                    }else{
+                        url='api/ExHpoAxpline/ExImpReleaseGoodsUnCancel'
+                    }
+                  }
+              }
+
+             this.$axios({
+                    method: "put",
+                    url: this.$store.state.webApi + url,
+                    data: data,
+                    loading: true,
+                    tip: false
+            })
+            .then(({data})=>{
+                if(data.resultstatus==0){
+                   this.inputModelData.dzstatus=data.resultdic.dzstatus
+                   this.$message.success(data.resultmessage)
+                }else{
+                   this.$message.error(data.resultmessage)
+                }
+            })
+              
+
+            },
+            // getHouseWareData(){
+            //     this.$axios({
+            //         method: "get",
+            //         url: this.$store.state.webApi + "api/Store/GetYbList",
+            //         params: { hpoid: this.inputModelData.guid,area:this.inputModelData.area },
+            //         noarea: true,
+            //         loading: false,
+            //         tip: false
+            //         })
+            //         .then(({data})=>{
+            //         let rightData = [];
+            //         let realListAll = [];
+            //         data.forEach((i,index) => {
+            //         realListAll = realListAll.concat(i.realList);
+            //         i.realList = i.realList.filter(n => n.isshow).map(i=>{i.statusPz=true;return i});
+            //         i.statusPz = i.realList.length != 0; //配置状态，有子列表代表已配置
+            //         rightData=rightData.concat(i.realList).concat(i.autoMapRealList)        
+            //         });
+            //         rightData.forEach(i=>{
+            //         if(i.storeType=='入库'||i.storeType=='实际入库'){
+            //             i.background="#DFFFD0"
+            //             i.customCommitPiece= i.customCommitWeight=i.customCommitVolume=""
+            //         }else{
+            //             i.background='yellow'
+            //             i.customCommitPiece=i.piece
+            //             i.customCommitWeight=i.weight
+            //             i.customCommitVolume=i.volume
+            //             i.piece=i.weight=i.volume='';
+            //         }
+            //         })
+            //         this.phczData = rightData;
+            //         this.phczAllData=data
+            //     })
+            // },
+            //@@ 进口更改
+            querySearchAsync(queryString, cb) {
+                console.log(this.restaurants)
+                var restaurants = this.restaurants
+                var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+                console.log(results)
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                cb(results);
+                }, 1000 * Math.random());
+            },
+            createStateFilter(queryString) {
+                return (thname) => {
+                return thname.usr_name.toLowerCase().indexOf(queryString.toLowerCase()) >= 0
+             };
+            },
+            // matchFunc(state, queryString) {
+            //     console.log(state)
+            //     console.log(queryString)
+            //     let Kq = 2;
+            //     let Kr = 1;
+            //     let Ks = 1;
+            //     let ss = queryString.toLowerCase();
+            //     let st = state.value.toLowerCase();
+            //     let q = 0  //获取交集数量
+            //     let arr = [];
+            //     for (let i in ss) {
+            //     if (st.indexOf(ss[i]) >= 0) {
+            //         arr.push(ss[i])
+            //     }
+            //     }
+            //     q = arr.length
+            //     let s = ss.length - q;
+            //     let r = st.length - q;
+            //     let probability = (Kq * q / (Kq * q + Kr * r + Ks * s));
+            //     if (st.indexOf(ss) >= 0) {
+            //     probability = 1
+            //     }
+            //     state.probability = probability
+            //     return probability >= 0.8 && probability <= 1
+            // },
+            handleSelect(val){
+                this.inputModelData.thgid=val.id
+                this.inputModelData.thname=val.usr_name
+            },
+            // =====@@@@进口更改结束
             cancelOrderFuncApi(json, url, type) {
                 this.$axios({
                     method: "put",
@@ -9378,12 +9979,21 @@
             } else {
                 this.isPaper = false;
             }
+            //@@ 进口更改
+            JSON.parse(window.wtkhData).forEach(i=>{
+                i.value=i.usr_name
+                this.restaurants.push(i)
+            })
+
         },
         watch: {
             activeName(val, oldValue) {
                 if(oldValue == 'tab1-third' && val == 'tab1-second') {
                     this.getMawbdetail()
                 }
+                // if(val=='tab1-second'){
+                //     this.getHouseWareData()
+                // }
             },
             showTextarea(value) {
                 if (value != -1) {
@@ -9409,6 +10019,10 @@
                     if (this.hawbForm.mdg.length != 3) {
                         this.hawbForm.mdg = this.inputModelData.mdg;
                     }
+                    // @@进口更改
+                    this.basicInformationAi['jjd']['options']=JSON.parse(localStorage.jjd).filter(i=>i.sfg==val).map(i=>{
+                        return {label:i.cname,value:i.id}
+                    })
                 }
             },
             "inputModelData.hbzl": {
@@ -9475,6 +10089,62 @@
                if(!this.inputModelDataBackup.zdweight&&this.inputModelData.orderdom == "直单"&&val){
                    this.inputModelData.zdweight=Number(val).toFixed(2)
                }
+            },
+            // @@进口更改
+            "inputModelData.system"(val){
+                if(val&&val=='空进'){
+                this.$axios({
+                    method: "get",
+                    url: this.$store.state.webApi + "api/ExAxpline",
+                    params: {
+                    hpoid: this.inputModelData.guid
+                    },
+                    loading: false,
+                    tip: false
+               }).then(results => {
+                    let data = results.data
+                    if(data.length){
+                    data.forEach(i => {
+                    i.system=this.inputModelData.system    
+                    i.khjcno = i.ybstoreList && i.ybstoreList.map(i => i.khjcno).toString() || '';
+                    if(!this.ifOperSysImport){//@@ 进口更改
+                     i.timestamp = i.guid
+                    }
+                    i.jsfs=String(this.inputModelData.jsfs)
+                    i.yjStoredatetype=String(this.inputModelData.yjStoredatetype)
+                    })
+                    Object.keys(data[0]).forEach(i=>{
+                     if(['yjStoredatetype','hwplace','hasdjh','hascdjh','hastzcx','hasjmyq'].includes(i)){
+                        data[0][i]=String(data[0][i])    
+                      }
+                    })
+                    this.hawbTableDataAi=data
+                    this.inputModelData.hawbList=data
+                    Object.keys(this.hawbTableDataAi[0]).forEach(i=>{
+                        if(['hwlx','hwxz','batterymodel','breakpiece','bwbreakpiece','cdjhpiece','deformpiece','djhpiece','englishpm','hascdjh','hasdjh','hasjmyq','hastzcx','hwplace','jmyqpiece','moistpiece','otherpiece','redpiece','tradeterm','tzcxhpiece','jsfs','yjStoredatetype'].includes(i)){
+                            this.$set(this.inputModelData,i,this.hawbTableDataAi[0][i])
+                        }
+                    })
+                    this.$nextTick(()=>{
+                      this.$refs.refInfoList.selectHawb=this.inputModelData.hawbList[0]['hawb']
+                    })
+                    
+                    }
+                }); 
+                }
+            },
+            // @@进口更改
+            "inputModelData.orderdom"(val){
+                if(this.ifOperSysImport){
+                    this.goodsinfoTabsChecked=0
+                    if(val=='总单'){
+                        this.infoTableFirst=[{title:'总单信息'},{title:'分单信息'}]
+                    }else{
+                        this.infoTableFirst=[{title:'总单信息'}]
+                    }
+                    this.allViewData=Object.assign({},this.basicInformationAi,this.basicInformationAiHawb)
+                    delete this.allViewData.hawb
+                }
             },
             "shipaceInfoData.loadingmodel": {
                 handler(val) {
@@ -10357,5 +11027,21 @@
         /deep/.content-pay {
             width: 1300px !important;
         }
+    }
+    .hwycInput::-webkit-input-placeholder { 
+    /* WebKit browsers */ 
+    color: #ccc; 
+    } 
+    .hwycInput:-moz-placeholder { 
+    /* Mozilla Firefox 4 to 18 */ 
+    color: #ccc; 
+    } 
+    .hwycInput::-moz-placeholder { 
+    /* Mozilla Firefox 19+ */ 
+    color: #ccc; 
+    } 
+    .hwycInput:-ms-input-placeholder { 
+    /* Internet Explorer 10+ */ 
+    color: #ccc; 
     }
 </style>

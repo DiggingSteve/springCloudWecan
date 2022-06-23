@@ -113,7 +113,7 @@
     <div
       style="margin:10px;"
       v-if="
-        !isFromFob && !(allmaindata.iscomboine == 1 && childPonoChecked == 0)
+        !isFromFob && !(allmaindata.iscomboine == 1 && childPonoChecked == 0) && !markTip
       "
     >
       <span
@@ -278,11 +278,12 @@
             :profitmode="profitmode"
             :initiator="initiator"
             :pagetype="pagetype"
+            :markTip="markTip"
             @handleCost="handleCost"
           ></costTableControl>
         </div>
       </div>
-      <div class="detail mawbPayment detailPaneRed" v-if="!isFromFob && !Cshow">
+      <div class="detail mawbPayment detailPaneRed" v-if="!isFromFob && !Cshow && !markTip">
         <el-row class="detail-title">
           <el-col :span="12">
             <p @click="$refs.mawbPayment.activeSettname = ''">应付费用总览</p>
@@ -393,13 +394,14 @@
             :profitmode="profitmode"
             :initiator="initiator"
             :pagetype="pagetype"
+            :markTip="markTip"
             @handleCost="handleCost"
           ></costTableControl>
         </div>
       </div>
     </div>
     <!-- 核对模式 -->
-    <div v-show="lineshu && !isFromFob" class="detailCost2">
+    <div v-show="lineshu && !isFromFob && !markTip" class="detailCost2">
       <div class="lineYinFu">
         <el-row class="detail-title">
           <el-col :span="6">
@@ -960,7 +962,8 @@ export default {
       //tzOperation 点入
       type: Boolean,
       default: true
-    }
+    },
+    markTip:[Number,String],
   },
   data() {
     return {
@@ -1175,19 +1178,24 @@ export default {
     },
     // 客服应收费用是否已经总确认
     kfWageinAllConfirm() {
-      return this.costData
+      // if(this.allmaindata.opersystem!='空进'){
+        return this.costData
         .filter(
           item =>
-            item.wagedom === "客服" && item.wageinout === 1 && item.yssys == "2"
+            ((item.wagedom === "客服"&&this.allmaindata.opersystem!='进口')||this.allmaindata.opersystem=='进口') && item.wageinout === 1 && item.yssys == "2"
         )
         .every(i => i.confirmstatus == "700");
+      // }else{
+      //   return true
+      // }
+
     },
     // 客服应付费用是否已经总确认
     kfWageoutAllConfirm() {
       return this.costData
         .filter(
           item =>
-            item.wagedom === "客服" && item.wageinout === 2 && item.yssys == "2"
+            ((item.wagedom === "客服"&&this.allmaindata.opersystem!='进口')||this.allmaindata.opersystem=='进口')&& item.wageinout === 2 && item.yssys == "2"
         )
         .every(i => i.confirmstatus == "700");
     },
@@ -1587,7 +1595,7 @@ export default {
         this.showSuggestWage &&
         this.allmaindata.opersystem !== "国内服务" &&
         this.allmaindata.wageconfirmstatus != "700" &&
-        this.costDom &&
+        ((this.costDom && this.allmaindata.system!='空进') || this.allmaindata.system=='空进')&&
         this.costDom != "结算"
       ) {
         this.getSuggestWageData();
@@ -1651,9 +1659,13 @@ export default {
             });
           }
         } else {
-          this.costData = results.data;
+          if(this.markTip){
+            this.costData = results.data.filter(i=>i.iscash=='1');
+          }else{
+            this.costData = results.data;
+          }
         }
-
+        console.log(this.costData)
         this.costData.forEach(i => {
           // 各状态费用背景颜色
           if (i.confirmstatus == "已确认" || i.confirmstatus == "700") {
@@ -1679,7 +1691,7 @@ export default {
         //应收、应付结算对象LIST和服务LIST 如果此结算对象状态都为确认则页面显示勾号图标
         this.setnameStatus(this.costData);
 
-        if (!this.isFromFob) {
+        if (!this.isFromFob && !this.markTip) {
           this.checkModel();
         }
 
@@ -2034,7 +2046,7 @@ export default {
           ? this.childrenList[this.childPonoChecked]
           : {};
 
-      if (this.childPonoChecked > 0 && !this.isFromFob) {
+      if (this.childPonoChecked > 0 && !this.isFromFob && !this.markTip) {
         this.checkModel();
       }
     },

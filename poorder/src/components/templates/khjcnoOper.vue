@@ -23,12 +23,12 @@
                 </el-col>
                 <el-col :span="4">
                     <span>体积：</span>
-                    <el-input class="input-required" v-model="curObj.volume" v-verify="'float'"></el-input>
+                    <el-input class="input-required" v-model="curObj.volume" v-verify="'float'" :disabled="mawbinfo.system=='空进'"></el-input>
                 </el-col>
                 <el-col :span="5">
                     <span>入库类型：</span>
                     <el-select v-model="curObj.storeType" class="input-required" style="width:120px" clearable
-                        :disabled="editType==2">
+                        :disabled="editType==2||mawbinfo.system=='空进'">
                         <el-option v-for="type of storeTypeOptions" :key="type" :value="type">{{ type }}</el-option>
                     </el-select>
                 </el-col>
@@ -117,7 +117,7 @@
             <div class="table-row" v-for="(item, index) in allTableData" :key="index">
                 <el-row :class="{'expansion': showSubTable == index}">
                     <el-col :span="3">
-                        <i title="编辑" class="el-icon-setting" @click="edit(allTableData[index])"></i>
+                        <i title="编辑" class="el-icon-setting" @click="edit(allTableData[index])" v-if="mawbinfo.opersystem!='进口'"></i>
                         <i title="删除" class="el-icon-delete" @click="del(allTableData[index])"></i>
                     </el-col>
                     <el-col :span="4">
@@ -208,7 +208,7 @@
                     piece: "",
                     weight: "",
                     volume: "",
-                    storeType: "",
+                    storeType: '',
                     storename_yb: "",
                     yjstoredate: "", // from 实例化预计入库日期参数
                     volYbList: [{
@@ -267,6 +267,9 @@
             //this.getStoreInfo();
 
         },
+        mounted(){
+          this.curObj.storeType=this.mawbinfo.system=='空进'?'不入库':''
+        },
         watch: {
 
         },
@@ -311,7 +314,7 @@
                 ) {
                     return this.$message.error("进仓编号重复");
                 }
-                if (!this.curObj.piece || !this.curObj.weight || !this.curObj.volume) {
+                if (!this.curObj.piece || !this.curObj.weight || (!this.curObj.volume&&this.mawbinfo.system!='空进')) {
                     return this.$message.error("请填写完整信息");
                 }
                 if (this.mawbinfo.area == "上海" && !this.curObj.storeType) {
@@ -356,7 +359,7 @@
                     piece: this.piece,
                     weight: this.weight,
                     volume: this.volume,
-                    storeType: "",
+                    storeType: this.mawbinfo.system=='空进'?'不入库':'',
                     storename_yb: '',
                     yjstoredate: '',
                     volYbList: [{

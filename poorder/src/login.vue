@@ -972,6 +972,7 @@ window.queueObj=new SystemMessage();
                 localStorage.setItem('englishname', result.data.englishname || '')
                 localStorage.setItem('userEmail', result.data.email || '')//对应外网out_email
                 sessionStorage.setItem('loginDate', new Date().getTime())
+                localStorage.setItem('userPhone', result.data.phone || ''); // 用户电话
                 
               }
               this.login_success = true

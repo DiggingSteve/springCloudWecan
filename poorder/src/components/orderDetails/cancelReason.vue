@@ -127,13 +127,14 @@
               </div>
 
               <div v-if="index==itemsActive&&item.reasontype=='撤单'">
+                <!-- @@ 进口更改 -->
                 <el-form
-                  style="margin-top:20px;pointer-events:none;border:1px solid #e8e8e8;padding:15px;border-radius:4px"
+                  style="margin-top:20px;border:1px solid #e8e8e8;padding:15px;border-radius:4px"
                 >
-                  <el-form-item label="撤单类型：">
+                  <el-form-item label="撤单类型：" style="pointer-events:none;">
                     <my-input v-model="item.canceltype"></my-input>
                   </el-form-item>
-                  <el-form-item label="撤单理由：">
+                  <el-form-item label="撤单理由：" style="pointer-events:none;">
                     <el-input
                       type="textarea"
                       :rows="2"
@@ -141,13 +142,31 @@
                       v-model="item.delbillreason"
                     ></el-input>
                   </el-form-item>
-                  <el-form-item label="总单处理结果：" v-if="item.ifshowRes">
+
+                   <el-form-item label="处理结果：" v-if="jobData.system=='空进'&&(item.canceltype=='客户弃货'||item.canceltype=='海关退货')">
+                      <el-radio v-model="item.handleRs" label="1" style="margin-left:20px;">未处理</el-radio>
+                      <el-radio v-model="item.handleRs" label="2">已处理</el-radio>
+                  </el-form-item>
+
+                  <el-form-item label="处理时间：" v-if="jobData.system=='空进'&&(item.canceltype=='客户弃货'||item.canceltype=='海关退货')">
+                    <el-date-picker
+                      v-model="item.handelDate"
+                      type="date"
+                      placeholder="选择日期"
+                      :class="[item.handleRs=='2'?'input-required':'']"
+                      :format="'yyyy-MM-dd'"
+                      :value-format="'yyyy-MM-dd'"
+                      >
+                    </el-date-picker>
+                </el-form-item>
+
+                  <el-form-item label="总单处理结果：" v-if="item.ifshowRes" style="pointer-events:none;">
                     <el-radio v-model="item.status" label="1" style="margin-left:20px;">可用</el-radio>
                     <el-radio v-model="item.status" label="4">不可用</el-radio>
                     <el-radio v-model="item.status" label="5">作废</el-radio>
                   </el-form-item>
 
-                  <el-form-item label="有无费用：">
+                  <el-form-item label="有无费用：" style="pointer-events:none;">
                     <el-radio v-model="item.iswage" label="1" style="margin-left:20px;">有</el-radio>
                     <el-radio v-model="item.iswage" label="2">无</el-radio>
                     <!-- <el-radio v-model="item.iswage" label="3">待定</el-radio> -->
@@ -249,7 +268,9 @@
         <slot name="footerBtngroup"></slot>
         <!--        <el-button @click="cancelDzFw(wageIdS)" type="primary">确定</el-button>
         <el-button @click="closeAbanDz">取消</el-button>-->
+        <el-button type="primary" v-if="jobData.system=='空进'" @click="resaveCancel">保存</el-button>
       </p>
+      
     </div>
 
     <el-dialog
@@ -328,6 +349,40 @@ export default {
     }
   },
   methods: {
+    //@@ 进口更改
+    resaveCancel(){
+      console.log(this.orderData)
+      this.orderData[0].delbilldate= formatDate(new Date(), "yyyy-MM-dd hh:mm")
+      let json={
+        area:this.jobData.area,
+        boguid:this.jobData.boguid,
+        cancelreason:JSON.stringify(this.orderData),
+        canceling:this.orderData[0].canceling,
+        canceltype:this.orderData[0].canceltype,
+        handelDate: this.orderData[0].handelDate,
+        handleRs: this.orderData[0].handleRs,
+        iswage: this.orderData[0].iswage,
+        remark: "",
+        sid: this.jobData.guid,
+        status: this.orderData[0].status,
+        wage:this.costdata
+      }
+      //console.log(json)
+      this.$axios({
+        method: "put",
+        url: this.$store.state.webApi + "api/CancelOrder",
+        data: json,
+        area: this.jobData.area,
+        loading: true,
+        tip: false
+      }).then(results => {
+        if (results.data.resultstatus == 0) {
+          this.$message.success('更新成功');
+        } else {
+          this.$message.error(results.data.resultmessage);
+        }
+      });
+    },
     getrollbackreason(item) {
       var obj =
         (item.rollbackreason &&

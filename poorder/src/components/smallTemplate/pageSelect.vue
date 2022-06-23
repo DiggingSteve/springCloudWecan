@@ -23,8 +23,9 @@
     <!-- {{servicecode}} -->
     <el-select v-model.trim="value" filterable default-first-option clearable @clear="focusFunc" :pagetype="pagetype"
       :placeholder="placeholder||(pagetype=='9'?'联系人':'请输入选择')" @change="changeFunc" :filter-method="filterFunc"
-      @visible-change="visChange" style="flex:1;min-width:120px;" class="mulSelPane" :disabled="disabled" size="mini"
-      :no-data-text="noDataText">
+      @visible-change="visChange" :style="{'flex':'1','min-width':'120px','width':width}" class="mulSelPane" :disabled="disabled" size="mini"
+      :no-data-text="noDataText"
+     >
       <div :class="['mulSelPane-title', 'mulFlex',pagetype=='61'?'alone':'']">
         <span v-for="(item,indexp) in viewdata" v-if="indexp>0" :key="indexp+'p'">{{item.title}}</span>
         <!-- <span>{{viewdata[1].title}}</span><span>{{viewdata[2].title}}</span> -->
@@ -157,7 +158,8 @@
       cShow: {//c类
         type: Boolean,
         default: false
-      }
+      },
+      width:"",
     },
     components: {
 
@@ -201,7 +203,7 @@
         if (!val) {
           //console.log(val)
           this.dataAll = this.pagedata.length > 0 ? this.pagedata : []
-          this.noDataText = '请输入数据，将自动匹配结果！'
+          this.noDataText ='请输入数据，将自动匹配结果！'
         } else {
           let dataAll = this.setpagedata
           //console.log(val)
@@ -310,10 +312,16 @@
         if (val == 1) {
           infoname = 'wtkh'
         }
-        if (val == 2||val==22) {
-          //应收
+        if (val == 2) {
+          //应收费用
           infoname = 'wtxm'
         }
+
+        if (val==22) {
+          //委托项目
+          infoname = 'wtxmxz'
+        }
+        
         if (val == 21) {
           infoname = 'wtxmBasic'
         }

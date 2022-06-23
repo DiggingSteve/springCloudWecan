@@ -35,6 +35,15 @@
         </div>
       </div>
     </div>
+
+  <div v-if="markTip" style="margin-bottom:16px">
+    <p>
+      <span>开票方式：</span>
+      <el-radio v-model="invoiceType" label="1">离线开票</el-radio>
+      <el-radio v-model="invoiceType" label="2">直连纸质发票</el-radio>
+      <el-radio v-model="invoiceType" label="3">直连电子发票</el-radio>
+    </p>
+  </div>
     <!--     {{costListData}} -->
     <div class="detail mawbCharge">
       <div class="detail-title">
@@ -277,8 +286,11 @@
         <el-button @click="printF(1)" type="primary" v-if="tranMethod != 'Fob'"
           >生成对账单</el-button
         >
-        <el-button @click="printF(2)" type="primary" v-if="tranMethod == 'Fob'"
+        <el-button @click="printF(2)" type="primary" v-if="tranMethod == 'Fob'&&!markTip"
           >生成账单</el-button
+        >
+         <el-button @click="printF(3)" type="primary" v-if="tranMethod == 'Fob'&&markTip"
+          >生成发票</el-button
         >
 
         <el-button @click="back">返回</el-button>
@@ -336,6 +348,18 @@
         :system="system"
         :area="area"
       ></dzdMake>
+    </el-dialog>
+
+    <!-- 生成发票 -->
+     <el-dialog
+      width="1300px"
+      top="4%"
+      center
+      :visible.sync="invoiceMake"
+      v-if="invoiceMake"
+      append-to-body
+    >
+    <invoicemake :information="dzdMakeD" wageinout="1" @UnVisibleInvoice="printClose" :system="system"  :area="area" :markTip="markTip" :invoiceType="invoiceType"></invoicemake>
     </el-dialog>
 
     <!-- 生成账单Fob -->
@@ -958,6 +982,7 @@
         @reSearch="getReconDeatil"
       ></costComtab>
     </el-dialog>
+
   </div>
 </template>
 
@@ -971,6 +996,7 @@ import {
 import singleDz from "./singleDz";
 import dzdMake from "./dzdMake";
 import accountMakeFob from "./accountMakeFob";
+import invoicemake from "./invoiceMake";
 import costComtab from "../templates/costComtab";
 import { myCommonTable, setBhiconColorMixin } from "@/common/detailPagesMixin";
 import { log } from '../../outsideDom/api/updateLog.js';
@@ -981,7 +1007,8 @@ export default {
     dzdMake,
     accountMakeFob,
     myCommonTable,
-    costComtab
+    costComtab,
+    invoicemake
   },
   mixins: [setBhiconColorMixin],
   props: {
@@ -996,7 +1023,8 @@ export default {
     tranMethod: "",
     gid: "",
     selectgid: "",
-    accountcomgid: ""
+    accountcomgid: "",
+    markTip:''
   },
   data() {
     return {
@@ -1165,7 +1193,9 @@ export default {
       bohuiAddJob: "",
       defaultSelectRowIndex: "-1",
       mawbObject: {}, //订单层数据
-      selectCost: [] //选中的费用
+      selectCost: [], //选中的费用
+      invoiceMake:false,
+      invoiceType:'1',//开发票类型
     };
   },
 
@@ -1308,7 +1338,8 @@ export default {
         roomStatus:this.chatRoom.showStatus,
         data:row
       }
-       this.$emit('openChatRoome',obj)
+      this.$store.commit("setChat", { status: true, data: row });
+       //this.$emit('openChatRoome',obj)
     },
     listenNum(residueMoney) {
       var balanceMoney = StringNum(Number(
@@ -2339,7 +2370,7 @@ export default {
       }
     },
     //生成对账单
-    printF(type) {
+    printF(type) {//1.对账单  2.账单  3.发票 
       //this.dzdMakeD={}
       if( this.selectCost.some(i =>{
         console.log(Number(i.realwageall - i.finishwageall_checkbill - i.dwageall))
@@ -2364,7 +2395,9 @@ export default {
             jobnolistTotal.push({
               jobListData: i,
               wagelist: i.wagelist.filter(cost => cost.checked),
-              settjobid: i.settjobid
+              settjobid: i.settjobid,
+              jobid:i.jobid,
+              hpoguid:i.hpoguid
             });
           });
 
@@ -2468,6 +2501,8 @@ export default {
           this.dzdMakeS = true;
         } else if (type == "2") {
           this.dzdMakeFob = true;
+        }else if(type=='3'){
+          this.invoiceMake=true
         }
       
       }
@@ -2515,6 +2550,7 @@ export default {
     printClose(data) {
       this.dzdMakeS = false;
       this.dzdMakeFob = false;
+      this.invoiceMake=false
       //console.log(data.noclose)
       if (data.noclose == 2) {
         this.back();

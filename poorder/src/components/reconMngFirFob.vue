@@ -12,7 +12,7 @@
 <!-- {{hawbCost}} -->
 <div class="searchForm">
   <el-button  @click="search">查询</el-button>
-  <el-button @click="openDialog('',2)">批量对账</el-button>
+  <el-button @click="openDialog('',2)"><span v-if="!markTip">批量对账</span><span v-else>批量开票</span></el-button>
 </div>
 
 
@@ -35,7 +35,7 @@
 
 <!-- 总单费用制作非合并 -->
  <el-dialog
-        title="海外D/N开票"
+        :title="!markTip?'海外D/N开票':'现结费用待开具'"
         :visible.sync="costMaking"
         width="100%"
         top="0"
@@ -47,7 +47,9 @@
         :modal="false"
         center>
 
-        <reconMngDetail  @unVisible="uncostMaking" :jobid="boguid" :area="area" :system="system" :wageinout='1' :tranMethod="Fob" :gid="accountgid" v-if="costMaking"></reconMngDetail>
+        <reconMngDetail  @unVisible="uncostMaking" :jobid="boguid" :area="area" :system="system" :wageinout='1' :tranMethod="Fob" :gid="accountgid" v-if="costMaking" :markTip="markTip"></reconMngDetail>
+
+     
         <!-- <span slot="footer">
 
         </span> -->
@@ -194,7 +196,8 @@ import { searCondition,filterGroupid,getChangeValue } from '../api/localStorage.
     monitor:{
      type:[Number,String],
      default:1
-    }
+    },
+    markTip:[Number,String]
     },
     data() {
       return {
@@ -204,8 +207,8 @@ import { searCondition,filterGroupid,getChangeValue } from '../api/localStorage.
            dialogShow:false,
           inputViewData:{
                   status:{'title':'订单状态',type:5,dom:'订单状态',system:'空出',"whereStr":"in",hidden:true},
-                  hbrq: { title: "航班日期", type: 15},
-                  overseasaccdate:{title: "海外DN审核时间", type: 15,defaultEnd: true},
+                  hbrq:  { title: this.markTip?"到港日期":"航班日期", type: 15},
+                  overseasaccdate:{title: "海外DN审核时间", type: 15,defaultEnd: true,hidden:this.markTip},
                 },
                 inputModelData:{
                   //status:'AO5060'
@@ -242,21 +245,24 @@ import { searCondition,filterGroupid,getChangeValue } from '../api/localStorage.
     },
     methods:{
      search(){
-      //var jsonArr=searCondition(this.inputViewData)
-this.tableDataRes=[]
-this.ziTableData=[]
-var search=JSON.parse(JSON.stringify(this.searchData))
-// search.orderguid=-1
-search.ispriorcheck='1'
-search.overseasacc={'in':'10'}
-search.confirmstatus_in={"in":"700,800,1100,1200"}
+            this.tableDataRes=[]
+            this.ziTableData=[]
+            var search=JSON.parse(JSON.stringify(this.searchData))
+
+            search.ispriorcheck='1'
+            if(this.markTip){
+            search.overseasacc={'in':'1'}
+            }else{
+            search.overseasacc={'in':'10'}
+            }
+            search.confirmstatus_in={"in":"700,800,1100,1200"}
             var jsonArr2={
               where:search,
                "order":"hbrq asc,qfsj asc"
             }
             var json={'json':JSON.stringify(jsonArr2)}
-
-            this.$axios({method:'get',url:this.$store.state.webApi+'api/ExHpoboAxplineOverseas3',params:json,loading:true,tip:true}).then(results=>{
+            var api=this.markTip?'api/ExHpoboAxplineCash':'api/ExHpoboAxplineOverseas3'
+            this.$axios({method:'get',url:this.$store.state.webApi+api,params:json,loading:true,tip:true}).then(results=>{
               //console.log(results)
               if(results.data.length==0){
                          this.$message('无查询结果');return;

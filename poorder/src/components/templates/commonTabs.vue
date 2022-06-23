@@ -116,7 +116,7 @@
     computed: {
       tablist() {
         if (this.list.length && this.checkedIndex > (this.list.length - 1)) {
-          this.close(this.checkedIndex)
+          // this.close(this.checkedIndex)
         }
         return this.list.map((i, k) => {
           i.title = i[this.titlefield];
@@ -158,6 +158,7 @@
       toggletab(index, e) {
         //  console.log(e)
         //  console.log(e.screenY,e.y,e.layerY,e.offsetY)
+      
         let item = this.tablist[index];
         if (item.disabled) {
           return
@@ -172,8 +173,10 @@
         this.$emit('toggle', { index: index })
       },
       close(index) {
-        console.log(index)
         // alert(this.deletetype)
+        console.log(this.list)
+        console.log(this.opendIndex)
+        console.log(index)
         if (this.deletetype == 1) {
           this.$emit('close', index)
         } else {
@@ -186,7 +189,9 @@
             if (this.opendIndex.includes(index)) {
               this.$emit("update:opendIndex", this.opendIndex.filter(i => i != index))
             }
+
             this.$emit("update:checkedIndex", index > 0 ? (this.list.length - 1) : 0)
+            
           })
 
         }

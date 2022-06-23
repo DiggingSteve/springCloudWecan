@@ -2,7 +2,7 @@
   <div class="elform" :class="{disabled:baoguanFinished}">
     <!-- {{ponoDisabledList}} -->
     <myAlert :servicecode="servicecode" v-if="!mark"></myAlert>
-    <div v-if="!mark" style="text-align: right;transform: translate(-122px,-42px);height:0px">
+    <div v-if="!mark" :style="{'text-align': 'right','transform': servicecode=='AB0620'?'translate(-210px,-50px)':'translate(-122px,-42px)','height':'0px'}">
       <el-button :type="baoguanFinished?'danger':'primary'" title="报关操作" style='pointer-events: all;'
         @click="openBgBtn">
         {{baoguanFinished?'取消完成':'报关完成'}}
@@ -832,12 +832,22 @@
       },
       baoguanFinished() {
         //报关服务是否完成
-        return !!(
-          this.mawbinfo.serviceList &&
-          this.mawbinfo.serviceList.find(
-            i => i.servicecode == "AA0610" && i.status == 500
-          )
-        );
+        if(this.mawbinfo.system!='空进'){
+          return !!(
+            this.mawbinfo.serviceList &&
+            this.mawbinfo.serviceList.find(
+              i => i.servicecode == "AA0610" && i.status == 500
+            )
+          );
+        }else{
+          return !!(
+            this.mawbinfo.serviceList &&
+            this.mawbinfo.serviceList.find(
+              i => i.servicecode == "AB0620" && i.status == 500
+            )
+          );
+        }
+
       },
       options(){
         //报关状态

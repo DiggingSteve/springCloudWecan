@@ -14,7 +14,7 @@
          <span style="float: left">{{ item.name }}</span>
 
         <!-- <span style="float: right; color: #8492a6; font-size: 10px;width:13px;height:13px;color:#fff;background:red;border-radius:13px;text-align:center;line-height:13px!important;margin-left:5px;">x</span> -->
-        <i class="el-icon-circle-close" style="float: right;color:#F56C6C;margin-left:3px;margin-top:12px;" @click="delTemp(item.id)"></i>
+        <i class="el-icon-circle-close" style="float: right;color:#F56C6C;margin-left:3px;margin-top:5px;" @click="delTemp(item.id)"></i>
 
         <!-- <span :style="{background:item.isactivate==1?'orange':'grey'}" class="jihuo" @click="defaultActive(item.id)"></span> -->
       </el-option>
@@ -69,7 +69,7 @@ export default {
     props:{
       name:String, //页面名称
       type:Number, //类型 80是服务项目
-      jsondata:Array,
+      jsondata:[Array,Object],
       initCompt:Boolean,
       placeholder:String
     },

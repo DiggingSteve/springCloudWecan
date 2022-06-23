@@ -3,11 +3,14 @@
 <!-- {{radioCheck}} -->
 
 <div v-if="mark">
-  <div style="float: right;height:0px;transform: translate(16px,-42px);">
+  <div :style="{float: 'right',height:'0px',transform: servicecode=='AB0620'?'translate(-72px,-50px)':'translate(16px,-42px)'}">
     <!-- <span v-html="getTabsTooltip('已配单')" style="margin-right: auto" v-if="inputModelData.pdfinishstatus!='1'"></span> -->
-    <el-button btnnum="270" class="finishBtn" type="primary" style="margin-right:98px" v-if="mawbinfo.pdfinishstatus=='1'"
+    <span v-if="!servicecode">
+       <el-button btnnum="270" class="finishBtn" type="primary" style="margin-right:98px" v-if="mawbinfo.pdfinishstatus=='1'"
       @click="pdFinish('1')" title="配单操作" :disabled="pzFinishButton">配单完成</el-button>
-    <el-button btnnum="280" class="finishBtn" type="danger" v-else @click="pdFinish('10')" style="margin-right:98px" title="配单操作">取消配单</el-button>
+       <el-button btnnum="280" class="finishBtn" type="danger" v-else @click="pdFinish('10')" style="margin-right:98px" title="配单操作">取消配单</el-button>
+    </span>
+
     <el-button  style="margin-left:0px;padding:8px" :icon="goodsinfoshow?'el-icon-caret-top':'el-icon-caret-bottom'" @click="goodsinfoshow=!goodsinfoshow">{{goodsinfoshow?'隐藏实际货物信息':'显示实际货物信息'}}</el-button>
 
   </div>
@@ -22,7 +25,7 @@
 </div>
 
     <div class="content">
-      <div style="width:500px" class="left" id="leftUpload">
+      <div :style="{'flex':'1','width':ifOperSysImport?'100%':'500px'}" class="left" v-if="(ifOperSysImport&&!serviceSelArr.includes('AB0420'))||!ifOperSysImport">
         <h4 v-if="!mark">
           预报货物信息
           <i
@@ -46,7 +49,8 @@
           ></i>
 
         </h4>
-        <commonTable :head="ybTableHead" :table-data="ybTableData" :divStyle="tableHeightStyle" :isRadioSelect="true"  @current-change="docRadioF" :defaultSelectRowIndex="defaultSelectRowIndex" @dragover.native="dragOverF" @dragleave.native="dragLeaveF($event)">
+
+        <commonTable :head="ybTableHead" :table-data="ybTableData" :divStyle="tableHeightStyle" :isRadioSelect="!ifOperSysImport"  @current-change="docRadioF" :defaultSelectRowIndex="defaultSelectRowIndex" @dragover.native="dragOverF" @dragleave.native="dragLeaveF($event)">
           <template slot="khjcno" slot-scope="props">
             <khjcnoSlot :tableCheckedIndex.sync="leftTableCheckedIndex" :propsData.sync="props.data" pagetype=1></khjcnoSlot>
           </template>
@@ -75,6 +79,7 @@
                 :style="{background:'#fff'}"
                 :title="props.data.row.statusPz&&props.data.row.storeType=='入库'?'已配货不能修改！':'修改'"
                 @click="dialogVisible=true;edit(props.data.row,props.data.index)"
+                v-if="mawbinfo.system!='空进'"
               ></button>
               <button
                 class="cblue el-icon-delete-solid"
@@ -87,6 +92,7 @@
               <button
                 class="cblue el-icon-document-add"
                 title="添加分单"
+                v-if="mawbinfo.system!='空进'"
                 :class="{'tdDisabled':phfinished}"
                 :style="{background:'#fff',color:props.data.row.realList.length==0||mawbinfo.orderdom=='直单'?'#ccc':''}"
                 :disabled="props.data.row.realList.length==0||mawbinfo.orderdom=='直单'"
@@ -163,13 +169,13 @@
         <p style="margin:20px 0" v-if="!mark">预报件重体合计：{{ybjztTotal}}</p>
       </div>
 
-      <div style="flex:1;width:400px" class="right">
+      <div :style="{'flex':'1','width':ifOperSysImport?'100%':'400px'}" class="right" v-if="(ifOperSysImport&&serviceSelArr.includes('AB0420'))||!ifOperSysImport">
 
       
 
         <h4  v-if="!mark">
 
-            <span style="width:48px;display:inline-block">
+            <span style="width:48px;display:inline-block" v-if="!ifOperSysImport">
             <el-button type="primary" @click="peizhiFunc({},1,true,true)" v-show="sjTableData.filter(i=>!i.statusPz&&i.checked).length" class="rightButton">配置</el-button>
             <el-button type="danger"  @click="peizhiFunc({},2,true,true)" v-show="sjTableData.filter(i=>i.statusPz&&i.checked).length" class="rightButton">解配</el-button>
             </span>
@@ -211,7 +217,8 @@
          
         </h4>
 <!-- {{sjTableData}} -->
-        <commonTable :head="sjTableHead" :table-data="sjTableData" :divStyle="tableHeightStyle">
+        <commonTable :head="sjTableHead" :table-data="sjTableData" :divStyle="tableHeightStyle" :tableStyle="{width:'100%',
+       textAlign:'center',boxSizing:'border-box',borderLeft:'1px solid #e8e8e8'}">
           <template slot="update" slot-scope="props">
             <!-- <button
               class="cblue el-icon-setting"
@@ -269,7 +276,7 @@
              <el-checkbox v-model="props.data.row.checked" v-if="mark" :disabled="pdfinishstatus||props.data.row.disabled" @change="changeSelect($event,props.data.row)"></el-checkbox>
           </template>
         </commonTable>
-        <p style="margin:20px 40px"  v-if="!mark">实际件重体合计：{{signjztTotal}}<span style="color:red" v-if="mawbinfo.bgpiece||mawbinfo.bgweight">(此票存在报关件重,则应以报关件重为准)</span></p>
+        <p :style="{'margin':!ifOperSysImport?'20px 40px':''}"  v-if="!mark">实际件重体合计：{{signjztTotal}}<span style="color:red" v-if="mawbinfo.bgpiece||mawbinfo.bgweight">(此票存在报关件重,则应以报关件重为准)</span></p>
       </div>
     </div>
 
@@ -458,12 +465,12 @@
     
 
      <!-- 小框 -->
-
     <docUpload :dialogShow.sync="dialogDoc" :prevUpload.sync="prevUpload" v-if="dialogDoc"  defaultFunc  :jcnoList="khjcnoListArray.map(i=>i.khjcno)" :peidanF="mark=='peidan'&&radioCheck!='-1'"   :dialogPosition="dialogPosition"   selectTableIndex="-1" @peidanFc="peidanFunc(true,'','1',$event)" @success="declareSearch();if(radioCheck=='-1'){getPeihuoInfo()}" ref="documentS"></docUpload>
+    <!-- <docUpload :dialogShow.sync="dialogDoc" :prevUpload.sync="prevUpload" v-if="dialogDoc"  defaultFunc  :jcnoList="khjcnoListArray.map(i=>i.khjcno)" :peidanF="mark=='peidan'&&radioCheck!='-1'"   :dialogPosition="dialogPosition"   selectTableIndex="-1" @peidanFc="peidanFunc(true,'','1',$event)" @success="declareSearch();if(radioCheck=='-1'){getPeihuoInfo()}" ref="documentS"></docUpload> -->
 
     <!-- 大框 -->
     <el-dialog v-if="dialogShow" center :visible.sync="dialogShow" append-to-body>
-      <docUpload :dialogShow.sync="dialogShow"  v-if="dialogShow" @success="declareSearch();if(radioCheck=='-1'){getPeihuoInfo()}" defaultFunc ref="document" :jcnoList="khjcnoListArray.map(i=>i.khjcno)" :peidanF="mark=='peidan'&&radioCheck!='-1'"   selectTableIndex="-1" @peidanFc="peidanFunc(true,'','1',$event)"></docUpload>
+     <docUpload :dialogShow.sync="dialogShow"  v-if="dialogShow" @success="declareSearch();if(radioCheck=='-1'){getPeihuoInfo()}" defaultFunc ref="document" :jcnoList="khjcnoListArray.map(i=>i.khjcno)" :servicecode="servicecode" :peidanF="mark=='peidan'&&radioCheck!='-1'" selectTableIndex="-1" @peidanFc="peidanFunc(true,'','1',$event)"></docUpload>
     </el-dialog>
 
     <el-dialog v-if="previewVisible&&previewFileaddress" title="文档预览" center :visible.sync="previewVisible" width="80%"
@@ -562,7 +569,17 @@ export default {
     },
     sjGoodsTableData:Array,
     serviceguid: [Number, String],
-    
+    servicecode:[Number, String],
+    serviceSelArr:{//服务选择 @@进口更改新增
+      type:Array,
+      default(){
+        return []
+      }
+    },
+    ifOperSysImport:{//是否是进口 @@进口更改新增
+      type:Boolean,
+      default:false
+    }
 
 
   },
@@ -603,12 +620,12 @@ export default {
       ],
       ybTableData: [],
       sjTableHead: [
-        { title: "", field: "operate", style: { background: "#F0F0F0",minWidth:'48px'} },
+        { title: "", field: "operate", style: { background: "#F0F0F0",minWidth:'48px'},hidden:this.ifOperSysImport },
         { title: "状态", field: "statusPz", formatType: 4, format: row => row.statusPz?'已配置':'未配置'},
         { title: "客户进仓编号", field: "khjcno",style:{'pointer-events':'all'}  },
         // { title: "进仓序号", field: "jcno" },
         { title: "入库件/重/体", field: "sjjzt" ,formatType: 4, format: row => `${row.piece||'--'}/${row.weight||'--'}/${row.volume||'--'}`},
-        { title: "客户确认件/重/体", formatType: 4,format: row => `${row.customCommitPiece||'--'}/${row.customCommitWeight||'--'}/${row.customCommitVolume||'--'}`},
+        { title: "客户确认件/重/体", formatType: 4,format: row => `${row.customCommitPiece||'--'}/${row.customCommitWeight||'--'}/${row.customCommitVolume||'--'}`,hidden:this.ifOperSysImport},
         {
           title: "入库日期",
           field: "jcdate",
@@ -797,7 +814,7 @@ export default {
           this.radioCheck=$(i).attr('indexKey')
         }
       })
-               
+      console.log(this.radioCheck)           
       if(!this.radioCheck||this.radioCheck=='-1'){
         return
       }else{
@@ -805,7 +822,7 @@ export default {
         x: e.clientX + 5,
         y: e.clientY - 5
       }
-         
+      console.log(this.dialogPosition)   
       this.dialogDoc = true
       this.prevUpload = true
       this.$refs.documentS.docupData.bggys= this.ybTableData[this.radioCheck]['bggys']

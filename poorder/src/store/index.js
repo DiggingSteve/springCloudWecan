@@ -16,7 +16,7 @@ let ipstr2 = "";
 //ipstr1 = 'erp.wecanintl.com'
 //ipstr1 = '192.168.98.178'
 //ipstr1 = '192.168.98.161'
-//ipstr1= '192.168.0.167'
+//ipstr1= '192.168.0.113'
 //ipstr1 = '192.168.0.162'
 //ipstr1 = '192.168.0.165'
 //ipstr1='192.168.98.203'
@@ -95,6 +95,8 @@ var customWebApi = `http://${ipstr1 ||ipstr}/CustomWebApi/`
 var BasicWebApi = `http://${ipstr}/BasicWebApi/`
 var feeWebApi=`http://${ipstr2 || ipstr }/fee/api/`
 var websocketApi=socketApi
+var wareStoreApi=`http://${ipstr}/StoreTerminalWebApi/`
+var settlementWebApi=`http://${ipstr}/SettlementWebApi/`
 
 var store = new Vuex.Store({
   state: {
@@ -110,6 +112,8 @@ var store = new Vuex.Store({
     BasicWebApi,
     feeWebApi,
     websocketApi,
+    wareStoreApi,
+    settlementWebApi,
     tableTmpAll: [],
     userSettingTmpAll: [],
     tablePageTmp: {},
@@ -131,7 +135,7 @@ var store = new Vuex.Store({
     allServiceCheck: [], //左侧菜单栏所有可选的服务
     serviceState: "", //左侧菜单栏选中的服务
     ifServicesAllChecked: false, //是否左侧的服务全选了
-    rwxdArr: ['AA0510', 'AG0115', 'AG0120', 'AG0125', 'AG0130', 'AA0810', 'AA0830', 'AA0840', 'AA0850', 'AG0110'], //需要任务下达的服务节点
+    rwxdArr: ['AA0510', 'AG0115', 'AG0120', 'AG0125', 'AG0130', 'AA0810', 'AA0830', 'AA0840', 'AA0850', 'AG0110','AB0520'], //需要任务下达的服务节点
     ifMergeHawb: true, //是否分单合并
     ifLimitSearch: true, //是否禁止查询列表的查询条件为空，方便全局控制
     isWorkUnFinish: false, // 当前账号是否是被控状态

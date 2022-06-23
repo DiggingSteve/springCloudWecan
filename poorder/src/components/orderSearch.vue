@@ -281,6 +281,9 @@
           })
         }
       }
+
+       this.inputViewData.hbrq.title=this.$store.state.navDataById[this.$router.currentRoute.params.id].othername&&this.$store.state.navDataById[this.$router.currentRoute.params.id].othername.includes('空进')?'到港日期':'航班日期'
+      
     },
     // mounted() {
     // console.log(this.inputModelData)

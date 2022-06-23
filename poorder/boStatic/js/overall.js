@@ -1,6 +1,6 @@
 function getxmdata(type) {
 
-  let arr = ['xmdata', 'wtxm', 'wtxmNoname', 'gysxm', 'jsxm', 'boardgys', "gysxmUseful", 'wtxmBasic', 'tzjs']
+  let arr = ['xmdata', 'wtxm', 'wtxmNoname', 'gysxm', 'jsxm', 'boardgys', "gysxmUseful", 'wtxmBasic', 'tzjs','wtxmxz']
   if (arr.includes(type)) {
 
     if (!window.xmdata) {
@@ -14,6 +14,10 @@ function getxmdata(type) {
     //console.log(data)
     if (type == 'wtxm') {
       return data.filter(i => i.comxz == 1)
+    }
+
+    if (type == 'wtxmxz') {
+      return data.filter(i => i.comxz == 1 && i.customxz!=2)
     }
 
     if (type == 'wtxmNoname') {

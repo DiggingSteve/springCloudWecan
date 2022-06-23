@@ -45,6 +45,21 @@
                         <i class="el-icon-search" @click="getNewMawbinfo"
                             style="cursor:pointer;transform:translateY(1px);padding:3px;"></i>
                     </span>
+                    <!-- @@进口更改 -->
+                    <span  style="display: inline-block;padding:1px 12px;background-color:#f2f2f2;border-radius:14px"
+                        v-show="showMawbSearch&&inputModelData.opersystem=='进口'">
+                        <span style="font-size:12px;">总运单号</span>
+                        <el-autocomplete v-model.trim="newMawb" class="autocomplete" size="mini" clearable
+                            placeholder="输入总运单号查询可快速切换" :fetch-suggestions="querySearchAsync" @select="handleSelectMawb" disabled
+                            hide-loading></el-autocomplete>
+                    </span>
+                    <span  style="display: inline-block;padding:1px 12px;background-color:#f2f2f2;border-radius:14px;"
+                        v-show="showMawbSearch&&inputModelData.opersystem=='进口'">
+                        <span style="font-size:12px;">分运单号</span>
+                        <el-select v-model="selectHawb" placeholder="选择分运单号查询可快速切换" @change="getNewMawbinfo('hawb')" class="hawbSelect">
+                            <el-option :label="i.hawb" :value="i.boguid" v-for="i in hawbArray" :key="i.boguid"></el-option>
+                        </el-select>
+                    </span>
                 </slot>
                 <slot name="wageAlert"></slot>
             </div>
@@ -69,9 +84,9 @@
                     <el-button type="success" btnnum="60" @click="detailShow.jiedianShow=!detailShow.jiedianShow"
                         v-show="inputModelData.opersystem!='国内服务'&&btnJurisdic(60)">节点状态信息</el-button>
                     <el-button type="success" btnnum="70" v-show="btnJurisdic(70)"
-                        @click="dialogImg=true;doctype=true;">本票照片</el-button>
-                    <el-button type="success" btnnum="80" v-show="btnJurisdic(80)"
-                        @click="selectTableIndex='';openDoc()">本票文档</el-button>
+                        @click="dialogImg=true;doctype=true;">文档&照片</el-button>
+                    <!-- <el-button type="success" btnnum="80" v-show="btnJurisdic(80)"
+                        @click="selectTableIndex='';openDoc()">本票文档</el-button> -->
                     <el-button type="default" btnnum="90" v-show="btnJurisdic(90)" @click="paneShow=!paneShow">
                         {{paneShow&&inputModelData.guid?'隐藏摘要':'显示摘要'}}</el-button>
                 </div>
@@ -107,7 +122,7 @@
             <div v-show="paneShow&&inputModelData.guid&&inputModelData.guid!=-1" style="background:white">
             
                 <div class="showpanediv"
-                    v-show="inputModelData.opersystem!='国内服务'&&name=='详细'&&inputModelData.iscomboine!=1">
+                    v-show="inputModelData.opersystem=='出口'&&name=='详细'&&inputModelData.iscomboine!=1">
                     <div class="showpaneinfo" style="width:100%;">
                         <div>
                             <span>委托客户：</span>
@@ -292,7 +307,139 @@
 
                     <slot name="exinfo"></slot>
                 </div>
+                <div class="showpanediv"
+                    v-show="inputModelData.opersystem=='进口'&&name=='详细'&&inputModelData.iscomboine!=1">
+                    <div class="showpaneinfo" style="width:100%;">
+                        <div>
+                            <span>委托客户：</span>
+                            <span class="color-red" :title="inputModelData.wtkhname">{{ inputModelData.wtkhname}}</span>
+                        </div>
+                    </div>
+                    <div class="showpaneinfo" style="width:100%">
+                        <div>
+                            <span>总运单号：</span>
+                            <span>{{ inputModelData.mawb||'--'}}</span>
+                        </div>
 
+                        <div>
+                            <span>总单始发港：</span>
+                            <span>{{ inputModelData.sfg||'--'}}</span>
+                        </div>
+                        <div>
+                            <span>总单到达港：</span>
+                            <span>{{ inputModelData.mdg||'--'}}</span>
+                        </div>
+
+                        <div>
+                            <span>货物来源：</span>
+                            <span>{{ jjdChange(inputModelData.jjd)||'--'}}</span>
+                        </div>
+                    </div>
+
+                    <div class="showpaneinfo" style="width:100%">
+                        <div>
+                            <span>航班号：</span>
+                            <span>{{(inputModelData.shipaceInfo&&inputModelData.shipaceInfo.hbh||inputModelData.hbh)||'--'}}</span>
+                        </div>
+
+                        <div>
+                            <span>到港日期：</span>
+                            <span>{{ inputModelData.hbrq | formatDate('yyyy-MM-dd') }}</span>
+                        </div>
+
+                        <div>
+                            <span>入境方式：</span>
+                            <span>{{inputModelData.ysfs}}</span>
+                        </div>
+                    </div>
+
+                    <div class="showpaneinfo" style="width:100%">
+                        <div>
+                            <span>总单预报件/重/体：</span>
+                            <span>{{ inputModelData.ybpiece}}/{{ Number(inputModelData.ybweight).toFixed(2)||0.00}}/{{
+                                Number(inputModelData.ybvolume).toFixed(3)||0.000}}</span>
+                        </div>
+
+                        <div>
+                            <span>总单实际件/重/体：</span>
+                            <span>{{ inputModelData.realpiece}}/{{
+                                Number(inputModelData.realweight).toFixed(2)||0.00}}/{{
+                                Number(inputModelData.realvolume).toFixed(3)||0.000}}</span>
+                        </div>
+
+                        <div>
+                            <span>总单计费重量：</span>
+                            <span>{{ Number(inputModelData.jfweight).toFixed(2)||0.00}}</span>
+                        </div>
+
+                        <div>
+                            <span>小件数：</span>
+                            <span>{{ inputModelData.smallpiece}}</span>
+                        </div>
+                    </div>
+
+                     <div class="showpaneinfo" style="width:100%" v-if="hawbTableDataAi.length&&inputModelData.orderdom=='总单'">
+                        <div>
+                            <span>分运单号：</span>
+                            <span>{{hawbTableDataAi[0]['hawb']||'--'}}</span>
+                        </div>
+                        <div>
+                            <span>分单始发港：</span>
+                            <span>{{hawbTableDataAi[0]['sfg']||'--'}}</span>
+                        </div>
+                        <div>
+                            <span>分单到达港：</span>
+                            <span>{{hawbTableDataAi[0]['mdg']||'--'}}</span>
+                        </div>
+                    </div>
+
+                    <div class="showpaneinfo" style="width:100%"  v-if="hawbTableDataAi.length&&inputModelData.orderdom=='总单'">
+                        
+                        <div>
+                            <span>分单预报件/重/体：</span>
+                            <span>
+                                {{hawbTableDataAi[0]['ybpiece']}}/{{Number(hawbTableDataAi[0]['ybweight']).toFixed(2)||0.00}}/{{Number(hawbTableDataAi[0]['ybvolume']).toFixed(3)||0.000}}
+                            </span>
+                            <!-- <span>{{ Number(inputModelData.realweight).toFixed(2)||0.00 }}</span> -->
+                        </div>
+
+                        <div>
+                            <span>分单实际件重体：</span>
+                            <span>{{hawbTableDataAi[0]['realpiece']}}/{{Number(hawbTableDataAi[0]['realweight']).toFixed(2)||0.00}}/{{Number(hawbTableDataAi[0]['realvolume']).toFixed(3)||0.000}}</span>
+                        </div>
+
+                        <div>
+                            <span>分单计费重量：</span>
+                            <span>{{Number(hawbTableDataAi[0]['jfweight']).toFixed(2)}}</span>
+                        </div>
+                    </div>
+
+                    <div class="showpaneinfo" style="width:100%" v-if="hawbTableDataAi.length||inputModelData.orderdom=='直单'">
+                        <div>
+                            <span>货物类型：</span>
+                            <span>{{hawbTableDataAi.length?hawbTableDataAi[0]['hwlx']:inputModelData['hwlx']}}</span>
+                        </div>
+
+                        <div>
+                            <span>货物性质：</span>
+                            <span>{{hawbTableDataAi.length?hawbTableDataAi[0]['hwxz']:inputModelData['hwxz']}}</span>
+                        </div>
+                        <div>
+                            <span>贸易方式：</span>
+                            <span>{{hawbTableDataAi.length?hawbTableDataAi[0]['tradeterm']:inputModelData['tradeterm']}}</span>
+                        </div>
+                        <div v-if="hawbTableDataAi.length">
+                            <span>结算方式：</span>
+                            <span>{{hawbTableDataAi[0]['jsfs']=='1'?'月结':'现结'}}</span>
+                        </div>
+                    </div>
+
+
+
+                   
+
+                    <slot name="exinfo"></slot>
+                </div>
                 <!-- <div class="playGrid" v-show="inputModelData.opersystem!='国内服务'&&name=='详细'">
            <template v-for="(item,index) in getInfoList()" >
               <span :key="index">{{item.title}}</span>
@@ -747,7 +894,7 @@
         <el-dialog :visible.sync="detailShow.lxrShow" v-if="detailShow.lxrShow" append-to-body width="1080px"
             title="联系人信息" center>
             <infoList style="margin-bottom:25px;" :inputModelData="inputModelData" :jiediandata.sync="jiediandata"
-                :ifopendetail="ifopendetail" :name="name" :pagetype="pagetype" nesting>
+                :ifopendetail="ifopendetail" :name="name" :pagetype="pagetype" nesting :hawbTableDataAi="hawbTableDataAi">
             </infoList>
 
             <mawbContacts :inputModelData="inputModelData" :mawbguid="inputModelData.guid"
@@ -758,7 +905,7 @@
         <el-dialog :visible.sync="dialogImg" :close-on-click-modal="false" class="dialogPage" width="100%" top="0px"
             v-if="dialogImg&&inputModelData.guid" append-to-body>
             <infoList style="padding:12px;" v-if="!isoutside" :inputModelData="inputModelData"
-                :jiediandata.sync="jiediandata" :ifopendetail="ifopendetail" :name="name" :pagetype="pagetype" nesting>
+                :jiediandata.sync="jiediandata" :ifopendetail="ifopendetail" :name="name" :pagetype="pagetype" nesting :hawbTableDataAi="hawbTableDataAi">
             </infoList>
 
             <div class="reconciliationMng" style="text-align:center">
@@ -776,7 +923,7 @@
                     style="width: 100%; height: 100%; border: 0px none;min-height:785px"
                     v-show="inputModelData.guid&&doctype"></iframe> -->
                 <imgUpload v-show="inputModelData.guid&&doctype" :src="imgUrl" :imgdocCheckedList.sync="imgList"
-                    :deleteIds.sync="deleteIds"></imgUpload>
+                    :deleteIds.sync="deleteIds" :InputModelsystem="inputModelData.system"></imgUpload>
 
                 <docUpload :dialogShow.sync="dialogImg" :modelData="inputModelData" :deleteIds.sync="deleteIds"
                     v-show="inputModelData.guid&&!doctype" pagetype="2" :showBtnGroup="false"
@@ -968,6 +1115,10 @@
                 type: String,
                 default: '1'
             },
+            hawbTableDataAi:{//@@ 进口更改
+                type:Array,
+                default:()=>[]
+            },
             showOrderNumber:{
                 type: Boolean,
                 default: true
@@ -1007,9 +1158,17 @@
                 imgList: [],//存放图片的数据
                 docList: [],//存放文档的数据
                 deleteIds: [],
+                selectHawb:'',//选择分运单号
+                hawbArray:[],//分运单列表
             };
         },
         methods: {
+            jjdChange(id){
+                if(id&&id!='-1'){
+                   return JSON.parse(localStorage.jjd).filter(i=>i.id==id)[0]['cname']
+                }
+               
+            },
             copyToClipboard(text) {
                 let textArea = document.createElement('textarea');
                 textArea.style.position = 'fixed';
@@ -1282,18 +1441,50 @@
                 // console.log(item);
                 this.getNewMawbinfo();
             },
-            getNewMawbinfo() {
-                let json = {
+            handleSelectMawb(){
+                this.$axios({
+                    method: "get",
+                    url: this.$store.state.webApi + "api/ExHpoAxpline/GetStoreMawbInfo",
+                    loading: false,
+                    params: {
+                        orderdom:'',
+                        mawb:this.newMawb,
+                        area:this.inputModelData.area,
+                        hawb:'',
+                    },
+                    tip: false
+                }).then(({data})=>{
+                    this.hawbArray=data
+                })
+            },
+            // 进口更改
+            getNewMawbinfo(type) { //type总单、分单
+            //console.log(type)
+                let json={}
+                if(typeof(type)!='string'||!type){
+                  json = {
                     mawb: this.newMawb,
                     area: this.inputModelData.area,
                     system: this.inputModelData.system
-                };
+                  };
+                }else{
+                  json = {
+                    boguid: this.selectHawb,
+                  };
+                }
+
                 if (!this.newMawb) {
                     return this.$message.error("请输入总运单号查询！");
                 }
-                if (this.newMawb == this.inputModelData.mawb) {
+                if ((this.newMawb == this.inputModelData.mawb)&&!type) {
                     return this.$message.error("请输入不同于当前页面的总运单号查询！");
                 }
+                if(this.inputModelData.system != '空出') {
+                    if(this.hawbArray.filter(i=>i.boguid==this.selectHawb)[0]['hawb']==this.hawbTableDataAi[0]['hawb']&&type){
+                        return this.$message.error("请输入不同于当前页面的分运单号查询！");
+                    }
+                }
+
                 this.$axios({
                     method: "get",
                     url: this.$store.state.webApi + "api/ExHpoAxpline",
@@ -1482,8 +1673,15 @@
                     "￥"
                 );
             },
+            // ysfs(){
+            //     return getValByGrouid('64',this.inputModelData.ysfs)
+            // }
+        },
+        mounted(){
+            
         },
         created() {
+            
             if (this.nesting) {
                 this.paneShow = true
             }
@@ -1607,6 +1805,10 @@
                 this.selectTableIndex = -1;
                 this.openDoc()
             }
+            //@@进口更改
+            if(this.inputModelData.opersystem=='进口'){
+                this.handleSelectMawb()
+            }
         },
         watch: {
             jiediandata: {
@@ -1616,7 +1818,6 @@
                 immediate: true,
                 deep: true
             },
-
             "$store.getters.userSetting": {
                 handler() {
                     if (this.$store.getters.userSetting.showInfoList) {
@@ -1643,7 +1844,7 @@
     // }
 
     .autocomplete {
-        width: 170px;
+        width: 130px;
 
         /deep/ input {
             background: #f2f2f2;
@@ -1655,6 +1856,13 @@
         /deep/ .el-input--suffix .el-input__inner {
             padding-right: 0px;
         }
+    }
+    .hawbSelect{
+       /deep/ input{
+           background:transparent;
+           border:none;
+           width:130px;
+       }
     }
 
     .isopen {

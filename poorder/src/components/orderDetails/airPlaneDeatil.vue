@@ -67,13 +67,13 @@
 
   
 
-  <el-tab-pane label="航线签单" name='签单'>
+  <el-tab-pane label="航线签单" name='签单' :class="{'paneDisabled':paneDisable}">
   <span slot="label" style="color:#9cd7ff;width:96px;display:inline-block;text-align:center;">航线签单</span>
   <div class="detail-c" style="max-width:max-content;padding-bottom:8px;" :class="getSignDisabled">
 
                           
 <div class="input-item width100" style="margin-left: 40px;margin-bottom:15px;" v-if="inputModelData.guid">
-    <div class="input-title">总运单号：<span style="display: inline-block;min-width:250px;">{{inputModelData.mawb}}</span></div>
+    <div class="input-title">总运单号：<span style="display: inline-block;min-width:200px;">{{inputModelData.mawb}}</span></div>
 
     <!-- 配置总运单 && 解除总运单 -->
      <!-- <slot name="operation"></slot> -->
@@ -90,24 +90,38 @@
      </div>
 
      
-    <div class="input-content">
+    <div class="input-content" style="margin-left: 154px;">
        <!--  <el-input v-model="inputModelData.mawb" style="width:100px;" disabled></el-input> -->
        <!--  <el-button  @click="configMawb" >配置总运单</el-button>
         <el-button  @click="unConfigMawb" :disabled="inputModelData.mawb?false:true">解除总运单</el-button> -->
         <span style="margin-left:60px;margin-right:20px;" v-if="inputModelData.mawb&&inputModelData.system=='空出'">航空公司：{{inputModelData.airCompany}}</span>
-        <span style="margin-right:20px" v-if="Number(this.inputModelData.childguid)<0">运单供应商：{{inputModelData.gysname}}</span>
+        <!-- <span style="margin-right:20px" v-if="Number(this.inputModelData.childguid)<0">运单供应商：{{inputModelData.gysname}}</span> -->
         <span style="margin-right:20px" v-if="Number(this.inputModelData.childguid)<0" v-show="!showButton">总运单所属：{{inputModelData.mawbss}}</span>
         <span style="margin-left: 20px;" v-show="!showButton">是否安检前：{{inputModelData.serviceList.filter(i=>i.servicecode=='AA0230')[0]['isdel']=='1'?'是':'否'}}</span>
     </div>
 </div>
 
 <!-- 总运单所属 && 是否安检前 -->
-<div class="input-item width100" style="margin-left: 40px;margin-bottom:15px;" v-if="inputModelData.guid && showButton">
-  <div class="input-content">
+<div  style="margin-left: 24px;margin-bottom:15px;" v-if="inputModelData.guid && showButton">
+  <el-row>
+      <el-col :span="6">
+         <span style="margin-right:20px" v-if="Number(this.inputModelData.childguid)<0">总运单所属：{{inputModelData.mawbss}}</span>
+      </el-col>
+      <el-col :span="7">
+        <span style="margin-left:-20px" v-if="Number(this.inputModelData.childguid)<0">运单供应商：{{inputModelData.gysname}}</span>
+      </el-col>
+       <el-col :span="7">
+         <span style="margin-left: 35px;">制单代码：{{inputModelData.iszddl && inputModelData.iszddl == '1'?'WFF':'非WFF'}}</span>
+      </el-col>
+      <el-col :span="4">
+         <!-- <span style="margin-left: 20px;">是否安检前：{{inputModelData.serviceList.filter(i=>i.servicecode=='AA0230')[0]['isdel']=='1'?'是':'否'}}</span> -->
+      </el-col>
+    </el-row>
+  <!-- <div class="input-content">
     <span style="margin-right:20px" v-if="Number(this.inputModelData.childguid)<0">总运单所属：{{inputModelData.mawbss}}</span>
     <span style="margin-left: 20px;">是否安检前：{{inputModelData.serviceList.filter(i=>i.servicecode=='AA0230')[0]['isdel']=='1'?'是':'否'}}</span>
 
-  </div>
+  </div> -->
 </div>
                                  
 
@@ -300,7 +314,7 @@
 </el-tab-pane>
 
 <!-- 应付运价start -->
-<el-tab-pane label="应付运价" name='应付'>
+<el-tab-pane label="应付运价" name='应付' :class="{'paneDisabled':paneDisable}">
 <span slot="label" class="badgeLabel badgeRed" v-show="monitor!=2&&inputModelData&&inputModelData.czlx!='代操作'">应付运价</span>
 
 <div class="input-item width100" style="margin-bottom:18px;margin-top:18px;" v-if="inputModelData.guid">
@@ -315,7 +329,7 @@
     </div>
 </div>
 
-<div class="detail-c content-pay" :class="getDealWithFreightDisalbed" style="display:flex;justify-content:space-between;width:1280px;">
+<div class="detail-c content-pay" :class="getDealWithFreightDisalbed" style="display:flex;justify-content:space-between;width:1280px; padding: 0px;">
 
 
 <!-- @@签单修改原先备注 -->
@@ -352,7 +366,7 @@
             <p>运费</p>
           </div>
           <div class="detail-c">
-          <newAssignForm :inputModelData="inputModelData" type="运费" :view-data="fareOutputViewData" wageinout="2" ref="accountweightout" ></newAssignForm>
+          <newAssignForm :inputModelData="inputModelData" type="运费" :view-data="fareOutputViewData" wageinout="2" ref="accountweightout" :paneDisable="paneDisable"></newAssignForm>
           </div>
 
 </div>
@@ -362,7 +376,7 @@
             <p>中转费</p>
           </div>
           <div class="detail-c">
-          <newAssignForm :inputModelData="inputModelData" type="中转费" :view-data="fareOutputViewData" wageinout="2" ref="accountweightoutzz" ></newAssignForm>
+          <newAssignForm :inputModelData="inputModelData" type="中转费" :view-data="fareOutputViewData" wageinout="2" ref="accountweightoutzz" :paneDisable="paneDisable"></newAssignForm>
           </div>
 </div>
 
@@ -497,9 +511,9 @@
 <!-- 非合并 -->
 <div  v-show="inputModelData.groupid<0">
   <!-- 利润分配并且操作站无法操作应收  orderguid>0为操作站-->
-  <div class="detail-c" style="display:inline-block;width:1100px" :class="getAccountsReceivableFreightDisabled" >
+  <div class="detail-c" style="display:inline-block;width:1100px; padding: 0px;" :class="getAccountsReceivableFreightDisabled" >
 
-<div class="input-item width100" style="margin-bottom:15px;margin-top:15px" v-if="inputModelData.guid">
+<div class="input-item width100" style="margin-bottom:18px;margin-top:18px" v-if="inputModelData.guid">
     <div class="input-title">总运单号：{{inputModelData.mawb}}</div>
     <div class="input-content">
        
@@ -516,7 +530,7 @@
             <p>运费</p>
           </div>
           <div class="detail-c">
-          <newAssignForm :inputModelData="inputModelData" type="运费" :view-data="fareInputViewData" wageinout="1" ref="accountweightin"></newAssignForm>
+          <newAssignForm :inputModelData="inputModelData" type="运费" :view-data="fareInputViewData" wageinout="1" ref="accountweightin" :paneDisable="paneDisable"></newAssignForm>
           </div>
 </div>
 
@@ -525,7 +539,7 @@
             <p>中转费</p>
           </div>
           <div class="detail-c">
-          <newAssignForm :inputModelData="inputModelData" type="中转费" :view-data="fareInputViewData" wageinout="1" ref="accountweightinzz" ></newAssignForm>
+          <newAssignForm :inputModelData="inputModelData" type="中转费" :view-data="fareInputViewData" wageinout="1" ref="accountweightinzz" :paneDisable="paneDisable"></newAssignForm>
           </div>
 </div>
 <!--     <newFormCmpt :view-data.sync="fareInputViewData" :model-data.sync="inputModelData">
@@ -608,7 +622,7 @@
 
   </div>
 
-  <el-row class="detail-title">
+  <el-row class="detail-title" :class="{'paneDisabled':paneDisable}">
   <el-col :span="3">
   <p>应收费用总览</p>
 </el-col>
@@ -620,7 +634,7 @@
 </span>
 </el-col>
 </el-row>
-<div class="detail-c">
+<div class="detail-c" :class="{'paneDisabled':paneDisable}">
   <commonTable class="commonTable" :head="mawb_table_model" :table-data="mawbCharge" style="position:relative" :tableIndex="1" :colorIndex="modCostIndex" :wagetype="wagetype"  v-if="mawbCharge" :name="1">
     <template slot="firstTd" slot-scope="props">
       <td>
@@ -1257,7 +1271,9 @@ center>
 
  <!-- 唯凯托书 -->
     <el-dialog :visible.sync="tuoshuDialog" width="1300px" top="4%" v-if="tuoshuDialog"
-        :close-on-press-escape="false" append-to-body center>
+        :close-on-press-escape="false" append-to-body center
+        :close-on-click-modal="false"
+        >
         <entrustBill :mawbinfo="getInfoBook()"></entrustBill>
     </el-dialog>
 
@@ -1331,9 +1347,9 @@ import entrustBill from "@/components/orderDetails/entrustBill"; //唯凯托书
 
 /*配置总运单*/
 import mawbConfigNew from '@/components/templates/mawbConfigNew'
-
+// getServiceView,
   import {
-        getServiceView,
+        
         serviceSplit
     } from '../mixins/service'
 
@@ -1343,7 +1359,8 @@ import mawbConfigNew from '@/components/templates/mawbConfigNew'
      allWageIn,hawbTabs,myCommonTable,serviceList, sizeInfo,newAssignForm, entrustBill, 
      mawbConfigNew,
    },
-   mixins:[setBhiconColorMixin, getServiceView(2), serviceSplit(2),],
+  //  getServiceView(2), 
+   mixins:[setBhiconColorMixin, serviceSplit(2)],
    name: 'airPlaneDeatil',
    props:{
       monitor: {
@@ -1387,7 +1404,8 @@ import mawbConfigNew from '@/components/templates/mawbConfigNew'
     showButton: {
       type: Boolean,
       default: true,
-    }
+    },
+
 
   },
 
@@ -2079,6 +2097,7 @@ curObjectKyYs:{
 
       showZuofei:false,//显示作废表单
       deprecateremark:'',//作废备注
+      paneDisable:false
     }
 
   },
@@ -2086,6 +2105,65 @@ curObjectKyYs:{
 
 
   methods: {
+
+      dealList(mawbInfo) { //过滤多条服务数据
+        mawbInfo.gbzlist =
+          mawbInfo.gbzlist &&
+          mawbInfo.gbzlist.filter(i => i.packagetype && i.packagestyle)
+
+        if (mawbInfo.gbzlist && mawbInfo.gbzlist.length > 0) { //防止未赋值servicecode
+          mawbInfo.gbzlist.forEach(i => {
+            i.servicecode = 'AG0120'
+          })
+        }
+
+        mawbInfo.gbzlistpm =
+          mawbInfo.gbzlistpm &&
+          mawbInfo.gbzlistpm.filter(
+            i => i.materialpm && i.materialstd && i.num && i.wagetype
+          )
+        if (mawbInfo.gbzlistpm && mawbInfo.gbzlistpm.length > 0) {
+          mawbInfo.gbzlistpm.forEach(i => {
+            i.servicecode = 'AG0120'
+          });
+        }
+
+
+        mawbInfo.gylist =
+          mawbInfo.gylist &&
+          mawbInfo.gylist.filter(i => i.clothtype && i.clothstd);
+
+
+        if (mawbInfo.gylist && mawbInfo.gylist.length > 0) {
+          mawbInfo.gylist.forEach(i => {
+            i.servicecode = 'AG0130'
+          });
+        }
+        mawbInfo.gylistpm =
+          mawbInfo.gylistpm &&
+          mawbInfo.gylistpm.filter(
+            i => i.materialpm && i.materialstd && i.num && i.wagetype
+          )
+
+        if (mawbInfo.gylistpm && mawbInfo.gylistpm.length > 0) {
+          mawbInfo.gylistpm.forEach(i => {
+            i.servicecode = 'AG0130'
+          });
+        }
+
+        mawbInfo.cltglist =
+          mawbInfo.cltglist &&
+          mawbInfo.cltglist.filter(
+            i => i.materialpm && i.materialstd && i.num && i.wagetype
+          )
+
+        if (mawbInfo.cltglist && mawbInfo.cltglist.length > 0) {
+          mawbInfo.cltglist.forEach(i => {
+            i.servicecode = 'AA0810'
+          });
+        }
+        return mawbInfo
+      },
     // 配置总运单
     getMawbConfig() {
           //获取总单配置表格数据
@@ -2228,11 +2306,11 @@ curObjectKyYs:{
             });
 
 
-            if (!(this.inputModelData.opersystem == "进口")) {//进口需要保留
-                delete mawbInfo.qfsj;
-                delete mawbInfo.hbh;
+            // if (!(this.inputModelData.opersystem == "进口")) {//进口需要保留
+            //     delete mawbInfo.qfsj;
+            //     delete mawbInfo.hbh;
                 // delete mawbInfo.hbrq;
-            }
+            // }
             // console.log(JSON.stringify(mawbInfo));
             if (mawbInfo.hwlx && mawbInfo.hwlx.indexOf('锂电池') < 0) {
                 mawbInfo.batterymodel = ''
@@ -6914,11 +6992,49 @@ costData = costData.map(x => ({
           this.inputModelData.iszddl = String(iszddl);
           this.inputModelData.zddlcode = zddlcode;
           this.inputModelData.mawbgid = mawbgid; // 解决配置总运单 => 无mawbgid
+
+          if(val.area == '上海' && val.czlx == '自货'){
+            this.paneDisable=true
+            Object.keys(this.fareInputViewData).forEach((i,index)=>{
+                if(index>0){
+                  this.fareInputViewData[i]['disabled']=true
+                }else{
+                  this.fareInputViewData[i]['disabled']=false
+                }
+
+            })
+          }
+
         }
-       
       },
       deep: true,
     
+    },
+
+    'inputModelData.yfstdin':{
+      handler(val){
+          if (!this.visibleI&&val) {
+          if(this.inputModelData.yfstdin=='2'){
+            Object.keys(this.fareInputViewData).forEach((i,index)=>{
+                if(index<=2){
+                  this.fareInputViewData[i]['disabled']=false
+                }else{
+                  this.fareInputViewData[i]['disabled']=true
+                }
+            })
+          }else{
+            Object.keys(this.fareInputViewData).forEach((i,index)=>{
+                if(index>0){
+                  this.fareInputViewData[i]['disabled']=true
+                }else{
+                  this.fareInputViewData[i]['disabled']=false
+                }
+
+            })
+          }
+      }
+      },
+      immediate: true,
     },
 
     shipaceInfoData: {
@@ -7816,6 +7932,68 @@ accountweightoutZz(val){
         }
         /deep/.content-pay {
             width: 1300px !important;
+        }
+    }
+        /deep/.paneDisabled {
+        cursor: not-allowed;
+
+        >div {
+            pointer-events: none;
+        }
+
+        /deep/ button {
+            // pointer-events: all;
+        }
+
+        /deep/ input {
+            pointer-events: none;
+           
+        }
+
+        /deep/  .input-required input{
+                background-color: #F0F0F0;
+         }
+        /deep/ .el-input__suffix-inner {
+            pointer-events: none;
+        }
+
+        /deep/ .add-hawb {
+            pointer-events: none;
+        }
+
+        /deep/ .icon-c {
+            pointer-events: none;
+        }
+
+        /deep/ td {
+            pointer-events: none;
+        }
+
+        /deep/ .tabs-header {
+            pointer-events: all;
+        }
+
+        /deep/ .hide-tabs {
+            pointer-events: all;
+        }
+
+        /deep/ #khjcno {
+            pointer-events: all;
+            cursor: pointer;
+        }
+
+        /deep/ #hwlx {
+            pointer-events: all;
+            cursor: pointer;
+        }
+
+        /deep/ #tradeterm {
+            pointer-events: all;
+            cursor: pointer;
+        }
+
+        /deep/ .el-tabs__nav {
+            pointer-events: all;
         }
     }
 </style>

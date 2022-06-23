@@ -513,6 +513,29 @@
             </div>
           </div>
         </div>
+          <div class="row relation-wrap">
+          <div class="item10 operate-title">货物参数</div>
+          <div class="item75" style="display: flex">
+            <template v-for="(item, index) in priceObj.cargoArr">
+              <div
+                class="operate-tag nohover"
+                style="cursor: not-allowed"
+                v-show="item.isAdd"
+              >
+                <span>{{ item.title }}</span>
+              </div>
+            </template>
+          </div>
+          <div class="item5"></div>
+          <div class="item10">
+            <div
+              class="operate-edit"
+              @click="priceObj.openRelationDialog('cargo')"
+            >
+              <span class="el-icon-setting"></span><span>添加</span>
+            </div>
+          </div>
+        </div>
         <div class="row relation-wrap">
           <div class="item10 operate-title">货型参数</div>
           <div class="item75" style="display: flex">
@@ -568,6 +591,8 @@
                 <span>{{ item.cusTitle }}</span>
                 <span>;</span>
                 <span>{{ item.pTitle }}</span>
+                <span>;</span>
+                <span>{{ item.cargoTitle }}</span>
               </div>
             </template>
           </div>
@@ -1444,6 +1469,7 @@ export default {
       let selectedTab = this.priceObj.cusPackageIndexArr[selectedIndex];
       let cusDiff = selectedTab.cDiff * 1;
       let pDiff = selectedTab.pDiff * 1;
+      let cargoDiff=selectedTab.cargoDiff*1;
 
       if (!Number.isFinite(weightPrice) || weightPrice == 0) return "--";
       if (!isVolSetValue) return "--";
@@ -1452,7 +1478,8 @@ export default {
         (Number.isFinite(volDiff) ? volDiff : 0) +
         (Number.isFinite(weightPrice) ? weightPrice : 0) +
         (Number.isFinite(pDiff) ? pDiff : 0) +
-        (Number.isFinite(cusDiff) ? cusDiff : 0);
+        (Number.isFinite(cusDiff) ? cusDiff : 0)+
+        (Number.isFinite(cargoDiff)?cargoDiff:0);
       return val.toFixed(2);
     },
     //取实际 vol

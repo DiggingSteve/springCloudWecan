@@ -82,6 +82,7 @@
 
     <el-dialog
       class="mawbAddDialog"
+      :modal-append-to-body="false"
       width="85%"
       top="30px"
       center
@@ -157,9 +158,9 @@
             <template v-if="tabsActiveName !== 'repeatOrder'">
               <el-button type="primary" @click="saveOrder(1)">本站操作</el-button>
               <el-button type="primary" @click="saveOrder(2)">保存待处理</el-button>
-              <template v-if="tabsActiveName == 'incompleteOrder'">
+              <!-- <template v-if="tabsActiveName == 'incompleteOrder'">
                 <el-button type="primary" @click="saveIncompleteOrder">暂存</el-button>
-              </template>
+              </template> -->
             </template>
             <template v-else-if="tabsActiveName == 'repeatOrder'">
               <el-button type="primary" @click="updateRepeatOrder">覆盖原信息</el-button>
@@ -177,7 +178,7 @@
       width="1000"
       center
       title="导入结果"
-      :append-to-body="true"
+      :modal-append-to-body="false"
       :close-on-click-modal="false">
 
       <div class="table-c">
@@ -200,7 +201,7 @@
       v-if="lzdDialogVisible"
       :fullscreen="true"
       width="1200px"
-      append-to-body
+      :modal-append-to-body="false"
       top="4%">
       <iframe :src="lzdUrl" frameborder="0" allowtransparency="true" style="width: 70%; height: 120%; border: 0px none;"></iframe>
     </el-dialog>
@@ -3725,3 +3726,9 @@ export default {
 }
 </style>
 
+
+<style scoped>
+  .mawbAddDialogTier{
+    z-index: 1900;
+  }
+</style>

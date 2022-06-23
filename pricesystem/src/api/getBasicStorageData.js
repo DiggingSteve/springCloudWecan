@@ -1,4 +1,4 @@
-const diffCodeKey = { package: "packageDiff", cus: "cusDiff", vol: "volDiff", weight: "weightDiff" }
+const diffCodeKey = { package: "packageDiff", cus: "cusDiff", vol: "volDiff", weight: "weightDiff",cargo:"cargoDiff" }
 const hbhinfo = "hbhinfo";
 
 
@@ -464,6 +464,7 @@ const getDiffCode = function () {
   let weightUrl = this.$store.state.publicWebApi + "api/Pubtypecode?groupid=1481";
   let volUrl = this.$store.state.publicWebApi + "api/Pubtypecode?groupid=1482";
   let cusUrl = this.$store.state.publicWebApi + "api/Pubtypecode?groupid=1483";
+  let cargoUrl = this.$store.state.publicWebApi + "api/Pubtypecode?groupid=1484";
 
   this.$axios({
     method: "get",
@@ -522,6 +523,21 @@ const getDiffCode = function () {
     localStorage.setItem(diffCodeKey.weight, data);
   });
 
+  this.$axios({
+    method: "get",
+    url: cargoUrl,
+    params: {
+
+    },
+    loading: false,
+    tip: false
+  }).then((result) => {
+    let arr = createBasicCardData(result.data);
+    let data = JSON.stringify(arr);
+    localStorage.setItem(diffCodeKey.cargo, data);
+  });
+
+
 }
 
 /**
@@ -544,7 +560,7 @@ function createBasicCardData(arr, type) {
   });
 }
 function isBasePoint(item) {
-  return item.ready01 == "官网公布" || item.ready01 == "散货" || item.ready01 == "1:167";
+  return item.ready01 == "官网公布" || item.ready01 == "散货" || item.ready01 == "1:167"||item.ready01=="普货";
 }
 
 

@@ -128,7 +128,7 @@ export default {
         itemStyle: { width: "578px" ,minWidth:'578px'}
        }
     },
-    inputModelData:{sfg:'PVG',yslx:'国际货',shipacexz:'正常货',czlx:'全部',hwxz:'全部',ysfs:'全部'},
+    inputModelData:{yslx:'国际货',shipacexz:'正常货',czlx:'全部',hwxz:'全部',ysfs:'全部'},
     qfsjsid:'',
     }
   },
@@ -166,7 +166,8 @@ export default {
       { immediate: true }
     );
     if(this.operationType=='1'){
-    	this.inputModelData={'sfg':'PVG',yslx:'国际货',shipacexz:'正常货',czlx:'全部',hwxz:'全部',ysfs:'全部'}
+      // 'sfg':'PVG',
+    	this.inputModelData={yslx:'国际货',shipacexz:'正常货',czlx:'全部',hwxz:'全部',ysfs:'全部'}
     }
    
   },

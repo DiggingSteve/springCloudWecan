@@ -481,16 +481,16 @@ export const myCommonTable = { //费用驳回的弹窗
       }
     },
     ordertype(){
-      if (this.mawbinfo.orderguid == -1 && this.mawbinfo.childguid == -1) {
+      if (this.mawbinfo.orderguid == -1 && this.mawbinfo.childguid == -1) {//本站
           return '1'
       }
-      if (this.mawbinfo.orderguid > 0 && this.mawbinfo.childguid > 0) {
+      if (this.mawbinfo.orderguid > 0 && this.mawbinfo.childguid > 0) {//中间站
           return '2'
       }
-      if (this.mawbinfo.orderguid > 0 && this.mawbinfo.childguid == -1) {
+      if (this.mawbinfo.orderguid > 0 && this.mawbinfo.childguid == -1) {//操作站
           return '4'
       }
-      if (this.mawbinfo.orderguid == -1 && this.mawbinfo.childguid > 0) {
+      if (this.mawbinfo.orderguid == -1 && this.mawbinfo.childguid > 0) {//销售站
           return '3'
       }
    }

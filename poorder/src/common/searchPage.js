@@ -5,6 +5,7 @@ import asignSearch from "@/components/asignSearch.vue"
 // import orderTaking from "@/components/orderTaking.vue"
 import acceptPage from "@/components/acceptPage.vue"
 import newOrderAdd from '@/components/newOrderAdd.vue'
+// import priceFreight from '@/priceSystem/priceFreight.vue'
 
 
 import {
@@ -111,18 +112,18 @@ export const createPage = function (name) {
     }
   }
 
-  if (["norAirlineFee", "souAirlineFee", "eurAirlineFee", "japAirlineFee", 'estAirlineFee'].includes(name)) {
-    return {
-      name: name,
-      mixins: [priceFreight],
-      data() {
-        return {
-          name: 'norAirlineFee.vue',
-          realPageName: name
-        }
-      }
-    }
-  }
+  // if (["norAirlineFee", "souAirlineFee", "eurAirlineFee", "japAirlineFee", 'estAirlineFee'].includes(name)) {
+  //   return {
+  //     name: name,
+  //     mixins: [priceFreight],
+  //     data() {
+  //       return {
+  //         name: 'norAirlineFee.vue',
+  //         realPageName: name
+  //       }
+  //     }
+  //   }
+  // }
 
 
 
