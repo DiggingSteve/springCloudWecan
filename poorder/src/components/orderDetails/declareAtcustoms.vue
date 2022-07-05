@@ -2,8 +2,8 @@
   <div class="elform" :class="{disabled:baoguanFinished}">
     <!-- {{ponoDisabledList}} -->
     <myAlert :servicecode="servicecode" v-if="!mark"></myAlert>
-    <div v-if="!mark" :style="{'text-align': 'right','transform': servicecode=='AB0620'?'translate(-210px,-50px)':'translate(-122px,-42px)','height':'0px'}">
-      <el-button :type="baoguanFinished?'danger':'primary'" title="报关操作" style='pointer-events: all;'
+    <div v-if="!mark" :style="{'text-align': 'right','height':'0px'}">
+      <el-button :type="baoguanFinished?'danger':'primary'" title="报关操作" :style="{'pointer-events': 'all','transform': servicecode=='AB0620'?'translate(-210px,-50px)':'translate(-122px,-42px)','position':'relative','z-index':'99'}"
         @click="openBgBtn">
         {{baoguanFinished?'取消完成':'报关完成'}}
       </el-button>

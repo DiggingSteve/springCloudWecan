@@ -3,12 +3,12 @@
     <div
       style="text-align: right;height: 0px;transform: translate(-2px,-52px);z-index: 600;position: relative"
     >
-      <el-button type="primary" @click="addHawb()">新增分单</el-button>
+      <el-button type="primary" @click="addHawb()">新增分单 </el-button>
     </div>
-    <!-- {{mawbdetail.hawbList}} -->
+
     <commonTabs
       deletetype="2"
-      :list="initInfo && initInfo.hawbList"
+      :list="mawbdetail.opersystem == '进口' ? initInfo && initInfo.hawbList : mawbdetail.hawbList"
       @toggle="toggleIndex"
       showClose
       :showContent="showContent"
@@ -17,18 +17,19 @@
       :showTooltip="false"
     >
       <div
-        v-for="(hawb, index) in mawbdetail.opersystem == '进口'
+        v-for="(hawb, index) in (mawbdetail.opersystem == '进口'
           ? initInfo && initInfo.hawbList
-          : mawbdetail.hawbList"
+          : mawbdetail.hawbList)"
         v-show="hawblistChecked == index"
         :key="index"
       >
         <hawbInfoNewAdd
           :hawbdata.sync="hawb"
-          :mawbdetail="mawbdetail"
+          :mawbdetail="mawbdetail.opersystem == '进口' ?  initInfo : mawbdetail "
         ></hawbInfoNewAdd>
       </div>
     </commonTabs>
+    
     <div
       v-show="
         initInfo &&
@@ -45,7 +46,6 @@
           <div class="detail" v-show="initInfo.hawbList.length > 0">
             <div class="detail-title">
               服务项目
-              <!-- {{hawblistChecked}} -->
             </div>
             <div class="detail-c">
               <tempConfig
@@ -57,8 +57,6 @@
                 v-if="tempConfigShow"
               >
               </tempConfig>
-              <!-- :serviceList="initInfo.guid > 0 ? mawbdetail.hawbList[handleTabIndex].serviceList : []" -->
-              <!-- mawbdetail.hawbList.length > 0 ? mawbdetail.hawbList[handleTabIndex].newService : newService -->
               <serviceList
                 :pagetype="initInfo && initInfo.guid > 0 ? 2 : 1"
                 :serviceList="
@@ -81,11 +79,10 @@
               </serviceList>
             </div>
           </div>
-          <!-- 分单货物信息 -->
           <div
             class="detail"
             v-show="
-              Object.values(initInfo.hawbList[hawbIndex].newService).filter(
+              initInfo.hawbList && Object.values(initInfo.hawbList[hawbIndex].newService).filter(
                 i => i.servicecode == 'AB0420' && !i.model
               ).length
             "
@@ -93,12 +90,11 @@
             <div class="detail-title">
               实际货物信息
             </div>
-            <!--  -->
             <div class="detail-c" style="overflow:auto">
               <commonTable
                 :head="cargoTableHead"
                 :tableData="
-                  initInfo.hawbList.length > 0
+                 initInfo.hawbList&& initInfo.hawbList.length > 0
                     ? initInfo.hawbList[hawbIndex].cargoInfoList
                     : []
                 "
@@ -430,7 +426,6 @@ export default {
         this.mawbdetail.opersystem == "进口" &&
         this.initInfo.hawbList.length > 0
       ) {
-        console.log(this.mawbdetail.hawbList[0].newService);
         obj.fid = this.initInfo.hawbList[0].fid;
         obj.gid = this.initInfo.hawbList[0].gid;
         obj.sfg = this.initInfo.hawbList[0].sfg;

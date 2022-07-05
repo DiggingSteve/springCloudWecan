@@ -277,6 +277,7 @@ export default {
       },
       () => {
         this.setRecorderNumberNew(2);
+        this.handleMark()
       },
       { deep: true }
     );
@@ -288,6 +289,7 @@ export default {
       () => {
         this.setRecorderNumberNew(1);
         this.setNavDisplay();
+        this.handleMark()
       },
       { immediate: true }
     );
@@ -540,6 +542,17 @@ export default {
         //setCookie('againShow', true)
         this.$store.commit("setAgainShow", true);
       }, 1000 * 60 * 30);
+    },
+    // 计算订单待处理和订单待受理 Tab标记
+    handleMark(){
+      let orderDcl = this.recorderNumberArrayNew.filter(i => this.$store.state.areaState.split(",").includes(i.area) && this.$store.state.systemCheck.split(",").includes(i.system) && i.autcode == 'SH_POMANAGEMENT_PAGE_BUSINESSUQUERY')
+      let orderDsl =  this.recorderNumberArrayNew.filter(i => this.$store.state.areaState.split(",").includes(i.area) && this.$store.state.systemCheck.split(",").includes(i.system) && i.autcode == 'SH_POMANAGEMENT_PAGE_CABINUNCONFIRMED')
+  
+      console.log(`订单待处理: ${orderDcl.reduce((pre,next) => pre + next.countnum,0)}`)
+      console.log(`订单待受理: ${orderDsl.reduce((pre,next) => pre + next.countnum,0)}`)
+      this.$store.commit('setDot',
+      {acceptPageDot:orderDsl.reduce((pre,next) => pre + next.countnum,0),
+      businessUqueryDot:orderDcl.reduce((pre,next) => pre + next.countnum,0)})
     },
     redirectRoute(i) {
       this.$router.push({

@@ -362,6 +362,10 @@
       relList: {
         type: Array,
         default: () => { }
+      },
+      needPhone:{
+        type:Boolean,
+        default:()=>true
       }
     },
    
@@ -587,7 +591,7 @@
 
       },
       chooseRel() {
-        if (!this.checkedRelData.mobile && !this.checkedRelData.phone) {
+        if (!this.checkedRelData.mobile && !this.checkedRelData.phone&&this.needPhone) {
           return this.$message.error('联系人信息缺失')
         }
         if (!this.checkedRelData.name || !this.checkedRelData.email) {

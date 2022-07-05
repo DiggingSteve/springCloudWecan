@@ -408,6 +408,14 @@ export default {
 };
 </script>
 
+
+
+<style>
+.orderBadge .el-badge__content.is-fixed {
+  right:0px;
+}
+</style>
+
 <style lang="less">
 html,
 body,

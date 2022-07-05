@@ -515,8 +515,8 @@ window.queueObj=new SystemMessage();
               // 运价系统暂定路由
               // { system_name: '运价系统', href: '${pathname}/priceSystem.html#/index?redirect=norAirlineFee' },
               { sub_title: '分站' },
-              { system_name: '基础数据', href: '${location.hostname}/wffbasic?username=${username}&key=${key}' }
-              //{system_name: '基础数据', href: '${location.hostname}/basicData'}
+              //{ system_name: '基础数据', href: '${location.hostname}/wffbasic?username=${username}&key=${key}' }
+              {system_name: '基础数据', href: '${location.hostname}/basicData'}
               //{system_name: '基础数据', href: '${location.hostname}/basicData/iframe/mawbManager/'}
             ]
           }, {

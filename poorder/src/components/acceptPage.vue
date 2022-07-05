@@ -411,6 +411,7 @@
         <transition enter-active-class="animate__animated animate__backInDown"
             leave-active-class="animate__animated animate__backOutDown">
             <el-dialog :title="pagetitle" v-if="dialogShow" center :visible.sync="dialogShow" class="dialogPage"
+                @close="closeNewOrderAddDialog"
                 :close-on-click-modal="false" :close-on-press-escape="false" width="100%" top="0px" :modal="false">
                 <!-- 备注打开弹框类型 -->
                 <!-- <mawbaddput :visible.sync="dialogShow" :pagetype="pagetype==1?15:2" :mawbguid="mawbguid"
@@ -418,7 +419,7 @@
                 </mawbaddput>
                 <new-order-add :boguid="boguid" pagetype=2 :visible.sync="dialogShow" v-else  frompage=2></new-order-add> -->
                 <!--从订单编号进入 订单新增 -->
-                <new-order-add :boguid="boguid" pagetype=2 :visible.sync="dialogShow" frompage=2></new-order-add>
+                <new-order-add :boguid="boguid" pagetype=2 :visible.sync="dialogShow" frompage=2 ref="newOrderAddRef"></new-order-add>
 
             </el-dialog>
         </transition>
@@ -941,6 +942,9 @@
             closeOrderDialog(){
                 this.orderDialogstatus = false
             },
+            closeNewOrderAddDialog(){
+                this.$refs.newOrderAddRef.initDataFunc()
+            },
             setBackModel() {
                 this.backModel = { hbh: '', hbrq: '', mawb: '', title: '', rejectreason: '', inwageallinprice: '', self_real_bp_freight_in: '', cus_real_bp_freight_in: '', inwageallinprice_trans: '', self_real_bp_trans_in: '', cus_real_bp_trans_in: '' }
             },
@@ -1086,7 +1090,7 @@
                     this.$set(this.inputViewData, 'hbrq', {
                         title: "航班日期",
                         type: 15,
-                        defaultVal: true,
+                        // defaultVal: true,
                         disabled: this.pagetype == 2
                     })
                 }
@@ -2248,7 +2252,7 @@
               this.inputModelData={status:'AO5010'}
               this.inputViewData.status.disabled=true
             }else if(val&&val=='2'){
-              this.inputViewData.hbrq.defaultVal=true
+            //   this.inputViewData.hbrq.defaultVal=true
               this.inputModelData={status:'AO5020'}
             }
           },{immediate:true})

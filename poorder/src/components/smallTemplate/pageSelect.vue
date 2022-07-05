@@ -369,6 +369,10 @@
         } else if (val == 13) {
           infoname = 'tzxm'
         }
+        // 委託客戶和带星号客户 用于开票
+        else if(val==100){
+               infoname = 'wtkh'
+        }
 
         let pageDataBackups = JSON.parse(localStorage.getItem(infoname)) || JSON.parse(sessionStorage.getItem(infoname)) || getxmdata(infoname) || []
 
@@ -470,7 +474,10 @@
            return pageDataBackups.filter(i => { return i.comxz == this.wageinout })
           }
           console.log(pageDataBackups.filter(i=>i.id=='4320'))
-        } else {
+        } 
+          else if(val==100){
+            let customSettData=JSON.parse(window.settCustom) ;
+            pageDataBackups=pageDataBackups.concat(customSettData);
         }
         
         //全局过滤掉“上海唯凯国际空运出口部”

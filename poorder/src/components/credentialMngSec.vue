@@ -25,13 +25,7 @@
       :showTotal="showTotal"
       :chinese-where.sync="chineseWhere"
     >
-      <!-- <template slot="deljobno" slot-scope="props">
-        <i
-          class="el-icon-delete"
-          @click="delPZ(props.data.index,props.data.row.pzdom)"
-          title="删除凭证号"
-        ></i>
-      </template> -->
+
       <template slot="showjobno" slot-scope="props">
         <i class="el-icon-document" @click="showJobno(props.data.index)" title="显示工作号"></i>
       </template>
@@ -40,6 +34,13 @@
           class="el-icon-close"
           @click="abandonShow(props.data.index,props.data.row.pzdom)"
           title="作废"
+        ></i>
+      </template>
+      <template slot="deljobno" slot-scope="props">
+        <i
+          class="el-icon-delete"
+          @click="delPZ(props.data.index,props.data.row.pzdom)"
+          title="删除凭证号"
         ></i>
       </template>
       <!-- <template slot="invoiceExport" slot-scope="props" v-if="tableDataRes[props.data.index].pzdom&&tableDataRes[props.data.index].pzdom=='发票'"><i class="el-icon-tickets" title="发票导出"></i></template> -->
@@ -430,10 +431,7 @@ export default {
         this.$message.error("非本人无法操作");
         return false;
       }
-      if (pzdom == "发票") {
-        this.$message.error("凭证类型无法进行此操作");
-        return false;
-      }
+
       //alert(i)
       this.$confirm("是否删除?", "提示", {
         confirmButtonText: "确定",
@@ -547,10 +545,7 @@ export default {
         this.$message.error("非本人无法操作");
         return false;
       }
-      if (pzdom == "发票") {
-        this.$message.error("凭证类型无法进行此操作");
-        return false;
-      }
+     
       this.invoiceIndex = i;
       this.abanInvoice = true;
     },

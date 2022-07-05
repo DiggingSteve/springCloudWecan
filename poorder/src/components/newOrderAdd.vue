@@ -83,6 +83,7 @@
         v-show="inputModelData.opersystem == '进口' && version == 2 && inputModelData.orderdom != ''"
         :areaStateCode="areaStateCode"
         :inputModelData="inputModelData"
+        :entranceData="entranceData"
         :frompage="frompage"
         ></newOrderAddEntrance>
         
@@ -1233,6 +1234,10 @@
           version: 2, //默认第一版本 
           gnShow:true,//国内服务信用被控显示
           pagestep: 1,
+          entranceData:{
+            zdData:{},
+            fdData:[]
+          },
           baseInfoInputViewData:{
             khjcno: {
               title: '进仓编号',
@@ -3995,6 +4000,15 @@
           }
           console.log("总单详细");
           console.log(JSON.stringify(results.data));
+          console.log(results.data.opersystem)
+
+          if(results.data.opersystem == "进口") {
+            this.basicinfoView.ordertype.hidden = false  
+            this.entranceData.zdData = results.data
+            
+
+          } 
+
           let data = results.data;
           data.frompage = this.frompage;
           data.serviceList = data.serviceList.filter(i => {
@@ -4020,7 +4034,7 @@
           if (data.ybstoreList) {
             data.ybstoreList.forEach(i => {//用timestamp标记数据，可以在进仓编号一样的时候找到具体的那条数据
               if (i.sid > 0) {
-                i.timestamp = i.sid
+                i.timestamp = i.sid 
               } else {
                 i.timestamp = new Date().getTime()
               }
@@ -4028,7 +4042,7 @@
             this.ybstoreListBackup = JSON.parse(JSON.stringify(data.ybstoreList))
           }
 
-        
+          console.log(data)
           Object.keys(data).forEach(i => {
             this.inputModelData[i] = data[i]
           })
@@ -4057,10 +4071,10 @@
             })
             this.hawbListBackup = JSON.parse(JSON.stringify(this.inputModelData.hawbList));
           } else {
-            this.getHawbNum()
+            
+              this.getHawbNum()
+            
           }
-
-          //console.log(this.inputModelData.gid)
         });
 
 //console.log(this.inputModelData)
@@ -4126,14 +4140,22 @@
           loading: false,
           tip: false
         }).then(results => {
-          let data = results.data
-          data.forEach(i => {
-            i.khjcno = i.ybstoreList && i.ybstoreList.map(i => i.khjcno).toString() || '';
-            i.timestamp = i.guid
-          })
 
-          this.hawbListBackup = JSON.parse(JSON.stringify(data));
-          this.inputModelData.hawbList = data
+            let data = results.data
+            data.forEach(i => {
+              i.khjcno = i.ybstoreList && i.ybstoreList.map(i => i.khjcno).toString() || '';
+              i.timestamp = i.guid
+            })
+            if(this.entranceData.zdData && this.entranceData.zdData.opersystem == "进口") {
+              this.entranceData.fdData = data
+            } else {
+               this.inputModelData.hawbList = data
+            }
+            this.hawbListBackup = JSON.parse(JSON.stringify(data));
+           
+            
+
+
         });
 
         return this.hawbListBackup;
@@ -4171,7 +4193,7 @@
       handler(val){
         if(val.length > 0) {
           val.forEach((item,index) => {
-            if(this.inputModelData.system == '空进' &&  this.inputModelData.hawbList[index].newService['OB0020']) {
+            if(this.inputModelData.system == '空进' &&   this.inputModelData.hawbList[index].newService['OB0020'] ) {
              this.inputModelData.hawbList[index].newService['OB0020'].model = true
              this.inputModelData.hawbList[index].newService['OB0020'].disabled = true
 
@@ -4214,7 +4236,9 @@
             this.basicinfoView.ordertype.disabled = true
             this.inputModelData.ordertype = 1
             this.version = 2
-            this.inputModelData.orderdom = "总单"
+            if(!this.entranceData.zdData.orderdom) {
+              this.inputModelData.orderdom = "总单"   
+            }
             // if(this.inputModelData.area == '上海') {
             //   this.version = 2
             // }else {
@@ -4269,7 +4293,7 @@
                 this.basicinfoView.gid.hidden = false
 
                 this.basicinfoView.ordertype.hidden = true 
-                this.basicinfoView.orderdom.hidden = true
+                // this.basicinfoView.orderdom.hidden = true
           } else if(val == "国内") {
               this.version = 1
               this.basicinfoView.area.title = "委托唯凯站点"
@@ -4588,7 +4612,7 @@
               this.basicinfoView[i].disabled = true;
             })
 
-            this.basicinfoView.ordertype.hidden = true;
+            // this.basicinfoView.ordertype.hidden = true;
             this.detailShow.ybstoreList = true
             this.detailShow.fareInputViewData = true
             this.detailShow.serviceDetail = true

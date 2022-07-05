@@ -5,6 +5,7 @@ import asignSearch from "@/components/asignSearch.vue"
 // import orderTaking from "@/components/orderTaking.vue"
 import acceptPage from "@/components/acceptPage.vue"
 import newOrderAdd from '@/components/newOrderAdd.vue'
+
 // import priceFreight from '@/priceSystem/priceFreight.vue'
 
 
@@ -62,7 +63,7 @@ export const createPage = function (name) {
       },
       computed: {
         src() {
-          return `${this.$store.state.imgWebApi}wffairexpfreight/basic/${basicDataPages[name]}.aspx?logname=${localStorage.usrname}`
+          return `${this.$store.state.imgWebApi}basicData/iframe/${basicDataPages[name]}/?usrname=${localStorage.usrname}`
         }
       },
       mounted() {
@@ -81,7 +82,7 @@ export const createPage = function (name) {
     }
   }
 
-  if (name == 'outerAccount' || name == "dataAnaly") { //外网对账和订舱显示正在开发中
+  if (name == 'outerAccount' || name == "dataAnaly" ) { //外网对账和订舱显示正在开发中
     return {
       name: name,
       data() {
@@ -106,7 +107,7 @@ export const createPage = function (name) {
       data() {
         return {
           name: "listConfirm.vue",
-          realPageName: name
+          realPageName: name,
         }
       }
     }
@@ -132,6 +133,7 @@ export const createPage = function (name) {
   //原来的单个路由页面分为两个tab,在外面拦截路由，用一个新页面包裹，里面的tab还是用原来的页面;。
   // console.log(cassifyObj)
   if (Object.keys(cassifyObj).includes(name)) {
+    
     let obj = cassifyObj[name];
     let routername = obj.routername;
     let first = obj.first;
@@ -217,13 +219,20 @@ export const createPage = function (name) {
       template: `
       <div class="reconciliationMng">
       <el-button-group  class="buttonTabs" >
-          <el-button  :class="[mng == 1 ?'active':'']" @click="mng=1">${first.title}</el-button>
-          <el-button  :class="[mng == 2?'active':'']" @click="mng=2">
-            <el-badge is-dot class="item" v-if="tableData&&tableData.length">
+      
+        <el-button  :class="[mng == 1 ?'active':'']" @click="mng=1" class="orderBadge">
+          <el-badge :value="$store.state.acceptPageDot"  v-if="${first.title == '订单待受理'} && $store.state.acceptPageDot != 0 " >
+          ${first.title} 
+          </el-badge>
+          <span v-else>${first.title}</span>
+        </el-button>
+
+      <el-button  :class="[mng == 2?'active':'']" @click="mng=2">
+            <el-badge :is-dot="tableData&&tableData.length"  :value="$store.state.businessUqueryDot"  class="orderBadge" v-if="tableData&&tableData.length || (${second.title == '订单待处理'} && $store.state.businessUqueryDot != 0)" >
             ${second.title}
             </el-badge>
             <span v-else> ${second.title}</span>
-          </el-button>
+      </el-button>
           <el-button  :class="[mng == 3 ?'active':'']"  v-if="${third.title !== undefined}" @click="mng=3">${third.title}</el-button>
       </el-button-group>
       

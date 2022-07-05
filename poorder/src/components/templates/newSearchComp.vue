@@ -635,13 +635,7 @@
 
 
           // 状态查询 fieldtype: 3
-          pztype:{
-            title:"发票类型",
-            type:5,
-            whereStr:"in",
-            fieldtype:3,
-            groupid:49
-          },
+          
           isverifiy:{
             title:"核销状态",
             type:5,
@@ -1033,6 +1027,14 @@
           },
 
           // 单位港口货物查询 fieldtype: 4
+          pztype:{
+            title:"发票类型",
+            type:5,
+            whereStr:"in",
+            fieldtype:4,
+            groupid:49
+          },
+          
           isCompleteHawb: {
             title: "是否分单补全",
             type: 4,

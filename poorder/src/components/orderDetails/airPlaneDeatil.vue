@@ -4311,7 +4311,7 @@ curObjectKyYs:{
         this.handleZzPrice('1',this.inputModelData.inwageallinprice_trans)
       }
     }  
-    if(!this.yingfustatus){
+    if(!this.yingfustatus&&this.inputModelData.isshipace!='2'&&!this.shipaceInfoData){
       if(this.inputModelData.outwageallinprice_trans&&this.inputModelData.isoutwageallin_trans>0){
         console.log(222)
         this.handleZzPrice('2',this.inputModelData.outwageallinprice_trans)
@@ -6483,14 +6483,9 @@ costData = costData.map(x => ({
       //this.dmfwf.priceout=0.4
       //console.log('22')
       if(val==4){
-          //alert('1')
           this.handleDmCost('2',true)
-          
-        
       }else{
-    
           this.handleDmCost('2',false)
-       
       }
     }  
     }

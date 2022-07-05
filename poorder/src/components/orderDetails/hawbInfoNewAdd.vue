@@ -4,8 +4,8 @@
     <!-- <commonTabs :list="tabsList" :showExpanionBtn="false" :checkedIndex.sync="tabChecked" :showTooltip="false"
       titlefield="title">
   </commonTabs> -->
-      <div class="fdinformation">         
-          <new-form-cmpt v-if="mawbdetail.opersystem == '进口'   " :view-data="orderViewData" :model-data="hawbdata" @changeRelData="mawbdetail.hawbList[computedTabIndex].customerRelList = $event">
+      <div class="fdinformation">       
+          <new-form-cmpt v-if="mawbdetail.opersystem == '进口'" :view-data="orderViewData" :pagetype="2" :area="hawbdata.area" :model-data="hawbdata" :system="mawbdetail.system" @changeRelData="mawbdetail.hawbList[computedTabIndex].customerRelList = $event">
           </new-form-cmpt>
          
         <div v-show="tabChecked==0 && mawbdetail.opersystem == '出口' " class="detail hawbinfo" style="padding-bottom:10px;margin-top: 0px;">

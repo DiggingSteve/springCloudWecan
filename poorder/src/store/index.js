@@ -11,7 +11,7 @@ var host = window.location.host
 var isLocalhost = host.includes('localhost') || host.includes('192.168.98.170') || host.includes('192.168.98.168') || host.includes('192.168.98.198') || host.includes('192.168.98.172') || host.includes('192.168.98.206')
 
 let ipstr1 = "";
-ipstr1 = '192.168.0.113'
+ipstr1 = '192.168.98.203'
 let ipstr2 = "";
 //ipstr1 = 'erp.wecanintl.com'
 //ipstr1 = '192.168.98.178'
@@ -24,7 +24,7 @@ let ipstr2 = "";
 //ipstr=host.replace(/localhost|192.168.98.241/g,'192.168.0.115')
 if (isLocalhost) {
   // ipstr = '192.168.0.115:8080'
-  ipstr = '192.168.0.113'
+  ipstr = '192.168.98.203'
   ipstr2 = '192.168.98.203:9000'
   if (buildSystem != 'wecan') {
     ipstr = 'erp.hfl-logistics.com'
@@ -270,7 +270,8 @@ var store = new Vuex.Store({
     againShow:false,
     // 情况补充说明 - 模块区分
     situationState: "",
-    //mngStatus: "",
+    acceptPageDot:"", //订单待受理Tab数字标记
+    businessUqueryDot:"" //订单待处理Tab数字标记
   },
   getters: {
     userSetting: state => {
@@ -546,9 +547,12 @@ var store = new Vuex.Store({
     setSituationState(state, payload){
       state.situationState = payload
     },
-    // setMngstatus(state, payload){
-    //   state.mngStatus = payload
-    // }
+    // 设置订单待受理和订单待处理的Tab标记
+    setDot(state,payload){
+      console.log(payload)
+      state.acceptPageDot = payload.acceptPageDot
+      state.businessUqueryDot = payload.businessUqueryDot
+    }
   },
   actions: {
     updateUserSetting({

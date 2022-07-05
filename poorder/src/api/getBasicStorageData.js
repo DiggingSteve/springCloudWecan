@@ -336,6 +336,17 @@ const getWtdata = function (message) {
     });
     works.push(wtkhFunc)
   }
+     //临时客户 带星号的数据  开发票用到
+     let customSettJob = this.$axios({
+      method: "get",
+      url: this.$store.state.publicWebApi + "api/custom/getSettCustom",
+      params: {
+   
+      }
+    }).then(results => {
+     window.settCustom=JSON.stringify(results.data)
+  })
+  works.push(customSettJob);
 
   //1 客户的项目  2供应商的项目
   var time2 = 0;

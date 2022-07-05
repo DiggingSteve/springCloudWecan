@@ -15,8 +15,8 @@
     <p>
       <span>开票方式：</span>
       <el-radio v-model="invoiceType" label="1">离线开票</el-radio>
-      <el-radio v-model="invoiceType" label="2">直连纸质发票</el-radio>
-      <el-radio v-model="invoiceType" label="3">直连电子发票</el-radio>
+      <el-radio v-model="invoiceType" label="2">KPT纸质发票</el-radio>
+      <el-radio v-model="invoiceType" label="3">KPT电子发票</el-radio>
     </p>
   </div>
   

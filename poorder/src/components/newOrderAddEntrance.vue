@@ -5,7 +5,7 @@
     <div>
       <div class="detail" style="margin-top: 0;">
         <div class="detail-title">
-          总单信息  
+          总单信息
           <!-- {{Object.values(newService).filter(i=>i.servicecode=='AB0420'&&!i.model)}} -->
           <!-- {{Object.values(newService)}} -->
         </div>
@@ -19,7 +19,7 @@
             :pagetype="2"
             :area="inputModelData.area"
             id="mawbMark"
-             @changeRelData="initInfo.customerRelList = $event"
+            @changeRelData="initInfo.customerRelList = $event"
           >
             <hwxzComptNew
               slot="exForm1"
@@ -38,7 +38,12 @@
           </newFormCmpt> 
         </div> -->
       </div>
-      <div v-if="inputModelData.orderdom == '直单'  && inputModelData.opersystem == '进口' ">
+      <div
+        v-if="
+          inputModelData.orderdom == '直单' &&
+            inputModelData.opersystem == '进口'
+        "
+      >
         <!-- 总单服务项目 -->
         <div class="detail">
           <div class="detail-title" @click="showService = !showService">
@@ -56,12 +61,18 @@
             </tempConfig>
             <serviceList
               :pagetype="initInfo.guid > 0 ? 2 : 1"
-              :serviceList="initInfo.guid > 0 ? initInfo.serviceList : []"
+              :serviceList="
+                this.entranceData.zdData.serviceList &&
+                this.entranceData.zdData.serviceList.length > 0
+                  ? this.entranceData.zdData.serviceList
+                  : serviceList
+              "
               :newService.sync="newService"
               :opersystem="initInfo.opersystem"
               :orderdom="initInfo.orderdom"
               :system="inputModelData.system"
               :czlx="initInfo.czlx"
+              :ysfs="initInfo && initInfo.ysfs"
             >
             </serviceList>
           </div>
@@ -69,14 +80,14 @@
         <!-- 总单货物信息 -->
         <div
           class="detail"
-          v-show=" 
+          v-show="
             Object.values(newService).filter(
               i => i.servicecode == 'AB0420' && !i.model
-            ).length  && inputModelData.orderdom == '直单' 
+            ).length && inputModelData.orderdom == '直单'
           "
         >
           <div class="detail-title">
-            实际货物信息 
+            实际货物信息
           </div>
 
           <div class="detail-c" style="overflow:auto">
@@ -208,9 +219,10 @@
                   :area="initInfo.area" id="hawbMark">
             <hwxzComptNew slot="exForm1" showGuageString :inputModelData="initInfo"></hwxzComptNew>
           </newFormCmpt>  -->
+
           <div>
             <hawbAdd
-              :mawbdetail="initInfo"
+              :mawbdetail="inputModelData"
               :initInfo="initInfo"
               ref="hawbtab"
               :showContent="true"
@@ -301,8 +313,15 @@
     </div>
 
     <div style="float:right" v-if="pagetype == '1'">
-      <el-button type="danger" @click="$parent.initDataFunc" v-if="frompage != 2">重置</el-button>
-      <el-button type="primary" @click="saveConfirm(false)" v-if="frompage != 2">保存</el-button>
+      <el-button
+        type="danger"
+        @click="$parent.initDataFunc"
+        v-if="frompage != 2"
+        >重置</el-button
+      >
+      <el-button type="primary" @click="saveConfirm(false)" v-if="frompage != 2"
+        >保存</el-button
+      >
       <el-button type="primary" @click="saveConfirm(true)" v-if="frompage != 2"
         >保存并新增</el-button
       >
@@ -376,13 +395,17 @@ import hawbAdd from "@/components/orderDetails/hawbAdd";
 import { formatDate, computedWeight, isNumber } from "@/api/localStorage.js";
 
 export default {
-  name: "newOrderAddAi",
+  name: "newOrderAddEntrance.vue",
 
   props: {
     inputModelData: {
       type: Object
     },
-    frompage:{
+    entranceData: {
+      //订单待受理，订舱编号带进来的数据，赋值 总单和分单数据
+      type: Object
+    },
+    frompage: {
       type: [String, Number]
     },
     areaStateCode: {
@@ -427,7 +450,7 @@ export default {
       assignShow: false, //分配弹框显示隐藏
       mawbguid: "", //分配guid
       inputViewData: {
-          fid: {
+        fid: {
           title: "委托客户",
           type: 11,
           required: true,
@@ -454,19 +477,19 @@ export default {
           disabled: false,
           showCustomerRel: true,
           isnewadd: true,
-          hidden: false,
+          hidden: false
         },
         mawb: {
           title: "总运单号",
           type: 1,
           required: true,
-          // verify: 'mawb', 
+          // verify: 'mawb',
           occupyRestSpace: true,
-          elEvent:{
-            eventName:'change',
+          elEvent: {
+            eventName: "change",
             // eventFunc:this.reSearch,
             eventFunc: this.isNotVerify
-          },
+          }
         },
         ybpiece: {
           title: "预报件数",
@@ -1377,12 +1400,89 @@ export default {
 
   methods: {
     //初始化订单类型为总分单的总单信息数据
-    initTotalSingleData(){
-      const arr = ['mawb','piece','ybpiece','ybweight','jfweight','sfg','hbh','arriverq','jjd','ysfs']
-      arr.forEach(i=> {
-        this.initInfo[i] = ""
-      })
+    initTotalSingleData() {
+      const arr = [
+        "mawb",
+        "piece",
+        "ybpiece",
+        "ybweight",
+        "jfweight",
+        "sfg",
+        "hbh",
+        "arriverq",
+        "jjd",
+        "ysfs"
+      ];
+      arr.forEach(i => {
+        this.initInfo[i] = "";
+      });
     },
+    // 暂不使用，
+    dealWithNewService(serviceList, index) {
+      console.log("=============00000000000000000000000000000000")
+      console.log(this.initInfo.hawbList[index].serviceList)
+      let serviceGroup = JSON.parse(localStorage.serviceDataGroup).filter(
+        e => e.system == this.initInfo.system
+      );
+      let serviceData = [];
+      serviceGroup.forEach(i => {
+        serviceData.push(...i.serviceBasicList);
+      });
+      let guid = -1;
+      let sid = -1;
+      let model = false;
+      //let model2=false;//空进出港服务主营唯凯代操作
+      var oprequest = "";
+      let disabled = false;
+      let profitmode = "";
+      let pgid = "";
+      let orderpgid = "";
+      let childpgid = "";
+      let title = "";
+
+      serviceData.forEach(item => {
+        serviceList.forEach(se => {
+          if (item.servicecode == se.servicecode) {
+            model = se.isdel == 1 ? true : false;
+            oprequest = se.oprequest;
+            guid = se.guid;
+            sid = se.sid;
+            profitmode = se.profitmode;
+            pgid = se.pgid;
+            orderpgid = se.orderpgid;
+            childpgid = se.childpgid;
+            title = this.getTitleName(item.servicename, se.assignarea);
+          }
+        });
+        // 要改的
+        this.$set(this.initInfo.hawbList[index].newService, item.servicecode, {
+          port: item.port,
+          guid: guid,
+          sid: sid,
+          //  servicetype: item.servicetype,
+          title: title ? title : this.getTitleName(item.servicename, ""),
+          id: item.id,
+          model: model,
+          oprequest: oprequest,
+          disabled: disabled,
+          servicecode: item.servicecode,
+          profitmode: profitmode,
+          pgid: pgid,
+          orderpgid: orderpgid,
+          childpgid: childpgid
+        });
+      });
+
+      console.log(`配置hawbList--newService--------${index}`)
+    },
+    getTitleName(name, area) {
+
+        let areaList = JSON.parse(localStorage.groupType).filter(i => i.groupid == 53)
+
+        let threeCode = area ? areaList.filter(i => i.typename == area)[0]['ready06'] : '本站'
+        // console.log(threeCode)
+        return `${name},${threeCode}`
+      },
     initInfoData() {
       //初始数据ug
       if (this.pagetype == "1") {
@@ -1449,7 +1549,7 @@ export default {
           hbrq: "", //航班日期
           qfsj: "", //起飞时间
 
-          hawb_englishpm: "CONSOLIDATION CARGO AS PER ATTACHED MANIFEST", 
+          hawb_englishpm: "CONSOLIDATION CARGO AS PER ATTACHED MANIFEST",
           hawb_sizeremark: "", //尺寸备注
           chinesepm: "", //中文品名
           hwxz: "普货",
@@ -1460,17 +1560,16 @@ export default {
           ctype: false, //c类客户
           remark: "", //备注
 
-
           //总直单数据开始
-          hwplace:"", //收人所在地
+          hwplace: "", //收人所在地
           tradeterm: "", //贸易方式
           jsfs: "", //结算方式
-          yjStoredatetype:"", //计费方式
-          hasdjh:"", //有无超限货
-          hasjmyq:"", //有误精密仪器
-          englishpm:"", //英文品名
-          sizeremark:"", //尺寸备注
-          hastzcx: "",//有无特种超限货
+          yjStoredatetype: "", //计费方式
+          hasdjh: "", //有无超限货
+          hasjmyq: "", //有误精密仪器
+          englishpm: "", //英文品名
+          sizeremark: "", //尺寸备注
+          hastzcx: "", //有无特种超限货
           //总直单数据结束
 
           system: this.inputModelData.system,
@@ -1558,9 +1657,12 @@ export default {
               otherpiece: ""
               //isadd:false,
             }
-          ], 
+          ],
+          cargoInfoList: [],
           customerRelList: this.inputModelData.customerRelList,
-          hawbList: [], 
+          hawbList: [],
+          serviceList: [],
+          newService: {},
           jjd: "-1", //货物来源
           ysfs: "普通进口货", //入境方式
           hawb_jsfs: "2", //结算方式
@@ -1667,42 +1769,53 @@ export default {
         return mawbInfo;
       }
     },
-    isNotVerify(){
-      console.log(this.initInfo['mawb'])
-      let val = this.initInfo['mawb']
-      if(this.inputModelData.opersystem == '进口' && this.inputModelData.opersystemdom == '空运'){
+    isNotVerify() {
+      console.log(this.initInfo["mawb"]);
+      let val = this.initInfo["mawb"];
+      if (
+        this.inputModelData.opersystem == "进口" &&
+        this.inputModelData.opersystemdom == "空运"
+      ) {
+        if (
+          !this.initInfo["mawb"].includes("-") &&
+          this.initInfo["mawb"].length >= 11
+        ) {
+          val =
+            this.initInfo["mawb"].substr(0, 3) +
+            "-" +
+            this.initInfo["mawb"].substr(3, 8);
+        }
+        if (
+          this.initInfo["mawb"].includes("-") &&
+          this.initInfo["mawb"].length > 12
+        ) {
+          val = this.initInfo["mawb"].substr(0, 12);
+        }
+        if (
+          val.replace("-", "").length == 11 &&
+          val.replace("-", "").substr(3, 7) % 7 != val.substr(11, 1)
+        ) {
+          layer.alert("运单格式不正确！");
+        }
+        if (this.isLetter(val)) {
+          val = "";
+          layer.alert("运单格式不正确！");
+        }
 
-            if (!this.initInfo['mawb'].includes('-') && this.initInfo['mawb'].length >= 11) {
-              val = this.initInfo['mawb'].substr(0, 3) + '-' + this.initInfo['mawb'].substr(3, 8)
-            }
-            if (this.initInfo['mawb'].includes('-') && this.initInfo['mawb'].length > 12) {
-              val = this.initInfo['mawb'].substr(0, 12)
-            }
-            if (val.replace('-', '').length == 11 && (val.replace('-', '').substr(3, 7) % 7 != val.substr(11, 1))) {
-              layer.alert('运单格式不正确！');
-              
-            }
-            if(this.isLetter(val)){
-              val = ""
-              layer.alert('运单格式不正确！');
-            }
-
-
-            console.log(this.initInfo['mawb'])
-            this.initInfo['mawb'] = val
-           
-      } 
+        console.log(this.initInfo["mawb"]);
+        this.initInfo["mawb"] = val;
+      }
     },
     // 是否包含字母
     isLetter(str) {
-    for (var i in str) {
+      for (var i in str) {
         var asc = str.charCodeAt(i);
-        if ((asc >= 65 && asc <= 90 || asc >= 97 && asc <= 122)) {
-            return true;
+        if ((asc >= 65 && asc <= 90) || (asc >= 97 && asc <= 122)) {
+          return true;
         }
-    }
-    return false;
-},  
+      }
+      return false;
+    },
     isOver(mawbpiece, hawbpiece) {
       //件数超量  总单件数、分单件数
       //新增只需
@@ -1829,18 +1942,21 @@ export default {
     //       return ''
     //     }
     //  },
-     inputChange(field,field2,field3){//新增一条货物信息 进仓编号、重量、件数
-     console.log(field,field2,field3)
-       let data = this.initInfo.ybstoreList[this.initInfo.ybstoreList.length-1]//最后一条货物信息是否有数据
+    inputChange(field, field2, field3) {
+      //新增一条货物信息 进仓编号、重量、件数
+      console.log(field, field2, field3);
+      let data = this.initInfo.ybstoreList[
+        this.initInfo.ybstoreList.length - 1
+      ]; //最后一条货物信息是否有数据
 
-     if(data[field]&&data[field2]&&data[field3]){
-         this.initInfo.ybstoreList.push({...this.initCargoInfo})
-         }
-
-     },
-     delKhjcno(index){//删除一条货物信息
-     this.initInfo.ybstoreList.splice(index,1)
-     },
+      if (data[field] && data[field2] && data[field3]) {
+        this.initInfo.ybstoreList.push({ ...this.initCargoInfo });
+      }
+    },
+    delKhjcno(index) {
+      //删除一条货物信息
+      this.initInfo.ybstoreList.splice(index, 1);
+    },
     assignClose() {
       //关闭分配弹窗
       this.$confirm(
@@ -1877,6 +1993,28 @@ export default {
           } else {
             status = true;
             continue;
+          }
+        }
+
+        if (this.newService["AB0420"].model == true) {
+          this.ybstoreList = [];
+        } else {
+          let cargoNumber = 0; //货物件数
+          let cargoWeight = 0; //货物重量
+          this.initInfo.ybstoreList.forEach(obj => {
+            cargoNumber += Number(obj.piece);
+            cargoWeight += Number(obj.weight);
+          });
+          if (Number(this.initInfo.ybpiece) != cargoNumber) {
+            status = false;
+            cargoNumber = 0;
+            this.$message.error(`请填写正确的货物信息件数`);
+          } else if (cargoWeight != Number(this.initInfo.ybweight)) {
+            status = false;
+            cargoWeight = 0;
+            this.$message.error(`请填写正确的货物信息重量`);
+          } else {
+            status = true;
           }
         }
       } else if (this.inputModelData.orderdom == "总单") {
@@ -1955,43 +2093,44 @@ export default {
         //货物的件数/重量之和等于分单的件数/重量
         //货物信息  未勾选进港操作——进唯凯仓是货物信息必填
         //  if(Object.values(this.newService).filter(i=>i.servicecode=='AB0420'&&!i.model).length){
-         const cargoStatus = this.initInfo.hawbList.every((item, index) => item.newService["AB0420"].model == true);
-         if(!cargoStatus) {
-            var cargoNumber = 0; //货物件数
-            var cargoWeight = 0; //货物重量
+        const cargoStatus = this.initInfo.hawbList.every(
+          (item, index) => item.newService["AB0420"].model == true
+        );
+        if (!cargoStatus) {
+          var cargoNumber = 0; //货物件数
+          var cargoWeight = 0; //货物重量
 
-            this.initInfo.hawbList.forEach(item => {
-              item.cargoInfoList.forEach(obj => {
-                cargoNumber += Number(obj.piece);
-                cargoWeight += Number(obj.weight);
-              });
+          this.initInfo.hawbList.forEach(item => {
+            item.cargoInfoList.forEach(obj => {
+              cargoNumber += Number(obj.piece);
+              cargoWeight += Number(obj.weight);
             });
-            console.log(cargoWeight);
-            console.log(cargoNumber);
-            // alert(`总货物件数： ${cargoNumber} ------- 总单的件数 ${this.initInfo.ybpiece} `)
-            // alert(`总货物重量： ${cargoWeight} -------- 总单的重量${this.initInfo.jfweight}`)
-            if (Number(this.initInfo.ybpiece) != cargoNumber) {
-              status = false;
-              cargoNumber = 0;
-              this.$message.error(`请填写正确的货物信息件数`);
-              //  throw new Error(`请填写正确的货物信息件数`);
-            } else if (cargoWeight != Number(this.initInfo.jfweight)) {
-              status = false;
+          });
+          console.log(cargoWeight);
+          console.log(cargoNumber);
+          // alert(`总货物件数： ${cargoNumber} ------- 总单的件数 ${this.initInfo.ybpiece} `)
+          // alert(`总货物重量： ${cargoWeight} -------- 总单的重量${this.initInfo.jfweight}`)
+          if (Number(this.initInfo.ybpiece) != cargoNumber) {
+            status = false;
+            cargoNumber = 0;
+            this.$message.error(`请填写正确的货物信息件数`);
+            //  throw new Error(`请填写正确的货物信息件数`);
+          } else if (cargoWeight != Number(this.initInfo.ybweight)) {
+            status = false;
 
-              cargoWeight = 0;
-              this.$message.error(`请填写正确的货物信息重量`);
-              //  throw new Error(`请填写正确的货物重量`);
-            } else {
-              status = true;
-            }
+            cargoWeight = 0;
+            this.$message.error(`请填写正确的货物信息重量`);
+            //  throw new Error(`请填写正确的货物重量`);
+          } else {
+            status = true;
           }
-         }
+        }
+      }
       if (status) {
-        
         let mawbInfo = { ...this.initInfo };
-        console.log("====================")
-        console.log(mawbInfo)
-        mawbInfo.serviceList=this.serviceList
+        console.log("====================");
+        console.log(mawbInfo);
+        mawbInfo.serviceList = this.serviceList;
         let publicField = [
           "hawb_sfg",
           "hawb_mdg",
@@ -2022,12 +2161,12 @@ export default {
           //  })
         } else {
           Object.keys(mawbInfo).forEach(i => {
-            if ( !publicField.includes(i)) {
+            if (!publicField.includes(i)) {
               this.$set(mawbInfo, i, this.initInfo[i]);
               //delete mawbInfo.i
             }
           });
-          console.log(mawbInfo)
+          console.log(mawbInfo);
         }
         if (this.inputModelData.orderdom == "总单") {
           // 提示分单时注意:
@@ -2055,8 +2194,8 @@ export default {
           });
           //3. 挂载数据
           mawbInfo.hawbList = this.initInfo.hawbList;
-          console.log(this.inputModelData.hawbList)
-          console.log("===========33333333333=========")
+          console.log(this.inputModelData.hawbList);
+          console.log("===========33333333333=========");
         }
 
         return mawbInfo;
@@ -2079,6 +2218,9 @@ export default {
       if (this.confirmAdd()) {
         let mawbInfo = this.confirmAdd();
         mawbInfo.nodecode = "AO5010";
+        mawbInfo.cargoInfoList = mawbInfo.ybstoreList;
+        mawbInfo.serviceList = this.serviceList;
+        delete mawbInfo.ybstoreList;
         console.log(mawbInfo);
         // console.log(this.inputModelData.hawbList);
         //return
@@ -2090,16 +2232,36 @@ export default {
           tip: false
         }).then(results => {
           if (results.data.resultstatus == 0) {
- 
-            this.saveVisible = false 
+            this.saveVisible = false;
             // this.$parent.initDataFunc();
-            this.initInfo.hawbList = []
-            this.initTotalSingleData()
-          //  this.$refs.hawbtab.initProject()
-            const reg = new RegExp(",")
+            this.initInfo.hawbList = [];
+            (this.initInfo.ybstoreList = [
+              {
+                khjcno: "",
+                piece: "",
+                weight: "",
+                storeType: "不入库",
+                yjstoredate: "",
+                packagetypename: "",
+                djhpiece: "",
+                cdjhpiece: "",
+                tzcxhpiece: "",
+                jmyqpiece: "",
+                breakPiece: "",
+                moistPiece: "",
+                deformPiece: "",
+                redpiece: "",
+                bwbreakpiece: "",
+                otherpiece: ""
+                //isadd:false,
+              }
+            ]),
+              this.initTotalSingleData();
+            //  this.$refs.hawbtab.initProject()
+            const reg = new RegExp(",");
             this.$confirm(
               "订单编号为:" +
-                results.data.resultno.replace(reg,"") +
+                results.data.resultno.replace(reg, "") +
                 "<br>" +
                 results.data.resultmessage,
               {
@@ -2114,7 +2276,7 @@ export default {
                 //cancelButtonClass: "el-button el-button--primary"
               }
             ).then(() => {
-              if (this.saveStatus) {
+              // if (this.saveStatus) {
                 //  初始化部分分单信息
                 this.initInfo.hawb_yjStoredatetype = "1";
                 this.initInfo.hwxz = "普货";
@@ -2137,9 +2299,9 @@ export default {
                   this.initInfo[i] = "";
                 });
                 this.reSearch();
-              } else {
-                this.$parent.initDataFunc();
-              }
+              // } else {
+              //   this.$parent.initDataFunc();
+              // }
               this.saveVisible = false;
 
               return;
@@ -2164,9 +2326,12 @@ export default {
       //type:1本站操作  2分配至外站
       if (this.confirmAdd()) {
         let mawbInfo = this.confirmAdd();
+        mawbInfo.cargoInfoList = mawbInfo.ybstoreList;
+        delete mawbInfo.ybstoreList;
+        mawbInfo.serviceList = this.serviceList;
         console.log(mawbInfo);
         console.log(this.inputModelData.hawbList);
-        
+
         //return;
         mawbInfo.nodecode = "AO5025";
         this.$axios({
@@ -2178,10 +2343,31 @@ export default {
         }).then(results => {
           if (results.data.resultstatus == 0) {
             this.initInfo = {};
-            this.$refs.fenpei.confirmFp(
-              results.data.resultguid,
-              results.data.resultno
-            );
+            (this.initInfo.ybstoreList = [
+              {
+                khjcno: "",
+                piece: "",
+                weight: "",
+                storeType: "不入库",
+                yjstoredate: "",
+                packagetypename: "",
+                djhpiece: "",
+                cdjhpiece: "",
+                tzcxhpiece: "",
+                jmyqpiece: "",
+                breakPiece: "",
+                moistPiece: "",
+                deformPiece: "",
+                redpiece: "",
+                bwbreakpiece: "",
+                otherpiece: ""
+                //isadd:false,
+              }
+            ]),
+              this.$refs.fenpei.confirmFp(
+                results.data.resultguid,
+                results.data.resultno
+              );
           } else if (results.data.resultstatus == 99) {
             this.$alert(results.data.resultmessage, "提示", {
               confirmButtonText: "确定",
@@ -2233,35 +2419,62 @@ export default {
         }
       });
     },
-    setOpetionInputViewData(){
-      const addOptionList = ['fid','gid','hwplace','tradeterm','jsfs','yjStoredatetype','hascdjh','hasjmyq','englishpm','sizeremark', 'hastzcx','hasdjh']
+    setOpetionInputViewData() {
+      const addOptionList = [
+        "fid",
+        "gid",
+        "hwplace",
+        "tradeterm",
+        "jsfs",
+        "yjStoredatetype",
+        "hascdjh",
+        "hasjmyq",
+        "englishpm",
+        "sizeremark",
+        "hastzcx",
+        "hasdjh"
+      ];
       addOptionList.forEach(options => {
-        if(this.inputModelData.orderdom == '直单'  && this.inputModelData.opersystem == '进口'  ) {
-          this.inputViewData[options].hidden = false
-          this.inputViewData[options].required = true
+        if (
+          this.inputModelData.orderdom == "直单" &&
+          this.inputModelData.opersystem == "进口"
+        ) {
+          this.inputViewData[options].hidden = false;
+          this.inputViewData[options].required = true;
         } else {
-          this.inputViewData[options].hidden = true
-          this.inputViewData[options].required = true
+          this.inputViewData[options].hidden = true;
+          this.inputViewData[options].required = true;
         }
-      })
+      });
     }
   },
 
   watch: {
-    // orderDialogstatus(val){
-    //     if(val == false) {
-    //       this.$parent.initDataFunc();   
-    //       this.initInfo = {};
-    //     }
-    //   },
-    
+    "entranceData.fdData": {
+      handler(val) {
+        if (val.length > 0) {
+          console.log(this.initInfo);
+          // 总直单需要这步操作
+          this.entranceData.fdData.forEach((item, index) => {
+            this.entranceData.fdData[
+              index
+            ].ybstoreList = this.entranceData.fdData[index].cargoInfoList;
+          });
+  
+          // 总分单赋值分单
+          this.initInfo.hawbList = this.entranceData.fdData;
+        }
+      },
+      immediate: true,
+      deep: true
+    },
     "inputModelData.orderdom": {
       //切换订单类型
       handler(val) {
         console.log(val);
         this.goodsinfoTabsChecked = 0;
-        this.setOpetionInputViewData()
-        
+        this.setOpetionInputViewData();
+
         //直单只显示总单信息(hawbViewData部分表单和inputViewData合并)，总单则是分开
         Object.keys(this.hawbViewData).forEach(i => {
           if (
@@ -2287,20 +2500,19 @@ export default {
     },
     "inputModelData.opersystemdom": {
       handler(val) {
-        if(this.inputModelData.opersystem == "进口") {
-          this.initInfo['mawb'] = ""
+        if (this.inputModelData.opersystem == "进口") {
+          this.initInfo["mawb"] = "";
         }
       },
       immediate: true,
-      deep:true
+      deep: true
     },
 
     "inputModelData.opersystem": {
-      handler(val){
-        this.setOpetionInputViewData()
+      handler(val) {
+        this.setOpetionInputViewData();
       },
-      deep:true
-
+      deep: true
     },
     "inputModelData.area": {
       handler(val) {
@@ -2310,12 +2522,11 @@ export default {
             this.initInfo.mdg = item.value;
           }
         });
-        this.setOpetionInputViewData()
+        this.setOpetionInputViewData();
       },
       immediate: true,
       deep: true
     },
-
 
     "inputModelData.creditlevel": {
       handler(val) {
@@ -2363,7 +2574,7 @@ export default {
     },
     "initInfo.ysfs": {
       handler(val) {
-        console.log(val)
+        console.log(val);
         if (this.newService["AB0420"]) {
           if (val != "外仓货") {
             this.newService["AB0420"]["model"] = true;
@@ -2371,7 +2582,7 @@ export default {
             this.newService["AB0420"]["model"] = false;
           }
         }
-        console.log(this.newService)
+        console.log(this.newService);
       },
       immediate: true
     }
@@ -2386,10 +2597,25 @@ export default {
     //   },
     //   deep:true
     // }
-
   },
 
-  mounted() {},
+  mounted() {
+    this.$watch(
+      () => {
+        return this.entranceData.zdData;
+      },
+      () => {
+        Object.keys(this.initInfo).forEach(i => {
+          this.initInfo[i] = this.entranceData.zdData[i];
+        });
+        //  this.initInfo = this.entranceData.zdData
+        if (this.entranceData.zdData.orderdom == "直单") {
+          this.initInfo.ybstoreList = this.entranceData.zdData.cargoInfoList;
+        }
+      },
+      { deep: true }
+    );
+  },
 
   created() {
     this.packageNameList = JSON.parse(localStorage.groupType)
@@ -2402,6 +2628,9 @@ export default {
       val => {
         if (this.pagetype == "2") {
           let creditlevelArr = getxmdata("wtkhUseful").filter(i => i.id == val);
+          console.log("------------------------------------")
+          console.log(getxmdata("wtkhUseful"))
+          console.log(creditlevelArr)
           if (creditlevelArr.length == 1) {
             this.inputModelData.creditlevel = creditlevelArr[0].creditlevel;
             //this.hawbViewData['hawb_jsfs']['disabled']=this.inputModelData.creditlevel=='A'||this.inputModelData.creditlevel=='C'
@@ -2410,6 +2639,8 @@ export default {
       },
       { deep: true, immediate: true }
     );
+
+    console.log(this.entranceData);
 
     this.$watch(
       () => {
@@ -2441,9 +2672,6 @@ export default {
           this.initInfo[i] = this.inputModelData[i];
           console.log(this.initInfo[i]);
         });
-
-        //console.log(this.inputModelData)
-        //console.log(val)
       },
       { deep: true }
     );
@@ -2472,13 +2700,18 @@ export default {
       },
       set(val) {
         //this.initFunc()
-        
+        console.log("=================1111111111111111");
+        console.log(val);
+        console.log(this.newService);
         val.forEach(item => {
           if (this.newService[item.servicecode]) {
             if (this.newService[item.servicecode].disabled == false) {
               this.newService[item.servicecode].model =
-                item.servicecode == 'OA0010' ? this.initInfo.system != '国内服务' && this.initInfo.czlx == '自货' : item.isdel == 1;
-                this.newService[item.servicecode].oprequest = item.oprequest;
+                item.servicecode == "OA0010"
+                  ? this.initInfo.system != "国内服务" &&
+                    this.initInfo.czlx == "自货"
+                  : item.isdel == 1;
+              this.newService[item.servicecode].oprequest = item.oprequest;
 
               if (
                 item.servicecode == "AB0420" &&

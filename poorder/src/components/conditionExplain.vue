@@ -6,13 +6,14 @@
         :view-data.sync="inputViewData"
         :model-data.sync="inputModelData"
         :search-data.sync="searchData"
-        :pageshow.sync='pageshow'
+        :pageshow.sync="pageshow"
         :pagetype="1"
         :chinese-where.sync="chineseWhere"
       ></newSearchComp>
       <div class="searchForm">
         <el-button @click="search">查询</el-button>
-        <el-button @click="openDialogShow">上传情况说明</el-button>
+        <el-button @click="sendConfirmation">发送支付确认函</el-button>
+        <el-button @click="openDialogShow">上传支付确认函</el-button>
         <el-button @click="openEditObjectDialog">更改结算对象</el-button>
       </div>
     </div>
@@ -25,6 +26,8 @@
       @changeAll="getChange"
       @transSelIndex="openDialogs"
       groupField="boguid"
+      :checkGroupStatus="checkGroupStatus"
+      :selectOrderId="selectOrderId"
       isGroup
       :isSort="false"
       :isPaging="false"
@@ -32,7 +35,8 @@
       <template slot="tabOperate" slot-scope="props">
         <el-checkbox
           v-model="props.data.row.checked"
-          @change="getSelectOrder"
+          @change="getSelectOrder(props.data.row)"
+          :disabled="selectOrderId.length > 0 && selectOrderId[0].wtkhname != props.data.row.wtkhname ? true : false"
         ></el-checkbox>
       </template>
       <template slot="display" slot-scope="props">
@@ -93,7 +97,6 @@
       :selectTableIndex="selectTableIndex"
       v-if="dialogShow"
       @close="closeDocStatus"
-
     >
       <template slot="infolist">
         <infoList
@@ -227,6 +230,7 @@
               </commonTable>
             </div>
             <div class="operateContainer">
+              <el-button class="send_confirmation" @click="sendConfirmationIn"  style="background:#0f5a8c;color:white;border:1px solid #e8e8e8;">发送支付确认函</el-button>
               <el-button
                 class="confrimUpload"
                 @click="confirmUpload"
@@ -331,6 +335,140 @@
       >
       </costmaking>
     </el-dialog>
+
+    <el-dialog title="填写内容" :visible.sync="dialogVisible" width="500px" append-to-body  :close-on-click-modal="false" :close-on-press-escape="false">
+      <div class="custom-required">
+        <el-form label-position="right" label-width="80px" :model="emailInfo">
+          <el-form-item label="收件人" class="required-item">
+            <el-input v-model="emailInfo.mailto"></el-input>
+          </el-form-item>
+          <el-form-item label="主题" class="required-item">
+            <el-input v-model="emailInfo.mailsubject" type="textarea" rows="3"></el-input>
+          </el-form-item>
+          <el-form-item label="抄送">
+            <el-input v-model="emailInfo.mailtolist" class="no-required"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer">
+        <el-button @click="closeDialogVisible">取 消</el-button>
+        <el-button type="primary" @click="handleConfirm">确 定</el-button>
+      </div>
+    </el-dialog>
+
+
+    <transition
+      enter-active-class="animate__animated animate__zoomInDown"
+      leave-active-class="animate__animated animate__zoomOutRight"
+    >
+      <el-dialog
+        :visible.sync="applyDialogStatus"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        @close="closeApplyDialogStatus"
+        width="983px"
+        style="margin-top:-5vh;margin-left:13vw;"
+        center
+      >
+        <!-- <el-carousel
+          height="1200px"
+          indicator-position="outside"
+          :autoplay="false"
+        >
+          <el-carousel-item v-for="(item, index) in outsourceData" :key="index"> -->
+            <div class="outsourcePayfor" v-for="(item, index) in outsourceData" :key="index" style="heihgt:1200px">
+              <h2 class="outsourceTitle">委外代付说明</h2>
+              <div class="content">
+                <div class="content-body">
+                  <span
+                    >致:
+                    <i style="text-decoration:underline;">
+                      {{ item.wecanfidName }}</i
+                    ></span
+                  >
+                  <span
+                    >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;因我司委托贵司代理国际航空货物运输业务,已产生应付贵司各项杂费合计人民币
+                    {{ item.sum }}元整(如下表)。</span
+                  >
+                  <span
+                    >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;对于上述杂费，我司委托由
+                    <i style="text-decoration:underline;">
+                      {{ item.wagefidName }}</i
+                    >(下称“代付方”)
+                    在贵我双方约定的结算周期内直接支付至贵司。此部分费用所涉发票，由贵司直接开具给代付方。</span
+                  >
+                  <span
+                    >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;若代付方未能如期定额向贵司付清上述约定费用，我司愿承担付款及违约责任。贵司如因接受上述代付行为产生任何损失，全部由我司承担。</span
+                  >
+                  <span
+                    >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;以上，特此说明。</span
+                  >
+                </div>
+                <div class="content-right">
+                  <span>
+                    <i style="text-decoration:underline;">
+                      {{ item.fidName }} </i
+                    >(公章)</span
+                  >
+                </div>
+                <div class="content-right">
+                  <span>
+                    &nbsp;&nbsp;&nbsp;&nbsp; 年
+                    &nbsp;&nbsp;&nbsp;&nbsp; 月
+                    &nbsp;&nbsp;&nbsp;&nbsp; 日</span
+                  >
+                </div>
+                <!-- 订单列表 -->
+                <div class="orderTitle">
+                  <span>清单列表</span>
+                </div>
+                <div class="order-container">
+                  <div class="order-item">
+                    提单号
+                  </div>
+                  <div class="order-item">
+                    实际件重体
+                  </div>
+                  <div class="order-item">
+                    费用名称
+                  </div>
+                  <div class="order-item">
+                    金额
+                  </div>
+                </div>
+                <div
+                  class="order-container"
+                  v-for="(obj, wageIndex) in item.wageList"
+                  :key="wageIndex"
+                >
+                  <div class="order-item">
+                    {{ obj.mawb != "" ? obj.mawb :  obj.pono }}
+                  </div>
+                  <div class="order-item">
+                    {{ obj.realpiece }} / {{ obj.realweight }} /
+                    {{ obj.realvolume }}
+                  </div>
+                  <div class="order-item">
+                    {{ obj.items }}
+                  </div>
+                  <div class="order-item">
+                    ￥ {{Number(obj.wageall).toFixed(2) }}
+                  </div>
+                </div>
+                <div class="content-right">
+                  <span>合计: ￥{{ item.sum }}</span>
+                </div>
+              </div>
+            </div>
+          <!-- </el-carousel-item>
+        </el-carousel> -->
+        <div class="btn">
+        <el-button type="primary" @click="dialogVisible = !dialogVisible" >发送邮箱</el-button>
+        <el-button type="primary" @click="closeApplyDialogStatus" >取消</el-button>
+        </div>
+
+      </el-dialog>
+    </transition>
   </div>
 </template>
 
@@ -339,7 +477,7 @@ import pageSelectMultiple from "./smallTemplate/pageSelectMultiple";
 import { getChangeValue, formatDate } from "../api/localStorage.js";
 import imgdocTable from "@/components/docSystem/imgdocTable";
 import jiedian from "./orderDetails/jiedian";
-
+import html2Canvas from 'html2canvas'
 export default {
   name: "conditionExplain",
   components: { pageSelectMultiple, jiedian, imgdocTable },
@@ -349,6 +487,35 @@ export default {
   data() {
     return {
       name: "conditionExplain.vue",
+      outsourceData: [],
+       // 在[航线 / 客服 / 订单]费用确认模块中使用，配合业务用来禁用checkbox
+      checkGroupStatus: true, 
+      dialogVisible:false,
+      emailInfo: {
+        mailto:"",
+        mailsubject:"",
+        mailtolist:""
+      }, // 邮箱发送信息
+      orderData: [
+        {
+          orderID: "781-23231231",
+          weight: "100/22/33",
+          costName: "卡车费",
+          count: "￥22222"
+        },
+        {
+          orderID: "781-23231231",
+          weight: "100/22/33",
+          costName: "卡车费",
+          count: "￥22222"
+        },
+        {
+          orderID: "781-23231231",
+          weight: "100/22/33",
+          costName: "卡车费",
+          count: "￥22222"
+        }
+      ],
       inputViewData: {
         hbrq: {
           title: "航班日期",
@@ -357,7 +524,8 @@ export default {
           defaultEnd: true
         }
       },
-      tagStatus: "",
+      tagStatus: "" ,
+      applyDialogStatus: false,
       pageSelectStatus: "情况补充说明",
       pageshow: true,
       inputFormModelData: {},
@@ -427,6 +595,7 @@ export default {
       inputModelData: {
         hxconfirmstatus: "700",
         confirmstatus: "700",
+        issupplyfile:"20,30",
         status: "AO5060,AO5065,AO5070",
         //signman: localStorage.getItem("usrname"),
         kfconfirmstatus: "700",
@@ -542,7 +711,7 @@ export default {
 
       canceltype: 4,
       jobData: {},
-
+      emailData:[],
       costMakingVisible: false
     };
   },
@@ -620,7 +789,7 @@ export default {
     routername: {
       immediate: true,
       handler(val) {
-        if(this.routername){
+        if (this.routername) {
           this.$store.commit("setSituationState", this.routername);
         }
         // if (this.routername == "hxCostCassify") {
@@ -629,10 +798,194 @@ export default {
         //   this.$store.commit("setSituationState", "kfCostCassify");
         // }
       }
+    },
+    fid(val){
+      // 服务项目 新结算对象名 表格数据 
+      this.serviceProjectData = []
+      this.gid = ""
+      this.inPcData = []
     }
   },
   methods: {
+    closeDialogVisible(){
+      this.emailInfo.mailtolist = ""
+      this.dialogVisible = false
+    },
+   async  generatePicture(){
+      let promise=[...document.querySelectorAll('.outsourcePayfor')].map((i,index)=>{
+        return new Promise((resolve,reject)=>{
+          html2Canvas(i,{
+            scrollY: 0,
+            scrollX: 0,
+            allowTaint: true,  //开启跨域
+            useCORS: true,
+          }).then((canvas)=>{
+            this.emailData.push({
+            imgbase64: canvas.toDataURL(),
+            fid:this.outsourceData[index].fid,
+            wagefid: this.outsourceData[index].wagefid,
+            wecanfid: this.outsourceData[index].wecanfid,
+            wageList: this.outsourceData[index].wageList,
+            gid: this.tagStatus == "更改结算对象" ? this.gid : -1
+          }) 
+           resolve(this.emailData)
+          })
+         
+        })
+        
+      })
+      
+
+    //@发送邮箱更新            
+    this.emailInfo.mailsender = localStorage.usrname;
+    this.emailInfo.maildate = new Date().Format("yyyy-MM-dd hh:mm:ss");
+      await Promise.all(promise).then((value)=>{
+                 this.$axios({
+                method: "post",
+                url: this.$store.state.webApi + "api/ExBoBaseWageChangeSettObjSendMail",
+                data: {
+                  czman: localStorage.usrname,
+                  mailjson: JSON.stringify(this.emailInfo), //@发送邮箱更新
+                  postdata: value[0],
+                  logExtraData:  this.$store.state.logExtraDataForBuild
+                },
+                loading: true,
+                tip: false
+              })
+              .then(results=>{
+                const res = results.data
+                if(res.resultstatus  == 0) {
+                  this.$alert(
+                  "批次号为" +
+                  results.data.resultno,
+                 {
+                  distinguishCancelAndClose: true,
+                  dangerouslyUseHTMLString: true,
+                  confirmButtonText: "确定"
+                }
+                ).then(() => {
+                   var el = document.createElement("a");
+                    document.body.appendChild(el);
+                    // @发送邮箱更新
+                    el.href = encodeURI(`mailto:${this.emailInfo.mailto}?subject=${this.emailInfo.mailsubject}&body=${res.resultdic.mailcontent}&cc=${this.emailInfo.mailtolist}`); 
+                    el.click();
+                    document.body.removeChild(el);
+                     //@发送邮箱更新
+                    this.dialogVisible = false
+                    //@发送邮箱更新
+                 
+                    this.applyDialogStatus = !this.applyDialogStatus;
+                });
+                 
+                }
+               
+              })
+      })
+
+ 
+    },
+    sendConfirmation() {
+      if( this.selectOrderId.length == 0) {
+        this.$message.error("请选择结算对象");
+      } else {
+        this.sendConfirm()
+      } 
+        
+    },
+    sendConfirmationIn(){
+      if(this.itemsList == "") {
+        this.$message.error("请选择服务项目");
+      } else if(this.gid == "") {
+        this.$message.error("请选择结算对象");
+      } else {
+        this.sendConfirm()
+      }
+    },
+    //@发送邮箱更新
+    handleConfirm(){
+      if (!this.emailInfo.mailto) {
+        this.$message.error('请填写收件人');
+        return;
+      }
+
+      if (!this.emailInfo.mailsubject) {
+        this.$messasge.error('请填写主题');
+        return
+      }
+        this.generatePicture();
+    },
+    
+    sendConfirm(){
+      
+       let arr = [];
+        if(this.tagStatus == "更改结算对象") {
+          this.orderList.forEach(item => {
+          arr.push(item.boguid);
+        });
+        } else {
+            this.selectOrderId.forEach(item => {
+            arr.push(item.boguid);
+          });
+        }
+        let data = {}
+        if( this.tagStatus == "更改结算对象") {
+          data = {
+            boguidlist: arr.join(","),
+            items: this.itemsList  ,
+            gid: this.gid 
+          }
+        } else {
+          data = {
+            boguidlist: arr.join(","),
+          }
+        }
+        this.$axios({
+          method: "get",
+          url: this.$store.state.webApi + `api/ExBoBaseWageChangeSettObj`,
+          params: data,
+          loading: true,
+          tip: false
+        }).then(res => {
+          console.log(res.data);
+          
+          if(res.data.length == 0) {
+            this.$message.error("没有数据");
+            this.applyDialogStatus = false
+ 
+          } else {
+            this.applyDialogStatus = true;
+            const mailto = res.data[0].mailto
+            const mailsubject = res.data[0].mailsubject
+            this.emailInfo.mailto = mailto
+            this.emailInfo.mailsubject = mailsubject
+            res.data.forEach(item => {
+            JSON.parse(window.wtkhData).forEach(obj => {
+              if (item.fid == obj.id) {
+                item.fidName = obj.usr_name;
+              } else if (item.wagefid == obj.id) {
+                item.wagefidName = obj.usr_name;
+              } else if (item.wecanfid == obj.id) {
+                item.wecanfidName = obj.usr_name;
+              }
+            });
+            item.sum = item.wageList.reduce((accumulator,currentValue) =>accumulator + currentValue.wageall, 0 ).toFixed(2)
+          });
+          this.outsourceData = res.data;
+
+          }
+          arr = []
+        });
+    },
+    closeApplyDialogStatus() {
+      this.emailData = []
+      this.outsourceData = []
+      this.applyDialogStatus = false
+      this.fid = ""
+      this.itemsList = ""
+      this.changeObjectDialog.visible = false
+    },
     getChange({ value, data }) {
+      console.log(value,data)
       for (var i = data.listLength - data.len; i < data.listLength; i++) {
         this.tableDataRes[i]["checked"] = value ? true : false;
       }
@@ -644,6 +997,7 @@ export default {
     closeStatus() {
       // this.fid = ""
       this.showDetail = false;
+      this.tagStatus = ""
       // this.serviceProjectData = []
       // this.itemsList = ""
       // this.gid = ""
@@ -655,7 +1009,8 @@ export default {
       this.itemsList = "";
       this.gid = "";
       this.inPcData = [];
-      this.search()
+      this.search();
+      
     },
     search() {
       this.selectTableIndex = -1;
@@ -692,16 +1047,24 @@ export default {
       }
       var jsonArr2 = {
         where: this.searchData,
-        order: "adddate desc",
+        order: "adddate desc"
       };
-      var json = { json: JSON.stringify(jsonArr2) ,routerName:'conditionExplain'};
-      console.log(this.searchData)
+      var json = {
+        json: JSON.stringify(jsonArr2),
+        routerName: "conditionExplain"
+      };
+      console.log(this.searchData);
       this.$axios({
         method: "get",
-        url: this.$store.state.webApi + (this.routername == "hxCostCassify" || this.routername == "kfCostCassify" ? "api/ExHpoboAxplineGeneralDomMissDoc": "api/ExHpoboAxplineGeneralMissDoc"),
+        url:
+          this.$store.state.webApi +
+          (this.routername == "hxCostCassify" ||
+          this.routername == "kfCostCassify"
+            ? "api/ExHpoboAxplineGeneralDomMissDoc"
+            : "api/ExHpoboAxplineGeneralMissDoc"),
         params: json,
         loading: true,
-        tip: false,
+        tip: false
       })
         .then(results => {
           //console.log(results)
@@ -825,7 +1188,7 @@ export default {
       // this.inputModelData = {};
     },
     openDialogShow() {
-      this.tagStatus = "上传情况说明";
+      this.tagStatus = "上传支付确认函";
       if (this.selectOrderId.length > 0) {
         this.dialogShow = true;
         this.uploadExplainDialogVisible = true;
@@ -909,7 +1272,7 @@ export default {
     confirmUpload() {
       if (this.fid && this.itemsList && this.gid) {
         this.dialogShow = true;
-        this.changeObjectDialog.visible = false;
+        // this.changeObjectDialog.visible = false;
       }
       if (!this.fid) {
         this.$message.error("请选择 委托客 后再进行上传");
@@ -921,8 +1284,8 @@ export default {
         this.$message.error("请选择 结算对象名 后再进行上传");
       }
     },
-    getSelectOrder(row, index) {
-      console.log(row, index);
+    getSelectOrder(row) {
+      console.log(row);
     },
     openDialog(row, tag) {
       console.log(row, tag);
@@ -1029,10 +1392,112 @@ export default {
   width: 100%;
   height: 100px;
   position: relative;
+  .send_confirmation{
+    position: absolute;
+    right: 110px;
+    top: 20px;
+  }
   .confrimUpload {
     position: absolute;
     right: 0;
     top: 20px;
   }
 }
+
+.outsourcePayfor {
+  width: 100%;
+  font-family: "楷体", "楷体_GB2312";
+  .outsourceTitle {
+
+    padding: 54px 42%;
+    justify-content: center;
+  }
+  .content {
+    width: 100%;
+
+    padding: 10px 178px;
+    .content-body {
+      span {
+        width: 100%;
+        height: 30px;
+        line-height: 30px;
+        display: inline-block;
+        font-size: 18px;
+        margin: 20px 0px;
+      }
+    }
+    .content-right {
+      width: 100%;
+      height: 30px;
+      line-height: 30px;
+      font-size: 18px;
+      margin: 20px 0px;
+      position: relative;
+      span {
+        position: absolute;
+        right: 0;
+      }
+    }
+
+    .orderTitle {
+      width: 100%;
+      height: 40px;
+      padding: 5px 0px;
+      color: blue;
+      border-bottom: 3px double black;
+    }
+    .order-container {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      .order-item {
+        width: 25%;
+        height: 40px;
+        line-height: 40px;
+      }
+    }
+  }
+}
+.btn {
+  width: 100%;
+  display:flex;
+  flex-wrap: wrap;
+  padding-left: 45%;
+}
+
+
+
 </style>
+
+<style lang="less">
+.custom-required {
+    .required-item {
+      input {
+      background: #fff8ef !important;
+      font-size: 16px !important;
+    }
+
+    textarea {
+      background: #fff8ef !important;
+      font-size: 16px !important;
+      white-space: pre-line;
+      word-wrap: break-word;
+    }
+  }
+ 
+
+  .no-required {
+    input {
+      background: initial !important;
+    }
+
+    textarea {
+      background: initial !important;
+      word-wrap: break-word;
+    }
+  }
+}
+
+
+</style>
+
