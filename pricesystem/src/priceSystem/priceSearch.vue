@@ -380,6 +380,28 @@
               </el-select>
             </div>
           </div>
+              <div
+            class="input-item"
+            style="
+              width: 150px;
+              min-width: 150px;
+              margin: 0 0 0 10px;
+              border: none;
+            "
+          >
+            <div class="input-title">货物类型</div>
+            <div class="input-content">
+              <el-select v-model="selectedCargo">
+                <el-option
+                  v-for="item in cargoData"
+                  :key="item.code"
+                  :label="item.code"
+                  :value="item.code"
+                >
+                </el-option>
+              </el-select>
+            </div>
+          </div>
         </div>
       </template>
       <template v-slot:hs="pdata">
@@ -409,7 +431,7 @@
           {{ void (currentRow = tableDataRes[currentIndex]) }}
         </template>
         <table
-          style="min-width: 500px; font-size: 10px; text-align: center"
+          style="min-width: 639px; font-size: 10px; text-align: center"
           v-if="isExactSearch"
         >
           <tbody>
@@ -422,7 +444,7 @@
           </tbody>
         </table>
         <table
-          style="min-width: 500px; font-size: 10px; text-align: center"
+          style="min-width: 639px; font-size: 10px; text-align: center"
           v-if="!isExactSearch"
         >
           <tbody>
@@ -698,6 +720,7 @@ export default {
       selectedTransportType: all, //选中的运输方式
       selectedPackageType: "散货", //选中的包装类型
       selectedCusType: "官网公布", //选中的客户类型
+      selectedCargo:"普货",
       isContainsTruck: true,
       booleanArr: [
         { code: true, name: "是" },
@@ -712,6 +735,7 @@ export default {
       isShowExpired: false,
       packageTypeData: JSON.parse(localStorage.getItem(diffCodeKey.package)),
       cusData: JSON.parse(localStorage.getItem(diffCodeKey.cus)),
+      cargoData: JSON.parse(localStorage.getItem(diffCodeKey.cargo)),
       volDiffData: JSON.parse(localStorage.getItem("volDiff")),
       weightDiffData: JSON.parse(localStorage.getItem("weightDiff")),
       typeEnum: [

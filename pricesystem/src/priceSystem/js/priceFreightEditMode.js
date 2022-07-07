@@ -256,6 +256,7 @@ class priceFreightEditView extends priceFreightView {
     var cusArr = JSON.parse(localStorage.getItem(diffCodeKey.cus));
     var volArr = JSON.parse(localStorage.getItem(diffCodeKey.vol));
     var weightArr = JSON.parse(localStorage.getItem(diffCodeKey.weight));
+    var cargoArr=JSON.parse(localStorage.getItem(diffCodeKey.cargo));
     var isSetPIndex = false;
     var isSetCIndex = false;
     if (!!map.packageTypeArr) {
@@ -267,6 +268,9 @@ class priceFreightEditView extends priceFreightView {
 
     if (!!map.volArr) {
       this.convertMapToCodeDiff(map.volArr, volArr, diffCode.vol)
+    }
+    if(!!map.cargoArr){
+      this.convertMapToCodeDiff(map.cargoArr, cargoArr, diffCode.cargo)
     }
     !!map.weightArr && weightArr.forEach((item, index) => {
       let code = item.code;
@@ -285,6 +289,7 @@ class priceFreightEditView extends priceFreightView {
     this.cusArr = cusArr;
     this.weightArr = weightArr;
     this.volArr = volArr;
+    this.cargoArr=cargoArr;
     this.confirmPriceTabArr();
 
   }

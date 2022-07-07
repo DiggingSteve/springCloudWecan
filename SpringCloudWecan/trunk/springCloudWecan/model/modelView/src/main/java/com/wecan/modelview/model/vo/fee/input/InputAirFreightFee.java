@@ -110,6 +110,8 @@ public class InputAirFreightFee extends InputBaseVo {
      * */
     public List<InputCodeDiff> weightArr;
 
+    public List<InputCodeDiff>cargoArr;
+
     /**
      * 货型参数 （一种体积比）
      * */

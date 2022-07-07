@@ -122,6 +122,25 @@ public interface InputCodeDiffMapper extends IBaseModelMapper<InputCodeDiff>, Pa
         }
     }
 
+    /**
+     * 价格参数vo转换重量参数
+     **/
+    @Mappings({
 
+    })
+    FeeCargoType toCargoType(InputCodeDiff data);
+
+    /**
+     * 价格参数List vo转换
+     **/
+    @Mappings({})
+    List<FeeCargoType> toCargoType(List<InputCodeDiff> data, @Context Long feeid);
+
+    @AfterMapping
+    default void afterMapCargoList(@MappingTarget List<FeeCargoType> list, @Context Long feeid) {
+        for (var item : list) {
+            item.setFeeid(feeid);
+        }
+    }
 
 }

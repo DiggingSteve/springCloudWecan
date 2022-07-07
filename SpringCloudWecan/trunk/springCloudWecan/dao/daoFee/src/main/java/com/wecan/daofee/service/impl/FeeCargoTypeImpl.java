@@ -12,6 +12,8 @@ import com.wecan.daofee.service.IFeeApprovalRecordService;
 import com.wecan.daofee.service.IFeeCargoTypeService;
 import com.wecan.modeldbo.airfreight.fee.FeeApprovalRecord;
 import com.wecan.modeldbo.airfreight.fee.FeeCargoType;
+import org.springframework.stereotype.Service;
 
+@Service
 public class FeeCargoTypeImpl  extends ServiceImpl<FeeCargoTypeMapper, FeeCargoType> implements IFeeCargoTypeService {
 }

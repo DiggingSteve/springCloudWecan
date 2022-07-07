@@ -4,7 +4,7 @@
  * @Autor: ZX
  * @Date: 2021-10-27 16:50:36
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-12-21 10:09:16
+ * @LastEditTime: 2022-07-04 17:01:22
 -->
 <template>
   <div class="frm-system-wage">
@@ -414,9 +414,32 @@
               ></el-option>
             </el-select>
           </td>
+
           <td>
-            <!-- 计算方式 -->
+            <!-- 制单计费方式 -->
+            <el-select v-model="editFormModel.jsfs_zd" style="width:120px;background:#fffaf2;">
+              <el-option
+                v-for="(item, index) in billList"
+                :key="index"
+                :value="item.typename"
+                :label="item.typename"
+              ></el-option>
+            </el-select>
+          </td>
+          <td>
+            <!-- 应收计费方式-->
             <el-select v-model="editFormModel.jsfs_out" style="width:120px;background:#fffaf2;">
+              <el-option
+                v-for="(item, index) in billList"
+                :key="index"
+                :value="item.typename"
+                :label="item.typename"
+              ></el-option>
+            </el-select>
+          </td>
+          <td>
+            <!-- 应付计费方式-->
+            <el-select v-model="editFormModel.jsfs_in" style="width:120px;background:#fffaf2;">
               <el-option
                 v-for="(item, index) in billList"
                 :key="index"
@@ -762,7 +785,9 @@ export default {
         sid: "", //计费方式 传递 id
         s_ename: "", //费用名称
         iszd: "", //是否带入制单
-        jsfs_out: "", //结算方式
+        jsfs_out: "", //应收计费方式
+        jsfs_zd:"", //制单计费方式
+        jsfs_in:"", //应付计费方式
         price: "", // 单价
         min_price: "", //MIN
         currency: "人民币", // 币种
@@ -788,8 +813,16 @@ export default {
           title: "作为制单成本"
         },
         {
+          field: "jsfs_zd",
+          title: "制单计费方式"
+        },
+        {
+          field: "jsfs_in",
+          title: "应收计费方式"
+        },
+        {
           field: "jsfs_out",
-          title: "计费方式"
+          title: "应付计费方式"
         },
         {
           field: "price",
@@ -1569,6 +1602,8 @@ this.$confirm('是否确认删除', '提示', {
         sid: "",
         iszd: "",
         jsfs_out: "",
+        jsfs_zd: "",
+        jsfs_in: "",
         price: "",
         min_price: "",
         currency: "",
@@ -1594,6 +1629,8 @@ this.$confirm('是否确认删除', '提示', {
         guid,
         iszd,
         jsfs_out,
+        jsfs_zd,
+        jsfs_in,
         sid,
         currency,
         begindate,
@@ -1613,6 +1650,8 @@ this.$confirm('是否确认删除', '提示', {
         items: items,
         guid: guid,
         jsfs_out: jsfs_out,
+        jsfs_zd:jsfs_zd,
+        jsfs_in: jsfs_in,
         price: price,
         currency: currency,
         begindate: begindate,

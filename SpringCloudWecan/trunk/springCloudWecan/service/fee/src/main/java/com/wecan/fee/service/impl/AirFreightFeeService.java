@@ -94,7 +94,8 @@ public class AirFreightFeeService implements IAirFreightFee {
     @Autowired
     TruckFeeWeightServiceImpl truckWeightDao;
 
-
+    @Autowired
+    FeeCargoTypeImpl cargoDao;
 
     @Autowired
     FeeApprovalRecordServiceImpl approvalDao;
@@ -128,7 +129,8 @@ public class AirFreightFeeService implements IAirFreightFee {
         List<FeeVolRatio> feeVolList = InputCodeDiffMapper.INSTANCES.toVol(data.getVolRatioArr(), fee.getGuid());
         //重量
         List<FeeWeight> feeWeightList = InputCodeDiffMapper.INSTANCES.toWeight(data.getWeightArr(), fee.getGuid());
-
+        //货物类型
+        List<FeeCargoType>feeCargoList=InputCodeDiffMapper.INSTANCES.toCargoType(data.getCargoArr(),fee.getGuid());
         List<FixedFreightFee>fixedFeeList= InputFixedFreightFeeMapper.INSTANCES.toFixedPrice(data.getFixedPriceArr(),fee.getGuid());
 
         List<FeeAirFlight>flightList=InputFeeAirFlightMapper.INSTANCES.toFlight(data.getFlightArr(),fee.getGuid());
@@ -139,6 +141,7 @@ public class AirFreightFeeService implements IAirFreightFee {
         packageTypeDao.saveBatch(feePackageTypeList);
         volDao.saveBatch(feeVolList);
         weightDao.saveBatch(feeWeightList);
+        cargoDao.saveBatch(feeCargoList);
         fixedFeeDao.saveBatch(fixedFeeList);
         if(data.getIsSpecifiedFlight()) {
             flightDao.saveBatch(flightList);
@@ -167,7 +170,8 @@ public class AirFreightFeeService implements IAirFreightFee {
         List<FeeVolRatio> feeVolList = InputCodeDiffMapper.INSTANCES.toVol(data.getVolRatioArr(), fee.getGuid());
         //重量
         List<FeeWeight> feeWeightList = InputCodeDiffMapper.INSTANCES.toWeight(data.getWeightArr(), fee.getGuid());
-
+        //货物类型
+        List<FeeCargoType>feeCargoList=InputCodeDiffMapper.INSTANCES.toCargoType(data.getCargoArr(),fee.getGuid());
         List<FixedFreightFee>fixedFeeList= InputFixedFreightFeeMapper.INSTANCES.toFixedPrice(data.getFixedPriceArr(),fee.getGuid());
         List<FeeAirFlight>flightList=InputFeeAirFlightMapper.INSTANCES.toFlight(data.getFlightArr(),fee.getGuid());
         feePendingDao.updateById(fee);
@@ -176,6 +180,7 @@ public class AirFreightFeeService implements IAirFreightFee {
         packageTypeDao.saveBatch(feePackageTypeList);
         volDao.saveBatch(feeVolList);
         weightDao.saveBatch(feeWeightList);
+        cargoDao.saveBatch(feeCargoList);
         fixedFeeDao.saveBatch(fixedFeeList);
         if(data.getIsSpecifiedFlight()) {
             flightDao.saveBatch(flightList);
@@ -205,6 +210,10 @@ public class AirFreightFeeService implements IAirFreightFee {
         LambdaQueryWrapper<FeeWeight> delWeightQuery = new LambdaQueryWrapper<FeeWeight>()
                 .eq(FeeWeight::getFeeid, feeid);
         weightDao.remove(delWeightQuery);
+
+        LambdaQueryWrapper<FeeCargoType>delCargoQuery=new LambdaQueryWrapper<FeeCargoType>()
+                .eq(FeeCargoType::getFeeid,feeid);
+        cargoDao.remove(delCargoQuery);
 
         LambdaQueryWrapper<FixedFreightFee> delFiexedFeeQuery = new LambdaQueryWrapper<FixedFreightFee>()
                 .eq(FixedFreightFee::getFeeid, feeid);
@@ -360,6 +369,7 @@ public class AirFreightFeeService implements IAirFreightFee {
         String weightArr = "weightArr";
         String volArr = "volArr";
         String cusArr = "cusArr";
+        String cargoArr="cargoArr";
         String fixedPrice="fixedPrice";
         String approvalArr="approvalArr";//审批数组
 
@@ -390,6 +400,11 @@ public class AirFreightFeeService implements IAirFreightFee {
         var weightWrapper = new LambdaQueryWrapper<FeeWeight>()
                 .in(FeeWeight::getFeeid, feeidList);
         List<FeeWeight> weightList = weightDao.list(weightWrapper);
+
+        // 查询cargo
+        var cargoWrapper = new LambdaQueryWrapper<FeeCargoType>()
+                .in(FeeCargoType::getFeeid, feeidList);
+        List<FeeCargoType> cargoList = cargoDao.list(cargoWrapper);
 
         // 查询volratio
         var volWrapper = new LambdaQueryWrapper<FeeVolRatio>()
@@ -463,6 +478,19 @@ public class AirFreightFeeService implements IAirFreightFee {
             }
         });
 
+        cargoList.forEach(p -> {
+            HashMap<String, Object> matchData = result.get(p.getFeeid());
+            if (!matchData.containsKey(cargoArr)) {
+                List<FeeCargoType> d = new ArrayList<>();
+                d.add(p);
+                matchData.put(cargoArr, d);
+            } else {
+                List<FeeCargoType> d = (List<FeeCargoType>) matchData.get(cargoArr);
+                d.add(p);
+            }
+        });
+
+
         volList.forEach(p -> {
             HashMap<String, Object> matchData = result.get(p.getFeeid());
             if (!matchData.containsKey(volArr)) {
@@ -513,6 +541,7 @@ public class AirFreightFeeService implements IAirFreightFee {
         return result;
 
     }
+
 
     @Override
     /**

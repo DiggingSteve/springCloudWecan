@@ -546,10 +546,11 @@ class priceFreightView extends BaseService {
                     var obj = {
                         cusIndex: cusIndex,
                         pIndex: pIndex,
+                        cargoIndex:cargoIndex,
                         cusTitle: cusTitle,
                         pTitle: pTitle,
-                        cargoDiff:cargoDiff,
                         cargoTitle:cargoTitle,
+                        cargoDiff:cargoDiff,
                         cDiff: cDiff, //记录对应勾稽参数差值
                         pDiff: pDiff,
                         fixedMap: {},//记录一口价 此一口价key无需加上cus package
@@ -567,6 +568,7 @@ class priceFreightView extends BaseService {
                         matchObj.cargoTitle=cargoTitle;
                         matchObj.cDiff = cDiff;
                         matchObj.pDiff = pDiff;
+                        matchObj.cargoDiff=cargoDiff;
                         matchObj.isRemain = true;
                     }
                 }
